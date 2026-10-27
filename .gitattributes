@@ -1,0 +1,8 @@
+# LF in the index and on checkout, so shell scripts and byte-compared fixtures
+# read the same on every system.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.zip binary
+*.dat binary

@@ -1,0 +1,122 @@
+{
+ "format": "tn-suite/1",
+ "slice": "toolchain",
+ "checks": {
+  "walker_m0": {
+   "key": "2333bdf8892899cd262f580c3e6e171210d89d5cf6cb964ccfc6a1da79365a22",
+   "run_dirs": [
+   ],
+   "summary": {
+    "requested": 875,
+    "window": [
+     60,
+     3899
+    ],
+    "ticks": 3840,
+    "columns": {
+     "wholeUpdate": {
+     },
+     "scriptUpdate": {
+     },
+     "mapGenerator": {
+     },
+     "mapGeneratorBasicTilesSupportApply": {
+     },
+     "mapGeneratorBasicTilesSupportCompute": {
+     },
+     "mapGeneratorCorrectedTilesApply": {
+     },
+     "mapGeneratorCorrectedTilesCompute": {
+     },
+     "mapGeneratorCorrectedTilesPrepare": {
+      "mean": 1e-05,
+      "p99": 0.0004,
+     },
+     "mapGeneratorEntitiesApply": {
+     },
+     "mapGeneratorEntitiesCompute": {
+     },
+     "mapGeneratorEntitiesPrepare": {
+     },
+     "mapGeneratorVariations": {
+     }
+    }
+   }
+  },
+  "perf15": {
+   "key": "86eabf3b1ec0d9ea786f0eafb159fa14602e6ef0a0cf5c172e2f6afeef79e85b",
+   "run_dirs": [
+   ],
+   "summary": {
+    "deltas_ms": {
+    },
+    "moved": "mapGeneratorBasicTilesSupportCompute"
+   }
+  },
+  "save_m0": {
+   "key": "81514e923437e4690d9280243569dc2f1bef8158b4d60ba5fd4e7775ffbca8df",
+   "run_dirs": [
+   ],
+   "summary": {
+    "pre": 791700,
+    "post": 1185839,
+    "increment": 394139
+   }
+  },
+  "rt_m0": {
+   "key": "169f04b15f048126138d7549a16ea5d48faf6d36e495a47efaf0d2b32f45c550",
+   "run_dirs": [
+   ],
+   "summary": {
+    "ticks": 2160,
+    "p50": 16.666,
+    "over_20ms": 0,
+    "over_33ms": 0,
+   }
+  },
+  "gst": {
+   "run_dirs": [
+   ],
+   "summary": {
+    "tests": 31,
+    "failed": 0,
+    "images": {
+     "preview-vanilla-256/1000.png": "b5ce38715e7fac569eec2c7dec2863115b3f635f4aadd8d6efe5d5711cb704ae",
+     "sheet-preview-disc/1000.png": "7553f53f400386097bcfc6d2b2fdc1968c268bffbde5e015cbc5ecafd9f787d7"
+    },
+    "replayed": true
+   }
+  },
+  "t15b_m0": {
+   "key": "7cf35dc112e7438adc394c1ac3373fd723b0066d13cf0dc494bda3b464742632",
+   "run_dirs": [
+   ],
+   "summary": {
+    "0xff": {
+     "a_spread": [
+     ],
+     "b_spread": [
+     ],
+     "reps": [
+      7,
+      7
+     ],
+     "batches": 1
+    },
+    "0xffff": {
+     "a_spread": [
+     ],
+     "b_spread": [
+     ],
+     "reps": [
+      7,
+      7
+     ],
+     "batches": 1,
+     "borderline": null
+    }
+   }
+  }
+ },
+ "game_build": "2.1.23 build 87750",
+}

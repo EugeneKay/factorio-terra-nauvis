@@ -1,0 +1,5 @@
+{
+ "format": "tn-lint-allowlist/1",
+ "note": "Committed allow-list of linter warnings (the lint row passes with warnings only from this list). Each entry is a substring of one luacheck warning line and is added with the reason it is allowed.",
+ "luacheck": []
+}

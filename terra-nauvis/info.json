@@ -1,0 +1,9 @@
+{
+  "name": "terra-nauvis",
+  "author": "Jake Mismas",
+  "factorio_version": "2.1",
+  "dependencies": [
+    "? alien-biomes",
+    "? cargo-ships-oil-rig",
+  ]
+}

@@ -1,0 +1,1 @@
+-- Everything that reads other mods' final state: entity wrappers and gated hooks on shared

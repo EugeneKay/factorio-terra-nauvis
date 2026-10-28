@@ -1,0 +1,23 @@
+{
+ "format": "tn-baselines/1",
+ "game_build": "2.1.23 build 87750",
+ "previews_256": {
+  "M0": {
+   "1000": "b5ce38715e7fac569eec2c7dec2863115b3f635f4aadd8d6efe5d5711cb704ae",
+   "1002": "a170055f71649a8c2e6cf160b30c7a0eda3dfbb293a0c916a8db8ab1c28674c8",
+   "1004": "0f6c371136cd39825c39a46ffea37b89e7732a0ff7d6b9036d4e8ff8609ab7e2"
+  },
+  }
+ },
+ "t15b_block": {
+  "chunks": "64:32:-64:-48",
+  "census_m0": {
+   "water_tiles": 57117,
+   "trees": 7136,
+   "enemies": 630,
+   "resources": 1778,
+   "rocks": 193,
+   "cliffs": 363
+  }
+ }
+}

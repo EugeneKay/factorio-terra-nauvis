@@ -102,12 +102,16 @@ def run_dump(instance, modset, out, seed=1000, areas="", points="", names="", ty
              grid="", grid_name="elevation", grid_threshold="0", grid_op="ge"):
     """Configure and run one scenario; returns (exit code, RESULT line, path of the dump JSON or None).
     Every ep-s8-dump setting is written on every call: stored values persist in the modset otherwise.
+    A run that may have left its instance stops every further game run (tnguard.run_breach). Under game_selftest.py --replay it launches nothing and answers from the
+    stored run directory."""
     if REPLAY["on"]:
         import game_selftest as gs
         code, so, res = gs.replayed_result(out, f"replay {label}")
         f = Path(out) / "script-output" / "ep-s8-dump" / f"{label}.json"
         return code, res, (f if f.exists() else None), so
     import tnguard
+    # the harness runs with the workspace as its working directory: hand it an absolute path, resolved
+    # against this process's working directory, never a relative one it would re-anchor
     out = tnguard.absolute_output(out)
     if map_gen_settings:
         map_gen_settings = tnguard.absolute_output(map_gen_settings)
@@ -116,6 +120,8 @@ def run_dump(instance, modset, out, seed=1000, areas="", points="", names="", ty
     if not ml.exists() or not any(m["name"] == "ep-s8-dump" and m["enabled"]
                                   for m in json.loads(ml.read_text(encoding="utf-8"))["mods"]):
         raise SystemExit(f"RESULT fail modset {modset} lacks ep-s8-dump: add it with the test harness: modset {modset} --add {MOD_DIR}")
+    vals = {"label": label, "areas": areas, "late-areas": "", "points": points, "names": names,
+            "decoratives": bool(decoratives),
             "scene": scene, "scene-lattice": int(lattice), "gen-tick": int(gen_tick), "tick": int(dump_tick),
             "types": DEFAULT_TYPES if types is None else types, "grid": grid, "grid-name": grid_name or "elevation",
             "grid-threshold": str(grid_threshold), "grid-op": grid_op}

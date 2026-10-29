@@ -1,6 +1,7 @@
 {
  "format": "tn-budgets/1",
  "note": "Measured values only, never thresholds: complexity rows from 64 px --verbose previews at seed 1000. Written by 'earth_test.py baseline'; the gate requires equality and keeps its limits outside this file.",
+ "game_build": "2.1.24 build 87808",
  "rows": [
   {
    "seed": 1000,
@@ -67,64 +68,466 @@
   {
    "seed": 1000,
    "size": 64,
+   "row": "map",
    "map": "europe",
    "modset": "M1",
    "preset": "terra-nauvis-europe",
-   "map": "europe",
-   "modset": "M1",
-   "preset": "terra-nauvis-europe",
-   "map": "europe",
-   "modset": "M1",
-   "preset": "terra-nauvis-europe",
-   "map": "europe",
-   "modset": "M1",
-   "preset": "terra-nauvis-europe",
-   "map": "europe",
-   "modset": "M1",
-   "preset": "terra-nauvis-europe",
-   "map": "europe",
-   "modset": "M1",
-   "preset": "terra-nauvis-europe",
-   "map": "europe",
-   "modset": "M1",
-   "preset": "terra-nauvis-europe",
-   "map": "europe",
-   "modset": "M1",
-   "preset": "terra-nauvis-europe",
-   "map": "europe",
-   "modset": "M1",
-   "preset": "terra-nauvis-europe",
-   "map": "europe",
-   "modset": "M1",
-   "preset": "terra-nauvis-europe",
-   "map": "europe",
-   "modset": "M1",
-   "preset": "terra-nauvis-europe",
-   "scale": 6,
+   "scale": 1,
+   "toggles": "on",
    "programs": {
     "cliff": {
     },
     "entity": {
     },
     "tile": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "modset": "M1",
+   "preset": "terra-nauvis-europe",
+   "scale": 1,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    },
+    "entity": {
+    },
+    "tile": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "modset": "M1",
+   "preset": "terra-nauvis-europe",
+   "scale": 2,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    },
+    "entity": {
+    },
+    "tile": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "modset": "M1",
+   "preset": "terra-nauvis-europe",
+   "scale": 2,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    },
+    "entity": {
+    },
+    "tile": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "modset": "M1",
+   "preset": "terra-nauvis-europe",
+   "scale": 3,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    },
+    "entity": {
+    },
+    "tile": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "modset": "M1",
+   "preset": "terra-nauvis-europe",
+   "scale": 3,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    },
+    "entity": {
+    },
+    "tile": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "modset": "M1",
+   "preset": "terra-nauvis-europe",
+   "scale": 4,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    },
+    "entity": {
+    },
+    "tile": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "modset": "M1",
+   "preset": "terra-nauvis-europe",
+   "scale": 4,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    },
+    "entity": {
+    },
+    "tile": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "modset": "M1",
+   "preset": "terra-nauvis-europe",
+   "scale": 5,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    },
+    "entity": {
+    },
+    "tile": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "modset": "M1",
+   "preset": "terra-nauvis-europe",
+   "scale": 5,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    },
+    "entity": {
+    },
+    "tile": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
    "map": "europe",
    "modset": "M1",
    "preset": "terra-nauvis-europe",
    "scale": 6,
+   "toggles": "on",
    "programs": {
     "cliff": {
-   "programs": {
-    "cliff": {
+    },
+    "entity": {
+    },
+    "tile": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "modset": "M1",
+   "preset": "terra-nauvis-europe",
    "scale": 6,
+   "toggles": "off",
    "programs": {
     "cliff": {
+    },
+    "entity": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
    "programs": {
     "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 1,
+   "toggles": "off",
    "programs": {
     "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 2,
+   "toggles": "on",
    "programs": {
     "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 3,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 4,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 5,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
    "scale": 6,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 6,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 1,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 2,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 3,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 4,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 5,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 6,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 6,
+   "toggles": "off",
    "programs": {
     "cliff": {
    "preset": null,
@@ -139,31 +542,17 @@
      "complexity": 287
     },
     "entity": {
-   "preset": "terra-nauvis-europe",
-   "preset": "terra-nauvis-europe",
-   "preset": "terra-nauvis-europe",
-   "preset": "terra-nauvis-europe",
-   "preset": "terra-nauvis-europe",
-   "preset": "terra-nauvis-europe",
-   "preset": "terra-nauvis-europe",
-   "preset": "terra-nauvis-europe",
-   "preset": "terra-nauvis-europe",
-   "preset": "terra-nauvis-europe",
-   "preset": "terra-nauvis-europe",
-   "scale": 6,
-   "programs": {
-    "cliff": {
-   "preset": "terra-nauvis-europe",
-   "scale": 6,
     }
    }
   },
   {
    "seed": 1000,
    "size": 64,
-   "programs": {
-    "cliff": {
-   "scale": 6,
+   "row": "map",
+   "map": "europe",
+   "preset": "terra-nauvis-europe",
+   "scale": 1,
+   "toggles": "on",
    "programs": {
     "cliff": {
     }
@@ -172,11 +561,399 @@
   {
    "seed": 1000,
    "size": 64,
+   "row": "map",
+   "map": "europe",
+   "preset": "terra-nauvis-europe",
+   "scale": 1,
+   "toggles": "off",
    "programs": {
     "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "preset": "terra-nauvis-europe",
+   "scale": 2,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "preset": "terra-nauvis-europe",
+   "scale": 2,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "preset": "terra-nauvis-europe",
+   "scale": 3,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "preset": "terra-nauvis-europe",
+   "scale": 3,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "preset": "terra-nauvis-europe",
+   "scale": 4,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "preset": "terra-nauvis-europe",
+   "scale": 4,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "preset": "terra-nauvis-europe",
+   "scale": 5,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "preset": "terra-nauvis-europe",
+   "scale": 5,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "preset": "terra-nauvis-europe",
    "scale": 6,
+   "toggles": "on",
    "programs": {
     "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "map": "europe",
+   "preset": "terra-nauvis-europe",
+   "scale": 6,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 1,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 2,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 3,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 4,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 5,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 6,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 6,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 1,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 2,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 3,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 4,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 5,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 6,
+   "toggles": "on",
+   "programs": {
+    "cliff": {
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "map",
+   "scale": 6,
+   "toggles": "off",
+   "programs": {
+    "cliff": {
+    },
+    "tile": {
     }
    }
   }

@@ -4,6 +4,7 @@
 
 The binary lands in its own directory (downloads are untrusted data) and is accepted
 only when its sha256 equals the manifest's. With --github-env, TN_LUACHECK is appended there so the
+later steps' `earth_test.py static` finds it. It reads no secret and touches nothing else.
 """
 import argparse
 import hashlib

@@ -5,7 +5,9 @@
   "walker_m0": {
    "key": "2333bdf8892899cd262f580c3e6e171210d89d5cf6cb964ccfc6a1da79365a22",
    "run_dirs": [
+    "previews/earth-build/suite/20261028-004927-toolchain/walk-m0"
    ],
+   "recorded": "2026-10-28 00:53:18",
    "summary": {
     "requested": 875,
     "window": [
@@ -15,30 +17,88 @@
     "ticks": 3840,
     "columns": {
      "wholeUpdate": {
+      "mean": 0.52606,
+      "p99": 6.29652,
+      "max": 27.7525,
+      "sum_ms": 2020.0593,
+      "per_step_ms": 33.66765
      },
      "scriptUpdate": {
+      "mean": 0.00804,
+      "p99": 0.17632,
+      "max": 2.2009,
+      "sum_ms": 30.879,
+      "per_step_ms": 0.51465
      },
      "mapGenerator": {
+      "mean": 0.38691,
+      "p99": 6.0055,
+      "max": 27.5467,
+      "sum_ms": 1485.7186,
+      "per_step_ms": 24.76198
      },
      "mapGeneratorBasicTilesSupportApply": {
+      "mean": 0.0002,
+      "p99": 0.0111,
+      "max": 0.0539,
+      "sum_ms": 0.7664,
+      "per_step_ms": 0.01277
      },
      "mapGeneratorBasicTilesSupportCompute": {
+      "mean": 0.11735,
+      "p99": 5.71481,
+      "max": 27.7234,
+      "sum_ms": 450.6268,
+      "per_step_ms": 7.51045
      },
      "mapGeneratorCorrectedTilesApply": {
+      "mean": 0.00057,
+      "p99": 0.02447,
+      "max": 0.0734,
+      "sum_ms": 2.1884,
+      "per_step_ms": 0.03647
      },
      "mapGeneratorCorrectedTilesCompute": {
+      "mean": 0.0712,
+      "p99": 4.14199,
+      "max": 13.0791,
+      "sum_ms": 273.4144,
+      "per_step_ms": 4.55691
      },
      "mapGeneratorCorrectedTilesPrepare": {
       "mean": 1e-05,
       "p99": 0.0004,
+      "max": 0.0015,
+      "sum_ms": 0.0303,
+      "per_step_ms": 0.00051
      },
      "mapGeneratorEntitiesApply": {
+      "mean": 0.04047,
+      "p99": 1.27753,
+      "max": 4.3954,
+      "sum_ms": 155.4081,
+      "per_step_ms": 2.59013
      },
      "mapGeneratorEntitiesCompute": {
+      "mean": 0.22851,
+      "p99": 6.22002,
+      "max": 8.0105,
+      "sum_ms": 877.4659,
+      "per_step_ms": 14.62443
      },
      "mapGeneratorEntitiesPrepare": {
+      "mean": 0.00122,
+      "p99": 0.0312,
+      "max": 0.0667,
+      "sum_ms": 4.6776,
+      "per_step_ms": 0.07796
      },
      "mapGeneratorVariations": {
+      "mean": 0.01484,
+      "p99": 0.8716,
+      "max": 2.9388,
+      "sum_ms": 57.0037,
+      "per_step_ms": 0.95006
      }
     }
    }
@@ -46,9 +106,21 @@
   "perf15": {
    "key": "86eabf3b1ec0d9ea786f0eafb159fa14602e6ef0a0cf5c172e2f6afeef79e85b",
    "run_dirs": [
+    "previews/earth-build/suite/20261028-004927-toolchain/walk-perf15-m0",
+    "previews/earth-build/suite/20261028-004927-toolchain/walk-perf15-heavy"
    ],
+   "recorded": "2026-10-28 00:53:35",
    "summary": {
     "deltas_ms": {
+     "mapGeneratorBasicTilesSupportApply": 0.134,
+     "mapGeneratorBasicTilesSupportCompute": 349.158,
+     "mapGeneratorCorrectedTilesApply": 0.127,
+     "mapGeneratorCorrectedTilesCompute": 1.344,
+     "mapGeneratorCorrectedTilesPrepare": 0.001,
+     "mapGeneratorEntitiesApply": 1.404,
+     "mapGeneratorEntitiesCompute": 5.307,
+     "mapGeneratorEntitiesPrepare": -0.135,
+     "mapGeneratorVariations": 0.298
     },
     "moved": "mapGeneratorBasicTilesSupportCompute"
    }
@@ -56,7 +128,9 @@
   "save_m0": {
    "key": "81514e923437e4690d9280243569dc2f1bef8158b4d60ba5fd4e7775ffbca8df",
    "run_dirs": [
+    "previews/earth-build/suite/20261028-004927-toolchain/save-m0"
    ],
+   "recorded": "2026-10-28 00:55:38",
    "summary": {
     "pre": 791700,
     "post": 1185839,
@@ -66,17 +140,28 @@
   "rt_m0": {
    "key": "169f04b15f048126138d7549a16ea5d48faf6d36e495a47efaf0d2b32f45c550",
    "run_dirs": [
+    "previews/earth-build/suite/20261028-004927-toolchain/rt-m0"
    ],
+   "recorded": "2026-10-28 00:54:54",
    "summary": {
     "ticks": 2160,
+    "mean": 16.609,
     "p50": 16.666,
+    "p95": 17.265,
+    "p99": 17.467,
+    "max": 17.974,
     "over_20ms": 0,
     "over_33ms": 0,
+    "window_s": 35.875,
+    "ups": 60.209
    }
   },
   "gst": {
+   "key": "6f054f70d4117a5ca4740cf865b1f475a59e4f1cca64a50465b50e65164bcd89",
    "run_dirs": [
+    "previews/earth-build/suite/20261028-004927-toolchain/gst"
    ],
+   "recorded": "2026-10-28 00:51:13",
    "summary": {
     "tests": 31,
     "failed": 0,
@@ -90,12 +175,21 @@
   "t15b_m0": {
    "key": "7cf35dc112e7438adc394c1ac3373fd723b0066d13cf0dc494bda3b464742632",
    "run_dirs": [
+    "previews/earth-build/suite/20261028-004927-toolchain/t15b-m0"
    ],
+   "recorded": "2026-10-28 00:53:09",
    "summary": {
     "0xff": {
+     "a_median_ms": 637.5543,
+     "b_median_ms": 649.0534,
+     "ratio": 0.9823,
      "a_spread": [
+      628.0967,
+      652.0446
      ],
      "b_spread": [
+      604.6061,
+      660.8955
      ],
      "reps": [
       7,
@@ -104,9 +198,16 @@
      "batches": 1
     },
     "0xffff": {
+     "a_median_ms": 633.5402,
+     "b_median_ms": 634.8821,
+     "ratio": 0.9979,
      "a_spread": [
+      612.4128,
+      649.8677
      ],
      "b_spread": [
+      628.2789,
+      649.5366
      ],
      "reps": [
       7,
@@ -119,4 +220,5 @@
   }
  },
  "game_build": "2.1.23 build 87750",
+ "updated": "2026-10-28 00:55:38"
 }

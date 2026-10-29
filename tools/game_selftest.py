@@ -17,6 +17,8 @@ refuses a folder inside the runner's evidence tree, whose analysis files and gam
 would rewrite.
 
 A relative --out-root is the workspace's, from any working directory: it is joined onto the workspace
+root first, so this process and every tool it starts in the workspace write the same folder. A game run
+that may have left its instance (tnguard.run_breach) stops every further game run at once (exit 3).
 
 Tests:
   t1      harness sample of ep_s8_x, ep_s8_y and ep_s8_disc (mods/ep-s8-probe) on a synthetic 160 x 128
@@ -90,6 +92,7 @@ def setup_modsets(replay=False):
     return NAMES
 
 
+# harness subcommands that launch the game (a replay answers them from the stored runs instead)
 FH_GAME_COMMANDS = {"preview", "sample", "scenario", "run", "dump-data"}
 # Set by --replay: game commands are answered from the stored run's run.json instead of launched.
 REPLAY = {"on": False}
@@ -120,6 +123,9 @@ def _out_arg(args):
 
 
 def run(args, label):
+    """Run a Python tool from the workspace; return (exit code, stdout, RESULT line). Under --replay
+    a game launch through the harness is answered from its stored run directory instead, and nothing is
+    launched."""
     game = bool(args) and ((str(args[0]) == str(eg.FH) and len(args) > 1 and str(args[1]) in FH_GAME_COMMANDS) or
                            (Path(str(args[0])).name == "oracle.py" and len(args) > 1 and str(args[1]) == "probe"))
     if game and REPLAY["on"]:
@@ -133,6 +139,7 @@ def run(args, label):
         print(cp.stdout[-2000:], cp.stderr[-2000:])
     if game:
         # a run that may have left its instance stops every further game run at once: a later one
+        # would only repeat its writes
         why = tnguard.run_breach(_out_arg(args), res)
         if why:
             print(f"RESULT fail game_selftest.py stops every further game run: [{label}] {why}", flush=True)
@@ -268,8 +275,15 @@ def main():
     ap.add_argument("--replay", action="store_true",
                     help="re-derive every verdict from the finished run under --out-root; launch nothing")
     a = ap.parse_args()
+    # A relative --out-root is the workspace's (the usage above): every tool this runs works in the
+    # workspace, so the folder is fixed there once and every write lands in the same place.
+    a.out_root = str(tnguard.absolute_output(a.out_root, WS))
     out_root = Path(a.out_root)
     if a.replay:
+        # a replay launches nothing (every game command answers from its run.json); it rewrites the
+        # analysis files and game-selftest.json beside the stored runs, so it runs on a scratch copy
+        # only, never on the runner's stored evidence itself (the gate copies the suite's run to a
+        # temporary folder first)
         evidence = tnguard.out_root(WS)
         try:
             in_evidence = out_root.resolve().is_relative_to(evidence.resolve())

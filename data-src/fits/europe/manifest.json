@@ -1,0 +1,28 @@
+{
+ "format": "tn-geo-manifest/1",
+ "tool": "tools/build_geo.py",
+ "emitter_version": 1,
+ "map": "europe",
+ "bodies": {
+  "geo": {
+   "terms": 8258,
+   "factors": 3936,
+   "row_groups": 1710,
+   "checkpoint": "data-src/fits/europe/model-8192-t1e.npz",
+   "checkpoint_sha256": "6147b5cda6b11c730905afcac68b21cd10b1801f56ad5e7f7d4611b5be134dd8",
+   "file": "terra-nauvis/prototypes/generated/geo_europe_v1.lua",
+   "sha256": "1d8f7f6d56fc47e9453f548798d5c6ef412cf1ac938e4994fd2a06e354e43c8f",
+   "bytes": 445901
+  },
+  "land_coarse": {
+   "terms": 256,
+   "factors": 208,
+   "row_groups": 88,
+   "checkpoint": "data-src/fits/europe/model-256.npz",
+   "checkpoint_sha256": "e2d2a2c5bb1191394e42bd0048f232e7b1dfdfb248e70110bbf14ef5dfb82b14",
+   "file": "terra-nauvis/prototypes/generated/land_coarse_europe_v1.lua",
+   "sha256": "0eb32742a20193a3db15ed9e32054095c00fdaf7516024ffe53b06acf0a175bd",
+   "bytes": 19251
+  }
+ }
+}

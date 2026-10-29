@@ -1,4 +1,20 @@
 #!/usr/bin/env python3
+"""The isolation fail-fast check, shared by the repo tools that launch the game through the local test
+harness (not part of this repository), and the path helpers they share. Every game run is isolated
+from the player's own profile, and a run that may have left its isolation stops every further run.
+
+  run_breach(out, result)      why a finished game run shows it may have left its instance, or None
+  absolute_output(path, base)  the absolute path a tool writes for `path`: a relative one joined to
+                               `base`, the folder the tool resolves it against (the working
+                               directory when omitted)
+  ws_root(), out_root(ws)      the test workspace and the runner's evidence tree in it
+
+the harness with its own instance, modset and new --out, and its RESULT line reads ok, isolated=yes
+and errors=0. A run that may have left its instance stops every further game run of its command at
+once. No repo tool refuses an output path for lying in the player's profile or a mods folder:
+development setup.
+
+It reads only paths and run records; it launches nothing and needs no game.
 """
 import json
 import os
@@ -18,6 +34,8 @@ def out_root(ws=None):
 
 def absolute_output(path, base=None):
     """The absolute path a tool writes for `path`: a relative one joined to `base` (the folder the
+    tool resolves it against; the working directory when omitted), '..' folded as Win32 folds it.
+    The harness runs with the workspace as its working directory, so tools hand it absolute paths only."""
     p = Path(os.fspath(path))
     if p.is_absolute():
         return Path(os.path.abspath(p))

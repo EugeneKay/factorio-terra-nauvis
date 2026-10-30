@@ -1,0 +1,20 @@
+{
+ "format": "tn-geo-manifest/1",
+ "tool": "tools/build_geo.py",
+ "emitter_version": 1,
+ "map": "olde_world",
+ "bodies": {
+  "geo": {
+  },
+  "land_coarse": {
+   "terms": 256,
+   "factors": 203,
+   "row_groups": 88,
+   "checkpoint": "data-src/fits/olde_world/model-256.npz",
+   "checkpoint_sha256": "c0d42bdc216603a5c99a1f50fb0720b39fda91e2b249d9df765d82b9fb31d9f5",
+   "file": "terra-nauvis/prototypes/generated/land_coarse_olde_world_v1.lua",
+   "sha256": "90ce43a098a931878e56b4815e674637e644175ace0a104f63fe4ade704d9031",
+   "bytes": 19429
+  }
+ }
+}

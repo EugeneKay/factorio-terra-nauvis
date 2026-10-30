@@ -8,13 +8,40 @@
 -- their default-slider values, so the slider moves nothing on the preset (config.lua's
 -- water_slider). From spawn-cities a version with a spawn record also bakes the distance redirect,
 -- the map's city number and the spawn lake and bias keys, and its city offset names name the city
+-- fold. From waterways a version that composes the waterways also sets the hook gate on and points
+-- the ford key at its map's ford set for the save's scale, and every version of a map a toggle lists
+-- bakes the toggle from its setting (the canals switch names a neutral body). A Map-type-only world
+-- keeps the gate's prototype (off), so it has no fords (ARCHITECTURE.md, "Map type entries"). A
+-- preset's geography version (its elevation entry, start mask, coarse field, city offset and tn_geo)
+-- is chosen in one place, geography() below, so climate-tiles can give Alien Biomes worlds a cheaper
+-- geography without touching base worlds.
 --
 -- A Map type pick sets only elevation, so every other per-save name a geography version's entry
 -- reads gets a prototype-level fallback valued as that version's preset bakes it under the current
 --
+-- A preset is not defined while a mod of its withheld_with list is loaded: from europe-coast to
+-- region-layer Alien Biomes' palms read elevation in the Entity program, so beside them a preset
+-- ships the palm switch and empties the lists. Its fallbacks stay defined, so the map's Map type
+--
+-- From climate-tiles each preset also redirects temperature, moisture and aux to the Earth climate,
+-- the Alien Biomes variant when alien-biomes is loaded and the fallback otherwise (climate.lua), and
+--
+-- From trees-forests each preset also bakes the great-forests gate from its setting (a toggle) and
+-- points the multiplier key at the region layer's multiplier; with Alien Biomes it points the restored
+-- vanilla trees', rocks', decals' and decoratives' keys at their bodies and each palm's probability key at
+-- its second version (trees.lua).
+--
+-- From ridges each preset also bakes the ridges toggle from its setting and points the cliff properties
+-- at the ridge bodies with the map's crest and openings keys; data-final-fixes.lua adds the ore keys,
+-- whose wrappers read other mods' final ore autoplace. The water frequency slider's two vanilla readers
+-- vanilla cliffs and ore (ARCHITECTURE.md, "Map type entries").
+--
+-- From resources-enemies each preset also bakes the hotspots toggle and, for a version with an
+-- offshore stamp, its map's stamp key (the stamp body with hotspots on, the neutral zero body off;
 local cfg = require("prototypes.config")
 
 local K = cfg.keys
+local AB = mods["alien-biomes"] ~= nil
 
 local function num(v)
   return string.format(cfg.number_format, v)
@@ -40,9 +67,107 @@ local function city_number(setting_key)
   error("the setting " .. s.name .. " holds " .. tostring(value) .. ", which config.lua does not list")
 end
 
+-- The climate and tile keys every Earth preset sets (climate-tiles), the same on every map and version.
+local function climate_names()
+  local TL = cfg.tiles
+  local out = {
+    temperature = variant.temperature,
+    moisture = variant.moisture,
+    aux = variant.aux,
+    [TL.marsh.water_shallow.key] = TL.marsh.water_shallow.body,
+  }
+  if AB then
+    for _, t in ipairs(TL.vanilla.tiles) do
+      out[TL.vanilla.keys[t]] = TL.vanilla.body
+    end
+    out[TL.exclude.key] = TL.exclude.body
+  else
+    out[TL.marsh.grass.key] = TL.marsh.grass.body
+  end
+  return out
+end
+
+-- The tree keys every Earth preset sets (trees-forests), the same on every map: the great-forests
+-- multiplier key names the region layer's multiplier (the gate is a toggle); with Alien Biomes each
+-- restored vanilla tree's, rock's, decal's and decorative's key names its Earth body, and each palm's
+-- probability key its second version, the boost around climate-tiles' copy.
+local function tree_names()
+  local TR = cfg.trees
+  local R = TR.restore
+  if AB then
+    for _, n in pairs(R.trees) do
+      out[n.p] = n.body
+      out[n.r] = R.richness
+    end
+    for _, n in pairs(R.rocks) do
+    end
+    for _, key in pairs(R.decoratives) do
+      out[key] = R.deco_body
+    end
+    for _, p in ipairs(TR.palm) do
+    end
+  end
+  return out
+end
+
+-- clearance its crest band through tn_band), so ridges are the only cliffs on every Terra Nauvis
+local function ridge_values(map_key)
+  if not (crest and openings and band) then
+    return {}
+  end
+end
+
+-- names the map's stamp body when the hotspots setting is on and the neutral zero body when it is off
+-- (min(e, 0) leaves water unchanged), so the stamp follows the hotspots toggle.
+local function stamp_values(map_key, v)
+  local key, body = v.fields, cfg.fields.names[map_key]
+  if not (key and body) then
+    return {}
+  end
+  local on = settings.startup[cfg.settings[cfg.toggles.hotspots.setting].name].value
+  return {[key] = on and body or cfg.neutral.zero}
+end
+
+    for _, t in ipairs(TL.vanilla.tiles) do
+-- left neutral (the game multiplies planet values by preset values, so a planet entry would scale the
+-- preset's). A control another mod removed is left out.
+local function controls()
+  local out = {}
+  for _, name in ipairs(cfg.resources.controls) do
+    if data.raw["autoplace-control"] and data.raw["autoplace-control"][name] then
+    end
+  end
+  return out
+end
+
+-- Each toggle's per-save value on a map: its on or off body by the toggle's startup setting, for the
+-- maps the toggle lists.
+local function toggle_values(map_key)
+  local out = {}
+  for _, key in ipairs(cfg.toggle_order) do
+    local t = cfg.toggles[key]
+    for _, m in ipairs(t.maps) do
+      if m == map_key then
+        local value = settings.startup[cfg.settings[t.setting].name].value
+        out[t.preset_key] = value and t.on or t.off
+      end
+    end
+  end
+  return out
+end
+
+      end
+    end
+  end
+  return out
+end
+
 -- The property_expression_names one geography version's preset bakes under the current startup
 -- settings (tools/tnconfig.py baked_names mirrors it). A version with a spawn record also bakes the
 -- distance redirect (vanilla's starting ore and enemy-free start follow the spawn through it),
+-- the map's city number and the spawn lake and bias the start mask reads. From climate-tiles every
+-- version also bakes the climate and tile keys (climate_names), from trees-forests the tree keys
+-- after them (tree_names: a palm's probability key names its second version), and from ridges the
 local function baked(map_key, v)
   local names = {
     [K.start_mask] = v.start_mask,
@@ -62,6 +187,24 @@ local function baked(map_key, v)
     names[sp.city] = city_number(sp.city_setting)
     names[K.spawn_lake] = sp.spawn_lake
     names[K.spawn_bias] = sp.spawn_bias
+  end
+  if ww then
+    names[K.on] = cfg.hooks.gate_on
+  end
+  for k, value in pairs(toggle_values(map_key)) do
+    names[k] = value
+  end
+  for k, value in pairs(climate_names()) do
+    names[k] = value
+  end
+  for k, value in pairs(tree_names()) do
+    names[k] = value
+  end
+  for k, value in pairs(ridge_values(map_key)) do
+    names[k] = value
+  end
+  for k, value in pairs(stamp_values(map_key, v)) do
+    names[k] = value
   end
   return names
 end

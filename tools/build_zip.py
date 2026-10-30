@@ -15,11 +15,32 @@ Windows checkout and on GitHub's windows-latest runner alike (the repo checks ou
 Stored entries keep the bytes independent of the zlib build, and the build record names the
 interpreter and zlib versions anyway. It needs no test harness, no workspace and no game.
 
+--release refuses while config.lua marks any placeholder name (the placeholder is never released)
+and when any Earth noise body config.lua defines, released or a firewall body, is missing from
+tests/frozen.json (the Map type fallbacks excepted: a registered body never changes or leaves). The
+region layer's every body counts: its row names come from config.lua's stems and suffix and the
+region table's row ids, composed by tools/tnconfig.py as regions.lua composes them. It finds the
+bodies statically, through the luaparser loader, because release.yml runs without the game; the
+gate's frozen row checks the dumped bodies themselves. --out-dir takes any folder, the game's own
+zip (and the .sha256 with --release).
+"""
+#!/usr/bin/env python3
+"""Package terra-nauvis/ into a byte-reproducible mod zip.
+
+The static gate's zip row checks it; ARCHITECTURE.md, "Build-time data flow", step 7.
 
   python tools/build_zip.py                    the zip under dist/ (installCheck and ci.yml)
   python tools/build_zip.py --release          the release zip plus its .sha256 (release.yml)
+  python tools/build_zip.py --check-tag v0.1.0 fail unless the tag is "v" plus info.json's version
 
 The zip holds one top folder, terra-nauvis/, with every file of the mod folder in sorted order,
+fixed timestamps, fixed attributes and no compression, so two builds give one sha256 on a local
+Windows checkout and on GitHub's windows-latest runner alike (the repo checks out LF everywhere).
+Stored entries keep the bytes independent of the zlib build, and the build record names the
+interpreter and zlib versions anyway.
+
+It reads only the checked-out tree: no git refs, no test harness, no workspace, no game.
+
 --release refuses while config.lua marks any placeholder name (the placeholder is never released),
 when a tests/frozen.json record breaks the tnfrozen contract (tools/tnfrozen.py: every field well
 formed, the dump label one the runner's slice registry assigns, read from tools/earth_test.py's
@@ -202,6 +223,15 @@ def release_problems(cfg, frozen_path=FROZEN, registry=None, mod_dir=MOD, suites
     placeholder name, any config.lua schema problem, a tests/frozen.json that breaks the tnfrozen
     record contract against the runner's slice registry (read statically from tools/earth_test.py,
     failing closed; a record whose dump label no registry entry assigns is never checked by the
+    gate), any Earth noise body config.lua defines (released bodies, the region table's composed row
+    names among them, and firewall bodies alike) that tests/frozen.json does not register, the Map
+    type fallbacks that mirror startup settings excepted (the one exemption: they are never
+    registered, while a frozen fallback is registered like every body; --release refuses any other
+    unregistered body), any body the mod's code builds (offline, tnlua) that differs
+    from its record or is unregistered, any registered name it no longer builds, any record a slice's
+    frozen snapshot holds that the registry moved, and anything an earlier release tag fixes that
+    moved. `cfg` loaded from a mod folder's config.lua reads that folder's region table
+    (tnconfig.Config.source)."""
     problems = []
     names, presets = placeholder_names(cfg)
     if names or presets:
@@ -220,6 +250,7 @@ def release_problems(cfg, frozen_path=FROZEN, registry=None, mod_dir=MOD, suites
     registered = frozen.get("bodies") if isinstance(frozen, dict) and isinstance(frozen.get("bodies"), dict) else {}
     try:
         exempt = set(tnconfig.exempt_fallback_names(cfg))
+        releases = tnconfig.release_of(cfg)
     except tnconfig.ConfigError as e:
         return problems + [f"config.lua schema: {e}"]
     for name in tnconfig.unregistered_names(cfg, registered):

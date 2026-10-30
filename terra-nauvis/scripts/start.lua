@@ -9,6 +9,10 @@
 --     exists.
 --   - With RSO active, the RSO warning, stored through guards.record_warning, which logs it
 --     once here and sends it to each created player (game.print in on_init reaches no player;
+--     engine places no cliffs at all, whatever the cliff expressions say, and the starting area is
+--     generated before on_init. So on an Earth world with ridges on, a size of 0 is written back as
+--     reset_size (config.lua ridges) with a whole-table assignment, once, logged in one line: the
+--     preview and the starting chunks keep none, and every chunk generated from then on gets its
 --
 local cfg = require("prototypes.config")
 local guards = require("scripts.guards")
@@ -44,6 +48,29 @@ local function intro(text)
     end
   end
   remote.call("freeplay", "set_custom_intro_message", {"", before, "\n\n", text})
+  return true
+end
+
+-- The cliff "none" reset; returns true when it wrote the control back.
+local function reset_cliffs(earth, surface)
+  local mgs = surface.map_gen_settings
+  local pen = mgs.property_expression_names or {}
+  local sw = cfg.toggles.ridges
+  if pen[sw.preset_key] ~= sw.on then
+    return false
+  end
+  local control = mgs.cliff_settings and mgs.cliff_settings.control
+  local controls = mgs.autoplace_controls or {}
+  local c = control and controls[control]
+  if not (c and c.size == 0) then
+    return false
+  end
+  c.size = cfg.ridges.reset_size
+  controls[control] = c
+  mgs.autoplace_controls = controls
+  surface.map_gen_settings = mgs
+  earth.cliff_reset = true
+  log(message("cliff_reset", control, cfg.ridges.reset_size))
   return true
 end
 

@@ -1,0 +1,9026 @@
+{
+ "format": "tn-waterways-manifest/1",
+ "tool": "tools/build_waterways.py",
+ "map": "atlantic",
+ "input": {
+  "file": "data-src/waterways/atlantic.json",
+ },
+ "coast_fit": {
+ },
+ "config": {
+  "basin_tiles": 30,
+  "bend": {
+   "window_tiles": 17,
+   "limit_degrees": 90
+  },
+  "dam": {
+   "floor_tiles": 1.5,
+   "per_scale": 0.5
+  },
+  "depth": {
+   "river": -2.2,
+   "strait": -6,
+   "canal": -2.2
+  },
+  "floor_tiles": 7,
+  "ford": {
+   "every_px": 60,
+   "bank_tiles": 3,
+  },
+  "km_per_px": 2.471,
+  "margin_tiles": 0.25,
+  "river_k": {
+   "major": 3,
+   "minor": 2
+  },
+  "slope": 4,
+  "smoothing": {
+   "windows": [1, 5, 9, 13, 17, 25, 33, 49, 65, 97],
+   "passes": 3,
+   "step_tiles": 1,
+   "fine_tolerance_tiles": 0.5,
+  },
+  "start": {
+   "clear_tiles": 12,
+   "radius_tiles": 150
+  },
+  "two_way_tiles": 11,
+  "version": 1,
+  "vertex_grid": 16
+ },
+ "scales": {
+  "1": {
+   "stats": {
+    "segments": {
+     "dam": 20
+    },
+    "classes": {
+    }
+   },
+   "cut": {
+    "rivers_carved": 32,
+    "rivers_listed": 32
+   },
+   "features": [
+    {
+     "kind": "river",
+     "id": "danube",
+     "name": "Danube",
+     "window_tiles": 33,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      },
+      {
+       "interval": 11,
+      },
+      {
+       "interval": 12,
+      },
+      {
+       "interval": 13,
+      },
+      {
+       "interval": 14,
+      },
+      {
+       "interval": 15,
+      },
+      {
+       "interval": 16,
+      },
+      {
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "dnieper",
+     "name": "Dnieper",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "rhine",
+     "name": "Rhine",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "vistula",
+     "name": "Vistula",
+     "window_tiles": 49,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "elbe",
+     "name": "Elbe",
+     "window_tiles": 33,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "loire",
+     "name": "Loire",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 5
+    },
+    {
+     "kind": "river",
+     "id": "daugava",
+     "name": "Daugava",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 5
+    },
+    {
+     "kind": "river",
+     "id": "oder",
+     "name": "Oder",
+     "window_tiles": 17,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 70.2,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+       "tangent": [-0.935948, -0.352139],
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "id": "tagus",
+     "name": "Tagus",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "id": "po",
+     "name": "Po",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "seine",
+     "name": "Seine",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 3
+    },
+    {
+     "kind": "river",
+     "id": "rhone",
+     "name": "Rhone",
+     "window_tiles": 17,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "ebro",
+     "name": "Ebro",
+     "window_tiles": 25,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "dniester",
+     "name": "Dniester",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "garonne",
+     "name": "Garonne",
+     "window_tiles": 25,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 49.5,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "weser",
+     "name": "Weser",
+     "window_tiles": 25,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+       "tangent": [-0.75881, -0.651312],
+      },
+      {
+       "interval": 1,
+       "tangent": [-0.779957, -0.625834],
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "douro",
+     "name": "Douro",
+     "segments": 4,
+     "window_tiles": 13,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "neman",
+     "name": "Neman",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "thames",
+     "name": "Thames",
+     "window_tiles": 13,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "guadalquivir",
+     "name": "Guadalquivir",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "don_lower",
+     "name": "Don (lower)",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "neva",
+     "name": "Neva",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "niger",
+     "name": "Niger",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 1,
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      },
+      {
+       "interval": 11,
+      },
+      {
+       "interval": 12,
+      },
+      {
+       "interval": 13,
+      },
+      {
+       "interval": 14,
+      },
+      {
+       "interval": 15,
+      },
+      {
+       "interval": 16,
+      },
+      {
+       "interval": 17,
+      },
+      {
+       "interval": 18,
+      },
+      {
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "mackenzie",
+     "name": "Mackenzie",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      },
+      },
+      {
+      }
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "mississippi",
+     "name": "Mississippi",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      },
+      {
+      },
+      {
+      },
+      },
+      },
+      },
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "congo",
+     "name": "Congo",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      },
+      {
+       "interval": 11,
+      },
+      {
+       "interval": 12,
+      },
+      {
+       "interval": 13,
+      },
+      },
+      },
+      },
+      },
+      {
+      },
+      {
+      }
+    },
+    {
+     "kind": "river",
+     "id": "nile",
+     "name": "Nile",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      },
+      {
+       "interval": 11,
+      },
+      {
+       "interval": 12,
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "zambezi",
+     "name": "Zambezi",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      {
+      {
+      },
+      {
+      },
+      {
+       "interval": 12,
+      },
+      {
+       "interval": 13,
+      },
+      {
+       "interval": 14,
+      },
+      {
+      }
+     ],
+     "fords_skipped": [
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+      }
+     ],
+    },
+    {
+     "kind": "river",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      {
+      },
+      {
+      },
+      {
+       "interval": 4,
+      },
+      },
+      {
+       "interval": 6,
+      },
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      },
+      {
+       "interval": 11,
+      },
+      {
+       "interval": 12,
+      },
+      {
+       "interval": 13,
+      },
+      },
+      },
+      },
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      }
+     ],
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "st_lawrence",
+     "name": "St. Lawrence",
+     "polyline_geo": [
+     ],
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+     ],
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "parana",
+     "name": "Parana",
+     "polyline_geo": [
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 6,
+      },
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      },
+      {
+       "interval": 11,
+      },
+      {
+       "interval": 12,
+      },
+      {
+       "interval": 13,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 15
+    },
+    {
+     "kind": "river",
+     "id": "orinoco",
+     "name": "Orinoco",
+     "polyline_geo": [
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      },
+      {
+       "interval": 6,
+      },
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 11
+    },
+    {
+     "kind": "strait",
+     "id": "gibraltar",
+     "name": "Strait of Gibraltar",
+     "hw_tiles": 5.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+    },
+    {
+     "kind": "strait",
+     "id": "bosporus",
+     "name": "Bosporus",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [1048.0, -1177.0], [1052.125, -1191.125], [1061.0, -1200.0]
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "dardanelles",
+     "name": "Dardanelles",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "basins": [
+      ],
+      "covered": true,
+      "required_basin": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "dover",
+     "name": "Strait of Dover",
+     "hw_tiles": 6.6775,
+     "segments": 3,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [-210.0, -1616.0], [-177.625, -1646.375], [-168.8125, -1647.1875], [-161.0, -1655.0]
+     ],
+     "length_tiles": 64.292,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 77.6,
+      "basins": [],
+      "covered": true
+    },
+    {
+     "kind": "strait",
+     "id": "oresund",
+     "name": "Oresund",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "great_belt",
+     "name": "Great Belt",
+     "hw_tiles": 5.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "two_way"
+    },
+    {
+     "kind": "strait",
+     "id": "little_belt",
+     "name": "Little Belt",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "basins": [
+      ],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "messina",
+     "name": "Strait of Messina",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "kerch",
+     "name": "Kerch Strait",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "canal",
+     "id": "kiel",
+     "name": "Kiel Canal",
+     "hw_tiles": 3.75,
+     "segments": 5,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "basins": [
+      ],
+      "covered": true
+     }
+    },
+    {
+     "kind": "canal",
+     "id": "corinth",
+     "name": "Corinth Canal",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     }
+    },
+    {
+     "kind": "canal",
+     "id": "suez",
+     "name": "Suez Canal",
+     "hw_tiles": 3.75,
+     "segments": 4,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [1198.0, -750.0], [1198.0, -715.0], [1201.0, -706.0], [1210.0, -699.0], [1209.0, -674.0]
+     ],
+     "length_tiles": 80.909,
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 88.1,
+      "basins": [],
+      "covered": true
+     }
+    },
+    {
+     "kind": "canal",
+     "id": "panama",
+     "name": "Panama Canal",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     }
+    },
+    {
+     "kind": "dam",
+     "id": "corinth",
+     "name": "Isthmus of Corinth",
+     "hw_tiles": 1.5,
+     "segments": 2,
+     "window_tiles": null,
+     "polyline_geo": [
+      [777.0, -1040.0], [776.0, -1042.0], [785.0, -1051.0]
+     ],
+     "length_tiles": 14.964,
+     "canal": "corinth"
+    },
+    {
+     "kind": "dam",
+     "id": "suez",
+     "name": "Isthmus of Suez",
+     "hw_tiles": 1.5,
+     "segments": 5,
+     "window_tiles": null,
+     "polyline_geo": [
+      [1180.0, -707.0], [1192.0, -695.0], [1204.0, -695.0], [1206.0, -693.0], [1216.0, -693.0],
+      [1230.0, -707.0]
+     ],
+     "length_tiles": 61.598,
+     "canal": "suez"
+    },
+    {
+     "kind": "dam",
+     "id": "panama",
+     "name": "Isthmus of Panama",
+     "hw_tiles": 1.5,
+     "segments": 13,
+     "window_tiles": null,
+     "polyline_geo": [
+      [-3873.0, 256.0], [-3866.0, 256.0], [-3862.0, 260.0], [-3847.0, 260.0], [-3844.0, 258.0],
+      [-3841.0, 258.0], [-3835.0, 252.0], [-3822.0, 252.0], [-3818.0, 248.0], [-3814.0, 246.0],
+      [-3807.0, 246.0], [-3806.0, 247.0], [-3806.0, 254.0], [-3810.0, 256.0]
+     ],
+     "length_tiles": 85.763,
+     "canal": "panama"
+    }
+   ],
+   "basins": [
+    {
+     "feature": "dardanelles",
+     "kind": "strait",
+     "depth": -6
+    },
+    {
+     "feature": "little_belt",
+     "kind": "strait",
+     "depth": -6
+    },
+    {
+     "feature": "kiel",
+     "kind": "canal",
+     "centre": [160.5, -1770.0],
+     "depth": -2.2
+    }
+   ],
+   "t1_mask": {
+    "thin_water_px": 421380,
+   },
+   "starts": {
+    "akka": {
+     "name": "Akka",
+     "spawn_geo": [-644, -662],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "aktobe": {
+     "name": "Aktobe",
+     "spawn_geo": [2356, -1662],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "albany": {
+     "name": "Albany",
+     "spawn_geo": [-3594, -1262],
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "st_lawrence",
+      }
+     ]
+    },
+    "bam": {
+     "name": "Bam",
+     "spawn_geo": [2356, -662],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "bamako": {
+     "name": "Bamako",
+     "spawn_geo": [-644, 88],
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "niger",
+      }
+     ]
+    },
+    "bangkok": {
+     "name": "Bangkok",
+     "spawn_geo": [4256, -62],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "boise": {
+     "name": "Boise",
+     "spawn_geo": [-5444, -1262],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "chengdu": {
+     "name": "Chengdu",
+     "spawn_geo": [4356, -662],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "cordoba": {
+     "name": "Cordoba",
+     "spawn_geo": [-3144, 1938],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "dangila": {
+     "name": "Dangila",
+     "spawn_geo": [1356, 88],
+     "move": [0, 0],
+    },
+    "delhi": {
+     "name": "Delhi",
+     "spawn_geo": [3356, -662],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "el-paso": {
+     "name": "El Paso",
+     "spawn_geo": [-5144, -862],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "ellesmere-island": {
+     "name": "Ellesmere Island",
+     "spawn_geo": [-3944, -2862],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "fort-liard": {
+     "name": "Fort Liard",
+     "spawn_geo": [-6044, -2262],
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "mackenzie",
+      }
+     ]
+    },
+    "griffith": {
+     "name": "Griffith",
+     "spawn_geo": [6356, 1938],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hampi": {
+     "name": "Hampi",
+     "spawn_geo": [3156, -62],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hearst": {
+     "name": "Hearst",
+     "spawn_geo": [-3944, -1662],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "huambo": {
+     "name": "Huambo",
+     "spawn_geo": [506, 938],
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "congo",
+      }
+     ]
+    },
+    "hughes": {
+     "name": "Hughes",
+     "spawn_geo": [-7244, -2262],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "iquitos": {
+     "name": "Iquitos",
+     "spawn_geo": [-3444, 738],
+     "move": [0, 0],
+    },
+    "johannesburg": {
+     "name": "Johannesburg",
+     "spawn_geo": [956, 1738],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "kharkiv": {
+     "name": "Kharkiv",
+     "spawn_geo": [1356, -1662],
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "dnieper",
+      }
+     ]
+    },
+    "kovdor": {
+     "name": "Kovdor",
+     "spawn_geo": [1056, -2262],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "london": {
+     "name": "London",
+     "spawn_geo": [-244, -1662],
+     "corridors": [
+      ["dover", 50.13]
+     ],
+     "banks": [
+      {
+       "corridor": "seine",
+      },
+      {
+       "corridor": "thames",
+      },
+      {
+       "corridor": "dover",
+       "nx": -0.684222,
+       "ny": -0.729274,
+      }
+     ]
+    },
+    "madrid": {
+     "name": "Madrid",
+     "spawn_geo": [-444, -1162],
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "tagus",
+      },
+      {
+       "corridor": "ebro",
+       "distance_tiles": 118.34
+      },
+      {
+       "corridor": "douro",
+       "distance_tiles": 84.06
+      },
+      {
+       "corridor": "guadalquivir",
+       "distance_tiles": 122.02
+      }
+     ]
+    },
+    "mexico-city": {
+     "name": "Mexico City",
+     "spawn_geo": [-4744, -262],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "mid-baffin": {
+     "name": "Mid Baffin",
+     "spawn_geo": [-3544, -2462],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "minneapolis": {
+     "name": "Minneapolis",
+     "spawn_geo": [-4494, -1262],
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "mississippi",
+      }
+     ]
+    },
+    "mongo": {
+     "name": "Mongo",
+     "spawn_geo": [356, 88],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "montgomery": {
+     "name": "Montgomery",
+     "spawn_geo": [-4044, -862],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "moron": {
+     "name": "Moron",
+     "spawn_geo": [4356, -1662],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "munguy": {
+     "name": "Munguy",
+     "spawn_geo": [3356, -2262],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "nanchang": {
+     "name": "Nanchang",
+     "spawn_geo": [4956, -662],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "newman": {
+     "name": "Newman",
+     "spawn_geo": [5056, 1738],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "okak": {
+     "name": "Okak",
+     "spawn_geo": [-3144, -1912],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "palmas": {
+     "name": "Palmas",
+     "spawn_geo": [-2344, 1038],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "prague": {
+     "name": "Prague",
+     "spawn_geo": [356, -1662],
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "danube",
+      },
+      {
+       "corridor": "elbe",
+      },
+      {
+       "corridor": "oder",
+       "nx": -0.896218,
+       "ny": 0.443613,
+       "c": 56.801,
+       "distance_tiles": 56.8
+      }
+     ]
+    },
+    "qaanaaq": {
+     "name": "Qaanaaq",
+     "spawn_geo": [-2744, -2862],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "saskatoon": {
+     "name": "Saskatoon",
+     "spawn_geo": [-5044, -1712],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "semey": {
+     "name": "Semey",
+     "spawn_geo": [3356, -1662],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "songea": {
+     "name": "Songea",
+     "spawn_geo": [1356, 938],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "songling": {
+     "name": "Songling",
+     "spawn_geo": [5356, -1662],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "summit-camp": {
+     "name": "Summit Camp",
+     "spawn_geo": [-2244, -2362],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "tabuk": {
+     "name": "Tabuk",
+     "spawn_geo": [1356, -662],
+     "corridors": [
+      ["suez", 143.74]
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "suez",
+       "nx": 0.999201,
+       "ny": 0.039968,
+       "c": 147.362,
+       "distance_tiles": 147.49
+      }
+     ]
+    },
+    "uranienborg": {
+     "name": "Uranienborg",
+     "spawn_geo": [-1544, -2862],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "waddan": {
+     "name": "Waddan",
+     "spawn_geo": [356, -662],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "xeta": {
+     "name": "Xeta",
+     "spawn_geo": [4356, -2662],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "yakutia": {
+     "name": "Yakutia",
+     "spawn_geo": [5356, -2262],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "yellowknife": {
+     "name": "Yellowknife",
+     "spawn_geo": [-4944, -2312],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "zyryanka": {
+     "name": "Zyryanka",
+     "spawn_geo": [6356, -2262],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    }
+   }
+  },
+  "2": {
+   "stats": {
+    "segments": {
+     "dam": 20
+    },
+    "classes": {
+    }
+   },
+   "cut": {
+    "rivers_listed": 32
+   },
+   "features": [
+    {
+     "kind": "river",
+     "id": "danube",
+     "name": "Danube",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      },
+      {
+       "interval": 11,
+      },
+      {
+       "interval": 12,
+      },
+      {
+       "interval": 13,
+      },
+      {
+       "interval": 14,
+      },
+      {
+       "interval": 15,
+      },
+      {
+       "interval": 16,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "dnieper",
+     "name": "Dnieper",
+     "window_tiles": 25,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      }
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "rhine",
+     "name": "Rhine",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "vistula",
+     "name": "Vistula",
+     "window_tiles": 65,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "elbe",
+     "name": "Elbe",
+     "window_tiles": 33,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "loire",
+     "name": "Loire",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 5
+    },
+    {
+     "kind": "river",
+     "id": "daugava",
+     "name": "Daugava",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 5
+    },
+    {
+     "kind": "river",
+     "id": "oder",
+     "name": "Oder",
+     "window_tiles": 33,
+     "polyline_geo": [
+      [1101.0, -3239.0], [1018.0625, -3280.125], [980.5, -3292.3125], [960.3125, -3318.9375],
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+       "tangent": [-0.895908, -0.444241],
+      },
+      {
+       "interval": 1,
+       "tangent": [-0.937931, -0.346823],
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "id": "tagus",
+     "name": "Tagus",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "id": "po",
+     "name": "Po",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "id": "seine",
+     "name": "Seine",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 3
+    },
+    {
+     "kind": "river",
+     "id": "rhone",
+     "name": "Rhone",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "ebro",
+     "name": "Ebro",
+     "window_tiles": 25,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 3
+    },
+    {
+     "kind": "river",
+     "id": "dniester",
+     "name": "Dniester",
+     "segments": 7,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "garonne",
+     "name": "Garonne",
+     "window_tiles": 49,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "weser",
+     "name": "Weser",
+     "window_tiles": 49,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "douro",
+     "name": "Douro",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "neman",
+     "name": "Neman",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "thames",
+     "name": "Thames",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "guadalquivir",
+     "name": "Guadalquivir",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "don_lower",
+     "name": "Don (lower)",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "neva",
+     "name": "Neva",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "niger",
+     "name": "Niger",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      },
+      {
+       "interval": 11,
+      },
+      {
+       "interval": 12,
+      },
+      {
+       "interval": 13,
+      },
+      {
+       "interval": 14,
+      },
+      {
+       "interval": 15,
+      },
+      {
+       "interval": 16,
+      },
+      {
+       "interval": 17,
+      },
+      {
+       "interval": 18,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "mackenzie",
+     "name": "Mackenzie",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+    },
+    {
+     "kind": "river",
+     "id": "mississippi",
+     "name": "Mississippi",
+     "depth": -2.2,
+     "bend": {
+      "violations": 1,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "congo",
+     "name": "Congo",
+     "polyline_geo": [
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "nile",
+     "name": "Nile",
+     "polyline_geo": [
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "zambezi",
+     "name": "Zambezi",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     ],
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+    },
+    {
+     "kind": "river",
+     "id": "amazon",
+     "name": "Amazon",
+     "polyline_geo": [
+      "covered": true
+     },
+     "class": "major",
+     ],
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+    },
+    {
+     "kind": "river",
+     "id": "st_lawrence",
+     "name": "St. Lawrence",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      {
+      }
+     ],
+      {
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+      }
+    },
+    {
+     "kind": "river",
+     "id": "parana",
+     "name": "Parana",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      {
+      },
+      {
+      }
+     ],
+      {
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+      }
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "orinoco",
+     "name": "Orinoco",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      {
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "strait",
+     "id": "gibraltar",
+     "name": "Strait of Gibraltar",
+     "hw_tiles": 5.7871,
+     "segments": 4,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [-1077.0, -1913.0], [-1009.1875, -1913.0], [-990.8125, -1915.1875], [-978.4375, -1927.0],
+      [-951.0, -1927.0]
+     ],
+     "length_tiles": 130.863,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+    },
+    {
+     "kind": "strait",
+     "id": "bosporus",
+     "name": "Bosporus",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "dardanelles",
+     "name": "Dardanelles",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [
+       [1899.0, -2315.0]
+      ],
+      "covered": true,
+      "required_basin": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "dover",
+     "name": "Strait of Dover",
+     "hw_tiles": 13.3549,
+     "segments": 3,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [-419.0, -3231.0], [-353.5, -3292.5], [-336.6875, -3293.3125], [-321.0, -3309.0]
+     ],
+     "length_tiles": 128.865,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 82.7,
+      "covered": true
+     },
+    },
+    {
+     "kind": "strait",
+     "id": "oresund",
+     "name": "Oresund",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "covered": true
+     },
+    },
+    {
+     "kind": "strait",
+     "id": "great_belt",
+     "name": "Great Belt",
+     "hw_tiles": 6.4751,
+     "segments": 2,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [481.0, -3709.0], [479.0, -3643.6875], [485.0, -3637.0]
+     ],
+     "length_tiles": 74.328,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+    },
+    {
+     "kind": "strait",
+     "id": "little_belt",
+     "name": "Little Belt",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [403.0, -3691.0], [394.9375, -3690.9375], [379.125, -3675.125], [365.0, -3675.0], [365.125, -3658.875],
+      [403.0, -3605.0]
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 2,
+      "worst_deg": 134.4,
+      "basins": [
+       [372.0625, -3675.0625], [365.0625, -3666.9375]
+      ],
+      "covered": true
+     },
+    },
+    {
+     "kind": "strait",
+     "id": "messina",
+     "name": "Strait of Messina",
+     "hw_tiles": 3.75,
+     "segments": 5,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [889.0, -2133.0], [896.75, -2127.25], [897.0, -2117.1875], [892.75, -2100.75], [885.1875, -2097.0],
+      [885.0, -2085.0]
+     ],
+     "length_tiles": 57.136,
+     "depth": -6,
+     "bend": {
+      "violations": 1,
+      "worst_deg": 111.9,
+      "basins": [
+       [889.0, -2098.875]
+      ],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "kerch",
+     "name": "Kerch Strait",
+     "hw_tiles": 3.75,
+     "segments": 4,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [2793.0, -2775.0], [2788.625, -2756.625], [2777.0, -2744.375], [2775.0625, -2727.0625],
+      [2781.0, -2727.0]
+     ],
+     "length_tiles": 59.135,
+     "depth": -6,
+     "bend": {
+      "violations": 1,
+      "worst_deg": 95.8,
+      "basins": [
+       [2775.0625, -2727.0625]
+      ],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "canal",
+     "id": "kiel",
+     "name": "Kiel Canal",
+     "hw_tiles": 3.75,
+     "polyline_geo": [
+      [277.0, -3537.0], [287.0, -3537.0], [296.9375, -3527.0625], [313.0, -3527.0], [325.0, -3537.0],
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+    },
+    {
+     "kind": "canal",
+     "id": "corinth",
+     "name": "Corinth Canal",
+     "hw_tiles": 3.75,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+    },
+    {
+     "kind": "canal",
+     "id": "suez",
+     "name": "Suez Canal",
+     "hw_tiles": 3.75,
+     "polyline_geo": [
+      [2397.0, -1499.0], [2401.0, -1441.0], [2397.0, -1429.0], [2403.0, -1411.0], [2421.0, -1397.0],
+      [2423.0, -1375.0], [2419.0, -1347.0]
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+    },
+    {
+     "kind": "canal",
+     "id": "panama",
+     "name": "Panama Canal",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+    },
+    {
+     "kind": "dam",
+     "id": "corinth",
+     "name": "Isthmus of Corinth",
+     "hw_tiles": 1.5,
+     "polyline_geo": [
+      [1555.0, -2079.0], [1553.0, -2083.0], [1571.0, -2101.0]
+     ],
+     "length_tiles": 29.928,
+     "canal": "corinth"
+    },
+    {
+     "kind": "dam",
+     "id": "suez",
+     "name": "Isthmus of Suez",
+     "hw_tiles": 1.5,
+     "segments": 5,
+     "window_tiles": null,
+     "polyline_geo": [
+      [2361.0, -1413.0], [2385.0, -1389.0], [2409.0, -1389.0], [2413.0, -1385.0], [2433.0, -1385.0],
+      [2461.0, -1413.0]
+     ],
+     "length_tiles": 123.196,
+     "canal": "suez"
+    },
+    {
+     "kind": "dam",
+     "id": "panama",
+     "name": "Isthmus of Panama",
+     "hw_tiles": 1.5,
+     "segments": 13,
+     "window_tiles": null,
+     "polyline_geo": [
+      [-7745.0, 513.0], [-7731.0, 513.0], [-7723.0, 521.0], [-7693.0, 521.0], [-7687.0, 517.0],
+      [-7681.0, 517.0], [-7669.0, 505.0], [-7643.0, 505.0], [-7635.0, 497.0], [-7627.0, 493.0],
+      [-7613.0, 493.0], [-7611.0, 495.0], [-7611.0, 509.0], [-7619.0, 513.0]
+     ],
+     "length_tiles": 171.526,
+     "canal": "panama"
+    }
+   ],
+   "basins": [
+    {
+     "feature": "dardanelles",
+     "kind": "strait",
+     "centre": [1899.0, -2315.0],
+     "depth": -6
+    },
+    {
+     "feature": "little_belt",
+     "kind": "strait",
+     "centre": [372.0625, -3675.0625],
+     "depth": -6
+    },
+    {
+     "feature": "little_belt",
+     "kind": "strait",
+     "centre": [365.0625, -3666.9375],
+     "depth": -6
+    },
+    {
+     "feature": "messina",
+     "kind": "strait",
+     "centre": [889.0, -2098.875],
+     "depth": -6
+    },
+    {
+     "feature": "kerch",
+     "kind": "strait",
+     "centre": [2775.0625, -2727.0625],
+     "depth": -6
+    }
+   ],
+    },
+    {
+    },
+    {
+    },
+    {
+    },
+    {
+    },
+    {
+    },
+    {
+    },
+    {
+    },
+    {
+   },
+   "starts": {
+    "akka": {
+     "name": "Akka",
+     "spawn_geo": [-1287, -1323],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "aktobe": {
+     "name": "Aktobe",
+     "spawn_geo": [4713, -3323],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "albany": {
+     "name": "Albany",
+     "spawn_geo": [-7187, -2523],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "bam": {
+     "name": "Bam",
+     "spawn_geo": [4713, -1323],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "bamako": {
+     "name": "Bamako",
+     "spawn_geo": [-1287, 177],
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "niger",
+    },
+    "bangkok": {
+     "name": "Bangkok",
+     "spawn_geo": [8513, -123],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "boise": {
+     "name": "Boise",
+     "spawn_geo": [-10887, -2523],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "chengdu": {
+     "name": "Chengdu",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "cordoba": {
+     "name": "Cordoba",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "dangila": {
+     "name": "Dangila",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "delhi": {
+     "name": "Delhi",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "el-paso": {
+     "name": "El Paso",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "ellesmere-island": {
+     "name": "Ellesmere Island",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "fort-liard": {
+     "name": "Fort Liard",
+     "spawn_geo": [-12087, -4523],
+     "corridors": [
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "mackenzie",
+    },
+    "griffith": {
+     "name": "Griffith",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hampi": {
+     "name": "Hampi",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hearst": {
+     "name": "Hearst",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "huambo": {
+     "name": "Huambo",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hughes": {
+     "name": "Hughes",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "iquitos": {
+     "name": "Iquitos",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "johannesburg": {
+     "name": "Johannesburg",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "kharkiv": {
+     "name": "Kharkiv",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "kovdor": {
+     "name": "Kovdor",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "london": {
+     "name": "London",
+     "corridors": [
+     ],
+     "banks": [
+      {
+       "corridor": "thames",
+      }
+     ]
+    },
+    "madrid": {
+     "name": "Madrid",
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "tagus",
+      }
+     ]
+    },
+    "mexico-city": {
+     "name": "Mexico City",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "mid-baffin": {
+     "name": "Mid Baffin",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "minneapolis": {
+     "name": "Minneapolis",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "mongo": {
+     "name": "Mongo",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "montgomery": {
+     "name": "Montgomery",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "moron": {
+     "name": "Moron",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "munguy": {
+     "name": "Munguy",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "nanchang": {
+     "name": "Nanchang",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "newman": {
+     "name": "Newman",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "okak": {
+     "name": "Okak",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "palmas": {
+     "name": "Palmas",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "prague": {
+     "name": "Prague",
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "elbe",
+      }
+     ]
+    },
+    "qaanaaq": {
+     "name": "Qaanaaq",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "saskatoon": {
+     "name": "Saskatoon",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "semey": {
+     "name": "Semey",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "songea": {
+     "name": "Songea",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "songling": {
+     "name": "Songling",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "summit-camp": {
+     "name": "Summit Camp",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "tabuk": {
+     "name": "Tabuk",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "uranienborg": {
+     "name": "Uranienborg",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "waddan": {
+     "name": "Waddan",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "xeta": {
+     "name": "Xeta",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "yakutia": {
+     "name": "Yakutia",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "yellowknife": {
+     "name": "Yellowknife",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "zyryanka": {
+     "name": "Zyryanka",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    }
+   }
+  },
+   "stats": {
+    "segments": {
+     "dam": 20
+    },
+    "classes": {
+    }
+   },
+   "cut": {
+    "rivers_listed": 32
+   },
+   "features": [
+    {
+     "kind": "river",
+     "id": "danube",
+     "name": "Danube",
+     "hw_tiles": 4.5,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 9,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      },
+      {
+       "interval": 11,
+      },
+      {
+       "interval": 12,
+      },
+      {
+       "interval": 13,
+      },
+      {
+       "interval": 14,
+      },
+      {
+       "interval": 15,
+      },
+      {
+       "interval": 16,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "dnieper",
+     "name": "Dnieper",
+     "hw_tiles": 4.5,
+     "window_tiles": 49,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 9,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+    },
+    {
+     "kind": "river",
+     "id": "rhine",
+     "name": "Rhine",
+     "hw_tiles": 4.5,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 9,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+    },
+    {
+     "kind": "river",
+     "id": "vistula",
+     "name": "Vistula",
+     "hw_tiles": 4.5,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 9,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "elbe",
+     "name": "Elbe",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "loire",
+     "name": "Loire",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 5
+    },
+    {
+     "kind": "river",
+     "id": "daugava",
+     "name": "Daugava",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 5
+    },
+    {
+     "kind": "river",
+     "id": "oder",
+     "name": "Oder",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "id": "tagus",
+     "name": "Tagus",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "id": "po",
+     "name": "Po",
+     "segments": 11,
+     "window_tiles": 49,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "id": "seine",
+     "name": "Seine",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 3
+    },
+    {
+     "kind": "river",
+     "id": "rhone",
+     "name": "Rhone",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "ebro",
+     "name": "Ebro",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 3
+    },
+    {
+     "kind": "river",
+     "id": "dniester",
+     "name": "Dniester",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "garonne",
+     "name": "Garonne",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "weser",
+     "name": "Weser",
+     "window_tiles": 49,
+     "polyline_geo": [
+      [364.0, -5267.0]
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "douro",
+     "name": "Douro",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "neman",
+     "name": "Neman",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "thames",
+     "name": "Thames",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "guadalquivir",
+     "name": "Guadalquivir",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "don_lower",
+     "name": "Don (lower)",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "neva",
+     "name": "Neva",
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "niger",
+     "name": "Niger",
+     "hw_tiles": 4.5,
+     "polyline_geo": [
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "mackenzie",
+     "name": "Mackenzie",
+     "hw_tiles": 4.5,
+     "polyline_geo": [
+     "bend": {
+      "violations": 1,
+      "worst_deg": 96.2,
+      "basins": [],
+      "covered": true
+     },
+      "basins": [],
+      "covered": true
+     },
+    },
+    {
+     "kind": "river",
+     "id": "congo",
+     "name": "Congo",
+     "polyline_geo": [
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "nile",
+     "name": "Nile",
+     "hw_tiles": 4.5,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 1,
+      "basins": [],
+      "covered": true
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "zambezi",
+     "name": "Zambezi",
+     "hw_tiles": 4.5,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "window_tiles": 49,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "window_tiles": 49,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "window_tiles": 49,
+     "polyline_geo": [
+     "bend": {
+      "violations": 0,
+      "worst_deg": 44.9,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 11
+    },
+    {
+     "kind": "strait",
+     "id": "gibraltar",
+     "name": "Strait of Gibraltar",
+     "hw_tiles": 8.6807,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [-1616.0, -2870.0], [-1486.9375, -2873.0625], [-1469.125, -2890.875], [-1427.0, -2891.0]
+     ],
+     "length_tiles": 196.415,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 44.8,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "two_way"
+    },
+    {
+     "kind": "strait",
+     "id": "bosporus",
+     "name": "Bosporus",
+     "hw_tiles": 3.75,
+     "segments": 2,
+     "window_tiles": 1,
+     "polyline_geo": [
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "dardanelles",
+     "name": "Dardanelles",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+      ],
+      "covered": true,
+      "required_basin": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "dover",
+     "name": "Strait of Dover",
+     "hw_tiles": 20.0324,
+     "window_tiles": 1,
+     "polyline_geo": [
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "two_way"
+    },
+    {
+     "kind": "strait",
+     "id": "oresund",
+     "name": "Oresund",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "great_belt",
+     "name": "Great Belt",
+     "hw_tiles": 9.7127,
+     "segments": 2,
+     "window_tiles": 1,
+     "polyline_geo": [
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "two_way"
+    },
+    {
+     "kind": "strait",
+     "id": "little_belt",
+     "name": "Little Belt",
+     "hw_tiles": 3.75,
+     "segments": 5,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [604.0, -5537.0], [591.875, -5536.875], [568.1875, -5513.1875], [547.0, -5513.0], [547.0625, -5488.9375],
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "messina",
+     "name": "Strait of Messina",
+     "hw_tiles": 3.75,
+     "segments": 5,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [1333.0, -3200.0], [1345.0, -3190.625], [1345.0, -3176.5], [1338.8125, -3151.8125], [1327.125, -3146.0],
+      [1327.0, -3128.0]
+     ],
+     "length_tiles": 85.858,
+     "depth": -6,
+     "bend": {
+      "violations": 1,
+      "worst_deg": 112.6,
+      "basins": [
+       [1333.0, -3148.875]
+      ],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "kerch",
+     "name": "Kerch Strait",
+     "hw_tiles": 3.75,
+     "segments": 4,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [4189.0, -4163.0], [4182.5625, -4135.5625], [4165.0, -4117.8125], [4162.0, -4091.0], [4171.0, -4091.0]
+     ],
+     "length_tiles": 89.132,
+     "depth": -6,
+     "bend": {
+      "violations": 1,
+      "worst_deg": 96.4,
+      "basins": [
+      ],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "canal",
+     "id": "kiel",
+     "name": "Kiel Canal",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [496.0, -5327.0], [529.0, -5336.0], [535.0, -5345.0], [556.0, -5357.0], [577.0, -5354.0],
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "covered": true
+     }
+    },
+    {
+     "kind": "canal",
+     "id": "corinth",
+     "name": "Corinth Canal",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [2364.875, -3134.0], [2377.0, -3122.0]
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+    {
+     "kind": "canal",
+     "id": "suez",
+     "name": "Suez Canal",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [3595.0, -2249.0], [3601.0, -2162.0], [3598.0, -2162.0], [3595.0, -2144.0], [3604.0, -2117.0],
+      [3631.0, -2096.0], [3634.0, -2063.0], [3628.0, -2021.0]
+     ],
+     "length_tiles": 246.683,
+     "depth": -2.2,
+     "bend": {
+      "violations": 2,
+      "worst_deg": 174.5,
+      "basins": [
+       [3601.0, -2162.0]
+      ],
+      "covered": true
+     }
+    },
+    {
+     "kind": "canal",
+     "id": "panama",
+     "name": "Panama Canal",
+     "hw_tiles": 3.75,
+     "segments": 4,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [-11555.0, 703.0], [-11555.0, 730.0], [-11549.0, 742.0], [-11528.0, 751.0], [-11492.0, 793.0]
+     ],
+     "length_tiles": 118.581,
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     }
+    },
+    {
+     "kind": "dam",
+     "id": "corinth",
+     "name": "Isthmus of Corinth",
+     "hw_tiles": 1.5,
+     "segments": 2,
+     "window_tiles": null,
+     "polyline_geo": [
+      [2332.0, -3119.0], [2329.0, -3125.0], [2356.0, -3152.0]
+     ],
+     "length_tiles": 44.892,
+     "canal": "corinth"
+    },
+    {
+     "kind": "dam",
+     "id": "suez",
+     "name": "Isthmus of Suez",
+     "hw_tiles": 1.5,
+     "segments": 5,
+     "window_tiles": null,
+     "polyline_geo": [
+      [3541.0, -2120.0], [3577.0, -2084.0], [3613.0, -2084.0], [3619.0, -2078.0], [3649.0, -2078.0],
+      [3691.0, -2120.0]
+     ],
+     "length_tiles": 184.794,
+     "canal": "suez"
+    },
+    {
+     "kind": "dam",
+     "id": "panama",
+     "name": "Isthmus of Panama",
+     "hw_tiles": 1.5,
+     "segments": 13,
+     "window_tiles": null,
+     "polyline_geo": [
+      [-11618.0, 769.0], [-11597.0, 769.0], [-11585.0, 781.0], [-11540.0, 781.0], [-11531.0, 775.0],
+      [-11522.0, 775.0], [-11504.0, 757.0], [-11465.0, 757.0], [-11453.0, 745.0], [-11441.0, 739.0],
+      [-11420.0, 739.0], [-11417.0, 742.0], [-11417.0, 763.0], [-11429.0, 769.0]
+     ],
+     "length_tiles": 257.289,
+     "canal": "panama"
+    }
+   ],
+   "basins": [
+    {
+     "feature": "dardanelles",
+     "kind": "strait",
+     "depth": -6
+    },
+    {
+     "feature": "kerch",
+     "kind": "strait",
+     "centre": [4162.0, -4091.0],
+     "depth": -6
+    },
+    {
+     "feature": "suez",
+     "kind": "canal",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "aktobe": {
+     "name": "Aktobe",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "albany": {
+     "name": "Albany",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "bam": {
+     "name": "Bam",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "bamako": {
+     "name": "Bamako",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "boise": {
+     "name": "Boise",
+     "spawn_geo": [-16331, -3785],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "chengdu": {
+     "name": "Chengdu",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "cordoba": {
+     "name": "Cordoba",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "dangila": {
+     "name": "Dangila",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "delhi": {
+     "name": "Delhi",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "el-paso": {
+     "name": "El Paso",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "ellesmere-island": {
+     "name": "Ellesmere Island",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "fort-liard": {
+     "name": "Fort Liard",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hampi": {
+     "name": "Hampi",
+     "spawn_geo": [9469, -185],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hearst": {
+     "name": "Hearst",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "huambo": {
+     "name": "Huambo",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hughes": {
+     "name": "Hughes",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "iquitos": {
+     "name": "Iquitos",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "johannesburg": {
+     "name": "Johannesburg",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "kharkiv": {
+     "name": "Kharkiv",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "kovdor": {
+     "name": "Kovdor",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "london": {
+     "name": "London",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "mid-baffin": {
+     "name": "Mid Baffin",
+     "spawn_geo": [-10631, -7385],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "minneapolis": {
+     "name": "Minneapolis",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "mongo": {
+     "name": "Mongo",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "montgomery": {
+     "name": "Montgomery",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "moron": {
+     "name": "Moron",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "munguy": {
+     "name": "Munguy",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "nanchang": {
+     "name": "Nanchang",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "newman": {
+     "name": "Newman",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "okak": {
+     "name": "Okak",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "palmas": {
+     "name": "Palmas",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "prague": {
+     "name": "Prague",
+     "spawn_geo": [1069, -4985],
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "elbe",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "saskatoon": {
+     "name": "Saskatoon",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "semey": {
+     "name": "Semey",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "songea": {
+     "name": "Songea",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "songling": {
+     "name": "Songling",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "summit-camp": {
+     "name": "Summit Camp",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "tabuk": {
+     "name": "Tabuk",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "uranienborg": {
+     "name": "Uranienborg",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "waddan": {
+     "name": "Waddan",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "xeta": {
+     "name": "Xeta",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "yakutia": {
+     "name": "Yakutia",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "yellowknife": {
+     "name": "Yellowknife",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "zyryanka": {
+     "name": "Zyryanka",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    }
+   }
+  },
+    "rivers_carved": 32,
+    "rivers_listed": 32
+   },
+   "features": [
+    {
+     "kind": "river",
+     "id": "danube",
+     "name": "Danube",
+      "covered": true
+     },
+     "class": "major",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 19
+    },
+    {
+     "kind": "river",
+     "id": "dnieper",
+     "name": "Dnieper",
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "covered": true
+     },
+     "class": "major",
+    },
+    {
+     "kind": "river",
+     "id": "rhine",
+     "name": "Rhine",
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+    },
+    {
+     "kind": "river",
+     "id": "vistula",
+     "name": "Vistula",
+     "hw_tiles": 6.0,
+     "window_tiles": 49,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+    },
+    {
+     "kind": "river",
+     "id": "elbe",
+     "name": "Elbe",
+     "hw_tiles": 4.0,
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 6
+    },
+    {
+     "kind": "river",
+     "id": "loire",
+     "name": "Loire",
+     "hw_tiles": 4.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 5
+    },
+    {
+     "kind": "river",
+     "id": "daugava",
+     "name": "Daugava",
+     "hw_tiles": 4.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 5
+    },
+    {
+     "kind": "river",
+     "hw_tiles": 4.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "id": "tagus",
+     "name": "Tagus",
+     "hw_tiles": 4.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 3
+    },
+    {
+     "kind": "river",
+     "id": "rhone",
+     "name": "Rhone",
+     "hw_tiles": 4.0,
+     "window_tiles": 49,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 3
+    },
+    {
+     "kind": "river",
+     "id": "dniester",
+     "name": "Dniester",
+     "hw_tiles": 4.0,
+     "window_tiles": 49,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "garonne",
+     "name": "Garonne",
+     "hw_tiles": 4.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "hw_tiles": 4.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "douro",
+     "name": "Douro",
+     "hw_tiles": 4.0,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "neman",
+     "name": "Neman",
+     "hw_tiles": 4.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "thames",
+     "name": "Thames",
+     "hw_tiles": 4.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "guadalquivir",
+     "name": "Guadalquivir",
+     "hw_tiles": 4.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "don_lower",
+     "name": "Don (lower)",
+     "hw_tiles": 4.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "neva",
+     "name": "Neva",
+     "hw_tiles": 4.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "hw_tiles": 6.0,
+     "window_tiles": 49,
+     "polyline_geo": [
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+    },
+    {
+     "kind": "river",
+     "id": "mississippi",
+     "name": "Mississippi",
+     "window_tiles": 17,
+     "polyline_geo": [
+      "covered": true
+     },
+     "class": "major",
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+      "covered": true
+     },
+     "class": "major",
+     "window_tiles": 49,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "covered": true
+     },
+     "class": "major",
+     "window_tiles": 17,
+     "polyline_geo": [
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+    },
+    {
+     "kind": "river",
+     "id": "st_lawrence",
+     "name": "St. Lawrence",
+     "hw_tiles": 4.0,
+     "window_tiles": 49,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+    },
+    {
+     "kind": "river",
+     "id": "parana",
+     "name": "Parana",
+     "hw_tiles": 4.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+    {
+     "kind": "river",
+     "id": "orinoco",
+     "name": "Orinoco",
+     "hw_tiles": 4.0,
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 11
+    },
+    {
+     "kind": "strait",
+     "id": "gibraltar",
+     "name": "Strait of Gibraltar",
+     "hw_tiles": 11.5743,
+     "segments": 4,
+     "window_tiles": 1,
+     "polyline_geo": [
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "two_way"
+    },
+    {
+     "kind": "strait",
+     "id": "bosporus",
+     "name": "Bosporus",
+     "hw_tiles": 3.75,
+     "segments": 4,
+     "window_tiles": 1,
+     "polyline_geo": [
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "dardanelles",
+     "name": "Dardanelles",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+      ],
+      "covered": true,
+      "required_basin": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "dover",
+     "name": "Strait of Dover",
+     "hw_tiles": 26.7098,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [-838.0, -6462.0], [-706.5625, -6585.4375], [-673.875, -6586.125], [-642.0, -6618.0]
+     ],
+     "length_tiles": 258.085,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "two_way"
+    },
+    {
+     "kind": "strait",
+     "id": "oresund",
+     "name": "Oresund",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "great_belt",
+     "name": "Great Belt",
+     "hw_tiles": 12.9502,
+     "segments": 2,
+     "window_tiles": 1,
+     "polyline_geo": [
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "two_way"
+    },
+    {
+     "kind": "strait",
+     "id": "little_belt",
+     "name": "Little Belt",
+     "hw_tiles": 3.75,
+     "segments": 5,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [806.0, -7382.0], [789.9375, -7381.9375], [758.0625, -7350.0625], [730.0, -7350.0],
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 90.0,
+      "basins": [],
+      "covered": true
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "messina",
+     "name": "Strait of Messina",
+     "hw_tiles": 3.75,
+     "segments": 5,
+     "window_tiles": 1,
+     "polyline_geo": [
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "kerch",
+     "name": "Kerch Strait",
+     "hw_tiles": 3.75,
+     "segments": 4,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [5586.0, -5550.0], [5578.0, -5514.0], [5554.0, -5489.6875], [5550.0625, -5454.0625], [5562.0, -5454.0]
+     ],
+     "length_tiles": 118.821,
+     "depth": -6,
+     "bend": {
+      "violations": 1,
+      "worst_deg": 96.0,
+      "basins": [
+       [5550.0625, -5454.0625]
+      ],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "canal",
+     "id": "kiel",
+     "name": "Kiel Canal",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "covered": true
+     }
+    },
+    {
+     "kind": "canal",
+     "id": "corinth",
+     "name": "Corinth Canal",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+      ],
+      "covered": true
+     }
+    },
+    {
+     "kind": "canal",
+     "id": "suez",
+     "name": "Suez Canal",
+     "hw_tiles": 3.75,
+     "segments": 10,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [4794.0, -2998.0], [4798.0, -2986.0], [4794.0, -2974.0], [4802.0, -2882.0], [4798.0, -2882.0],
+      [4794.0, -2858.0], [4806.0, -2822.0], [4842.0, -2794.0], [4846.0, -2750.0], [4842.0, -2742.0],
+      [4838.0, -2694.0]
+     ],
+     "length_tiles": 330.823,
+     "depth": -2.2,
+     "bend": {
+      "violations": 2,
+      "worst_deg": 175.5,
+      "basins": [
+      ],
+      "covered": true
+     }
+    },
+    {
+     "kind": "canal",
+     "id": "panama",
+     "name": "Panama Canal",
+     "hw_tiles": 3.75,
+     "segments": 5,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [-15406.0, 938.0], [-15406.0, 974.0], [-15398.0, 990.0], [-15378.0, 1002.0], [-15370.0, 1002.0],
+      [-15322.0, 1058.0]
+     ],
+     "length_tiles": 158.969,
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     }
+    },
+    {
+     "kind": "dam",
+     "id": "corinth",
+     "name": "Isthmus of Corinth",
+     "hw_tiles": 2.0,
+     "segments": 2,
+     "window_tiles": null,
+     "polyline_geo": [
+      [3110.0, -4158.0], [3106.0, -4166.0], [3142.0, -4202.0]
+     ],
+     "length_tiles": 59.856,
+     "canal": "corinth"
+    },
+    {
+     "kind": "dam",
+     "id": "suez",
+     "name": "Isthmus of Suez",
+     "hw_tiles": 2.0,
+     "segments": 5,
+     "window_tiles": null,
+     "polyline_geo": [
+      [4722.0, -2826.0], [4770.0, -2778.0], [4818.0, -2778.0], [4826.0, -2770.0], [4866.0, -2770.0],
+      [4922.0, -2826.0]
+     ],
+     "length_tiles": 246.392,
+     "canal": "suez"
+    },
+    {
+     "kind": "dam",
+     "id": "panama",
+     "name": "Isthmus of Panama",
+     "hw_tiles": 2.0,
+     "segments": 13,
+     "window_tiles": null,
+     "polyline_geo": [
+     "depth": -2.2
+    },
+    {
+     "feature": "dardanelles",
+     "kind": "strait",
+     "depth": -6
+    },
+    {
+     "feature": "kerch",
+     "kind": "strait",
+     "centre": [5550.0625, -5454.0625],
+     "depth": -6
+    },
+    {
+     "feature": "corinth",
+     "kind": "canal",
+     "centre": [3118.0, -4184.0],
+     "depth": -2.2
+    },
+    {
+     "feature": "suez",
+     "kind": "canal",
+     "depth": -2.2
+    }
+   ],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "aktobe": {
+     "name": "Aktobe",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "albany": {
+     "name": "Albany",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "bam": {
+     "name": "Bam",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "bamako": {
+     "name": "Bamako",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "boise": {
+     "name": "Boise",
+     "spawn_geo": [-21774, -5046],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "chengdu": {
+     "name": "Chengdu",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "cordoba": {
+     "name": "Cordoba",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "dangila": {
+     "name": "Dangila",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "delhi": {
+     "name": "Delhi",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "el-paso": {
+     "name": "El Paso",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "ellesmere-island": {
+     "name": "Ellesmere Island",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "fort-liard": {
+     "name": "Fort Liard",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hampi": {
+     "name": "Hampi",
+     "spawn_geo": [12626, -246],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hearst": {
+     "name": "Hearst",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "huambo": {
+     "name": "Huambo",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hughes": {
+     "name": "Hughes",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "iquitos": {
+     "name": "Iquitos",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "johannesburg": {
+     "name": "Johannesburg",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "kharkiv": {
+     "name": "Kharkiv",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "kovdor": {
+     "name": "Kovdor",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "london": {
+     "name": "London",
+     "spawn_geo": [-974, -6646],
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "thames",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "mid-baffin": {
+     "name": "Mid Baffin",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "minneapolis": {
+     "name": "Minneapolis",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "mongo": {
+     "name": "Mongo",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "montgomery": {
+     "name": "Montgomery",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "moron": {
+     "name": "Moron",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "munguy": {
+     "name": "Munguy",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "nanchang": {
+     "name": "Nanchang",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "newman": {
+     "name": "Newman",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "okak": {
+     "name": "Okak",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "palmas": {
+     "name": "Palmas",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "prague": {
+     "name": "Prague",
+     "spawn_geo": [1426, -6646],
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "elbe",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "saskatoon": {
+     "name": "Saskatoon",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "semey": {
+     "name": "Semey",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "songea": {
+     "name": "Songea",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "songling": {
+     "name": "Songling",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "summit-camp": {
+     "name": "Summit Camp",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "tabuk": {
+     "name": "Tabuk",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "uranienborg": {
+     "name": "Uranienborg",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "waddan": {
+     "name": "Waddan",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "xeta": {
+     "name": "Xeta",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "yakutia": {
+     "name": "Yakutia",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "yellowknife": {
+     "name": "Yellowknife",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "zyryanka": {
+     "name": "Zyryanka",
+     "spawn_geo": [25426, -9046],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+     "dam": 20
+    },
+    }
+   },
+   "cut": {
+    "rivers_carved": 32,
+    "rivers_listed": 32
+   },
+   "features": [
+    {
+     "kind": "river",
+     "id": "danube",
+     "name": "Danube",
+     "hw_tiles": 7.5,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 19
+    },
+    {
+     "kind": "river",
+     "id": "dnieper",
+     "name": "Dnieper",
+     "hw_tiles": 7.5,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+    },
+    {
+     "kind": "river",
+     "id": "rhine",
+     "name": "Rhine",
+     "hw_tiles": 7.5,
+     "window_tiles": 65,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+    },
+    {
+     "kind": "river",
+     "id": "vistula",
+     "name": "Vistula",
+     "hw_tiles": 7.5,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+    },
+    {
+     "kind": "river",
+     "id": "elbe",
+     "name": "Elbe",
+     "hw_tiles": 5.0,
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 6
+    },
+    {
+     "kind": "river",
+     "id": "loire",
+     "name": "Loire",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 5
+    },
+    {
+     "kind": "river",
+     "id": "daugava",
+     "name": "Daugava",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 5
+    },
+    {
+     "kind": "river",
+     "id": "oder",
+     "name": "Oder",
+     "hw_tiles": 5.0,
+     "window_tiles": 65,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "id": "tagus",
+     "name": "Tagus",
+     "hw_tiles": 5.0,
+     "window_tiles": 65,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+     "hw_tiles": 5.0,
+     "window_tiles": 65,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "id": "seine",
+     "name": "Seine",
+     "hw_tiles": 5.0,
+     "window_tiles": 65,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 3
+    },
+    {
+     "kind": "river",
+     "id": "rhone",
+     "name": "Rhone",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "id": "ebro",
+     "name": "Ebro",
+     "hw_tiles": 5.0,
+     "window_tiles": 65,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 3
+    },
+    {
+     "kind": "river",
+     "id": "dniester",
+     "name": "Dniester",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "garonne",
+     "name": "Garonne",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "weser",
+     "name": "Weser",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "douro",
+     "name": "Douro",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "neman",
+     "name": "Neman",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "thames",
+     "name": "Thames",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "guadalquivir",
+     "name": "Guadalquivir",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "don_lower",
+     "name": "Don (lower)",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "neva",
+     "name": "Neva",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "niger",
+     "name": "Niger",
+     "hw_tiles": 7.5,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+    },
+    {
+     "kind": "river",
+     "id": "mackenzie",
+     "name": "Mackenzie",
+     "hw_tiles": 7.5,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+    },
+    {
+     "kind": "river",
+     "id": "mississippi",
+     "name": "Mississippi",
+      "covered": true
+     },
+     "class": "major",
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "congo",
+     "name": "Congo",
+     "window_tiles": 33,
+     "polyline_geo": [
+      "covered": true
+     },
+     "class": "major",
+      {
+      {
+      {
+      }
+    },
+    {
+     "kind": "river",
+     "hw_tiles": 7.5,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 15,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      },
+      {
+       "interval": 11,
+      },
+      {
+       "interval": 12,
+      },
+      {
+       "interval": 13,
+      },
+      {
+       "interval": 14,
+      },
+      {
+       "interval": 15,
+      },
+      {
+       "interval": 16,
+      },
+      {
+       "interval": 17,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "zambezi",
+     "name": "Zambezi",
+     "hw_tiles": 7.5,
+     "window_tiles": 65,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 15,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 7,
+      },
+      {
+      },
+      {
+      },
+      {
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+    },
+    {
+     "kind": "river",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 15,
+     "fords": [
+      {
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      }
+     ],
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+    },
+    {
+     "kind": "river",
+     "id": "st_lawrence",
+     "name": "St. Lawrence",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      }
+     ],
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+    },
+    {
+     "kind": "river",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+      }
+     ],
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+    },
+    {
+     "kind": "river",
+     "id": "orinoco",
+     "name": "Orinoco",
+     "hw_tiles": 5.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 10,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "strait",
+     "id": "gibraltar",
+     "name": "Strait of Gibraltar",
+     "hw_tiles": 14.4678,
+     "segments": 4,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [-2693.0, -4783.0], [-2522.9375, -4783.0625], [-2477.9375, -4788.0625], [-2448.125, -4817.875],
+      [-2378.0, -4818.0]
+     ],
+     "length_tiles": 327.626,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 44.9,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "two_way"
+    },
+    {
+     "kind": "strait",
+     "id": "bosporus",
+     "name": "Bosporus",
+     "hw_tiles": 3.75,
+     "segments": 4,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [5242.0, -5883.0], [5242.125, -5913.125], [5262.0, -5938.0], [5262.0625, -5953.0625], [5307.0, -5998.0]
+     ],
+     "length_tiles": 140.579,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 83.1,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "dardanelles",
+     "name": "Dardanelles",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 44.8,
+      "basins": [
+      ],
+      "covered": true,
+      "required_basin": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "dover",
+     "name": "Strait of Dover",
+     "hw_tiles": 33.3873,
+     "segments": 3,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [-1048.0, -8078.0], [-883.4375, -8232.5625], [-842.6875, -8233.3125], [-803.0, -8273.0]
+     ],
+     "length_tiles": 322.65,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+    },
+    {
+     "kind": "strait",
+     "id": "oresund",
+     "name": "Oresund",
+     "hw_tiles": 4.0469,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+    },
+    {
+     "kind": "strait",
+     "id": "great_belt",
+     "name": "Great Belt",
+     "hw_tiles": 16.1878,
+     "segments": 2,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [1202.0, -9273.0], [1197.0, -9108.875], [1212.0, -9093.0]
+     ],
+     "length_tiles": 186.042,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+    },
+    {
+     "kind": "strait",
+     "id": "little_belt",
+     "name": "Little Belt",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [1007.0, -9228.0], [986.9375, -9227.9375], [947.125, -9188.125], [912.0, -9188.0],
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+    },
+    {
+     "kind": "strait",
+     "id": "messina",
+     "name": "Strait of Messina",
+     "hw_tiles": 3.75,
+     "segments": 5,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [2222.0, -5333.0], [2241.9375, -5318.0625], [2242.0, -5293.0625], [2232.0, -5253.0625],
+      [2212.125, -5243.0], [2212.0, -5213.0]
+     ],
+     "length_tiles": 143.421,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+    },
+    {
+     "kind": "strait",
+     "id": "kerch",
+     "name": "Kerch Strait",
+     "hw_tiles": 4.5528,
+     "segments": 4,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [6982.0, -6938.0], [6971.9375, -6892.9375], [6942.125, -6863.125], [6937.0625, -6818.0625],
+      [6952.0, -6818.0]
+     ],
+     "length_tiles": 148.617,
+     "depth": -6,
+     "bend": {
+      "violations": 1,
+      "worst_deg": 96.2,
+      "basins": [
+       [6937.0625, -6818.0625]
+      ],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "canal",
+     "id": "kiel",
+     "name": "Kiel Canal",
+     "hw_tiles": 3.75,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+    },
+    {
+     "kind": "canal",
+     "id": "corinth",
+     "name": "Corinth Canal",
+     "hw_tiles": 3.75,
+     "segments": 8,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [3897.0, -5233.0], [3897.0, -5228.0], [3942.125, -5222.875], [3962.0, -5203.0]
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 2,
+      "basins": [
+       [3894.5, -5233.0]
+      ],
+      "covered": true
+    },
+    {
+     "kind": "canal",
+     "id": "suez",
+     "name": "Suez Canal",
+     "hw_tiles": 3.75,
+     "segments": 10,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [5992.0, -3748.0], [5997.0, -3733.0], [5992.0, -3718.0], [6002.0, -3603.0], [5997.0, -3603.0],
+      [5992.0, -3573.0], [6007.0, -3528.0], [6052.0, -3493.0], [6057.0, -3438.0], [6052.0, -3428.0],
+      [6047.0, -3368.0]
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 2,
+      "worst_deg": 175.5,
+      "basins": [
+       [6002.0, -3603.0]
+      ],
+      "covered": true
+    },
+    {
+     "kind": "canal",
+     "id": "panama",
+     "name": "Panama Canal",
+     "hw_tiles": 3.75,
+     "segments": 8,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [-19258.0, 1172.0], [-19258.0, 1217.0], [-19248.0, 1237.0], [-19233.0, 1242.0], [-19223.0, 1252.0],
+      [-19213.0, 1252.0], [-19183.0, 1282.0], [-19168.0, 1307.0], [-19153.0, 1322.0]
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     }
+    },
+    {
+     "kind": "dam",
+     "id": "corinth",
+     "name": "Isthmus of Corinth",
+     "hw_tiles": 2.5,
+     "segments": 2,
+     "window_tiles": null,
+     "polyline_geo": [
+      [3887.0, -5198.0], [3882.0, -5208.0], [3927.0, -5253.0]
+     ],
+     "canal": "corinth"
+    },
+    {
+     "kind": "dam",
+     "id": "suez",
+     "name": "Isthmus of Suez",
+     "hw_tiles": 2.5,
+     "segments": 5,
+     "window_tiles": null,
+     "polyline_geo": [
+      [5902.0, -3533.0], [5962.0, -3473.0], [6022.0, -3473.0], [6032.0, -3463.0], [6082.0, -3463.0],
+      [6152.0, -3533.0]
+     ],
+     "length_tiles": 307.99,
+     "canal": "suez"
+    },
+    {
+     "kind": "dam",
+     "id": "panama",
+     "name": "Isthmus of Panama",
+     "hw_tiles": 2.5,
+     "segments": 13,
+     "window_tiles": null,
+     "polyline_geo": [
+      [-19363.0, 1282.0], [-19328.0, 1282.0], [-19308.0, 1302.0], [-19233.0, 1302.0], [-19218.0, 1292.0],
+      [-19203.0, 1292.0], [-19173.0, 1262.0], [-19108.0, 1262.0], [-19088.0, 1242.0], [-19068.0, 1232.0],
+      [-19033.0, 1232.0], [-19028.0, 1237.0], [-19028.0, 1272.0], [-19048.0, 1282.0]
+     ],
+     "length_tiles": 428.815,
+     "canal": "panama"
+    }
+   ],
+   "basins": [
+    {
+     "depth": -2.2
+    },
+    {
+     "feature": "dardanelles",
+     "kind": "strait",
+     "centre": [4796.9375, -5817.9375],
+     "depth": -6
+    },
+    {
+     "feature": "kerch",
+     "kind": "strait",
+     "centre": [6937.0625, -6818.0625],
+     "depth": -6
+    },
+    {
+     "feature": "corinth",
+     "kind": "canal",
+     "centre": [3894.5, -5233.0],
+     "depth": -2.2
+    },
+    {
+     "feature": "suez",
+     "kind": "canal",
+     "centre": [6002.0, -3603.0],
+     "depth": -2.2
+    }
+   ],
+    },
+    {
+    },
+    {
+   },
+   "starts": {
+    "akka": {
+     "name": "Akka",
+     "spawn_geo": [-3218, -3308],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "aktobe": {
+     "name": "Aktobe",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "albany": {
+     "name": "Albany",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "bam": {
+     "name": "Bam",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "bamako": {
+     "name": "Bamako",
+     ],
+      {
+      }
+    },
+    "bangkok": {
+     "name": "Bangkok",
+     "spawn_geo": [21282, -308],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "boise": {
+     "name": "Boise",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "chengdu": {
+     "name": "Chengdu",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "cordoba": {
+     "name": "Cordoba",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "dangila": {
+     "name": "Dangila",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "delhi": {
+     "name": "Delhi",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "el-paso": {
+     "name": "El Paso",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "ellesmere-island": {
+     "name": "Ellesmere Island",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "fort-liard": {
+     "name": "Fort Liard",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "griffith": {
+     "name": "Griffith",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hampi": {
+     "name": "Hampi",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hearst": {
+     "name": "Hearst",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "huambo": {
+     "name": "Huambo",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hughes": {
+     "name": "Hughes",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "iquitos": {
+     "name": "Iquitos",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "johannesburg": {
+     "name": "Johannesburg",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "kharkiv": {
+     "name": "Kharkiv",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "kovdor": {
+     "name": "Kovdor",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "london": {
+     "name": "London",
+     "spawn_geo": [-1218, -8308],
+     "corridors": [
+     ],
+      {
+      }
+    },
+    "madrid": {
+     "name": "Madrid",
+     "spawn_geo": [-2218, -5808],
+     "corridors": [
+     ],
+      {
+      }
+    },
+    "mexico-city": {
+     "name": "Mexico City",
+     "spawn_geo": [-23718, -1308],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "mid-baffin": {
+     "name": "Mid Baffin",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "minneapolis": {
+     "name": "Minneapolis",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "mongo": {
+     "name": "Mongo",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "montgomery": {
+     "name": "Montgomery",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "moron": {
+     "name": "Moron",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "munguy": {
+     "name": "Munguy",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "nanchang": {
+     "name": "Nanchang",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "newman": {
+     "name": "Newman",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "okak": {
+     "name": "Okak",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "palmas": {
+     "name": "Palmas",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "prague": {
+     "name": "Prague",
+     "spawn_geo": [1782, -8308],
+     "corridors": [
+     ],
+      {
+      }
+     ]
+    },
+    "qaanaaq": {
+     "name": "Qaanaaq",
+     "spawn_geo": [-13718, -14308],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "saskatoon": {
+     "name": "Saskatoon",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "semey": {
+     "name": "Semey",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "songea": {
+     "name": "Songea",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "songling": {
+     "name": "Songling",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "summit-camp": {
+     "name": "Summit Camp",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "tabuk": {
+     "name": "Tabuk",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "uranienborg": {
+     "name": "Uranienborg",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "waddan": {
+     "name": "Waddan",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "xeta": {
+     "name": "Xeta",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "yakutia": {
+     "name": "Yakutia",
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "yellowknife": {
+     "name": "Yellowknife",
+     "spawn_geo": [-24718, -11558],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "zyryanka": {
+     "name": "Zyryanka",
+     "spawn_geo": [31782, -11308],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    }
+   }
+  },
+  "6": {
+     "dam": 20
+    },
+    "classes": {
+    }
+   },
+   "cut": {
+    "rivers_carved": 32,
+    "rivers_listed": 32
+   },
+   "features": [
+    {
+     "kind": "river",
+     "hw_tiles": 9.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 18,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      },
+      {
+       "interval": 7,
+      },
+      },
+      {
+       "interval": 9,
+      },
+      },
+      {
+       "interval": 11,
+      },
+      },
+      {
+       "interval": 13,
+      },
+      {
+       "interval": 14,
+      },
+      },
+      {
+       "interval": 16,
+      },
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "dnieper",
+     "name": "Dnieper",
+     "hw_tiles": 9.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 18,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      },
+      },
+      },
+      }
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "rhine",
+     "name": "Rhine",
+     "hw_tiles": 9.0,
+     "polyline_geo": [
+     ],
+     "bend": {
+      "violations": 0,
+      "basins": [
+      ],
+      "covered": true,
+      "required_basin": true
+     },
+     "class": "major",
+     "width_tiles": 18,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      },
+      },
+      },
+      }
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "vistula",
+     "name": "Vistula",
+     "hw_tiles": 9.0,
+     "polyline_geo": [
+     ],
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 18,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      },
+      },
+      }
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "elbe",
+     "name": "Elbe",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      },
+      }
+     ],
+     "fords_skipped": [],
+    {
+     "kind": "river",
+     "id": "loire",
+     "name": "Loire",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     ],
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "daugava",
+     "name": "Daugava",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     ],
+     "bend": {
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "oder",
+     "name": "Oder",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "tagus",
+     "name": "Tagus",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "hw_tiles": 6.0,
+     "segments": 10,
+     "window_tiles": 97,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "seine",
+     "name": "Seine",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 3
+    },
+    {
+     "kind": "river",
+     "id": "rhone",
+     "name": "Rhone",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 4
+    },
+    {
+     "kind": "river",
+     "id": "ebro",
+     "name": "Ebro",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 3
+    },
+    {
+     "kind": "river",
+     "id": "dniester",
+     "name": "Dniester",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "garonne",
+     "name": "Garonne",
+     "hw_tiles": 6.0,
+     "window_tiles": 97,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "basins": [
+       [-1838.4375, -8378.4375]
+      ],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "weser",
+     "name": "Weser",
+     "hw_tiles": 6.0,
+     "segments": 10,
+     "window_tiles": 97,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+      {
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "douro",
+     "name": "Douro",
+     "hw_tiles": 6.0,
+     "window_tiles": 97,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+      {
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "neman",
+     "name": "Neman",
+     "hw_tiles": 6.0,
+     "window_tiles": 97,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+      {
+      },
+      {
+       "interval": 1,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 2
+    },
+    {
+     "kind": "river",
+     "id": "thames",
+     "name": "Thames",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "guadalquivir",
+     "name": "Guadalquivir",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "don_lower",
+     "name": "Don (lower)",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+     "fords": [
+      {
+       "interval": 0,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "neva",
+     "name": "Neva",
+     "hw_tiles": 6.0,
+     "window_tiles": 97,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+      }
+     ],
+     "fords_skipped": [],
+     "fords_expected": 1
+    },
+    {
+     "kind": "river",
+     "id": "niger",
+     "name": "Niger",
+     "hw_tiles": 9.0,
+     "polyline_geo": [
+     "bend": {
+      "violations": 0,
+      "worst_deg": 45.6,
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 18,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      },
+      {
+       "interval": 7,
+      },
+      },
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "id": "mackenzie",
+     "name": "Mackenzie",
+     "hw_tiles": 9.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "covered": true
+     },
+     "class": "major",
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 18,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      },
+      {
+       "interval": 11,
+      },
+      {
+       "interval": 12,
+      },
+      {
+       "interval": 13,
+      },
+      {
+       "interval": 14,
+      },
+      {
+       "interval": 15,
+      },
+      {
+       "interval": 16,
+      },
+      {
+       "interval": 17,
+      },
+      {
+      },
+      {
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "hw_tiles": 9.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 18,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+       "interval": 4,
+      },
+      {
+       "interval": 5,
+      },
+      {
+       "interval": 6,
+      },
+      {
+       "interval": 7,
+      },
+      {
+       "interval": 8,
+      },
+      {
+       "interval": 9,
+      },
+      {
+       "interval": 10,
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      {
+      },
+      {
+      },
+      {
+       "tangent": [-0.242536, -0.970143],
+      },
+      {
+      },
+      {
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      }
+     ],
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+    },
+    {
+     "kind": "river",
+     "id": "zambezi",
+     "name": "Zambezi",
+     "hw_tiles": 9.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 18,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      {
+       "interval": 3,
+      },
+      {
+      },
+      {
+      },
+      {
+      {
+      },
+      {
+      },
+      {
+      {
+      },
+      {
+      },
+      {
+      {
+      },
+      {
+      },
+      {
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "river",
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     },
+     "class": "major",
+     "width_tiles": 18,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      {
+      },
+      {
+      },
+      {
+      },
+      },
+      {
+      },
+      {
+      },
+      {
+      {
+      },
+      {
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      },
+      {
+      }
+     ],
+      {
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+      },
+      {
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+      }
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "st_lawrence",
+     "name": "St. Lawrence",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      },
+      }
+     ],
+      {
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+      }
+     ],
+    },
+    {
+     "kind": "river",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      },
+      {
+      },
+      {
+      },
+      },
+      {
+      },
+      {
+      },
+      {
+      }
+     ],
+      {
+       "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
+       "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
+      }
+     ],
+    },
+    {
+     "kind": "river",
+     "id": "orinoco",
+     "name": "Orinoco",
+     "hw_tiles": 6.0,
+     "polyline_geo": [
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "class": "minor",
+     "width_tiles": 12,
+     "fords": [
+      {
+       "interval": 0,
+      },
+      {
+       "interval": 1,
+      },
+      {
+       "interval": 2,
+      },
+      },
+      },
+      },
+      {
+      },
+      {
+      },
+      }
+     ],
+     "fords_skipped": [],
+    },
+    {
+     "kind": "strait",
+     "id": "gibraltar",
+     "name": "Strait of Gibraltar",
+     "hw_tiles": 17.3614,
+     "segments": 4,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [-3231.0, -5739.0], [-3027.5625, -5739.0], [-2972.8125, -5745.1875], [-2936.4375, -5781.0],
+      [-2853.0, -5781.0]
+     ],
+     "length_tiles": 393.019,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 44.6,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "two_way"
+    },
+    {
+     "kind": "strait",
+     "id": "bosporus",
+     "name": "Bosporus",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "dardanelles",
+     "name": "Dardanelles",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 44.8,
+      "basins": [
+       [5757.25, -6981.0]
+      ],
+      "covered": true,
+      "required_basin": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "dover",
+     "name": "Strait of Dover",
+     "hw_tiles": 40.0648,
+     "segments": 3,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [-1257.0, -9693.0], [-1059.375, -9878.625], [-1011.3125, -9879.0], [-963.0, -9927.0]
+     ],
+     "length_tiles": 387.299,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 44.4,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "two_way"
+    },
+    {
+     "kind": "strait",
+     "id": "oresund",
+     "name": "Oresund",
+     "hw_tiles": 4.8563,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "great_belt",
+     "name": "Great Belt",
+     "hw_tiles": 19.4253,
+     "segments": 2,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [1443.0, -11127.0], [1437.0, -10929.75], [1455.0, -10911.0]
+     ],
+     "length_tiles": 223.333,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 45.6,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "two_way"
+    },
+    {
+     "kind": "strait",
+     "id": "little_belt",
+     "name": "Little Belt",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [1209.0, -11073.0], [1184.875, -11072.875], [1137.1875, -11025.1875], [1095.0, -11025.0],
+     ],
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 89.7,
+      "basins": [
+       [1095.0, -11025.0]
+      ],
+      "covered": true,
+      "required_basin": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "messina",
+     "name": "Strait of Messina",
+     "hw_tiles": 3.75,
+     "segments": 5,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [2667.0, -6399.0], [2690.75, -6381.25], [2691.0, -6351.3125], [2679.0, -6303.1875], [2655.0625, -6291.0],
+      [2655.0, -6255.0]
+     ],
+     "length_tiles": 172.049,
+     "depth": -6,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 62.9,
+      "basins": [],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "strait",
+     "id": "kerch",
+     "name": "Kerch Strait",
+     "hw_tiles": 5.4634,
+     "segments": 4,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [8379.0, -8325.0], [8366.875, -8270.875], [8331.0, -8234.6875], [8325.0, -8181.0], [8343.0, -8181.0]
+     ],
+     "length_tiles": 178.445,
+     "depth": -6,
+     "bend": {
+      "violations": 1,
+      "worst_deg": 96.4,
+      "basins": [
+       [8325.0, -8181.0]
+      ],
+      "covered": true
+     },
+     "width_class": "single"
+    },
+    {
+     "kind": "canal",
+     "id": "kiel",
+     "name": "Kiel Canal",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "covered": true
+     }
+    },
+    {
+     "kind": "canal",
+     "id": "corinth",
+     "name": "Corinth Canal",
+     "hw_tiles": 3.75,
+     "window_tiles": 1,
+     "polyline_geo": [
+     ],
+     "depth": -2.2,
+     "bend": {
+      "violations": 2,
+      "basins": [
+       [4674.0, -6279.0]
+      ],
+      "covered": true
+     }
+    },
+    {
+     "kind": "canal",
+     "id": "suez",
+     "name": "Suez Canal",
+     "hw_tiles": 3.75,
+     "segments": 10,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [7191.0, -4497.0], [7197.0, -4479.0], [7191.0, -4461.0], [7203.0, -4323.0], [7197.0, -4323.0],
+      [7191.0, -4287.0], [7209.0, -4233.0], [7263.0, -4191.0], [7269.0, -4125.0], [7263.0, -4113.0],
+      [7257.0, -4041.0]
+     ],
+     "length_tiles": 496.234,
+     "depth": -2.2,
+     "bend": {
+      "violations": 2,
+      "worst_deg": 175.5,
+      "basins": [
+       [7203.0, -4323.0]
+      ],
+      "covered": true
+     }
+    },
+    {
+     "kind": "canal",
+     "id": "panama",
+     "name": "Panama Canal",
+     "hw_tiles": 3.75,
+     "segments": 8,
+     "window_tiles": 1,
+     "polyline_geo": [
+      [-23109.0, 1407.0], [-23109.0, 1461.0], [-23097.0, 1485.0], [-23079.0, 1491.0], [-23067.0, 1503.0],
+      [-23055.0, 1503.0], [-23019.0, 1539.0], [-23001.0, 1569.0], [-22983.0, 1587.0]
+     ],
+     "length_tiles": 240.13,
+     "depth": -2.2,
+     "bend": {
+      "violations": 0,
+      "worst_deg": 90.0,
+      "basins": [],
+      "covered": true
+     }
+    },
+    {
+     "kind": "dam",
+     "id": "corinth",
+     "name": "Isthmus of Corinth",
+     "hw_tiles": 3.0,
+     "segments": 2,
+     "window_tiles": null,
+     "polyline_geo": [
+      [4665.0, -6237.0], [4659.0, -6249.0], [4713.0, -6303.0]
+     ],
+     "length_tiles": 89.784,
+     "canal": "corinth"
+    },
+    {
+     "kind": "dam",
+     "id": "suez",
+     "name": "Isthmus of Suez",
+     "hw_tiles": 3.0,
+     "segments": 5,
+     "window_tiles": null,
+     "polyline_geo": [
+      [7083.0, -4239.0], [7155.0, -4167.0], [7227.0, -4167.0], [7239.0, -4155.0], [7299.0, -4155.0],
+      [7383.0, -4239.0]
+     ],
+     "length_tiles": 369.588,
+     "canal": "suez"
+    },
+    {
+     "kind": "dam",
+     "id": "panama",
+     "name": "Isthmus of Panama",
+     "hw_tiles": 3.0,
+     "segments": 13,
+     "window_tiles": null,
+     "polyline_geo": [
+      [-23235.0, 1539.0], [-23193.0, 1539.0], [-23169.0, 1563.0], [-23079.0, 1563.0], [-23061.0, 1551.0],
+      [-23043.0, 1551.0], [-23007.0, 1515.0], [-22929.0, 1515.0], [-22905.0, 1491.0], [-22881.0, 1479.0],
+      [-22839.0, 1479.0], [-22833.0, 1485.0], [-22833.0, 1527.0], [-22857.0, 1539.0]
+     ],
+     "length_tiles": 514.578,
+     "canal": "panama"
+    }
+   ],
+   "basins": [
+    {
+     "feature": "rhine",
+     "kind": "river",
+     "depth": -2.2
+    },
+    {
+     "feature": "garonne",
+     "kind": "river",
+     "centre": [-1838.4375, -8378.4375],
+     "depth": -2.2
+    },
+    {
+     "feature": "dardanelles",
+     "kind": "strait",
+     "centre": [5757.25, -6981.0],
+     "depth": -6
+    },
+    {
+     "feature": "little_belt",
+     "kind": "strait",
+     "centre": [1095.0, -11025.0],
+     "depth": -6
+    },
+    {
+     "feature": "kerch",
+     "kind": "strait",
+     "centre": [8325.0, -8181.0],
+     "depth": -6
+    },
+    {
+     "feature": "corinth",
+     "kind": "canal",
+     "centre": [4674.0, -6279.0],
+     "depth": -2.2
+    },
+    {
+     "feature": "suez",
+     "kind": "canal",
+     "centre": [7203.0, -4323.0],
+     "depth": -2.2
+    }
+   ],
+   "t1_mask": {
+    "thin_water_px": 421380,
+   },
+   "starts": {
+    "akka": {
+     "name": "Akka",
+     "spawn_geo": [-3861, -3969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "aktobe": {
+     "name": "Aktobe",
+     "spawn_geo": [14139, -9969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "albany": {
+     "name": "Albany",
+     "spawn_geo": [-21561, -7569],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "bam": {
+     "name": "Bam",
+     "spawn_geo": [14139, -3969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "bamako": {
+     "name": "Bamako",
+     "spawn_geo": [-3861, 531],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "bangkok": {
+     "name": "Bangkok",
+     "spawn_geo": [25539, -369],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "boise": {
+     "name": "Boise",
+     "spawn_geo": [-32661, -7569],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "chengdu": {
+     "name": "Chengdu",
+     "spawn_geo": [26139, -3969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "cordoba": {
+     "name": "Cordoba",
+     "spawn_geo": [-18861, 11631],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "dangila": {
+     "name": "Dangila",
+     "spawn_geo": [8139, 531],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "delhi": {
+     "name": "Delhi",
+     "spawn_geo": [20139, -3969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "el-paso": {
+     "name": "El Paso",
+     "spawn_geo": [-30861, -5169],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "ellesmere-island": {
+     "name": "Ellesmere Island",
+     "spawn_geo": [-23661, -17169],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "fort-liard": {
+     "name": "Fort Liard",
+     "spawn_geo": [-36261, -13569],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "griffith": {
+     "name": "Griffith",
+     "spawn_geo": [38139, 11631],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hampi": {
+     "name": "Hampi",
+     "spawn_geo": [18939, -369],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hearst": {
+     "name": "Hearst",
+     "spawn_geo": [-23661, -9969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "huambo": {
+     "name": "Huambo",
+     "spawn_geo": [3039, 5631],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "hughes": {
+     "name": "Hughes",
+     "spawn_geo": [-43461, -13569],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "iquitos": {
+     "name": "Iquitos",
+     "spawn_geo": [-20661, 4431],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "johannesburg": {
+     "name": "Johannesburg",
+     "spawn_geo": [5739, 10431],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "kharkiv": {
+     "name": "Kharkiv",
+     "spawn_geo": [8139, -9969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "kovdor": {
+     "name": "Kovdor",
+     "spawn_geo": [6339, -13569],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "london": {
+     "name": "London",
+     "spawn_geo": [-1461, -9969],
+     "corridors": [
+     ],
+     "banks": [
+      {
+       "corridor": "thames",
+      }
+     ]
+    },
+    "madrid": {
+     "name": "Madrid",
+     "spawn_geo": [-2661, -6969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "mexico-city": {
+     "name": "Mexico City",
+     "spawn_geo": [-28461, -1569],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "mid-baffin": {
+     "name": "Mid Baffin",
+     "spawn_geo": [-21261, -14769],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "minneapolis": {
+     "name": "Minneapolis",
+     "spawn_geo": [-26961, -7569],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "mongo": {
+     "name": "Mongo",
+     "spawn_geo": [2139, 531],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "montgomery": {
+     "name": "Montgomery",
+     "spawn_geo": [-24261, -5169],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "moron": {
+     "name": "Moron",
+     "spawn_geo": [26139, -9969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "munguy": {
+     "name": "Munguy",
+     "spawn_geo": [20139, -13569],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "nanchang": {
+     "name": "Nanchang",
+     "spawn_geo": [29739, -3969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "newman": {
+     "name": "Newman",
+     "spawn_geo": [30339, 10431],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "okak": {
+     "name": "Okak",
+     "spawn_geo": [-18861, -11469],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "palmas": {
+     "name": "Palmas",
+     "spawn_geo": [-14061, 6231],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "prague": {
+     "name": "Prague",
+     "spawn_geo": [2139, -9969],
+     "corridors": [
+     ],
+     "move": [0, 0],
+     "banks": [
+      {
+       "corridor": "elbe",
+      }
+     ]
+    },
+    "qaanaaq": {
+     "name": "Qaanaaq",
+     "spawn_geo": [-16461, -17169],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "saskatoon": {
+     "name": "Saskatoon",
+     "spawn_geo": [-30261, -10269],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "semey": {
+     "name": "Semey",
+     "spawn_geo": [20139, -9969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "songea": {
+     "name": "Songea",
+     "spawn_geo": [8139, 5631],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "songling": {
+     "name": "Songling",
+     "spawn_geo": [32139, -9969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "summit-camp": {
+     "name": "Summit Camp",
+     "spawn_geo": [-13461, -14169],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "tabuk": {
+     "name": "Tabuk",
+     "spawn_geo": [8139, -3969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "uranienborg": {
+     "name": "Uranienborg",
+     "spawn_geo": [-9261, -17169],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "waddan": {
+     "name": "Waddan",
+     "spawn_geo": [2139, -3969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "xeta": {
+     "name": "Xeta",
+     "spawn_geo": [26139, -15969],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "yakutia": {
+     "name": "Yakutia",
+     "spawn_geo": [32139, -13569],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "yellowknife": {
+     "name": "Yellowknife",
+     "spawn_geo": [-29661, -13869],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    },
+    "zyryanka": {
+     "name": "Zyryanka",
+     "spawn_geo": [38139, -13569],
+     "corridors": [],
+     "move": [0, 0],
+     "banks": []
+    }
+   }
+  }
+ }
+}

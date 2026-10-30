@@ -1,4 +1,5 @@
 ---------------------------------------------------------------------------------------------------
+    - The mod is titled Terra Nauvis: Earth Maps, with a shorter description. The mod ID, every
       setting name and the log and chat prefix stay as they were.
 Version: 0.1.0
   Features:
@@ -11,6 +12,12 @@ Version: 0.1.0
     - Map type Terra Nauvis: Europe in the Terrain tab: Europe's coast and spawn on its own, with a
       one-time notice that the preset adds the rest and that a changed scale or spawn city setting
     - The water slider leaves a Terra Nauvis: Europe world unchanged, cliffs and land included.
+    - Map-gen presets Terra Nauvis: Atlantic and Terra Nauvis: Old World, listed after Terra Nauvis:
+      Europe: the Atlantic world and the Old World with their real coastlines in an endless deep
+      ocean, each from its own fit.
+    - Map types Terra Nauvis: Atlantic and Terra Nauvis: Old World in the Terrain tab, each with the
+      one-time notice pointing to its own preset.
+    - Spawn city startup settings for Atlantic (Random, the default, or one of 50 cities) and Old
     - A loud message when a save names a map expression this version lacks, and an info line when
       the scale or spawn city setting no longer matches a save.
     - Spawn city startup setting for Europe: Random (the default) or one of 40 cities. The map moves
@@ -18,4 +25,25 @@ Version: 0.1.0
       enemy-free start of the base game; the intro names the city and the world size.
     - A warning at the start, and to each player who joins, when RSO is active.
     - Other planets' surfaces never take the Terra Nauvis map, and adding the mod to a world made
+    - Rivers, straits and canals on every map at every scale: rivers grow with the map scale and
+      carry a walkable shallow ford every 60 reference pixels; Gibraltar, Dover and the Great Belt
+      are two-way straits; the Canals startup setting (default on) opens Kiel, Corinth, Suez and
+    - Earth climate on every Terra Nauvis preset: the far north frozen, Scandinavia and Russia cold,
+      temperate Europe, and hot deserts where EarthMaps paints sand (the Sahara, Arabia, Central
+      Asia, the American south-west, the Kalahari, Australia and the southern Andes). With Alien
+      Biomes its tiles and trees follow this climate, temperate land keeps the vanilla tiles with
+      six adopted Alien Biomes tiles mixed in, and palms read climate alone; without Alien Biomes
+      the vanilla tiles follow it and the far north turns to dry, dead ground. Every climate zone is
+      a patchwork of several tiles that changes with the map seed, and the moisture and terrain type
+      sliders (with Alien Biomes also its temperature sliders) move it.
+    - Marshes: the Pripet Marshes, the Danube, Po, Rhone and Volga deltas, the Wadden Sea, the
+      Vasyugan Swamp, the Sudd, the Okavango, the Mesopotamian Marshes, the Everglades and the
+      Pantanal carry walkable mud pools and shallow water along their open water, with Alien Biomes'
+      wetland grass and trees when it is installed and vanilla's lush grass between the pools
+      without it.
+    - The sea deepens a few tiles offshore at every map scale, with a beach strip along the coast.
+      and the Scandinavian taiga to the Congo and the Amazon, hold about twice the trees of the land
+      around them, while trees still follow the climate.
+    - With Alien Biomes, the base game's trees, rocks, decals and plants grow again on the vanilla
+      ground of Terra Nauvis worlds, beside Alien Biomes' own.
   Changes:

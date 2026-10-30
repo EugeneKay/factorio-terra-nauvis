@@ -313,6 +313,7 @@ return {
     id = ID,
     title = "Terra Nauvis",
     author = "Jake Mismas",
+    homepage = "https://github.com/jakemismas/factorio-terra-nauvis",
     factorio_version = "2.1",
     setting_prefix = ID .. "-",
     noise_prefix = NOISE,
@@ -438,6 +439,11 @@ return {
       order = "c-f",
     },
     exact_coast = {
+    },
+    -- it in a running game; on, the map view shows every city of the world's map (scripts/markers.lua).
+    city_markers = {
+      name = ID .. "-city-markers", type = "bool-setting", setting_type = "runtime-global", default_value = false,
+      order = "d-a",
     },
   },
 
@@ -1407,5 +1413,40 @@ return {
                land_fill = "g", thin = "h", water_masked = "i", land_masked = "j"},
     symbol_order = {"none", "water", "land", "water_k", "land_k", "water_fill", "land_fill", "thin",
                     "water_masked", "land_masked"},
+  },
+
+  -- scripts/markers.lua draws one text per city of the save's map, its name from the map's city table, at the
+  -- tile holding the city's reference pixel centre: world = geo - the city offset, the conversion of
+  -- spawn-cities' force-spawn probe (t18_force_spawn). They are rendering objects in chart mode: drawn on the map
+  -- view only, for every force, the same size on screen at every zoom; they need no charted chunk and no per-chunk
+  -- event, so a headless check reads them with rendering.get_all_objects.
+  --   centre       where a marker stands inside its tile, in tiles from the tile's corner
+  --   text_scale   the text's size on screen (it scales with zoom)
+  markers = {
+    setting = "city_markers",
+    render_mode = "chart",
+    centre = 0.5,
+    text_scale = 1.5,
+    color = {r = 1, g = 0.9, b = 0.45, a = 1},
+    alignment = "center",
+    vertical_alignment = "middle",
+  },
+
+  -- width_px and height_px times the scale; each preset description gives its map's size at preset_scales. No
+  -- measured footprint of a late-game factory exists (every source found only reports one), so the locale
+  -- carries two figures as reported community examples, never as measurements: each footprint below is its
+  -- source's figure in tiles (r8_row names the source table's row), and every text that carries one says
+  -- reported_phrase before it. The static locale check tests every figure of those texts against this table
+  -- and the maps.
+  size_context = {
+    reported_phrase = "reported community examples",
+    footprints = {
+      {key = "core_1k", r8_row = "1k SPM", width = 683, height = 813,
+       what = "a 1k SPM factory core blueprint, non-beaconed, without mining (Factorio 1.1.101)",
+       source = "https://factoriobin.com/post/EhaghFV6"},
+      {key = "megabase_9k", r8_row = "9.45k SPM", width = 10000, height = 6000,
+       what = "the map of a 9.45k SPM megabase with every outpost, an upper bound (Factorio 0.17.79)",
+       source = "https://forums.factorio.com/viewtopic.php?p=475463"},
+    },
   },
 }

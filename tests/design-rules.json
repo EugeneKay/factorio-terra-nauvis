@@ -84,6 +84,12 @@
   "exact_coast": {
    "type": "bool-setting",
    "setting_type": "startup",
+  },
+  "city_markers": {
+   "source": "terra-nauvis-city-markers (runtime-global, bool, default off)",
+   "type": "bool-setting",
+   "setting_type": "runtime-global",
+   "default_value": false
   }
  },
  "numeric_literals_allowed": [0, 1, 2]

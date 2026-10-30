@@ -48,6 +48,8 @@ Version: 0.1.0
       around them, while trees still follow the climate.
     - With Alien Biomes, the base game's trees, rocks, decals and plants grow again on the vanilla
       ground of Terra Nauvis worlds, beside Alien Biomes' own.
+    - City markers map setting (default off, changeable in a running game): the map view names every
+      city of a Terra Nauvis world's map where it lies; switching it off removes them.
   Changes:
       climate alone, never the coast. A world made from a preset without Alien Biomes does the same
       once Alien Biomes is added.

@@ -202,9 +202,22 @@ if AB then
   def(N.ab.temperature, "clamp(" .. N.core .. " + " .. noise(T.noise, "(var('control:hot:frequency') + " ..
     "var('control:cold:frequency')) / 2") .. " + " .. num(TA.shift_per_unit) .. " * (var('control:hot:size') - " ..
     "var('control:cold:size')), " .. num(TA.min) .. ", " .. num(TA.max) .. ")")
+  end
   -- lifts toward vanilla red desert, a lift that is 0 wherever the AB temperature lies outside the
   -- exclusion band, so no alien AB colour can follow it.
   local R = A.red
+      num(R.lift) .. " * " .. N.dry .. " * clamp((" .. N.ab.temperature .. " - " .. num(R.t_lo) .. ") / " ..
+      num(R.ramp) .. ", 0, 1) * clamp((" .. num(R.t_hi) .. " - " .. N.ab.temperature .. ") / " .. num(R.ramp) ..
+      ", 0, 1) + " .. num(A.ab_bias) .. " * var('control:aux:bias'), 0, 1)"
+  end
+  def(N.ab.aux, ab_aux(""))
+
+  -- The grain's bodies (config.lua climate.grain), which tile scores alone read. Temperature adds to
+  -- the zone's lift, the version presets name, and stops at the natural ceiling unless the zone is
+  -- already over it, so no grain reaches Alien Biomes' volcanic band outside the zone; aux adds under
+  -- the cap, so no grain reaches its alien palette.
+  local G, GN = C.grain, N.grain
+  local T2 = cfg.destroyed.names.temperature
 end
 
 data:extend(E)

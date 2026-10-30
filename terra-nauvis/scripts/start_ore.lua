@@ -1,6 +1,9 @@
 -- The start ore guarantee (config.lua start_ore): once, from start.on_init on an
 -- Earth or Map-type-only world, every starting ore gets a patch on the land the spawn reaches on foot
 -- when that land holds too little of it. The game generates the starting area before on_init
+-- the `? rso-mod` dependency runs RSO's on_init, which places its starting ore, before this one, so a
+-- start RSO served well gets nothing. RSO's own "Ore in starting area" off stands the pass down. Runs
+-- once per world, so its cost (one tile query and one flood over the start square) never recurs.
 local cfg = require("prototypes.config")
 
 local M = {}
@@ -110,6 +113,8 @@ local function place(surface, name, cx, cy, r, amount)
 end
 
 function M.ensure(surface)
+  local rso_start = settings.global[C.rso_start]
+  if rso_start and not rso_start.value then
     return
   end
   local controls = surface.map_gen_settings.autoplace_controls or {}

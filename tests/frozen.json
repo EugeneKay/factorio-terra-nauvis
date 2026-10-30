@@ -831,8 +831,10 @@
   },
   "tn_destroyed_sd_v1": {
    "type": "noise-expression",
+   "sha256": "a6268f18b3defcc9efbf0d0b5f8470c62b980b0cc6f960e0d3874eb771098b4e",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_destroyed_w_v1": {
    "type": "noise-expression",
@@ -1898,8 +1900,10 @@
   },
   "tn_sd_destroyed_europe_v1": {
    "type": "noise-expression",
+   "sha256": "b58c3eb9a89535319d81f8038d079fdf32b15a4a7fe2ebef68f15bc64b0a3822",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_dinaric_mixed_v1": {
    "type": "noise-expression",
@@ -4321,13 +4325,16 @@
   },
   "tn_city_pool_europe_v1": {
    "type": "noise-expression",
+   "sha256": "3934d0733b75ff787aa64985892f1cdb0682423b1949a3721156f3e20e7e5a91",
    "dump": "m1",
    "slice": "destroyed-europe",
+   "registered": "2026-10-30"
   },
   "tn_destroyed_heat_v1": {
    "type": "noise-expression",
    "dump": "m1",
    "slice": "destroyed-europe",
+   "registered": "2026-10-30"
   },
   "tn_destroyed_zone_v1": {
    "type": "noise-expression",
@@ -4489,33 +4496,110 @@
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "1234aba2391552d1b558f95240511c52e8afd9040c124e1ae0fb3bdff0e1abe2",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "42bc057c2d94c91f6089a19c33b5675781bd6399855926ed0b535c168d4921ab",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "699630c354eae8481a972c8f2df27e2ff849f388897ec9a38845c67a1802ec7e",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_depth_keep_britain_v1": {
+   "type": "noise-expression",
+   "sha256": "9e8b05575ffc3ddbf14e1643dba514cf242d263a26ef5855efdeb067b24d569a",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+  "tn_depth_keep_carpathians_v1": {
+   "type": "noise-expression",
+   "sha256": "f68f9957e902ed7b186b5460c4a95c56e58767b089c637f02462aa78dbddb1f8",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+  "tn_depth_keep_denmark_v1": {
+   "type": "noise-expression",
+   "sha256": "9d588eada4b1ce67136969f327d2b314ff6ddcc6ee08d014dd2f77d27c16dd79",
+   "dump": "m1",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "a01776b16f4a358f120248421e98774d9e5060b6b6a09d6a43e197a67be5ba84",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "bcddfc7d4b1304a1cedd70647af9a733c6b379bb868be07d13548e2685483e18",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "9fed05938a75f550c9f4313bd4d8d2870e26a8e492fab6a169da40fe691425a7",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+  "tn_sd_keep_carpathians_v1": {
+   "type": "noise-expression",
+   "sha256": "b3e7bdb9a5381891990bc6b8f49e73a90eb3aed18944eaa91baf684a28d03c8f",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "d40faf472564887356b0f85b4e908315ad9fe5a0db9174ff80e553b1e6ee4c58",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "a57883cf66558f7460507b599adccd39583c7e9337fce22c3137af78187abbe2",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+  "tn_w_keep_carpathians_v1": {
+   "type": "noise-expression",
+   "sha256": "890dc0cefea02b1b6f81fa3dab93b2da051a7532a3b4e8bc015333c32e2de09c",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "79f07a5013389f6f0400226f83b653db35513192eddbdfd0a42fd8c4e2737904",
    "dump": "m1",
    "registered": "2026-10-30"
   },
@@ -4592,46 +4676,6 @@
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
-   "dump": "m1",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
@@ -4661,252 +4705,399 @@
    "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
+   "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
    "slice": "extras",
    "registered": "2026-10-30"
+  },
   }
  }
 }

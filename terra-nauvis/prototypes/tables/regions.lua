@@ -2,6 +2,7 @@
 -- Written by tools/build_regions.py (writer 1) from
 --   data-src/approvals/approvals-data.json sha256 244cd5e533d5c6e52e1afcef2a1e5dc51a4cafce87b8eadcc1609e431eb2b2c1
 --   docs/plan/research/R7b-geography.json sha256 480c9f20e0a33decc79786b2c4b7a38fe3b8ba8d8b5d8706783f11d913be7729
+--   data-src/approvals/destroyed-zone.json sha256 28453b5577c471136c420c7a996fb436046d5b7657f0269d2c9446228ad570ab
 -- Never edit by hand: a change is an edit of approvals-data.json, then
 -- `python tools/build_regions.py emit`; the static gate row re-emits this file and fails on a difference.
 --
@@ -12,24 +13,51 @@
 -- include, or exclude to keep a protected feature out of the zone); shape (disc: lat, lon,
 -- radius_km; polygon: latlon vertices; path: latlon and radius_km, buffered); warp (the row's share
 -- of the shared domain warp); maps (the maps that adopt it); boost (forest strength); mult, resource,
+-- jitter_km and phase (hotspot: biter multiplier, resource, jitter radius and the phase of its fold);
+-- vertex_jitter_km and vertex_phase (a seeded polygon: each vertex's jitter radius and fold phase).
 -- Degrees throughout; sizes in km at regions.km_per_px (config.lua).
 return {
   rows = {
     {
+      id = "destroyed_europe", layer = "destroyed", mode = "include", shape = "polygon", warp = 2.5,
       maps = {"europe", "atlantic", "olde_world"},
       latlon = {
+        {43.45, -2.1}, {48.4, -5.4}, {51.0072, 1.4786}, {53.5, 4.6}, {55.3, 17}, {54.36, 23.1}, {52.0766, 23.6161},
+        {49.7833, 22.7667}, {49.55, 17.85}, {45.55, 15}, {45.3, 13.4}, {42.2, 14.7}, {41.35, 12.8}, {41.25, 9.6},
+        {42.35, 3.3},
       },
+      vertex_jitter_km = {
+        80, 50, 40, 60, 90, 110, 110, 70, 50, 70, 40, 90, 100, 80, 70,
+      },
+      vertex_phase = {
+        0.437112688, 0.151615411, 0.154371397, 0.844856607, 0.481420007, 0.746452696, 0.796097949, 0.320134982,
+        0.808700745, 0.284323369, 0.456894025, 0.408658231, 0.33418846, 0.534147954, 0.26615482,
+      },
+      source = "destroyed-zone.json vertices",
     },
     {
+      id = "keep_britain", layer = "destroyed", mode = "exclude", shape = "path", warp = 0, radius_km = 205,
       maps = {"europe", "atlantic", "olde_world"},
       latlon = {
+        {51.6, -4.8}, {52.6, 0.9},
       },
+      source = "destroyed-zone.json keep keep_britain",
     },
     {
+      id = "keep_denmark", layer = "destroyed", mode = "exclude", shape = "path", warp = 0, radius_km = 255,
       maps = {"europe", "atlantic", "olde_world"},
+      latlon = {
+        {56.2, 9.2}, {57.2, 14.5},
+      },
+      source = "destroyed-zone.json keep keep_denmark",
     },
     {
+      id = "keep_carpathians", layer = "destroyed", mode = "exclude", shape = "path", warp = 0, radius_km = 70,
       maps = {"europe", "atlantic", "olde_world"},
+      latlon = {
+        {49.35, 19.4}, {49, 23.2},
+      },
+      source = "destroyed-zone.json keep keep_carpathians",
     },
     {
       id = "bialowieza", layer = "forest", shape = "disc", warp = 0.25, boost = 1, lat = 52.75, lon = 23.95,

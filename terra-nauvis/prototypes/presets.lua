@@ -178,7 +178,22 @@ local function destroyed_values(map_key, v, names)
   return out
 end
 
+-- The climate grain (config.lua climate.grain): with Alien Biomes, the listed maps' tile scores read the
+-- grain's bodies through the keys, and the temperate bonus and exclusion their grain versions. A map not
+-- listed keeps its keys as the plain fields, and its worlds keep their programs.
+local function grain_values(map_key)
+  local out = {}
+  if AB and cfg.climate.grain.maps[map_key] then
+    local C, TL = cfg.climate, cfg.tiles
+    for field, key in pairs(C.grain.keys) do
+    end
+    out[TL.exclude.key] = TL.exclude.body_grain
     for _, t in ipairs(TL.vanilla.tiles) do
+    end
+  end
+  return out
+end
+
 -- left neutral (the game multiplies planet values by preset values, so a planet entry would scale the
 -- preset's). A control another mod removed is left out.
 local function controls()
@@ -271,6 +286,9 @@ local function baked(map_key, v)
     names[k] = value
   end
   for k, value in pairs(destroyed_values(map_key, v, names)) do
+    names[k] = value
+  end
+  for k, value in pairs(grain_values(map_key)) do
     names[k] = value
   end
   for k, value in pairs(bandfix_names(map_key)) do

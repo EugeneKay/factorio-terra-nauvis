@@ -26,6 +26,8 @@ Date: 2026-10-30
       ore on the city's own land, as on Europe.
       holds less than half of a normal start's amount of an ore on that land (an island or
       peninsula start, such as Stockholm or Athens), a patch of it is placed on that land when the
+      world is created. With RSO the check runs on RSO's own start, unless RSO's Ore in starting
+      area setting is off.
     - A loud message when a save names a map expression this version lacks, and an info line when
       the scale or spawn city setting no longer matches a save.
     - Spawn city startup setting for Europe: Random (the default) or one of 40 cities. The map moves
@@ -58,6 +60,8 @@ Date: 2026-10-30
       around them, while trees still follow the climate.
     - With Alien Biomes, the base game's trees, rocks, decals and plants grow again on the vanilla
       ground of Terra Nauvis worlds, beside Alien Biomes' own.
+    - Destroyed Europe startup setting (default off, needs Alien Biomes): from France to Warsaw and
+      from the North Sea across Switzerland and Austria to Ljubljana and down Italy to about Rome,
     - City markers map setting (default off, changeable in a running game): the map view names every
       city of a Terra Nauvis world's map where it lies; switching it off removes them.
   Changes:

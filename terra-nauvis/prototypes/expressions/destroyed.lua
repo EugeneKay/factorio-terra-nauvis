@@ -1,4 +1,7 @@
 --
+-- The zone reads one region-layer interface name, tn_destroyed_depth: the outline of
+-- data-src/approvals/destroyed-zone.json less its keep rows (Britain, Denmark and the Carpathians), in tiles.
+-- Each seed moves the outline's vertices and warps its edges harder than the shared warp, the same way on
 -- regions row fails one outside regions.lua). The zone is cut by the start disc around the spawn, which the
 -- spawn shift keeps at the origin on every map, so every spawn city, the zone's included, starts on normal
 -- ground with normal trees. Its heat climbs from a heat-1 rim to a core that mixes Alien Biomes' four

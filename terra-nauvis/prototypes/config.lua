@@ -103,6 +103,15 @@ local CT = {
   CL_T_AB = NOISE .. "temperature_ab_v1",
   CL_M_AB = NOISE .. "moisture_ab_v1",
   CL_A_AB = NOISE .. "aux_ab_v1",
+  CL_GRAIN = NOISE .. "climate_grain_v1",
+  CL_T_AB_G = NOISE .. "temperature_ab_v3",
+  CL_M_AB_G = NOISE .. "moisture_ab_v2",
+  CL_A_AB_G = NOISE .. "aux_ab_v2",
+  K_TILE_T = NOISE .. "tile_temperature",
+  K_TILE_M = NOISE .. "tile_moisture",
+  K_TILE_A = NOISE .. "tile_aux",
+  VT_BONUS_G = NOISE .. "vtile_bonus_v2",
+  AB_EXCLUDE_BODY_G = NOISE .. "ab_exclude_v2",
   CL_T_FB = NOISE .. "temperature_fb_v1",
   CL_M_FB = NOISE .. "moisture_fb_v1",
   CL_A_FB = NOISE .. "aux_fb_v1",
@@ -907,12 +916,19 @@ return {
   -- r tiles out (rings every `ring_step` tiles, about `arc_step` tiles apart on a ring, at least
   -- `min_ring_points`) whose disc of r + `land_margin` tiles is all reached land and holds no
   -- resource within r + `ore_margin`. r is the disc that holds the amount at `density` per tile,
+  -- shrunk by `shrink` down to `min_radius` when nothing fits. An ore whose control size is 0 is left
+  -- alone. Beside RSO the pass runs the same way on what RSO placed, read after RSO's on_init (the
+  -- `? rso-mod` dependency orders it first), so it adds only where RSO's own start fell short
+  -- (at seed 1002 it added one stone patch of 68,390 on 33 tiles); with `rso_start` off, RSO's
+  -- "Ore in starting area", the player asked for no ore there and the whole pass stands down. Scripted
+  -- ore never shows in a map preview.
   start_ore = {
     ores = {
       {resource = "iron-ore", reference = 368000, density = 540},
       {resource = "copper-ore", reference = 357000, density = 860},
       {resource = "stone", reference = 159000, density = 750},
     },
+    rso_start = "rso-ore-in-start-area",
     resource_type = "resource",
     water_layer = "water_tile",
     grid = 160,
@@ -1157,10 +1173,15 @@ return {
   },
 
   -- prototypes/expressions/destroyed.lua builds, from the region layer's interface names only:
+  --          distance to the spawn, so the zone is positive inside its seeded outline less its keep rows
+  --          (regions.lua seeded_polygon: vertices and edges move with the seed) and never inside the start
+  --          disc, where every spawn city keeps normal ground and trees; the zone's own start mask, d read from
   --   heat   where the zone is positive, clamp(rim + min(per_tile * zone, ramp) + noise, rim, cap) in Alien
   --          Biomes units: a heat-1 rim (100 to 120) that climbs within ramp / per_tile tiles to a core
   --          mixing heat-1 to heat-4 (heat-2 from 120, heat-3 from 135, heat-4 from 145 to 150; a small
   --          disc ramped 0.49 per tile to its cap, which on this zone would pave it with heat-4);
+  --          -inf elsewhere, neutral for max; the noise is in tiles, a texture, not geography, and fine enough
+  --          that a chunk rarely holds one heat band alone (at 96 tiles 48 percent of land chunks did, at 24, 2)
   --   temperature   the Alien Biomes temperature's next version: max(climate-tiles' first version, heat)
   --          with the toggle on, the first version alone off (a folded `if` on the switch)
   --   pools  per map with a city fold, its random pick over the cities outside the zone: the fold's hash
@@ -1169,6 +1190,7 @@ return {
   --          city number, so the first fold reads it and resolves it as a chosen city
   destroyed = {
     pools = {europe = DE.pool_europe, atlantic = DE.pool_atlantic, olde_world = DE.pool_olde_world},
+            noise = {amplitude = 20, wavelength_tiles = 24, octaves = 3, persistence = 0.6, seed1 = 7901}},
     switch_threshold = 0.5,
   },
 
@@ -1314,6 +1336,7 @@ return {
     octave_shift_px = 10000.37,
     max_arguments = 255,
     forest_boost = 2,
+    jitter = {mult_x = 0.6180339887, mult_y = 0.4142135624, mult_high = 0.569840291, high_bits = 65536,
     names = {
       suffix = RG_V,
       row = {sd = NOISE .. "sd_", w = NOISE .. "w_", depth = NOISE .. "depth_", hu = NOISE .. "hu_",
@@ -1409,6 +1432,21 @@ return {
       -- the moisture spread's cold), so the boreal belt keeps grass-2, beach sand and red desert out
       fallback = {cold_aux = 0.3, cold_cap = 0.45, cold_span = 12, dry_pull = 0.15, bias = 1},
     },
+    -- noise can move, so at scale 6, where the spread's finest octave is 240 tiles, every edge outside
+    -- the temperate band is a razor line round a flat blob. Europe hides it: 54 percent of its land is
+    -- temperate, against 18 on Old World and Atlantic, where vanilla tiles and their patch noise win.
+    -- Beside Alien Biomes, every map below gives the tile scores alone frayed copies of the three
+    -- fields (Europe too: its Moscow had the same razor edges): each Alien Biomes tile with a prefix
+    -- below reads keys.tile on its on branch, and the temperate bonus and exclusion read the
+    -- temperature copy, so their edge frays too. A copy adds
+    -- noise_layer_noise(layer), 6 to 48 tiles at every scale, the same call as grass-1's, so the Tile
+    -- program shares it; trees and decoratives keep the plain fields, so placement stays as it was.
+    -- The amounts are per unit (aux inside its cap), at full weight cold_span under cold_t and
+    -- Each key's prototype is its plain field, so a preset that names none keeps its program.
+    grain = {maps = {atlantic = true, europe = true, olde_world = true}, layer = 19,
+             temperature = 3, moisture = 0.09, aux = 0.09,
+             cold_t = 32, cold_span = 10, hot_t = 58, hot_span = 7,
+             prefixes = {"vegetation-", "mineral-", "frozen-", "volcanic-"},
     -- the coldness the fallback's pulls and spread read: 0 at core cold.t and warmer, 1 at
     -- cold.t - cold.span and colder
     cold = {t = 10, span = 30},
@@ -1487,6 +1525,7 @@ return {
                   "mineral-beige-dirt-1", "mineral-cream-sand-1", "mineral-grey-sand-1", "water-mud"},
     exclude = {
       prefixes = {"vegetation-", "mineral-"},
+      key = CT.AB_EXCLUDE, off = "0", body = CT.AB_EXCLUDE_BODY, body_grain = CT.AB_EXCLUDE_BODY_G,
     },
     marsh = {
       water_shallow = {key = CT.MARSH_SHALLOW, off = "-inf", body = CT.MARSH_SHALLOW_BODY},

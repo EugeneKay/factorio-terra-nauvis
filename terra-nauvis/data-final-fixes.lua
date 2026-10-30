@@ -82,9 +82,25 @@ local function vanilla_hooks()
   end
 end
 
+local function grain_scores(text)
+  for field, key in pairs(cfg.climate.grain.keys) do
+    text = string.gsub(text, "%f[%w_:]" .. field .. "%f[^%w_:]", key)
+  end
+end
+
+  local others = {}
   for name in pairs(tile_settings or {}) do
     local t = data.raw.tile[name]
+    if not excluded[name] and t and t.autoplace and t.autoplace.probability_expression then
         if string.sub(name, 1, #p) == p then
+          others[#others + 1] = name
+          break
+        end
+      end
+    end
+  end
+  table.sort(others)
+  for _, name in ipairs(others) do
     local autoplace = data.raw.tile[name].autoplace
     local original = "(" .. tostring(autoplace.probability_expression) .. ")"
   for name in pairs(tile_settings or {}) do
@@ -109,7 +125,9 @@ local function exclusion_hooks()
     end
   end
   table.sort(names)
+  local excluded = {}
   for _, name in ipairs(names) do
+    excluded[name] = true
     local autoplace = data.raw.tile[name].autoplace
     local original = "(" .. tostring(autoplace.probability_expression) .. ")"
   end
@@ -426,6 +444,10 @@ local function ridge_wrappers()
       log(cfg.identity.title .. ": the autoplace of " .. o.resource .. " holds no probability expression this " ..
           "version wraps; its ore keeps no ridge clearance")
     end
+  end
+  -- data:extend refuses an empty list, and a mod that replaces the base ores leaves this one empty
+  if #E > 0 then
+    data:extend(E)
   end
   point_presets(keys)
 end

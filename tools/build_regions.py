@@ -9,6 +9,10 @@ Rows: exact discs, polygons and buffered paths in degrees, written from
 data-src/approvals/approvals-data.json (what each map adopts, hotspot centres, radii and jitter) and
 the geography research file the module reads (outlines, extents and the protected features beside the
 destroyed zone), by the rules of the tuned prototype table:
+              every map whose extent holds it: a polygon whose vertices each move per seed by up to their
+              own jitter, at the file's warp share (above 1: stronger than the shared warp), plus the
+              file's keep rows (warp 0), buffered paths that hold Britain, Denmark and the Carpathian
+              crest outside at every seed
   forest      every adopted forest: the researched outline as a polygon, else a disc of its equivalent radius;
               share 0.25 for discs, 0.4 for thin outlines, 1 for the rest; boost 1
   hotspot     every adopted hotspot as a disc of its radius r at its adopted centre, jittered per
@@ -43,6 +47,7 @@ REPO = HERE.parent
 MOD = REPO / "terra-nauvis"
 TABLE = MOD / tnconfig.REGION_TABLE
 APPROVALS = REPO / "data-src" / "approvals" / "approvals-data.json"
+ZONE = REPO / "data-src" / "approvals" / "destroyed-zone.json"
 R7B = REPO / "docs" / "plan" / "research" / "R7b-geography.json"
 TOOL_VERSION = 1
 
@@ -240,10 +245,14 @@ def polygon_area_perimeter(pts):
 
 def max_drift_px(row, cfg):
     """The most a row's edge can move from its nominal shape at any seed, in reference pixels: its
+    share of the warp clamp, the roughness clamp and, for a hotspot or a seeded polygon, its jitter
+    radius (a polygon's largest vertex jitter)."""
     R = cfg_regions(cfg)
     out = float(row["warp"]) * float(R["warp"]["clamp_px"]) + float(R["rough"]["clamp_px"])
     if row["layer"] == "hotspot":
         out += row["jitter_km"] / km_per_px(cfg)
+    if row.get("vertex_jitter_km"):
+        out += max(row["vertex_jitter_km"]) / km_per_px(cfg)
     return out
 
 
@@ -274,15 +283,29 @@ def adopted_maps(cfg, adopted):
     return [k for k in cfg["map_order"] if (adopted or {}).get(k)]
 
 
+def derive_rows(cfg, appr, r7b, zone):
+    """The table's rows from the approval data, the researched geography and the zone's outline, in table order."""
     fr = frame(cfg)
     kpp = km_per_px(cfg)
     if abs(float(appr["rules"]["km_per_px"]) - kpp) > 1e-9:
         raise RegionError(f"config.lua regions.km_per_px {kpp} differs from approvals-data.json rules.km_per_px "
                           f"{appr['rules']['km_per_px']}")
     rows = []
+    verts = zone["vertices"]
+    poly = [[float(p["lat"]), float(p["lon"])] for p in verts]
     pts = [to_px(lat, lon, fr) for lat, lon in poly]
     maps_d = [k for k in cfg["map_order"] if all(in_map(cfg, k, u, v) for u, v in pts)]
     rows.append({"id": "destroyed_europe", "layer": "destroyed", "mode": "include", "shape": "polygon",
+                 "warp": float(zone["warp_share"]), "maps": maps_d, "latlon": poly,
+                 "vertex_jitter_km": [float(p["jitter_km"]) for p in verts],
+                 "vertex_phase": [phase_of("destroyed_europe_" + p["id"]) for p in verts],
+                 "source": "destroyed-zone.json vertices"})
+    # Keep rows: what stays outside the zone at every seed.
+    for k in zone["keep"]:
+        rows.append({"id": k["id"], "layer": "destroyed", "mode": "exclude", "shape": "path", "warp": SHARE_EXCLUDE,
+                     "maps": maps_d, "radius_km": float(k["radius_km"]),
+                     "latlon": [[float(a), float(b)] for a, b in k["latlon"]],
+                     "source": f"destroyed-zone.json keep {k['id']}"})
     # Forests.
     r7f = {f["id"]: f for f in r7b["forests"]}
     for f in appr["forests"]:
@@ -418,6 +441,11 @@ def emit_row(r):
         out.append(inner + "latlon = {")
         out += wrap_items(["{" + lua_num(a) + ", " + lua_num(b) + "}" for a, b in r["latlon"]], inner + "  ")
         out.append(inner + "},")
+    for k in ("vertex_jitter_km", "vertex_phase"):
+        if k in r:
+            out.append(inner + k + " = {")
+            out += wrap_items([lua_num(v) for v in r[k]], inner + "  ")
+            out.append(inner + "},")
     out.append(inner + "source = " + lua_str(r["source"]) + ",")
     out.append(ind + "},")
     for line in out:
@@ -431,6 +459,7 @@ HEADER = """\
 -- Written by tools/build_regions.py (writer {tool}) from
 --   data-src/approvals/approvals-data.json sha256 {appr}
 --   docs/plan/research/R7b-geography.json sha256 {r7b}
+--   data-src/approvals/destroyed-zone.json sha256 {zone}
 -- Never edit by hand: a change is an edit of approvals-data.json, then
 -- `python tools/build_regions.py emit`; the static gate row re-emits this file and fails on a difference.
 --
@@ -441,10 +470,14 @@ HEADER = """\
 -- include, or exclude to keep a protected feature out of the zone); shape (disc: lat, lon,
 -- radius_km; polygon: latlon vertices; path: latlon and radius_km, buffered); warp (the row's share
 -- of the shared domain warp); maps (the maps that adopt it); boost (forest strength); mult, resource,
+-- jitter_km and phase (hotspot: biter multiplier, resource, jitter radius and the phase of its fold);
+-- vertex_jitter_km and vertex_phase (a seeded polygon: each vertex's jitter radius and fold phase).
 -- Degrees throughout; sizes in km at regions.km_per_px (config.lua).
 """
 
 
+def emit_text(rows, appr_sha, r7b_sha, zone_sha):
+    out = HEADER.format(tool=TOOL_VERSION, appr=appr_sha, r7b=r7b_sha, zone=zone_sha).splitlines()
     out += ["return {", "  rows = {"]
     for r in rows:
         out += emit_row(r)
@@ -460,9 +493,13 @@ def sha256(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
+def build(cfg=None, appr_path=APPROVALS, r7b_path=R7B, zone_path=ZONE):
     cfg = cfg or tnconfig.load()
     appr = json.loads(Path(appr_path).read_text(encoding="utf-8"))
     r7b = json.loads(Path(r7b_path).read_text(encoding="utf-8"))
+    zone = json.loads(Path(zone_path).read_text(encoding="utf-8"))
+    rows = derive_rows(cfg, appr, r7b, zone)
+    return rows, emit_text(rows, sha256(appr_path), sha256(r7b_path), sha256(zone_path))
 
 
 # ------------------------------------------------------------------------------------------------ load
@@ -491,6 +528,8 @@ def row_problems(r):
         out.append(f"layer {r.get('layer')!r}")
     if r.get("shape") not in SHAPES:
         out.append(f"shape {r.get('shape')!r}")
+    if not isinstance(r.get("warp"), (int, float)) or not 0 <= r["warp"] <= tnconfig.REGION_MAX_SHARE:
+        out.append(f"warp {r.get('warp')!r} is not a share in [0, {tnconfig.REGION_MAX_SHARE}]")
     if not isinstance(r.get("maps"), list) or not r["maps"]:
         out.append("maps is not a list of map keys")
     if r.get("shape") in ("disc", "path") and not (isinstance(r.get("radius_km"), (int, float)) and r["radius_km"] > 0):
@@ -504,6 +543,11 @@ def row_problems(r):
             out.append(f"a {r['shape']} needs latlon with at least {need} vertices")
     if r.get("layer") == "destroyed" and r.get("mode") not in ("include", "exclude"):
         out.append("a destroyed row needs mode include or exclude")
+    if "vertex_jitter_km" in r or "vertex_phase" in r:
+        n = len(r.get("latlon") or [])
+        if r.get("shape") != "polygon" or len(r.get("vertex_jitter_km") or []) != n or \
+                len(r.get("vertex_phase") or []) != n:
+            out.append("a seeded polygon needs one vertex_jitter_km and one vertex_phase per vertex")
     if r.get("layer") == "hotspot":
         if r.get("shape") != "disc":
             out.append("a hotspot row is a disc")

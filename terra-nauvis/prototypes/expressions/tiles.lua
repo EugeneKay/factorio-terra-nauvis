@@ -51,9 +51,25 @@ def(MS.grass.key, MS.grass.off)
 -- alone (with -inf there, a test render showed water-mud covering the band wherever the lean
 -- failed); at and above the band's top, below its bottom where the lean fails, on water and
 -- inside marshes -inf. The lean still reaches below the band's bottom, on its cold side.
+    num(X.temperate_below) .. ", -inf, if(1 - abs(" .. t .. " - " .. num(V.lean_t) .. ") / " .. num(V.lean_span) ..
+end
+local PATCH = {patch = "clamp(" .. num(V.patch.amplitude) .. " * " .. noise(V.patch) .. ", " .. num(-V.patch.clamp) ..
+  ", " .. num(V.patch.clamp) .. ")"}
 
 
 -- The exclusion of non-adopted Alien Biomes land tiles from the temperate band.
+  return "if(" .. t .. " >= " .. num(X.temperate_from) .. ", if(" .. t .. " < " .. num(X.temperate_below) ..
+end
+
+-- The grain's tile copies (config.lua climate.grain): each key is its plain field, and the bonus and
+-- exclusion versions read the temperature copy, so the temperate band's edge frays with the tiles. Tile
+-- scores alone read them; they exist only with Alien Biomes, as the fields' grain bodies do.
+if mods["alien-biomes"] then
+  local GK = cfg.climate.grain.keys
+  for field, key in pairs(GK) do
+    def(key, field)
+  end
+end
 
 -- Marsh pools: inside a marsh (weight above marsh_cut; normalized noise alone passes the weight-0 cut
 -- on about 3 percent of tiles in a test run), the pool noise passes a cut that falls as

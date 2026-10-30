@@ -654,20 +654,28 @@ def _hinge_obj(f, c, y, valid, m, lamv):
     return float((valid * v * v).sum(dtype=np.float64) + (lamv * c * c).sum())
 
 
+def _newton(B, c, y, valid, m, lam, steps, tol, maxit, log, wgt=None):
+    """wgt: the per-pixel weights of a region-weighted fit (0 on thin water), or None, where every
+    valid pixel weighs 1 and the arithmetic is the original fitter's unchanged."""
     import numpy as np
     lamv = lam * B.precond()
+    wv = valid if wgt is None else wgt
     f = B.forward(c)
+    J = _hinge_obj(f, c, y, wv, m, lamv)
     iters = 0
     for s in range(steps):
         a = ((y * f) < m) & valid
+        cn, it = _pcg(B, c, a if wgt is None else a * wgt, (y * m).astype(np.float32), lam, tol, maxit)
         iters += it
         fn = B.forward(cn)
+        Jn = _hinge_obj(fn, cn, y, wv, m, lamv)
         if Jn > J:
             # f is linear in c, so a damped step is the same blend of both evaluations
             best = (Jn, fn, cn)
             for step in (0.5, 0.25, 0.125):
                 ft = f + step * (fn - f)
                 ct = c + step * (cn - c)
+                Jt = _hinge_obj(ft, ct, y, wv, m, lamv)
                 if Jt < best[0]:
                     best = (Jt, ft, ct)
                 if Jt < J:
@@ -707,6 +715,49 @@ def tile_estimate(desc):
     return round(a * terms + b * desc["factors"] + g * desc["row_groups"] + z)
 
 
+def region_box_px(mref, box):
+    """(r0, r1, c0, c1): the reference pixels whose centres lie in a box of (lon0, lon1, lat0, lat1)
+    degrees in the map's own frame (its georeference), clipped to the raster."""
+    import math
+    lon0, lon1, lat0, lat1 = (float(x) for x in box[:4])
+    u0, v0 = mref.lonlat_to_uv(min(lon0, lon1), max(lat0, lat1))
+    u1, v1 = mref.lonlat_to_uv(max(lon0, lon1), min(lat0, lat1))
+    c0, c1 = max(0, math.ceil(u0 - 0.5)), min(mref.W, math.floor(u1 - 0.5) + 1)
+    r0, r1 = max(0, math.ceil(v0 - 0.5)), min(mref.H, math.floor(v1 - 0.5) + 1)
+    return r0, r1, c0, c1
+
+
+def region_weights(mref, valid, regions):
+    """The per-pixel weights of a region-weighted fit: 1 on every valid pixel, times the largest
+    multiplier of the region boxes holding the pixel centre, and 0 on thin water."""
+    import numpy as np
+    mult = np.ones(valid.shape, np.float32)
+    for r in regions:
+        r0, r1, c0, c1 = region_box_px(mref, r)
+        np.maximum(mult[r0:r1, c0:c1], np.float32(r[4]), out=mult[r0:r1, c0:c1])
+    mult *= valid
+    return mult
+
+
+def parse_region(text):
+    """'lon0,lon1,lat0,lat1,weight' (degrees in the map's frame; weight above 0)."""
+    parts = [float(x) for x in text.split(",")]
+    if len(parts) != 5 or parts[4] <= 0:
+        raise argparse.ArgumentTypeError("a region is lon0,lon1,lat0,lat1,weight with weight above 0")
+    return parts
+
+
+    parts = [float(x) for x in text.split(",")]
+def fit(map_key, work, nmax, stop_agreement, extra_steps, max_steps=None, through=8192, regions=None,
+    """The greedy fit at native resolution, resumable (the section comment above says what the port changed).
+
+    regions: optional boxes [lon0, lon1, lat0, lat1, weight] that multiply the fit's per-pixel
+    weight (the hinge objective, the refits and the greedy scores), so the terms concentrate on
+    those coasts. Off by default, which keeps the original arithmetic and the recorded fits unchanged;
+    when on, the boxes join the fit's params, so a resume with other boxes is refused.
+
+    start_from: optional checkpoint of the same reference (an earlier fit's growth step) whose terms
+    and coefficients the growth continues from, instead of the least-squares start at nmin terms;
     import time
     import numpy as np
     import earthgeo as eg
@@ -720,6 +771,13 @@ def tile_estimate(desc):
         logf.write(line + "\n")
         logf.flush()
 
+    P = dict(FIT_PARAMS)
+    if regions:
+        P["region_weights"] = [[float(x) for x in r] for r in regions]
+    if start_from:
+        start_from = Path(start_from)
+        P["start_from"] = {"checkpoint": start_from.name, "sha256": sha256_file(start_from),
+                           "terms": int(len(load_model(start_from)[2]))}
     t0 = time.time()
     mref = eg.MapRef(map_key)
     H, W = mref.H, mref.W
@@ -742,6 +800,8 @@ def tile_estimate(desc):
     filled = land | thin
     valid = ~thin
     n_valid = int(valid.sum())
+    wgt = region_weights(mref, valid, regions) if regions else None
+    wv = valid if wgt is None else wgt
     y = np.where(filled, np.int8(1), np.int8(-1))
     t = saturated_sdf(filled, P["D"])
     del filled, land, thin
@@ -771,9 +831,17 @@ def tile_estimate(desc):
             log(f"resumed after {done} terms from {last['checkpoint']}; the model field recomputed")
         del t
         t = None
+    elif start_from:
+        meta, idx, coef = load_model(start_from)
         if [list(s) for s in meta["shapes"]] != [list(s) for s in B.shape]:
+            raise SystemExit("RESULT fail the start checkpoint's grid shapes differ from this reference's")
         B.idx = [np.asarray(a, np.int64) for a in idx]
         c = coef
+        done = int(len(coef))
+        f = B.forward(c)
+        log(f"starting after {done} terms from {start_from.name}")
+        del t
+        t = None
     first = done == 0
     reached = next((p["terms_target"] for p in state["points"] if p["sample_agreement"] >= stop_agreement), None)
     ran = 0
@@ -789,14 +857,18 @@ def tile_estimate(desc):
             break
         ts = time.time()
         if first:
+            R = wv * t
         else:
             act_px = ((y * f) < marg) & valid
+            R = (act_px if wgt is None else act_px * wgt) * (y * marg - f)
             del act_px
         del R
         c = B.add(lv, fl, c)
         cg_ls = 0
         if first:
+            c, cg_ls = _pcg(B, c, wv, t, P["lam"], P["tol"], P["maxit"])
         f = None
+        c, f, J, cg_h = _newton(B, c, y, valid, marg, P["lam"], P["newton"], P["tol"], P["maxit"], log, wgt)
         if first:
             t = None
             first = False
@@ -830,6 +902,7 @@ def tile_estimate(desc):
     work.mkdir(parents=True, exist_ok=True)
     filled = land | thin
     valid = ~thin
+    wgt = region_weights(mref, valid, regions) if regions else None
     y = np.where(filled, np.int8(1), np.int8(-1))
     del filled, land, thin
     mref._land = mref._thin = None
@@ -880,7 +953,16 @@ def curve(map_key, work, min_sample, only=None):
     return doc
 
 
+def adopt(map_key, work, version=1, budget=None):
     """Copy the shipped checkpoints (the smallest at or above FIT_BAR, and the 256-term one) and the
+    curve into data-src/fits/<map>/ and write its fit.json; the emitter reads only that folder.
+
+    budget: for a region-weighted fit grown from the folder's shipped fit (fit --region and
+    --start-from), ship the largest evaluated step within this many terms instead of the bar rule's
+    (every step is above the bar once the start is), and record the budget in fit.json. The coarse
+    land field stays the folder's own (fit.json's land_coarse body and its checkpoint, byte for
+    byte), and curve.json becomes the whole lineage: the folder's curve through the start
+    checkpoint, each point marked stage "base", then the region steps, marked stage "region"."""
     import shutil
     work = Path(work)
     doc = json.loads((work / "curve.json").read_text(encoding="utf-8"))
@@ -889,11 +971,50 @@ def curve(map_key, work, min_sample, only=None):
     dst.mkdir(parents=True, exist_ok=True)
     import tnconfig
     label = tnconfig.load()["maps"][map_key]["display"]
+    if budget is not None:
+        params = doc["params"]
+        start = params.get("start_from")
+        if not params.get("region_weights") or not start:
+            raise SystemExit(f"RESULT fail --budget adopts a region-weighted fit grown with --start-from; {work} is not")
+        old = fit_spec(map_key)["bodies"]
+        if sha256_file(dst / start["checkpoint"]) != start["sha256"]:
+            raise SystemExit(f"RESULT fail the fit started from {start['checkpoint']} {start['sha256'][:12]}, which "
+                             f"is not {dst / start['checkpoint']}")
+        base = json.loads((dst / "curve.json").read_text(encoding="utf-8"))
+        bpts = [dict(p, stage="base") for p in base["points"] if p["terms"] <= start["terms"]]
+        if not any(p["checkpoint"] == old["land_coarse"]["checkpoint"] and "t1" in p for p in bpts):
+            raise SystemExit(f"RESULT fail the folder's curve does not record {old['land_coarse']['checkpoint']}")
+        within = [p for p in pts if p["terms"] <= budget]
+        if not within:
+            raise SystemExit(f"RESULT fail no evaluated step of {work} lies within {budget} terms")
+        ship = max(within, key=lambda p: p["terms"])
+        shutil.copyfile(work / ship["checkpoint"], dst / ship["checkpoint"])
+                   points=bpts + [dict(p, stage="region") for p in doc["points"]])
+        doc["note"] = (doc["note"] + "; stage base: the folder's earlier fit through the start checkpoint "
+                       "(base_params), stage region: the region-weighted growth from it (params)")
+        coarse = next(p for p in bpts if p["checkpoint"] == old["land_coarse"]["checkpoint"])
+        geo = {"checkpoint": ship["checkpoint"], "file": f"geo_{map_key}_v{version}.lua",
+               "note": f"{label}'s coast fit, region weighted", "budget_terms": int(budget)}
+        coarse_body = old["land_coarse"]
+    else:
+        ship = next((p for p in sorted(pts, key=lambda p: p["terms"]) if p["t1"]["agreement"] >= FIT_BAR), None)
+        if ship is None:
+            raise SystemExit(f"RESULT fail no evaluated checkpoint of {map_key} reaches {FIT_BAR}")
+        coarse = next((p for p in pts if p["terms_target"] == COARSE_TERMS), None)
+        if coarse is None:
+            raise SystemExit(f"RESULT fail the {COARSE_TERMS}-term checkpoint of {map_key} is not evaluated")
+        for p in (ship, coarse):
+            shutil.copyfile(work / p["checkpoint"], dst / p["checkpoint"])
+        geo = {"checkpoint": ship["checkpoint"], "file": f"geo_{map_key}_v{version}.lua",
+               "note": f"{label}'s coast fit, the smallest checkpoint at or above {FIT_BAR}"}
+        coarse_body = {"checkpoint": coarse["checkpoint"], "file": f"land_coarse_{map_key}_v{version}.lua",
+                       "note": f"{label}'s coarse land field, the {COARSE_TERMS}-tent checkpoint of the same fit"}
     _write_json(dst / "curve.json", doc)
     spec = {"format": "tn-fit/1", "map": map_key,
             "note": f"Which checkpoint each generated body of {label} is emitted from (tools/build_geo.py). "
                     "See PROVENANCE.md.",
             # each note heads its generated file, so it stays short (the file's 120-column rule)
+            "bodies": {"geo": geo, "land_coarse": coarse_body}}
     _write_json(dst / "fit.json", spec)
     return {"geo": ship, "land_coarse": coarse}
 
@@ -1705,6 +1826,11 @@ def main(argv=None):
     p.add_argument("--max-steps", type=int, help="run at most this many growth steps now (resume later)")
     p.add_argument("--through", type=int, default=8192,
                    help="always run through this term count (the curve compares the shipped checkpoint with it)")
+    p.add_argument("--region", type=parse_region, action="append",
+                   help="lon0,lon1,lat0,lat1,weight: multiply the fit's weight on the pixels of this box (degrees "
+                        "in the map's own frame; repeatable, overlaps take the largest); off by default")
+    p.add_argument("--start-from", help="continue the growth from this checkpoint of the same reference (an "
+                                        "earlier fit's growth step) instead of the least-squares start")
     p = sub.add_parser("curve")
     p.add_argument("--map", required=True)
     p.add_argument("--work")
@@ -1713,6 +1839,7 @@ def main(argv=None):
     p = sub.add_parser("adopt")
     p.add_argument("--map", required=True)
     p.add_argument("--work")
+    p.add_argument("--budget", type=int, help="a region-weighted fit grown with --start-from: ship its largest "
     a = ap.parse_args(argv)
     if a.cmd == "fit":
         st = fit(a.map, a.work or default_work(a.map), a.nmax, a.stop_agreement, a.extra_steps, a.max_steps,

@@ -29,6 +29,8 @@ Version: 0.1.0
     - Inland lakes startup setting, off by default: sparse random lakes across the land, kept off
       coasts and out of the start area. Off leaves the lake at the spawn city, the rivers and the
     - A warning at the start, and to each player who joins, when RSO is active.
+    - A world that uses a Terra Nauvis map type alone gets the same start as a preset world: the
+      intro names its spawn city and world size, and with RSO active it gets the RSO warning.
     - Other planets' surfaces never take the Terra Nauvis map, and adding the mod to a world made
     - Rivers, straits and canals on every map at every scale: rivers grow with the map scale and
       carry a walkable shallow ford every 60 reference pixels; Gibraltar, Dover and the Great Belt

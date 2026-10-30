@@ -20,6 +20,7 @@
 --     number names the map's random pool, which counts as random (0) here.
 --
 local cfg = require("prototypes.config")
+local cities = require("prototypes.city_tables")
 local guards = require("scripts.guards")
 
 local M = {}

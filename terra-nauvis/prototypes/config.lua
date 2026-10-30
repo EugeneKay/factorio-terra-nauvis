@@ -289,6 +289,30 @@ local ELN = {
   EU6_CX = NOISE .. "cx_europe_v6",
   EU6_CY = NOISE .. "cy_europe_v6",
 }
+local OAS = {
+  AT6_GX = NOISE .. "gx_atlantic_v6",
+  AT6_GY = NOISE .. "gy_atlantic_v6",
+  AT6_U = NOISE .. "u_atlantic_v6",
+  AT6_V = NOISE .. "v_atlantic_v6",
+  AT6_CX = NOISE .. "cx_atlantic_v6",
+  AT6_CY = NOISE .. "cy_atlantic_v6",
+  AT_CITY = NOISE .. "city_atlantic",
+  AT_CITY_INDEX = NOISE .. "city_index_atlantic_v1",
+  AT_CITY_CX = NOISE .. "city_cx_atlantic_v1",
+  AT_CITY_CY = NOISE .. "city_cy_atlantic_v1",
+  OW6_GX = NOISE .. "gx_olde_world_v6",
+  OW6_GY = NOISE .. "gy_olde_world_v6",
+  OW6_U = NOISE .. "u_olde_world_v6",
+  OW6_V = NOISE .. "v_olde_world_v6",
+  OW6_CX = NOISE .. "cx_olde_world_v6",
+  OW6_CY = NOISE .. "cy_olde_world_v6",
+  OW_CITY = NOISE .. "city_olde_world",
+  OW_CITY_INDEX = NOISE .. "city_index_olde_world_v1",
+  OW_CITY_CX = NOISE .. "city_cx_olde_world_v1",
+  OW_CITY_CY = NOISE .. "city_cy_olde_world_v1",
+}
+local OAS_SETS = {
+}
 -- is a name switch to tn_one and tn_zero, baked on only when its setting is on and Alien Biomes is loaded
 -- (without Alien Biomes the switch drops at the data stage). The key (K) and the bodies, one table so this
 -- file stays under Lua's 200 locals per function: the zone (the region layer's zone depth cut by the start
@@ -403,6 +427,7 @@ return {
         "random", "prague", "madrid", "london", "kovdor", "munguy", "xeta", "yakutia", "zyryanka", "kharkiv",
         "huambo", "mongo", "dangila", "bamako", "akka", "waddan", "johannesburg", "songea", "tabuk", "chengdu",
         "nanchang", "songling", "delhi", "hampi", "bam", "aktobe", "semey", "moron", "bangkok", "griffith", "newman",
+        "frankfurt", "aachen", "moscow",
       },
       order = "b-c",
     },
@@ -522,22 +547,26 @@ return {
       versions = {
           fallbacks = {
             {name = K_SCALE, map_qualified = false},
+            {name = OAS.AT_CITY, map_qualified = true},
             {name = K_CANALS, map_qualified = false},
             {name = REN.AT_FIELDS_KEY, map_qualified = true},
             {name = ELN.K_INLAND_LAKES, map_qualified = false},
           },
           spawn = {
+            city_setting = "spawn_city_atlantic", city = OAS.AT_CITY, city_index = OAS.AT_CITY_INDEX,
           fields = REN.AT_FIELDS_KEY,
           edge = true,
           lakes = ELN.K_INLAND_LAKES,
         },
           fallbacks = {
             {name = K_SCALE, map_qualified = false},
+            {name = OAS.AT_CITY, map_qualified = true},
             {name = K_CANALS, map_qualified = false},
             {name = REN.AT_FIELDS_KEY, map_qualified = true},
             {name = ELN.K_INLAND_LAKES, map_qualified = false},
           },
           spawn = {
+            city_setting = "spawn_city_atlantic", city = OAS.AT_CITY, city_index = OAS.AT_CITY_INDEX,
           fields = REN.AT_FIELDS_KEY,
           edge = true,
           lakes = ELN.K_INLAND_LAKES,
@@ -549,22 +578,26 @@ return {
       versions = {
           fallbacks = {
             {name = K_SCALE, map_qualified = false},
+            {name = OAS.OW_CITY, map_qualified = true},
             {name = K_CANALS, map_qualified = false},
             {name = REN.OW_FIELDS_KEY, map_qualified = true},
             {name = ELN.K_INLAND_LAKES, map_qualified = false},
           },
           spawn = {
+            city_setting = "spawn_city_olde_world", city = OAS.OW_CITY, city_index = OAS.OW_CITY_INDEX,
           fields = REN.OW_FIELDS_KEY,
           edge = true,
           lakes = ELN.K_INLAND_LAKES,
         },
           fallbacks = {
             {name = K_SCALE, map_qualified = false},
+            {name = OAS.OW_CITY, map_qualified = true},
             {name = K_CANALS, map_qualified = false},
             {name = REN.OW_FIELDS_KEY, map_qualified = true},
             {name = ELN.K_INLAND_LAKES, map_qualified = false},
           },
           spawn = {
+            city_setting = "spawn_city_olde_world", city = OAS.OW_CITY, city_index = OAS.OW_CITY_INDEX,
           fields = REN.OW_FIELDS_KEY,
           edge = true,
           lakes = ELN.K_INLAND_LAKES,
@@ -634,6 +667,8 @@ return {
                  "enemy_base_probability", REN.K_HOTSPOTS, REN.EU_FIELDS_KEY, REN.AT_FIELDS_KEY, REN.OW_FIELDS_KEY,
                  "entity:offshore-oil:probability", "entity:offshore-oil:richness",
                  -- edge-and-lakes: the inland lakes switch and the new versions' city offset names
+                 -- the Old World and Atlantic spawn city: the maps' city numbers and the new versions' offset names
+                 OAS.AT_CITY, OAS.OW_CITY, OAS.AT6_CX, OAS.AT6_CY, OAS.OW6_CX, OAS.OW6_CY,
                  -- destroyed-europe: the zone toggle (temperature and the city numbers are listed above)
                  DE.K,
                  -- coast-band-fix: the band-fix key, on presets whose map the setting acts on
@@ -737,9 +772,11 @@ return {
     {
       release = "0.1.0",
       map = "atlantic",
+      geography = 17,
     {
       release = "0.1.0",
       map = "olde_world",
+      geography = 18,
     -- The Destroyed Europe bodies (destroyed-europe). They belong to no geography: the zone and its heat
     -- read the region layer's zone depth and the spawn distance; the temperature's next version reads
     -- climate-tiles' Alien Biomes temperature, so it exists only with Alien Biomes and is registered from

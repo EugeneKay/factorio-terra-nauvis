@@ -19,6 +19,7 @@
 -- comes from config.lua, the city tables and the generated bearings. A body that several
 -- versions name is defined once, and two versions that would build it differently fail at load.
 local cfg = require("prototypes.config")
+local cities = require("prototypes.city_tables")
 -- destroyed-europe: the cities its zone covers, which a random pick on a world with the zone on skips
 local destroyed = require("prototypes.tables.destroyed")
 

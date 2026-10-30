@@ -3764,46 +3764,304 @@
    "dump": "m2",
    "slice": "destroyed-europe",
    "registered": "2026-10-29"
+  },
+  "tn_city_cx_atlantic_v1": {
+   "type": "noise-expression",
+   "sha256": "135a4c7ca7ef0516337ab9f57484d9c651e3636a2690a52427c8cd0b247f15f7",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+  "tn_city_cx_olde_world_v1": {
+   "type": "noise-expression",
+   "sha256": "55289370bd3afd5216ec7ea1fbfea16e84dd1d004f6a3c1e8f2332cdd571e0cd",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+  "tn_city_cy_atlantic_v1": {
+   "type": "noise-expression",
+   "sha256": "d155868f57c143d134cbcb75887bb634e06910b2c319ea569f40ce691a1f0061",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+  "tn_city_cy_olde_world_v1": {
+   "type": "noise-expression",
+   "sha256": "ae1f2db14c29005d58417ef5ca44d8b375650625ee82dc5eb23edc5e96a8fab7",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+  "tn_city_index_atlantic_v1": {
+   "type": "noise-expression",
+   "sha256": "e7f0c925542bdbdb824fa6bf83a162963a1f9e9b87cb6188c613c5693a036061",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+  "tn_city_index_olde_world_v1": {
+   "type": "noise-expression",
+   "sha256": "bcf5bf252ae82d48d3b4853b52513df6b210018b83daad41cd26b22febcf721d",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+  "tn_cx_atlantic_v6": {
+   "type": "noise-expression",
+   "sha256": "4eea67be9a42f6c0276f076d57c4aa8961d552886cffe7364e1d40752c58258d",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+  "tn_cx_olde_world_v6": {
+   "type": "noise-expression",
+   "sha256": "ce91c1e8abe68831a427f18d2057ec8b48b68efe09557640d770ddab740509d3",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+  "tn_cy_atlantic_v6": {
+   "type": "noise-expression",
+   "sha256": "8893cf4ef216643bed1a9c87c668ef476256452a4f3999429353aaf1a090c084",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+  "tn_cy_olde_world_v6": {
+   "type": "noise-expression",
+   "sha256": "fa8c45350f133113cf97ba326513119a6d3b0152d436a54896390ecc4b9610a0",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "c2c9e3f2fe0c1985d1d80802a0be81e2c65e08b73345e637eb9e7e235e2efaf2",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "3fe04ab53c7ead2a2d4364e5d145ec89457722a0070be9e3b7f6a2a60cd26e96",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "e6b58427aaa1753afdbe5ca77f36f23b02169582b560ea9b9cb2b9bd38847a1c",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "d4baabad00fc9db4e7bc727a6a3e834f9171aaeca74c20ab5a9797c9421ce09d",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "87b227a630aa809936a201b5c2f92004277295e22be94898ef03ae95d6d2e005",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "c64098dbc7839fb96dbad55f0e7b0f256f08b2b0edd45ee26f08f9235bcb331e",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "dcf1927db66e6b00baa638979685d941e99434efd270304743a0c7b50e06e450",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "ffc5a40b96c6878639a82de75a1b8dcd99fbb397cc5ab962db9a08a6113c5407",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "olde-world-atlantic",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "dump": "m1",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "registered": "2026-10-30"
   }
  }
 }

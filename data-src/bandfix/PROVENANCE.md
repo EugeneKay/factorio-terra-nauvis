@@ -16,3 +16,8 @@ re-emits the tables twice and compares each byte for byte with the committed fil
 
 | File | sha256 | Role |
 |---|---|---|
+
+`bandfix.tables` gained Europe's geography 14 and Old World's 16 and 18 (the soft-edge
+versions; the handler skips the edge band on them). The emitter reads that list only to check the
+map's membership, so the tables are unchanged: both manifests' `bandfix_config_sha256` was re-stamped
+to the new group (the old digest recomputes exactly from the new group with the old lists).

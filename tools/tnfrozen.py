@@ -306,6 +306,16 @@ def offline_bodies(source, cfg):
     return earth_bodies(offline_dump(source), cfg)
 
 
+# The dumps the offline data stage reproduces: M1, base only (tools/tnlua.py runs no other mod). A
+# record registered from the Alien Biomes (M2) or Oil Rig (M3) dump names a body that exists only beside
+# that mod; the gate's frozen row holds those to the game's own dumps.
+OFFLINE_DUMPS = ("m1",)
+
+
+def body_problems(bodies, fz, cfg, where="the offline data stage", dumps=OFFLINE_DUMPS):
+    """Every registered record of `dumps` held to the body `bodies` builds under its name ([] when all
+    hold): present with the record's type and the record's hash (a body changed in place through its
+    code or its data fails like a re-hash), and every Earth body built there registered, the exempt
     out = []
     registered = (fz or {}).get("bodies") if isinstance((fz or {}).get("bodies"), dict) else {}
     for name, rec in sorted(registered.items()):

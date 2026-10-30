@@ -35,6 +35,7 @@
    "default_value": "random",
    "allowed_values": ["random", "prague", "madrid", "london", "kovdor", "munguy", "xeta", "yakutia", "zyryanka",
     "kharkiv", "huambo", "mongo", "dangila", "bamako", "akka", "waddan", "johannesburg", "songea", "tabuk", "chengdu",
+    "nanchang", "songling", "delhi", "hampi", "bam", "aktobe", "semey", "moron", "bangkok", "griffith", "newman", "frankfurt", "aachen", "moscow"]
   },
    "type": "bool-setting",
    "setting_type": "startup",

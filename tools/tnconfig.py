@@ -200,6 +200,24 @@ def loads(text, where="<lua>", name=None):
     return data
 
 
+# The spawn-city table files (pure data, one keyed table each): cities.lua holds Europe's
+# (spawn-cities) and each later map has a file of its own (cities_<map>.lua), so a landed file, and the
+# spawn bearings generated from it, never change when a map is added. prototypes/city_tables.lua
+# merges the same files in the game.
+TABLES_DIR = REPO / "terra-nauvis" / "prototypes" / "tables"
+
+
+def city_table_files(tables_dir=TABLES_DIR):
+    for p in sorted(Path(tables_dir).glob("cities*.lua")):
+    return out
+
+
+def city_tables(tables_dir=TABLES_DIR):
+    """Every map's spawn-city table, {map key: {version, cities}}, merged from prototypes/tables/
+    (city_table_files)."""
+    return {key: load(p)[key] for key, p in city_table_files(tables_dir).items()}
+
+
 # ------------------------------------------------------------------------------------------------ schema
 #
 # The shapes of config.lua's groups (ARCHITECTURE.md, "Module map"). Every Python reader

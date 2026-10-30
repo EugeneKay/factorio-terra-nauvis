@@ -72,6 +72,7 @@
    "type": "bool-setting",
    "setting_type": "startup",
    "default_value": false
+  },
    "type": "string-setting",
    "setting_type": "startup",
    "type": "bool-setting",
@@ -80,6 +81,7 @@
   },
    "type": "string-setting",
    "setting_type": "startup",
+  "exact_coast": {
    "type": "bool-setting",
    "setting_type": "startup",
   }

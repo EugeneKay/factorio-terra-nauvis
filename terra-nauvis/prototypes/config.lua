@@ -302,6 +302,12 @@ local DE = {
   pool_europe = NOISE .. "city_pool_europe_v1",
 }
 
+-- neutral body tn_one, only when the startup setting is on and that map passed all four flip checks
+-- the destroyed-europe names are (Lua's 200 locals per function).
+local BFN = {
+  K = NOISE .. "bandfix",
+}
+
 return {
   identity = {
     id = ID,
@@ -431,6 +437,8 @@ return {
       name = ID .. "-destroyed-europe", type = "bool-setting", setting_type = "startup", default_value = false,
       order = "c-f",
     },
+    exact_coast = {
+    },
   },
 
   -- Map-gen presets, sorted right after Default ("a") and before Rich resources ("b").
@@ -472,6 +480,8 @@ return {
     inland_lakes = ELN.K_INLAND_LAKES,
     -- destroyed-europe: the zone toggle
     destroyed = DE.K,
+    -- coast-band-fix: the band-fix key (no prototype; control only)
+    bandfix = BFN.K,
   },
 
   -- Each map's geography (ARCHITECTURE.md, "Map type entries"): map_type_order, the order of the
@@ -619,6 +629,8 @@ return {
                  "entity:offshore-oil:probability", "entity:offshore-oil:richness",
                  -- edge-and-lakes: the inland lakes switch and the new versions' city offset names
                  -- destroyed-europe: the zone toggle (temperature and the city numbers are listed above)
+                 DE.K,
+                 -- coast-band-fix: the band-fix key, on presets whose map the setting acts on
 
   -- decorative or Cliff root on a Terra Nauvis preset may reach one. The start land guarantee is
   -- analytic but belongs to the field by ARCHITECTURE.md's firewall rule; the spawn lake, the bias,
@@ -1352,5 +1364,48 @@ return {
       rocks = TF_ROCKS, rock_off = "0",
       decoratives = TF_DECO, deco_off = "-inf", deco_body = TFN.TF_VDECO, deco_on = "0",
     },
+  },
+
+  -- Exact coastlines (ARCHITECTURE.md, "Exact coastlines"). On a save whose Nauvis surface carries the key,
+  -- scripts/bandfix.lua's on_chunk_generated handler rewrites, where the generated land or water is wrong,
+  -- the tiles of the K
+  --   setting, key, on  the startup bool, the per-save name switch and its value when on: a map's preset
+  --       carries the key only when the setting is on and the map is listed in maps; absent means off
+  --       is never listed
+  --   checks  each flip-checked map's measured configuration, its scale
+  --   tables  per map with K+ tables: the geography ids (tn_geo) they serve. They follow the coast fit, the
+  --   float_margin_px  float32 slack over the lattice detail's bound (coast.detail_amplitude_px times
+  --       coast.detail_clamp): a tile counts as possibly wrong unless the fit alone is right by more
+  --   correction_tiles  the game's own tile stage grows water so every water tile lies in a 2 x 2 block of
+  --       water (measured on Europe at scale 6: no generated water tile outside one, 1,078 tiles the fit
+  --       makes land for sure turned water, every one within 2 tiles of possible water), so a tile also
+  --       counts as possibly wrong while a tile of the other possible class lies within this many tiles
+  --   mask_margin_tiles  waterway, canal, dam and basin footprints grow by this many tiles before they mask
+  --       pixels; a ford spans its carve plus waterways.ford.margin_tiles
+  --   spawn_keep_tiles  no tile within this radius of the spawn (world 0, 0) is written, so spawn-cities'
+  --       start land guarantee and the spawn tile keep what the noise draws
+  --   fill  K pixels whose band region holds no 2 x 2 block of tiles (an islet or a channel narrower than
+  --       a pixel) are written whole instead of as a one-tile line; the tool marks them
+  --   encoding  each table row is its first column, then runs (length - 1) * #symbol_order + symbol index
+  --       (0-based in symbol_order), every number a varint of varint_base digits written in alphabet (a
+  --       digit at or above varint_base continues the number); a decoded row is one symbol character per
+  --       pixel: none (outside K+), water, land, a K pixel of either class (band), a fill pixel of either
+  --       class, thin water, and a pixel of either class inside a waterway footprint (masked)
+  bandfix = {
+    setting = "exact_coast", key = BFN.K, on = ONE,
+    version = 1,
+    float_margin_px = 0.01,
+    correction_tiles = 2,
+    mask_margin_tiles = 3,
+    spawn_keep_tiles = 24,
+    chunk_tiles = 32,
+    row_cache = 2048,
+    neighbours = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}},
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+    varint_base = 32,
+    symbols = {none = "a", water = "b", land = "c", water_k = "d", land_k = "e", water_fill = "f",
+               land_fill = "g", thin = "h", water_masked = "i", land_masked = "j"},
+    symbol_order = {"none", "water", "land", "water_k", "land_k", "water_fill", "land_fill", "thin",
+                    "water_masked", "land_masked"},
   },
 }

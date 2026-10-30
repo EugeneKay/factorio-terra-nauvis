@@ -1,0 +1,18 @@
+# Exact coastlines: provenance
+
+The emission manifests of `tools/build_geo.py emit --map <map> --bandfix` (ARCHITECTURE.md, "Exact
+coastlines" and "Build-time data flow"). Each manifest records the inputs
+its K+ tables were built from (the map's shipped coast fit checkpoint from `data-src/fits/<map>/fit.json`,
+the reference rasters `data-src/earthmaps/<map>-land.png` and `-thinwater.png`, each scale's waterway
+manifest `data-src/waterways/manifest-<map>.json` and config.lua's `bandfix` group), the generated
+files with their sha256 (`terra-nauvis/scripts/generated/bandfix_<map>_v1.lua`, the map's K+ table, and
+`bandfix_<map>_s<k>_v1.lua`, each scale's waterway masks over it), and per scale the pricing: the band
+rule's measures (`s12_rule`: the share of the map's chunks the band rule corrects and the tiles per corrected
+chunk, mean, p95 and max, with the coast fit alone deciding) beside the shipped rule's (`shipped_rule`:
+K pixels outside the scale's masks, fill pixels whole) and the chunks the handler reads
+(`chunks_read`). The offline pricing reads scales 1, 3 and 6. The static data-src row re-hashes
+every file of this folder against the table below; `build_geo.py check --map <map> --bandfix`
+re-emits the tables twice and compares each byte for byte with the committed files.
+
+| File | sha256 | Role |
+|---|---|---|

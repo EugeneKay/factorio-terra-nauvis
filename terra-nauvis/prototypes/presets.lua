@@ -59,6 +59,10 @@
 -- the Alien Biomes temperature's next version, whose switch folds it to climate-tiles' first when the
 -- toggle is off; and with the toggle on and the spawn city at random a version with a spawn record
 -- bakes the map's random pool as the city number, so random never lands on a city the zone covers.
+--
+-- From coast-band-fix a preset also bakes the band-fix key, a name switch to tn_one, when the startup
+-- setting Exact coastlines is on and its map passed all four flip checks (config.lua bandfix.maps,
+-- reads it from the save's own surface, so a world keeps it for life.
 local cfg = require("prototypes.config")
 
 local K = cfg.keys
@@ -201,6 +205,12 @@ local function toggle_values(map_key)
   return out
 end
 
+local function bandfix_names(map_key)
+  local BF = cfg.bandfix
+  local out = {}
+    for _, m in ipairs(BF.maps) do
+      if m == map_key then
+        out[BF.key] = BF.on
       end
     end
   end
@@ -214,6 +224,9 @@ end
 -- version also bakes the climate and tile keys (climate_names), from trees-forests the tree keys
 -- after them (tree_names: a palm's probability key names its second version), and from ridges the
 -- cliff properties and the map's ridge keys (ridge_values), from resources-enemies a version with
+-- an offshore stamp its stamp key (stamp_values), from destroyed-europe the Alien Biomes temperature's
+-- next version and, with the zone on and the city at random, the map's random pool (destroyed_values),
+-- and from coast-band-fix the band-fix key where the setting acts on the map (bandfix_names).
 local function baked(map_key, v)
   local names = {
     [K.start_mask] = v.start_mask,
@@ -253,6 +266,9 @@ local function baked(map_key, v)
     names[k] = value
   end
   for k, value in pairs(destroyed_values(map_key, v, names)) do
+    names[k] = value
+  end
+  for k, value in pairs(bandfix_names(map_key)) do
     names[k] = value
   end
   return names

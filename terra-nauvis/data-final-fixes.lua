@@ -306,6 +306,19 @@ local function restore_vanilla()
     "re-listed " .. relisted .. " decoratives, extended " .. extended .. " restrictions beside Alien Biomes")
 end
 
+-- Whether Nauvis places a prototype: its autoplace names a control Nauvis lists, or Nauvis's autoplace settings
+-- list it. Another planet's trees (Space Age's Vulcanus lichen trees and Gleba plants) keep their prototypes
+-- programs and placements, so other planets are never touched).
+local function on_nauvis(kind, name, autoplace)
+  local mgs = ((data.raw.planet or {}).nauvis or {}).map_gen_settings or {}
+  local controls = mgs.autoplace_controls or {}
+  local listed = ((mgs.autoplace_settings or {})[kind] or {}).settings or {}
+  return (autoplace.control ~= nil and controls[autoplace.control] ~= nil) or listed[name] ~= nil
+end
+
+-- The great-forests hook on every living tree Nauvis places (the base game's dead and dry trees
+-- excepted). Alien Biomes' palms are left out too: their prototypes stay AB's (ARCHITECTURE.md, "Stable hooks"),
+-- keys name the copies' second versions, which carry the boost.
 local function boost_hooks()
   local skip = {}
   for _, name in ipairs(VAN.dead_trees) do
@@ -316,6 +329,8 @@ local function boost_hooks()
   end
   local names = {}
   for name, tree in pairs(data.raw.tree or {}) do
+    if not skip[name] and tree.autoplace and tree.autoplace.probability_expression ~= nil and
+        on_nauvis("entity", name, tree.autoplace) then
       names[#names + 1] = name
     end
   end

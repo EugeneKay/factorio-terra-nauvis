@@ -22,6 +22,10 @@ local K_LAND_COARSE = NOISE .. "land_coarse"
 local K_SPAWN_LAKE = NOISE .. "spawn_lake"
 local K_SPAWN_BIAS = NOISE .. "spawn_bias"
 
+-- Each map's geography. Every name a map's elevation entry reads is bound to that map: its coordinate
+-- chain carries the map's radii and extent and reads the city offset through the map's own
+-- map-qualified per-save names, so a Map type pick alone (which sets only elevation) still renders the
+-- map, and no map-dependent value reaches the entry through tn_map or a shared key. Each map keeps one
 -- The generated files (tools/build_geo.py): name-free data that a geography version's fit bodies
 -- bind to its own chain, so a later version binds the same files instead of emitting new ones.
 local EU_GEO_FILE = "prototypes/generated/geo_europe_v1.lua"
@@ -95,6 +99,7 @@ local CT = {
   CL_LON = NOISE .. "lon_v1",
   CL_DRY = NOISE .. "dry_v1",
   CL_CORE = NOISE .. "t_core_v1",
+  CL_SHIFT = NOISE .. "climate_shift_v1",
   CL_T_AB = NOISE .. "temperature_ab_v1",
   CL_M_AB = NOISE .. "moisture_ab_v1",
   CL_A_AB = NOISE .. "aux_ab_v1",
@@ -150,6 +155,8 @@ local CT = {
 local TFN = {
   K_FORESTS_ON = NOISE .. "forests_on",
   K_TREE_MULT = NOISE .. "tree_mult",
+  K_TREE_LIFT = NOISE .. "tree_lift",
+  TF_LIFT = NOISE .. "tree_lift_v1",
   TF_VTEMP = NOISE .. "temperature_vanilla_v1",
   TF_VTREE_R = NOISE .. "vtree_r_v1",
   TF_VDECO = NOISE .. "vdeco_v1",
@@ -279,6 +286,9 @@ local REN = {
   OW_FIELDS = NOISE .. "fields_olde_world" .. RE_V,
 }
 
+-- into deep water across a noise-warped band just inside the extent (coast.edge_band), so a coast the
+-- box cuts reads as a wavy coastline, and a
+-- map's inland lakes compose only when the per-save switch tn_inland_lakes names tn_one. Europe's
 -- edge-and-lakes' names (one table: the 200-local limit)
 local ELN = {
   K_INLAND_LAKES = NOISE .. "inland_lakes",
@@ -289,6 +299,7 @@ local ELN = {
   EU6_CX = NOISE .. "cx_europe_v6",
   EU6_CY = NOISE .. "cy_europe_v6",
 }
+-- setting moves the spawn through the city fold, with the spawn lake, start mask version 2 and the
 local OAS = {
   AT6_GX = NOISE .. "gx_atlantic_v6",
   AT6_GY = NOISE .. "gy_atlantic_v6",
@@ -324,6 +335,8 @@ local DE = {
   heat = NOISE .. "destroyed_heat_v1",
   temperature = NOISE .. "temperature_ab_v2",
   pool_europe = NOISE .. "city_pool_europe_v1",
+  pool_atlantic = NOISE .. "city_pool_atlantic_v1",
+  pool_olde_world = NOISE .. "city_pool_olde_world_v1",
 }
 
 -- neutral body tn_one, only when the startup setting is on and that map passed all four flip checks
@@ -517,6 +530,18 @@ return {
   },
 
   -- Each map's geography (ARCHITECTURE.md, "Map type entries"): map_type_order, the order of the
+  -- map's Map type entry, and `versions`, the map's elevation entries, the newest last. A version is
+  -- what one geography release points a preset at: its entry, the bodies only that entry reads (coast
+  -- fit, detail, far-field box), its coarse land field, its coordinate chain with city offset names of
+  -- its own and the offset its preset bakes there, the start mask its preset names (a start_mask
+  -- version), the generated files its fit bodies bind (name-free data, so a later version binds the
+  -- same files to its own chain), the Map type fallbacks its entry reads, and its geography release id.
+  -- The map's preset names the newest version, whose entry carries the Map type fields
+  -- (intended_property, localised_name and map_type_order). presets.lua picks a preset's version here,
+  -- in one place at the data stage.
+  --
+  -- One version per map: nothing had shipped and no saves existed, so every superseded version was
+  -- a map's versions only grow again: a later version takes names of its own and an older one stays
   --
   -- geo_id is the version's geography release, the number its preset bakes as tn_geo. tn_geo is
   -- one id space across every map: each geography release of any map takes the next unused
@@ -608,7 +633,12 @@ return {
   },
 
   -- The chain every map-wide layer reads (the region layer, the climate and the layers after them):
+  -- per map, the geography release (tn_geo) whose coordinate chain their bodies read. Since the
+  -- superseded versions were retired that is each map's own version, so a preset world and a
+  -- Map-type-only world read one chain per map. A later version that keeps the frame keeps this row (the
+  -- same city offset under names of its own); a version that moves the frame needs layer bodies of its
   -- own.
+  layer_chain_geo = {europe = 14, atlantic = 17, olde_world = 18},
 
   -- The water slider (inert on Earth presets). Vanilla 2.1.23 reads control:water:* in exactly
   -- three named expressions (core/prototypes/noise-programs.lua): water_level (10 * log2 of the
@@ -630,7 +660,9 @@ return {
   -- guard"). From climate-tiles also the climate redirects,
   -- the marsh keys, the palm keys, and with Alien Biomes the vanilla tile keys and the exclusion key
   -- (absent keys are by design on a world without AB).
+  preset_keys = {"elevation", "starting_resources_lake_mask", K_LAND_COARSE, K_MAP, K_SCALE, K_GEO,
                  "water_level", "segmentation_multiplier", "nauvis_segmentation_multiplier",
+                 "distance", EU_CITY, K_SPAWN_LAKE, K_SPAWN_BIAS, K_ON, K_FORDS, K_CANALS,
                  "temperature", "moisture", "aux", CT.MARSH_MUD, CT.MARSH_SHALLOW, CT.MARSH_GRASS,
                  CT.VT_GRASS_1, CT.VT_GRASS_2, CT.VT_GRASS_3, CT.VT_GRASS_4, CT.VT_DRY_DIRT, CT.VT_DIRT_1,
                  CT.VT_DIRT_2, CT.VT_DIRT_3,
@@ -639,6 +671,7 @@ return {
                  CT.PALM_A_R_KEY, CT.PALM_B_P_KEY, CT.PALM_B_R_KEY,
                  -- trees-forests: the great-forests gate and multiplier key, and with Alien Biomes the restored
                  -- vanilla trees', rocks' and decoratives' keys
+                 TFN.K_FORESTS_ON, TFN.K_TREE_MULT, TFN.K_TREE_LIFT,
                  TF_TREES["tree-01"].p, TF_TREES["tree-01"].r, TF_TREES["tree-02"].p, TF_TREES["tree-02"].r,
                  TF_TREES["tree-02-red"].p, TF_TREES["tree-02-red"].r, TF_TREES["tree-03"].p, TF_TREES["tree-03"].r,
                  TF_TREES["tree-04"].p, TF_TREES["tree-04"].r, TF_TREES["tree-05"].p, TF_TREES["tree-05"].r,
@@ -668,16 +701,26 @@ return {
                  "enemy_base_probability", REN.K_HOTSPOTS, REN.EU_FIELDS_KEY, REN.AT_FIELDS_KEY, REN.OW_FIELDS_KEY,
                  "entity:offshore-oil:probability", "entity:offshore-oil:richness",
                  -- edge-and-lakes: the inland lakes switch and the new versions' city offset names
+                 ELN.K_INLAND_LAKES, ELN.EU6_CX, ELN.EU6_CY,
                  -- the Old World and Atlantic spawn city: the maps' city numbers and the new versions' offset names
                  OAS.AT_CITY, OAS.OW_CITY, OAS.AT6_CX, OAS.AT6_CY, OAS.OW6_CX, OAS.OW6_CY,
                  -- destroyed-europe: the zone toggle (temperature and the city numbers are listed above)
                  DE.K,
                  -- coast-band-fix: the band-fix key, on presets whose map the setting acts on
 
+  -- only it reads}. The constant-coast twin turns each into a constant; no Entity,
   -- decorative or Cliff root on a Terra Nauvis preset may reach one. The start land guarantee is
   -- analytic but belongs to the field by ARCHITECTURE.md's firewall rule; the spawn lake, the bias,
   -- distance and the city fold are firewall-clean (the start mask reads the lake and the bias).
   firewall = {
+    -- each map's entry and the terms only it reads; the ford sets reach Tile only, through the
+    -- water-shallow hook
+    europe = {
+    },
+    atlantic = {
+    },
+    olde_world = {
+    },
   },
 
   -- Per geography release: {release = <version>, map = <map key>, geography = <tn_geo id>, names =
@@ -716,6 +759,8 @@ return {
     -- copies are (trees.lua).
     {
       release = "0.1.0",
+      names = {TFN.K_FORESTS_ON, TFN.K_TREE_MULT, TFN.K_TREE_LIFT, TFN.TF_LIFT, TFN.TF_VTEMP, TFN.TF_VTREE_R,
+               TFN.TF_VDECO, TFN.PALM_A_P2,
       TFN.PALM_B_P2,
                TF_TREES["tree-01"].p, TF_TREES["tree-01"].r, TF_TREES["tree-01"].body,
                TF_TREES["tree-02"].p, TF_TREES["tree-02"].r, TF_TREES["tree-02"].body,
@@ -836,12 +881,52 @@ return {
     },
   },
 
+  -- field in place of elevation. `versions` holds every version: a geography version names the one
+  -- its preset bakes. Each names its formula (spawn.lua builds formula n from the version's numbers).
+  -- Formula 2 (spawn-cities) reads the coarse field in reference pixels, so it is the same at every
   -- scale, and keeps starting ore off the spawn lake as vanilla's mask does with its own lake:
   -- clamp((min(coarse_gain * tn_land_coarse, tn_spawn_lake) - floor) / span, 0, 1) * tn_spawn_bias.
+  -- It is full where the coarse field reads 5.5 or more and graded below it, so starting ore prefers
+  -- ground well inside the coast (the coarse field is no calibrated distance: near coasts it reads land
+  -- over estuaries and inlets, which at scale 1 lie inside the start area; spawn-cities measured
+  -- London's stone there). On a coastal start the bias tilts the start area toward the city's own land.
   start_mask = {
     versions = {
       {name = START_MASK2, formula = 2, floor = 1, span = 10, coarse_gain = 2},
     },
+  },
+
+  -- The start ore guarantee: vanilla's starting patches pick
+  -- among a few fixed spot-noise candidates per ore, so on archipelago and peninsula starts no
+  -- start mask can keep every ore on the spawn's land (even an oracle mask loses some). Once, in on_init
+  -- of an Earth or Map-type-only world, scripts/start_ore.lua floods the land reached on foot from the
+  -- spawn (4-connected tiles without `water_layer` within
+  -- under `trigger` times `reference` (vanilla's mean starting amount within 150 tiles at seeds
+  -- 1000, 1002 and 1004, times the control's richness) places one patch of `fill` times it on
+  -- reached land: the nearest centre `min_distance` (vanilla's starting-patch excluder) to radius -
+  -- r tiles out (rings every `ring_step` tiles, about `arc_step` tiles apart on a ring, at least
+  -- `min_ring_points`) whose disc of r + `land_margin` tiles is all reached land and holds no
+  -- resource within r + `ore_margin`. r is the disc that holds the amount at `density` per tile,
+  start_ore = {
+    ores = {
+      {resource = "iron-ore", reference = 368000, density = 540},
+      {resource = "copper-ore", reference = 357000, density = 860},
+      {resource = "stone", reference = 159000, density = 750},
+    },
+    resource_type = "resource",
+    water_layer = "water_tile",
+    grid = 160,
+    radius = 150,
+    trigger = 0.5,
+    fill = 0.5,
+    min_distance = 40,
+    ring_step = 4,
+    arc_step = 8,
+    min_ring_points = 8,
+    land_margin = 2,
+    ore_margin = 3,
+    shrink = 0.75,
+    min_radius = 4,
   },
 
   -- builds every spawn body from (the names are each geography version's own, in its spawn record).
@@ -1083,6 +1168,7 @@ return {
   --          zone cities); a preset with the toggle on and the spawn city at random bakes it as the map's
   --          city number, so the first fold reads it and resolves it as a chosen city
   destroyed = {
+    pools = {europe = DE.pool_europe, atlantic = DE.pool_atlantic, olde_world = DE.pool_olde_world},
     switch_threshold = 0.5,
   },
 
@@ -1112,10 +1198,13 @@ return {
       rso = "rso-warning",
       drift_city = "drift-city",
       drift_toggle = "drift-toggle",
+      drift_toggle_new = "drift-toggle-new-only",
       toggle_on = "toggle-on",
       toggle_off = "toggle-off",
       cliff_reset = "cliff-reset",
       destroyed_no_ab = "destroyed-no-ab",
+      start_ore = "start-ore",
+      start_ore_none = "start-ore-none",
     },
   },
 
@@ -1124,7 +1213,10 @@ return {
   toggles = {
     -- Canals (waterways): a name switch read by every waterways version's entry through a folded `if`, so
     -- only the selected branch compiles (Tile 19,620 off and 20,161 on at scale 1).
+    -- map_type_follows: its Map type fallback mirrors the setting, so the drift line says a world made
+    -- from the map type alone follows it; every other toggle reaches new preset worlds only.
     canals = {setting = "canals", preset_key = K_CANALS, default = true, mechanism = "name switch",
+              on = ONE, off = ZERO, maps = {"europe", "atlantic", "olde_world"}, map_type_follows = true},
     -- Great forests (trees-forests): the hook gate of the boost on every living tree, outermost in the
     -- hook, so on every other world the hook folds to the tree's own autoplace. Its values are the
     -- numbers 1 and 0 as strings, so a save reads them back as it stored them and the drift line
@@ -1142,6 +1234,8 @@ return {
     -- the previous version's composition. Every map lists it: a map's version without a spawn
     -- record bakes it unread.
     inland_lakes = {setting = "inland_lakes", preset_key = ELN.K_INLAND_LAKES, default = false,
+                    mechanism = "name switch", on = ONE, off = ZERO, maps = {"europe", "atlantic", "olde_world"},
+                    map_type_follows = true},
     -- Destroyed Europe (destroyed-europe): a name switch read by the temperature's next version through a
     -- folded `if`, so the zone off compiles to climate-tiles' temperature alone. `requires` names the mod
     -- without which a preset bakes it off whatever the setting says, and the drift line
@@ -1279,22 +1373,41 @@ return {
   climate = {
     -- the pixel centre in reference pixels (lat_top_edge - (v + centre_px) / px_per_degree)
     centre_px = 0.5,
+    -- The city offset folded into a seed1 shift (tiles modulo `modulus`, x times `stride` plus y): each
+    -- spawn city's climate noise gets its own seed (climate.lua). The largest value stays under 2^24, so
+    -- float32 holds it exactly.
+    city_shift = {modulus = 4093, stride = 257},
     temperature = {
       ref_lat = 54, ref_t = 25, per_degree = 2.2, min = -20, cap = 78,
       continental = {t = 6, lon_start = 15, lon_span = 45, lat_start = 35, lat_span = 10},
       desert_heat = 12,
       noise = {amplitude = 6, wavelength_px = 40, octaves = 3, persistence = 0.6, seed1 = 7602},
       ab = {shift_per_unit = 20.8333333, min = -20, max = 99},
+      -- treeline_t up to plateau is lifted to plateau, so the boreal belt sits inside the vanilla cold
+      -- trees' 0 to 15 band; below treeline_t it falls by slope per unit, so the tundra and the arctic
+      -- stay treeless (core -20 maps to -10 before the scale)
+      fallback = {scale = 0.45, min = -20, max = 50, taiga = {plateau = 10, treeline_t = -16, slope = 5}},
     },
     moisture = {
       base = 0.68, equatorial = 0.12, equatorial_lat = 4, equatorial_ramp = 8, dry = 0.55, marsh = 0.9,
       noise = {amplitude = 0.32, wavelength_px = 40, octaves = 3, persistence = 0.6, seed1 = 7603},
+      spread = {dry = 0.7, cold = 0.55},
+      -- north: the boreal belt is moist (the vanilla cold trees want 0.4 to 0.8): the cap rises to wet
+      -- from core wet_from_t to wet_full_t, falls to frozen from core frozen_from_t to frozen_full_t,
+      -- and a floor (full at core floor_full_t, none from floor_from_t) keeps sand, light dirt and
+      -- dry dirt out of the north
+      fallback = {cap_base = 0.26, cap_per_t = 0.6, cap_t = 40, bias = 1,
+                  north = {wet = 0.64, wet_from_t = 20, wet_full_t = 10, frozen = 0.45, frozen_from_t = -16,
+                           frozen_full_t = -20, floor = 0.42, floor_from_t = 12, floor_full_t = 4}},
     },
     aux = {
       base = 0.35,
       noise = {amplitude = 0.2, wavelength_px = 48, octaves = 3, persistence = 0.6, seed1 = 7604},
       ab_bias = 2.2, ab_cap = 0.5,
       red = {lift = 0.5, t_lo = 25, t_hi = 65, ramp = 5},
+      -- cold_span: the aux pull and cap reach full strength cold_span below climate.cold.t (sooner than
+      -- the moisture spread's cold), so the boreal belt keeps grass-2, beach sand and red desert out
+      fallback = {cold_aux = 0.3, cold_cap = 0.45, cold_span = 12, dry_pull = 0.15, bias = 1},
     },
     -- the coldness the fallback's pulls and spread read: 0 at core cold.t and warmer, 1 at
     -- cold.t - cold.span and colder
@@ -1316,6 +1429,7 @@ return {
       {id = "australia", lat = {-35, -17}, lon = {113, 147}, ramp = {3, 4}},
       {id = "south_america_sw", lat = {-56, -16}, lon = {-76, -63}, ramp = {3, 3}},
     },
+    names = {lat = CT.CL_LAT, lon = CT.CL_LON, dry = CT.CL_DRY, core = CT.CL_CORE, shift = CT.CL_SHIFT,
              ab = {temperature = CT.CL_T_AB, moisture = CT.CL_M_AB, aux = CT.CL_A_AB},
              fallback = {temperature = CT.CL_T_FB, moisture = CT.CL_M_FB, aux = CT.CL_A_FB}},
     -- The climate bands the oracle (t3_oracle) and the climate checks read, in Alien Biomes units.
@@ -1391,6 +1505,10 @@ return {
   --             layer's multiplier (regions.names.tree_mult: 1 + forest boost 2 times the forest sum).
   --             The base game's dead and dry trees are left alone (prototypes/tables/vanilla.lua),
   --             and so are Alien Biomes' palm prototypes (tiles.palm.copies' trees stay AB's)
+  --             before the multiplier: its key's prototype holds lift_off and Earth presets name lift_body,
+  --             lift_per_sum times the forest sum times the boreal weight (0 at climate core
+  --             boreal_from_t and warmer, 1 at boreal_full_t and colder), so the boreal great forests fill
+  --             the gaps between vanilla's tree patches while every other forest keeps the multiplier alone
   --   palm      on Earth presets with Alien Biomes the palms read their Earth copies (tiles.palm), so each
   --             palm's probability key names its second version, the boost's formula around the
   --   restore   with Alien Biomes, the base game's living trees, rocks and decals AB takes off Nauvis,
@@ -1402,6 +1520,9 @@ return {
   --             takes off Nauvis are re-listed as (own score) + key, the key's prototype -inf and its body
   --             deco_on; the vanilla decoratives and dead trees AB restricts to its tiles get the vanilla land
   trees = {
+    boost = {gate = TFN.K_FORESTS_ON, gate_off = "0", key = TFN.K_TREE_MULT, key_off = "1", cap = 1,
+             lift = TFN.K_TREE_LIFT, lift_off = "0", lift_body = TFN.TF_LIFT, lift_per_sum = 0.25,
+             boreal_from_t = 18, boreal_full_t = 10},
     temperature = TFN.TF_VTEMP,
     restore = {
       trees = TF_TREES, tree_off = "0", richness = TFN.TF_VTREE_R,
@@ -1418,6 +1539,7 @@ return {
   --       is never listed
   --   checks  each flip-checked map's measured configuration, its scale
   --   tables  per map with K+ tables: the geography ids (tn_geo) they serve. They follow the coast fit, the
+  --       reference and the waterway footprints, so a later geography that keeps all three may be listed
   --   float_margin_px  float32 slack over the lattice detail's bound (coast.detail_amplitude_px times
   --       coast.detail_clamp): a tile counts as possibly wrong unless the fit alone is right by more
   --   correction_tiles  the game's own tile stage grows water so every water tile lies in a 2 x 2 block of

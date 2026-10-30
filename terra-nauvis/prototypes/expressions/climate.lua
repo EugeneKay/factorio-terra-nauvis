@@ -8,6 +8,13 @@
 --                 with AB's 2.2 times bias; the marsh weight lifts moisture into the wet band;
 --                 dry temperate land lifts aux toward vanilla red desert, inside the band where the
 --                 exclusion hook keeps every non-adopted AB tile out (tiles.lua)
+--   fallback      temperature on the vanilla scale for vanilla trees and decoratives, the boreal belt
+--                 lifted into the vanilla cold trees' band up to a treeline; the moisture mean capped by
+--                 the warm-side cold, then raised again in the boreal belt (taiga grass and trees) and
+--                 held at mid moisture above the treeline, with a floor that keeps sand and light dirt
+--                 out of the north (no snow tile in the base game: the tundra and arctic read as the
+--                 dark dirt-5 to dirt-7 and grass-4); the aux mean pulled low in the cold, under grass-2,
+--                 beach sand and vanilla red desert, and down in the dry belts (vanilla sand)
 -- Every field is the Earth mean plus a seeded spread (config.lua climate: spread), so each real climate
 -- zone is a patchwork of several tiles that changes with the seed; the caps and pulls move the mean
 -- and bound the result, never the spread alone.
@@ -69,6 +76,16 @@ local function by_map(fn)
   return out
 end
 
+-- The city offset of the world's map folded into one constant added to each noise's seed1, so each
+-- spawn city gets a climate texture of its own: the world shifts to put the city at the origin, so a
+-- noise of plain x and y would repeat around every city of a seed. A seed folds at compile time; x + cx
+-- would leave the engine's fast path, and multioctave_noise's offsets are no shifts.
+local SH = C.city_shift
+def(N.shift, by_map(function(X)
+  return "(floor(" .. X.g.cx .. ") % " .. num(SH.modulus) .. ") * " .. num(SH.stride) .. " + floor(" .. X.g.cy ..
+    ") % " .. num(SH.modulus)
+end))
+
 -- A noise of wavelength_px reference pixels, its input scale times `freq` (a slider's frequency or 1).
 local function noise(P, freq)
   local scale = "1 / (" .. num(P.wavelength_px) .. " * " .. K.scale .. ")"
@@ -76,6 +93,8 @@ local function noise(P, freq)
     scale = "(" .. freq .. ") / (" .. num(P.wavelength_px) .. " * " .. K.scale .. ")"
   end
   return num(P.amplitude) .. " * multioctave_noise{x = x, y = y, seed0 = map_seed, seed1 = " .. num(P.seed1) ..
+    " + " .. N.shift .. ", octaves = " .. num(P.octaves) .. ", persistence = " .. num(P.persistence) ..
+    ", input_scale = " .. scale .. ", output_scale = 1}"
 end
 
 local function ramp_in(v, lo, hi, r)
@@ -152,13 +171,29 @@ end
 -- The fallback, with no Alien Biomes control: the vanilla scale for temperature, the cold cap on the
 -- moisture mean, the cold and dry pulls on the aux mean and the cold cap on aux.
 local FB = T.fallback
+local TG = FB.taiga
+def(N.fallback.temperature, "clamp(" .. num(FB.scale) .. " * (max(c, min(" .. num(TG.plateau) .. ", " ..
+  num(TG.plateau) .. " + " .. num(TG.slope) .. " * (c - " .. num(TG.treeline_t) .. "))) + " .. noise(T.noise) ..
+  "), " .. num(FB.min) .. ", " .. num(FB.max) .. ")",
+  {c = N.core})
 local MF = M.fallback
+local NO = MF.north
+local function fall(from, full)
+  return "clamp((" .. num(from) .. " - " .. N.core .. ") / " .. num(from - full) .. ", 0, 1)"
+end
+def(N.fallback.moisture, "clamp(max(min(mean, max(cap, wet)) + " .. moisture_spread(true) .. ", low) + " ..
+  num(MF.bias) .. " * var('control:moisture:bias'), 0, 1)",
   {mean = moisture_mean(), cold = COLD,
    cap = num(MF.cap_base) .. " + " .. num(MF.cap_per_t) .. " * clamp(" .. N.core .. " / " .. num(MF.cap_t) ..
+     ", 0, 1)",
+   wet = num(NO.wet) .. " * " .. fall(NO.wet_from_t, NO.wet_full_t) .. " - " .. num(NO.wet - NO.frozen) .. " * " ..
+     fall(NO.frozen_from_t, NO.frozen_full_t),
+   low = num(NO.floor) .. " * " .. fall(NO.floor_from_t, NO.floor_full_t)})
 local AF = A.fallback
 def(N.fallback.aux, "clamp(min(" .. num(A.base) .. " + (" .. num(AF.cold_aux) .. " - " .. num(A.base) ..
   ") * cold - " .. num(AF.dry_pull) .. " * " .. N.dry .. " + " .. noise(A.noise, AFREQ) .. ", 1 - " ..
   num(1 - AF.cold_cap) .. " * cold) + " .. num(AF.bias) .. " * var('control:aux:bias'), 0, 1)",
+  {cold = "clamp((" .. num(C.cold.t) .. " - " .. N.core .. ") / " .. num(AF.cold_span) .. ", 0, 1)"})
 
 if AB then
   -- Alien Biomes' hot and cold sliders: their size shifts the temperature as AB's own average does, their

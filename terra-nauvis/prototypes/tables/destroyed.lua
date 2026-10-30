@@ -7,5 +7,6 @@ return {
   version = 1,
   zone_cities = {
     atlantic = {"prague"},
+    olde_world = {"prague", "frankfurt", "aachen"},
   },
 }

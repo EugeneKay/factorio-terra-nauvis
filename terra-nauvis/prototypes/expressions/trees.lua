@@ -12,6 +12,15 @@
 --
 --
 -- The great forests (trees-forests; ARCHITECTURE.md, "Stable hooks"): every living tree's
+-- probability becomes boost(own) below, if(tn_forests_on > threshold, min(cap, ((own) + tn_tree_lift) *
+-- tn_tree_mult), own) on the base game's living trees (own alone on every other tree); the lift key's
+-- prototype holds 0 and Earth presets name the boreal lift (config.lua trees.boost), so only the boreal
+-- great forests fill in beyond the multiplier. The gate's prototype holds 0 and the key's 1, so on every
+-- world without an Earth preset the hook folds to the tree's own autoplace; Earth presets bake the gate
+-- from the great-forests setting and name the region layer's multiplier in the key (1 + forest boost 2
+-- times the forest sum; the region formula lives in regions.lua alone). A multiplier keeps the
+-- climate in charge: where a tree's own probability is 0 or below, the boost adds nothing. Alien
+-- Biomes' palm prototypes carry no
 -- palms read their copies, so each palm's probability key names a second version that is the same
 --
 -- The restored base game beside Alien Biomes (trees-forests): AB nils
@@ -37,6 +46,14 @@ end
 
 local M = {}
 
+-- The great-forests hook around a tree's own probability (also each palm copy's second version, without
+-- the lift). `lift` adds the boreal lift key, for the base game's living trees only: Alien Biomes' trees
+-- already fill its taiga, and lifted they covered over half the land (draft run q-ab-after, 558 trees per
+  local inner = "(" .. own .. ")"
+  if lift then
+  end
+  return "if(" .. B.gate .. " > " .. num(cfg.hooks.threshold) .. ", min(" .. num(B.cap) .. ", " .. inner .. " * " ..
+    B.key .. "), " .. own .. ")"
 end
 
 local function ident(name)
@@ -60,6 +77,10 @@ end
 -- The boost's gate and multiplier key, at their off values.
 def(B.gate, B.gate_off)
 def(B.key, B.key_off)
+def(B.lift, B.lift_off)
+def(B.lift_body, num(B.lift_per_sum) .. " * " .. cfg.regions.names.forest_sum .. " * clamp((" ..
+  num(B.boreal_from_t) .. " - " .. cfg.climate.names.core .. ") / " .. num(B.boreal_from_t - B.boreal_full_t) ..
+  ", 0, 1)")
 
 -- The Earth temperature on the vanilla scale, as the fallback climate hands it to vanilla trees.
 def(TR.temperature, "clamp(" .. num(FB.scale) .. " * temperature, " .. num(FB.min) .. ", " .. num(FB.max) .. ")")

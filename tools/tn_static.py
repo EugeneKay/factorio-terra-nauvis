@@ -2150,9 +2150,11 @@ def reference_files(path, repo=REPO, refs=None):
     return out
 
 
+def frozen_union(registries, moves=None):
     """The union of the reference refs' frozen.json registries, {"bodies": {...}}, and the problems
     (a registry that is not tn-frozen/1, or two refs registering one name with different records:
     whole records compare, so a dump label, type, slice or date the refs disagree on fails like a
+    hash; two hashes the waiver both excuses, `moves`, are a stale local main, not a disagreement)."""
     union, probs, where = {}, [], {}
     for ref, fz in sorted(registries.items()):
         if not isinstance(fz, dict) or fz.get("format") != tnfrozen.FORMAT or not isinstance(fz.get("bodies"), dict):
@@ -2164,6 +2166,8 @@ def reference_files(path, repo=REPO, refs=None):
                 rec = {}
             if name in union:
                 diff = tnfrozen.record_changes(rec, union[name])
+                if diff and not (tnfrozen.moved(moves, name, rec.get("sha256")) and
+                                 tnfrozen.moved(moves, name, union[name].get("sha256"))):
                     probs.append(f"{name}: {where[name]} and {ref} register different records ({diff})")
                 continue
             union[name] = rec
@@ -2175,16 +2179,22 @@ def _as_dict(v):
     return v if isinstance(v, dict) else {}
 
 
+def append_only_findings(work_fz, work_cfg, refs, moves=None):
     """What the working tree dropped or changed of the persisted entries its references hold. `refs`
     maps a ref to {"frozen": <its tests/frozen.json>, "cfg": <its config table>}. Append-only:
     every registered body's whole record (type, sha256, the dump label the gate reads it from, slice
     and date) and the field list the hashes cover, every tn_map id (maps.<key>.id), every tn_geo id
+    with its map (release_registry), and every stored message key with its locale key and section.
+    `moves` (tnfrozen.active_moves) excuses a record at its exact hash and a retired tn_geo id."""
     out = []
+    union, probs = frozen_union({ref: d.get("frozen") for ref, d in refs.items()}, moves)
     out += probs
     bodies = _as_dict(_as_dict(work_fz).get("bodies"))
     for name, rec in sorted(union["bodies"].items()):
         ref = union["where"][name]
         mine = bodies.get(name)
+        if tnfrozen.moved(moves, name, rec.get("sha256")):
+            continue
         if name not in bodies:
             out.append(f"{name} is registered on {ref} but missing from tests/frozen.json (append-only)")
             continue
@@ -2206,6 +2216,7 @@ def _as_dict(v):
         wgeo = {}
     wmsg = _as_dict(wcfg.get("messages"))
     wkeys = _as_dict(wmsg.get("keys"))
+    retired = set(_as_dict(moves).get("geographies") or [])
     for ref, d in sorted(refs.items()):
         rc = _as_dict(d.get("cfg"))
         for key, m in sorted(_as_dict(rc.get("maps")).items()):
@@ -2218,6 +2229,8 @@ def _as_dict(v):
                            f"never changes")
         for r in rc.get("release_registry") or []:
             if not isinstance(r, dict) or "geography" not in r:
+                continue
+            if r["geography"] in retired and r["geography"] not in wgeo:
                 continue
             if wgeo.get(r["geography"]) != r.get("map"):
                 out.append(f"config.lua release_registry: tn_geo id {r['geography']!r} names map {r.get('map')!r} on "
@@ -2469,7 +2482,20 @@ def work_release_inputs(cfg, repo=REPO):
     return {"cfg": cfg, "files": files, "tables": tables}
 
 
+def moves_findings(repo, tags):
+    """(findings, the waiver or None): tests/unreleased-moves.json (tools/tnfrozen.py) applies while no
+    release exists, and a release that exists voids it, so a non-empty file then fails the row."""
+    path = Path(repo) / "tests" / "unreleased-moves.json"
+    try:
+        moves = tnfrozen.read_moves(path)
     except tnfrozen.RegistryUnreadable as e:
+        return [str(e)], None
+    if tags and moves and (moves.get("records") or moves.get("geographies")):
+        return [f"tests/unreleased-moves.json still holds entries, but {tags[0]} exists: a release voids the "
+                f"waiver, so empty the file"], None
+    return [], None if tags else moves
+
+
     except tnfrozen.RegistryUnreadable as e:
     bodies = _as_dict(_as_dict(work_fz).get("bodies"))
     except tnconfig.ConfigError as e:
@@ -2477,21 +2503,31 @@ def row_append_only(repo=REPO):
     repo = Path(repo)
     try:
         refs, shas = append_only_reference(repo)
+        tags = release_tag_refs(repo)
     except ReferenceUnreadable as e:
         return [str(e)], "the reference is unreadable"
     work_fz = load_json(repo / "tests" / "frozen.json")
     work_cfg = tnconfig.load(repo / "terra-nauvis" / "prototypes" / "config.lua")
+    mv_f, moves = moves_findings(repo, tags)
+    # The inputs of a landed body are fixed from its first release: before
+    # one, the bodies row holds what they build to the registry, and the waiver holds the registry.
     try:
+        work_in, ref_in = release_input_reference({r: d["cfg"] for r, d in refs.items() if r in tags}, shas, repo)
     except ReferenceUnreadable as e:
         return f + [str(e)], "the release inputs' reference is unreadable"
     work_in["cfg"] = work_cfg
+    snap_f, snap_seen = snapshot_findings(repo, work_fz, refs, moves)
     f = sorted(set(f + snap_f))
     landed = sorted(ref for ref, d in ref_in.items() if d["cfg"].get("release_registry"))
     seen = ", ".join(f"{ref} {sha[:8]}" for ref, sha in sorted(shas.items()))
+    waived = len((moves or {}).get("records") or {})
     return f, (f"registered records (whole: type, sha256, dump, slice, date), tn_map and tn_geo ids and stored "
                f"message keys append-only against {seen}, and the records against the frozen snapshots of the "
+               f"slices before the registry's newest ({snap_seen}), {waived} waived by name and hash (no release "
+               f"tables) fixed against {', '.join(landed) or 'no release yet'}")
 
 
+def snapshot_findings(repo, work_fz, refs, moves=None):
     """The registry against the frozen snapshots of every slice before the runner registry's newest
     (a batch's earlier slices, which land their registries in their suite manifests before main
     holds them), and a record of such a slice without a snapshot that no reference holds (fail
@@ -2503,6 +2539,8 @@ def row_append_only(repo=REPO):
                                                suites=repo / "tests" / "baselines" / "suites")
     except tnfrozen.RegistryUnreadable as e:
         return [f"the slices' frozen snapshots are unreadable: {e}"], "unreadable"
+    union, _ = frozen_union({ref: d.get("frozen") for ref, d in refs.items()}, moves)
+    f = tnfrozen.snapshot_problems(work_fz, snaps, moves) + tnfrozen.unsnapshotted_problems(work_fz, none, union)
     seen = ", ".join(f"{k.split(chr(39))[0]} {len((v or {}).get('bodies') or {})} records"
                      for k, v in sorted(snaps.items())) or "none"
     return f, seen
@@ -3215,6 +3253,7 @@ def next_version(cfg, map_key=None):
     key = map_key or next(iter(out["geography"]))
     vs = out["geography"][key]["versions"]
     last = vs[-1]
+    n = int(re.search(r"_v(\d+)$", last["entry"]).group(1)) + 1
 
     def bump(name):
         return re.sub(r"_v\d+$", "", name) + f"_v{n}"
@@ -3351,6 +3390,9 @@ def spawn_record_fixtures(cfg):
 
     def fw_without(name):
         return dict(cfg, firewall=dict(cfg["firewall"], **{key: [n for n in cfg["firewall"][key] if n != name]}))
+    older_spawned, _, _ = next_version(cfg, key)
+    older_spawned["geography"][key]["versions"][-1]["spawn"] = dict(sp)
+    older_spawned["geography"][key]["versions"][-1]["city_offset"] = list(v["city_offset"])
     frozen_city = copy.deepcopy(cfg)
     for vv in frozen_city["geography"][key]["versions"]:
         vv["fallbacks"] = [dict(e, frozen=True) if e["name"] == sp["city"] else e for e in vv["fallbacks"]]
@@ -3365,6 +3407,7 @@ def spawn_record_fixtures(cfg):
     cases = {
         "a spawn record without its bearings file": (
             cfg_version(cfg, key, i, spawn={k: x for k, x in sp.items() if k != "bearings"}), "must hold exactly"),
+        "a next version naming the older version's inland lakes": (older_spawned, "in more than one role or version"),
         "inland lakes outside the firewall": (fw_without(sp["inland_lakes"]), "firewall." + key + " lacks"),
         "the start land guarantee outside the firewall": (fw_without(sp["start_land"]), "firewall." + key + " lacks"),
         "the spawn lake inside the firewall": (
@@ -3643,6 +3686,7 @@ def id_space_fixtures(cfg):
     other = next(m for m in maps if m != first)
     g0 = tnconfig.geography(cfg)[first]
     mk = dict(cfg["maps"])
+    rows.sort(key=lambda r: r.get("map") != first)
 
     def other_map(geo_id=None, order="z"):
         """The first map's geography copied under another map, with its own Map type order and, when
@@ -3782,6 +3826,7 @@ def append_only_fixtures(cfg, fz):
             "two references disagreeing on a dump label": (fz, cfg, {"main": ref, "origin/main": other_label})}.items():
         f = append_only_findings(wfz, wcfg, refs)
         out.append((f"append-only: {label} fails", bool(f), f[:1]))
+    out += unreleased_moves_fixtures(cfg, fz, ref, v, dropped, rehashed)
     for label, (path, refs) in {
             "a ref that does not resolve": ("tests/frozen.json", ["refs/heads/tn-fixture-no-such-ref"]),
             "a resolving ref without the file": ("tests/tn-fixture-no-such-file.json", ["HEAD"])}.items():
@@ -3793,7 +3838,67 @@ def append_only_fixtures(cfg, fz):
     return out
 
 
+def unreleased_moves_fixtures(cfg, fz, ref, name, dropped, rehashed):
+    """The unreleased waiver: a record moved or dropped passes only at the exact hash the waiver lists
+    (append-only and snapshots alike), a retired tn_geo id only when listed; a release tag voids the
+    waiver and fails the row while it holds entries, a broken file fails closed, and tools/refreeze.py
+    records each hash a record leaves."""
+    import copy
+    import refreeze
+    out = []
+    rec = fz["bodies"][name]
+    moves = {"format": tnfrozen.MOVES_FORMAT, "ruling": "fixture", "geographies": [], "records": {name: [rec["sha256"]]}}
+    wrong = dict(moves, records={name: ["4" * 64]})
+    main = {"main": ref}
+    for label, wfz in (("a re-hashed body", rehashed), ("a dropped body", dropped)):
+        f = append_only_findings(wfz, cfg, main, moves)
+        out.append((f"unreleased: {label} the waiver lists at its landed hash passes", not f, f[:1]))
+        out.append((f"unreleased: {label} the waiver lists at another hash fails",
+                    bool(append_only_findings(wfz, cfg, main, wrong)), ""))
+    snap = {"format": tnfrozen.SNAPSHOT_FORMAT, "bodies": {name: rec}, "sha256": tnfrozen.key_of({name: rec})}
+    out.append(("unreleased: a snapshot's record the waiver lists passes",
+                not tnfrozen.snapshot_problems(rehashed, {"fx": snap}, moves), ""))
+    out.append(("unreleased: a snapshot's record the waiver does not list fails",
+                bool(tnfrozen.snapshot_problems(rehashed, {"fx": snap}, wrong)), ""))
+    row = next(r for r in cfg["release_registry"] if "geography" in r)
+    gone = copy.deepcopy(cfg)
+    gone["release_registry"] = [r for r in cfg["release_registry"] if r != row]
+    out.append(("unreleased: a tn_geo id that left the registry fails", bool(append_only_findings(fz, gone, main)), ""))
+    f = append_only_findings(fz, gone, main, dict(moves, geographies=[row["geography"]]))
+    out.append(("unreleased: a tn_geo id the waiver retires passes", not f, f[:1]))
+    with tempfile.TemporaryDirectory(prefix="tn-moves-") as td:
+        p = Path(td) / "tests" / "unreleased-moves.json"
+        p.parent.mkdir()
+        p.write_text(json.dumps(moves), encoding="utf-8")
+        f, got = moves_findings(td, [])
+        out.append(("unreleased: the waiver applies while no release exists", not f and got == moves, f[:1]))
+        f, got = moves_findings(td, ["refs/tags/v0.1.0"])
+        out.append(("unreleased: a release tag voids a waiver that holds entries", bool(f) and got is None, ""))
+        out.append(("unreleased: active_moves reads nothing once a release exists",
+                    tnfrozen.active_moves(["refs/tags/v0.1.0"], p) is None, ""))
+        p.write_text("{", encoding="utf-8")
+        f, got = moves_findings(td, [])
+        out.append(("unreleased: a waiver that does not parse fails closed", bool(f) and got is None, ""))
+        p.write_text(json.dumps(dict(moves, ruling="")), encoding="utf-8")
+        f, got = moves_findings(td, [])
+        out.append(("unreleased: a waiver naming no ruling fails closed", bool(f) and got is None, ""))
     pre = cfg["identity"]["noise_prefix"]
+    gone_n, kept_n, new_n = f"{pre}fx_gone_v1", f"{pre}fx_kept_v1", f"{pre}fx_new_v1"
+    bodies = {gone_n: tnfrozen.record("noise-expression", "5" * 64, "m1", "extras", "2026-10-30"),
+              kept_n: tnfrozen.record("noise-expression", "6" * 64, "m1", "extras", "2026-10-30"),
+              f"{pre}fx_m2_v1": tnfrozen.record("noise-expression", "7" * 64, "m2", "extras", "2026-10-30")}
+    dump = {"noise-expression": {kept_n: {"type": "noise-expression", "name": kept_n, "expression": "1"},
+                                 new_n: {"type": "noise-expression", "name": new_n, "expression": "2"}}}
+    empty = dict(moves, records={})
+    nf, nm, rep = refreeze.refreeze({"bodies": bodies}, empty, {"m1": dump}, cfg, "2026-10-30", "extras",
+                                    [(kept_n, bodies[kept_n])])
+    out.append(("unreleased: refreeze moves, drops and adds, and names each hash left behind",
+                rep["changed"] == [kept_n] and rep["dropped"] == [gone_n] and rep["added"] == [new_n] and
+                rep["unchecked"] == [f"{pre}fx_m2_v1"] and nm["records"] == {gone_n: ["5" * 64], kept_n: ["6" * 64]} and
+                nf["bodies"][kept_n]["slice"] == "extras" and gone_n not in nf["bodies"], str(rep)[:120]))
+    return out
+
+
         except tnconfig.ConfigError as e:
 def release_input_fixtures(cfg):
     """The landed bodies' inputs on fixture references built from the working tree: a regenerated
@@ -3980,6 +4085,7 @@ def bodies_fixtures(td, cfg, fz):
              "replace"), gxs, "changed in place"),
         "a frozen fallback's body moved in presets.lua fails": (
             ("prototypes/presets.lua", 'type(value) == "number" and num(value) or value',
+             '"1 + " .. tostring(value)', "replace"), frozen_fb, "changed in place"),
         "a registered body the data stage no longer defines fails": (
             ("prototypes/presets.lua", "data:extend(fallbacks)", "", "replace"), frozen_fb, "is not defined"),
         "an unregistered Earth body fails": (

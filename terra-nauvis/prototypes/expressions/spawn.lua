@@ -1,10 +1,12 @@
 --
 -- in every starting-ore spot noise, which on an Earth preset would carry the fine coast into the
 -- Entity program. Earth presets point that key at a start mask version (config.lua's start_mask;
+-- each geography version names the one its preset bakes). Each version names its formula:
 --   2: the coarse field in reference pixels and the map's spawn lake, as vanilla's mask reads its
 --      own starting lake through elevation, times the map's starting-ore bias,
 --      clamp((min(gain * tn_land_coarse, tn_spawn_lake) - floor) / span, 0, 1) * tn_spawn_bias
 --      (spawn-cities).
+-- It reads no firewall name. tn_land_coarse, tn_spawn_lake and tn_spawn_bias are preset keys:
 -- each Earth preset names its map's bodies.
 --
 -- The spawn (spawn-cities): every geography read of a version with a spawn record
@@ -73,6 +75,7 @@ end
 -- The formulas a start mask version can name, by number. A registered version keeps its formula
 -- for good, so a change is a new formula under a new version.
 local FORMULAS = {
+  [2] = function(M)
     return "clamp((min(" .. num(M.coarse_gain) .. " * " .. K.land_coarse .. ", " .. K.spawn_lake .. ") - " ..
       num(M.floor) .. ") / " .. num(M.span) .. ", 0, 1) * " .. K.spawn_bias
   end,

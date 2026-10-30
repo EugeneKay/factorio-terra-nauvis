@@ -392,6 +392,8 @@ local function drift_earth(surface)
       on = false
     end
     local want = on and tg.on or tg.off
+      say(message(tg.map_type_follows and "drift_toggle" or "drift_toggle_new", setting_label(tg.preset_key),
+        fallback_label(tg.preset_key, was), fallback_label(tg.preset_key, want)))
     end
   end
 end

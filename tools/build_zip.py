@@ -192,18 +192,28 @@ def placeholder_names(cfg):
     return names, presets
 
 
+def active_moves(repo=REPO):
+    import tn_static
+    try:
     except tn_static.ReferenceUnreadable as e:
+        raise tnfrozen.RegistryUnreadable(str(e)) from e
+
+
 def offline_body_problems(mod_dir, cfg, frozen, registry, suites=tnfrozen.SUITES, where="the offline data stage"):
     """(problems, bodies): every Earth body the mod at `mod_dir` builds offline (tnlua), held to its
     tests/frozen.json record (tnfrozen.body_problems), and the registry held to every slice's frozen
+    snapshot, the waiver's records excepted. The offline stage failing, or a manifest that does not
+    parse, fails closed."""
     try:
         bodies = tnfrozen.offline_bodies(mod_dir, cfg)
     except Exception as e:  # tnlua.LuaError and anything else the stage raises
         return [f"the offline data stage did not run: {type(e).__name__}: {e} (fail closed)"], None
     try:
         snaps, _ = tnfrozen.suite_snapshots(registry, suites=suites)
+        moves = active_moves()
     except tnfrozen.RegistryUnreadable as e:
         return problems + [f"the slices' frozen snapshots are unreadable: {e}"], bodies
+    return problems + tnfrozen.snapshot_problems(frozen, snaps, moves), bodies
 
 
 def released_problems(frozen, cfg, repo=REPO):
@@ -334,6 +344,7 @@ def landing_problems(out_dir, mod_dir, cfg, frozen, registry, suites=tnfrozen.SU
     if bodies is None:
         return problems, None
     new = tnfrozen.body_digests(bodies)
+    moves = active_moves()
     import tnlua
     for z in landed_zips(out_dir, cfg["identity"]["id"]):
         where = f"{z.name} in {out_dir}"
@@ -350,6 +361,8 @@ def landing_problems(out_dir, mod_dir, cfg, frozen, registry, suites=tnfrozen.SU
             continue
         exempt = tnfrozen.exempt_names(cfg) | tnfrozen.exempt_names(old_cfg)
         for name, why in tnfrozen.body_changes(old, new, exempt):
+            if tnfrozen.moved(moves, name, (old[name] or {}).get("sha256")):
+                continue
             problems.append(f"{where} defines {name}, which this build {why}: a body that reached a mods folder is "
                             f"landed and never changes in place (ship a change under the next _v<n>)")
         rec_path = Path(out_dir) / f"{z.stem}.build.json"
@@ -361,6 +374,7 @@ def landing_problems(out_dir, mod_dir, cfg, frozen, registry, suites=tnfrozen.SU
                 continue
             snap = rec.get("frozen") if isinstance(rec, dict) else None
             if snap is not None:
+                problems += tnfrozen.snapshot_problems(frozen, {f"{rec_path.name} in {out_dir}": snap}, moves)
     return problems, bodies
 
 

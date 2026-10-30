@@ -28,6 +28,7 @@
 local cfg = require("prototypes.config")
 local cities = require("prototypes.city_tables")
 local guards = require("scripts.guards")
+local start_ore = require("scripts.start_ore")
 
 local M = {}
 local MSG = cfg.messages
@@ -126,6 +127,7 @@ function M.on_init()
       end
       earth.city_index, earth.intro = announce(surface, geo.map, sp, earth.scale or 0)
     end
+    start_ore.ensure(surface)
   else
     local mt = guards.map_type_geography(surface)
     if not mt then
@@ -137,6 +139,7 @@ function M.on_init()
       local scale = math.floor((value_at_origin(surface, cfg.keys.scale) or 0) + 1 / 2)
       state.city_index, state.intro = announce(surface, mt.map, sp, scale)
     end
+    start_ore.ensure(surface)
   end
   local rso = script.active_mods["rso-mod"]
   if rso then

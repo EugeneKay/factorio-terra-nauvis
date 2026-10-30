@@ -41,6 +41,7 @@ local E = {}
       if not gen then
         error("waterways.lua has no generated file for " .. key .. " at scale " .. s)
       end
+      local function set(kind, expression, functions)
         local lf = {}
         for _, f in ipairs(functions) do
           lf[f] = fn(gen.functions[f])
@@ -48,6 +49,10 @@ local E = {}
         E[#E + 1] = {type = "noise-expression", name = name, expression = expression, local_expressions = locals,
                      local_functions = lf}
       end
+      set("ww", gen.ww, {"seg"})
+      set("canals", gen.canals, {"seg"})
+      set("dams", gen.dams, {"seg"})
+      set("fords", gen.fords, {"box"})
     end
 for _, key in ipairs(cfg.map_order) do
   local versions = (cfg.geography[key] or {}).versions or {}

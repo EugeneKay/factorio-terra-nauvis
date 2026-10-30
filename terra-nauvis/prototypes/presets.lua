@@ -18,6 +18,10 @@
 --
 -- A Map type pick sets only elevation, so every other per-save name a geography version's entry
 -- reads gets a prototype-level fallback valued as that version's preset bakes it under the current
+-- startup settings. Surface values beat prototype names: preset worlds and saves keep their own
+-- values, and only a Map-type-only world follows the startup settings at every load. A frozen fallback
+-- (config.lua) mirrors no setting: its constant body is registered, so no later version moves the worlds
+-- that read it.
 --
 -- A preset is not defined while a mod of its withheld_with list is loaded: from europe-coast to
 -- region-layer Alien Biomes' palms read elevation in the Entity program, so beside them a preset
@@ -124,6 +128,7 @@ end
 local function tree_names()
   local TR = cfg.trees
   local R = TR.restore
+  local out = {[TR.boost.key] = cfg.regions.names.tree_mult, [TR.boost.lift] = TR.boost.lift_body}
   if AB then
     for _, n in pairs(R.trees) do
       out[n.p] = n.body
@@ -295,6 +300,7 @@ for _, key in ipairs(cfg.preset_order) do
 end
 
 -- The fallbacks of every geography version: one prototype per name, valued as every version that
+-- reads it bakes it (a number, or the name of the expression that folds it).
 local fallbacks, seen = {}, {}
 for _, key in ipairs(cfg.map_order) do
   local g = cfg.geography[key]

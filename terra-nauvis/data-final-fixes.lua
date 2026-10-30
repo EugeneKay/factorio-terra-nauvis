@@ -335,7 +335,10 @@ local function boost_hooks()
     end
   end
   table.sort(names)
+  local base_tree = {}
   for _, row in ipairs(VAN.trees) do
+    base_tree[row.tree] = true
+  end
   for _, name in ipairs(names) do
     local autoplace = data.raw.tree[name].autoplace
   end

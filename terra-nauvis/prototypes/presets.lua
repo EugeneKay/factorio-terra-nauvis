@@ -22,9 +22,20 @@
 -- A preset is not defined while a mod of its withheld_with list is loaded: from europe-coast to
 -- region-layer Alien Biomes' palms read elevation in the Entity program, so beside them a preset
 -- ships the palm switch and empties the lists. Its fallbacks stay defined, so the map's Map type
+-- entry still works there. Withholding reached new worlds only: scripts/guards.lua warned a preset
+-- world that later loaded beside such a mod, and a save made before the switch keeps its palms on
+-- its fine field for life (ARCHITECTURE.md, "Alien Biomes").
 --
 -- From climate-tiles each preset also redirects temperature, moisture and aux to the Earth climate,
 -- the Alien Biomes variant when alien-biomes is loaded and the fallback otherwise (climate.lua), and
+-- points the marsh keys at their bodies and each palm's probability and richness keys at its Earth
+-- copy (trees.lua, built from the frozen Alien Biomes table on every load, so the name is never
+-- dangling), which reads the palm constant where AB reads elevation and closes the palm leak
+-- world that gains it later meets the switch too; with Alien Biomes it also points the 19 vanilla
+-- tile keys at the shared bonus body and the exclusion key at its body, and data-final-fixes.lua
+-- points a palm's keys at the neutral body when the installed palm differs from the table. Every
+-- other AB key exists only with AB loaded (ARCHITECTURE.md, "Module map"); without AB the marsh grass
+-- key gives grass-1 between the marsh pools instead.
 --
 -- From trees-forests each preset also bakes the great-forests gate from its setting (a toggle) and
 -- points the multiplier key at the region layer's multiplier; with Alien Biomes it points the restored
@@ -38,6 +49,16 @@
 --
 -- From resources-enemies each preset also bakes the hotspots toggle and, for a version with an
 -- offshore stamp, its map's stamp key (the stamp body with hotspots on, the neutral zero body off;
+--
+-- From edge-and-lakes each preset also bakes the inland lakes toggle (default off; toggle_values), which
+-- a version with a lakes field reads its inland lakes through, and the toggle's key is that version's
+-- Map type fallback, so a Map-type-only world follows the setting.
+--
+-- From destroyed-europe each preset also bakes the zone toggle, on only when its setting is on and
+-- Alien Biomes is loaded (the toggle's `requires`); with Alien Biomes it points temperature at
+-- the Alien Biomes temperature's next version, whose switch folds it to climate-tiles' first when the
+-- toggle is off; and with the toggle on and the spawn city at random a version with a spawn record
+-- bakes the map's random pool as the city number, so random never lands on a city the zone covers.
 local cfg = require("prototypes.config")
 
 local K = cfg.keys
@@ -76,6 +97,11 @@ local function climate_names()
     aux = variant.aux,
     [TL.marsh.water_shallow.key] = TL.marsh.water_shallow.body,
   }
+  -- The palm keys with Alien Biomes loaded or not: a world made without it that gains it later
+  -- places its palms from the copies too, never from the fine field.
+  for _, c in ipairs(TL.palm.copies) do
+    out[c.key] = c.body
+  end
   if AB then
     for _, t in ipairs(TL.vanilla.tiles) do
       out[TL.vanilla.keys[t]] = TL.vanilla.body
@@ -128,6 +154,21 @@ local function stamp_values(map_key, v)
   return {[key] = on and body or cfg.neutral.zero}
 end
 
+-- switch, the toggle baked above, folds it to climate-tiles' first temperature when off); with the toggle
+-- on and the map's spawn city at random, a version's city number (its spawn record's) names the map's random
+-- pool, which skips the cities the zone covers. `names` is the version's table so far.
+local function destroyed_values(map_key, v, names)
+  local D, sw = cfg.destroyed, cfg.toggles.destroyed_europe
+  local out = {}
+  if AB then
+    out.temperature = D.names.temperature
+  end
+  local pool, sp = D.pools[map_key], v.spawn
+    out[sp.city] = pool
+  end
+  return out
+end
+
     for _, t in ipairs(TL.vanilla.tiles) do
 -- left neutral (the game multiplies planet values by preset values, so a planet entry would scale the
 -- preset's). A control another mod removed is left out.
@@ -149,6 +190,10 @@ local function toggle_values(map_key)
     for _, m in ipairs(t.maps) do
       if m == map_key then
         local value = settings.startup[cfg.settings[t.setting].name].value
+        -- a toggle that requires a mod bakes off without it, whatever the setting says (destroyed-europe)
+        if t.requires and not mods[t.requires] then
+          value = false
+        end
         out[t.preset_key] = value and t.on or t.off
       end
     end
@@ -168,6 +213,7 @@ end
 -- the map's city number and the spawn lake and bias the start mask reads. From climate-tiles every
 -- version also bakes the climate and tile keys (climate_names), from trees-forests the tree keys
 -- after them (tree_names: a palm's probability key names its second version), and from ridges the
+-- cliff properties and the map's ridge keys (ridge_values), from resources-enemies a version with
 local function baked(map_key, v)
   local names = {
     [K.start_mask] = v.start_mask,
@@ -204,6 +250,9 @@ local function baked(map_key, v)
     names[k] = value
   end
   for k, value in pairs(stamp_values(map_key, v)) do
+    names[k] = value
+  end
+  for k, value in pairs(destroyed_values(map_key, v, names)) do
     names[k] = value
   end
   return names

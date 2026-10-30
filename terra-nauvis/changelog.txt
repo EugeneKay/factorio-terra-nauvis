@@ -23,6 +23,8 @@ Version: 0.1.0
     - Spawn city startup setting for Europe: Random (the default) or one of 40 cities. The map moves
       so the city sits at the spawn, with land around it, a lake nearby, the starting ore and the
       enemy-free start of the base game; the intro names the city and the world size.
+    - Inland lakes startup setting, off by default: sparse random lakes across the land, kept off
+      coasts and out of the start area. Off leaves the lake at the spawn city, the rivers and the
     - A warning at the start, and to each player who joins, when RSO is active.
     - Other planets' surfaces never take the Terra Nauvis map, and adding the mod to a world made
     - Rivers, straits and canals on every map at every scale: rivers grow with the map scale and
@@ -47,3 +49,5 @@ Version: 0.1.0
     - With Alien Biomes, the base game's trees, rocks, decals and plants grow again on the vanilla
       ground of Terra Nauvis worlds, beside Alien Biomes' own.
   Changes:
+      climate alone, never the coast. A world made from a preset without Alien Biomes does the same
+      once Alien Biomes is added.

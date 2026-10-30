@@ -6,9 +6,13 @@
 -- constant is the palm band's middle (AB's palms grow from elevation 0 to 2), so on Earth presets palms
 -- follow climate and sand alone; every other world keeps AB's own palms,
 -- untouched. A Map type pick sets no key, so its palms read the fine field.
+-- Every Earth preset bakes the keys with or without Alien Biomes, so a world that gains AB later
+-- meets the switch too; a save made before the switch names no key and keeps AB's own palms on its
+-- fine field for life.
 --
 --
 -- The great forests (trees-forests; ARCHITECTURE.md, "Stable hooks"): every living tree's
+-- palms read their copies, so each palm's probability key names a second version that is the same
 --
 -- The restored base game beside Alien Biomes (trees-forests): AB nils
 -- the autoplace of the 15 living vanilla trees and of the vanilla rocks and decals. data-final-fixes.lua

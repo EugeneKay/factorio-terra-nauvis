@@ -57,18 +57,27 @@
    "type": "bool-setting",
    "setting_type": "startup",
    "default_value": true
+  },
    "type": "string-setting",
    "setting_type": "startup",
    "type": "string-setting",
    "setting_type": "startup",
+  "inland_lakes": {
    "type": "bool-setting",
    "setting_type": "startup",
+   "default_value": false
+  },
+  "destroyed_europe": {
+   "source": "terra-nauvis-destroyed-europe (startup, bool, default off)",
    "type": "bool-setting",
    "setting_type": "startup",
+   "default_value": false
    "type": "string-setting",
    "setting_type": "startup",
    "type": "bool-setting",
    "setting_type": "startup",
+   "default_value": false
+  },
    "type": "string-setting",
    "setting_type": "startup",
    "type": "bool-setting",

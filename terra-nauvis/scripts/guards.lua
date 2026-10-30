@@ -175,6 +175,21 @@ local function fallback_record(entry)
   return out
 end
 
+-- A saved city number as a number: a map's random pool, which a preset with the Destroyed Europe zone on
+-- bakes for a random spawn city (destroyed-europe), counts as random, 0. The pools are looked up here, not
+-- in a main-chunk table, which keeps this file's main chunk inside the linter's complexity limit.
+local function city_number(value)
+  local n = tonumber(value)
+  if n == nil then
+    for _, name in pairs((cfg.destroyed or {}).pools or {}) do
+      if value == name then
+        return 0
+      end
+    end
+  end
+  return n
+end
+
 local function setting_label(name)
   if name == K.scale then
     return {"mod-setting-name." .. cfg.settings.scale.name}
@@ -205,6 +220,7 @@ end
 local function fallback_label(name, value)
   local sp = CITY_SPAWN[name]
   if sp then
+    return city_label(sp, city_number(value))
   end
   local tg = TOGGLE_OF[name] or STAMP_OF[name]
   if tg and value == tg.on then
@@ -349,6 +365,7 @@ local function drift_earth(surface)
   local geo = M.geography_of(pen[K.geo])
   local sp = geo and geo.version.spawn
   if sp then
+    local saved_city = city_number(pen[sp.city])
     local now_city = setting_city(sp)
     if saved_city and now_city and saved_city ~= now_city then
       say(message("drift_city", city_label(sp, saved_city), city_label(sp, now_city)))
@@ -357,6 +374,12 @@ local function drift_earth(surface)
   for _, key in ipairs(cfg.toggle_order) do
     local tg = cfg.toggles[key]
     local was = pen[tg.preset_key]
+    local on = settings.startup[cfg.settings[tg.setting].name].value
+    -- a toggle that requires a mod is off without it, as the preset baked it (destroyed-europe)
+    if tg.requires and not script.active_mods[tg.requires] then
+      on = false
+    end
+    local want = on and tg.on or tg.off
     end
   end
 end
@@ -386,6 +409,10 @@ end
 -- The surface guard's strip rule (ARCHITECTURE.md, "D33 surface guard"): a surface other than Nauvis drops a listed
 -- key only when the save's default value names an Earth body or the key is an Earth per-save key. From
 -- ridges the listed keys include vanilla properties (cliff_elevation, cliffiness, the ore
+-- cliffiness and cliff_elevation to the very values Space Age's planets set themselves, so comparing
+-- the value alone would blank those planets' own keys on a world that is no Earth map. The guard's
+-- comparison with the default value stays; this predicate gates it (the static d33_guard row requires
+-- the call).
 function M.earth_valued(key, value)
   local prefix = cfg.identity.noise_prefix
   local function earth(s)

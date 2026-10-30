@@ -3,6 +3,7 @@
 -- line in on_configuration_changed, the withheld-preset warning in both, and the notice and the
 -- start message and the RSO warning; from ridges also the cliff "none" reset) after world detection,
 -- and the D33 surface guard on every new surface and as a sweep in on_init and on_configuration_changed
+-- zone warning (Destroyed Europe on without Alien Biomes), stored like the RSO warning for every created
 local guards = require("scripts.guards")
 local start = require("scripts.start")
 

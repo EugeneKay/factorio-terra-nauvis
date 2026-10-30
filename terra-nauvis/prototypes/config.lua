@@ -279,6 +279,29 @@ local REN = {
   OW_FIELDS = NOISE .. "fields_olde_world" .. RE_V,
 }
 
+-- edge-and-lakes' names (one table: the 200-local limit)
+local ELN = {
+  K_INLAND_LAKES = NOISE .. "inland_lakes",
+  EU6_GX = NOISE .. "gx_europe_v6",
+  EU6_GY = NOISE .. "gy_europe_v6",
+  EU6_U = NOISE .. "u_europe_v6",
+  EU6_V = NOISE .. "v_europe_v6",
+  EU6_CX = NOISE .. "cx_europe_v6",
+  EU6_CY = NOISE .. "cy_europe_v6",
+}
+-- is a name switch to tn_one and tn_zero, baked on only when its setting is on and Alien Biomes is loaded
+-- (without Alien Biomes the switch drops at the data stage). The key (K) and the bodies, one table so this
+-- file stays under Lua's 200 locals per function: the zone (the region layer's zone depth cut by the start
+-- disc), its heat, the next version of climate-tiles' Alien Biomes temperature, which lifts the zone above
+-- 100, and per map with a city fold the random pick over the cities outside the zone.
+local DE = {
+  K = NOISE .. "destroyed",
+  zone = NOISE .. "destroyed_zone_v1",
+  heat = NOISE .. "destroyed_heat_v1",
+  temperature = NOISE .. "temperature_ab_v2",
+  pool_europe = NOISE .. "city_pool_europe_v1",
+}
+
 return {
   identity = {
     id = ID,
@@ -396,6 +419,18 @@ return {
     hotspots = {
       name = ID .. "-hotspots", type = "bool-setting", setting_type = "startup", default_value = true, order = "c-a",
     },
+    -- sparse random inland lakes. Off leaves the spawn lake at the chosen city, the rivers and the real
+    -- lakes of the coast fit as the only fresh water. Baked per save through the toggle tn_inland_lakes.
+    inland_lakes = {
+      name = ID .. "-inland-lakes", type = "bool-setting", setting_type = "startup", default_value = false,
+      order = "c-e",
+    },
+    -- ground inside the zone's polygon, its edges moving with the map seed, never at the spawn. It needs Alien
+    -- toggle tn_destroyed.
+    destroyed_europe = {
+      name = ID .. "-destroyed-europe", type = "bool-setting", setting_type = "startup", default_value = false,
+      order = "c-f",
+    },
   },
 
   -- Map-gen presets, sorted right after Default ("a") and before Rich resources ("b").
@@ -408,6 +443,7 @@ return {
   -- offered beside Alien Biomes again. Withholding acted on new worlds only: a world made from a
   -- preset that later loads beside a listed mod still names its fine field, so control code warns
   -- once and records it while a list names that mod (scripts/guards.lua). A save made before the
+  -- switch keeps its palms on its fine field for life: no load writes the palm keys into it.
   presets = {
     europe = {name = ID .. "-europe", map = "europe", order = "a-tn-a", withheld_with = {}},
     atlantic = {name = ID .. "-atlantic", map = "atlantic", order = "a-tn-b", withheld_with = {}},
@@ -432,6 +468,10 @@ return {
     cliff_elevation = "cliff_elevation", cliffiness = "cliffiness",
     -- resources-enemies: the hotspots toggle, each map's offshore stamp key and the enemy property
     fields = {europe = REN.EU_FIELDS_KEY, atlantic = REN.AT_FIELDS_KEY, olde_world = REN.OW_FIELDS_KEY},
+    -- edge-and-lakes: the inland lakes switch (a toggle)
+    inland_lakes = ELN.K_INLAND_LAKES,
+    -- destroyed-europe: the zone toggle
+    destroyed = DE.K,
   },
 
   -- Each map's geography (ARCHITECTURE.md, "Map type entries"): map_type_order, the order of the
@@ -451,10 +491,14 @@ return {
             {name = EU_CITY, map_qualified = true},
             {name = K_CANALS, map_qualified = false},
             {name = REN.EU_FIELDS_KEY, map_qualified = true},
+            {name = ELN.K_INLAND_LAKES, map_qualified = false},
           },
           spawn = {
             city_setting = "spawn_city_europe", city = EU_CITY, city_index = EU_CITY_INDEX,
           fields = REN.EU_FIELDS_KEY,
+          edge = true,
+          lakes = ELN.K_INLAND_LAKES,
+        },
       },
     },
     atlantic = {
@@ -464,12 +508,24 @@ return {
             {name = K_SCALE, map_qualified = false},
             {name = K_CANALS, map_qualified = false},
             {name = REN.AT_FIELDS_KEY, map_qualified = true},
+            {name = ELN.K_INLAND_LAKES, map_qualified = false},
+          },
+          spawn = {
           fields = REN.AT_FIELDS_KEY,
+          edge = true,
+          lakes = ELN.K_INLAND_LAKES,
+        },
           fallbacks = {
             {name = K_SCALE, map_qualified = false},
             {name = K_CANALS, map_qualified = false},
             {name = REN.AT_FIELDS_KEY, map_qualified = true},
+            {name = ELN.K_INLAND_LAKES, map_qualified = false},
+          },
+          spawn = {
           fields = REN.AT_FIELDS_KEY,
+          edge = true,
+          lakes = ELN.K_INLAND_LAKES,
+        },
       },
     },
     olde_world = {
@@ -479,12 +535,24 @@ return {
             {name = K_SCALE, map_qualified = false},
             {name = K_CANALS, map_qualified = false},
             {name = REN.OW_FIELDS_KEY, map_qualified = true},
+            {name = ELN.K_INLAND_LAKES, map_qualified = false},
+          },
+          spawn = {
           fields = REN.OW_FIELDS_KEY,
+          edge = true,
+          lakes = ELN.K_INLAND_LAKES,
+        },
           fallbacks = {
             {name = K_SCALE, map_qualified = false},
             {name = K_CANALS, map_qualified = false},
             {name = REN.OW_FIELDS_KEY, map_qualified = true},
+            {name = ELN.K_INLAND_LAKES, map_qualified = false},
+          },
+          spawn = {
           fields = REN.OW_FIELDS_KEY,
+          edge = true,
+          lakes = ELN.K_INLAND_LAKES,
+        },
       },
     },
   },
@@ -510,6 +578,7 @@ return {
   -- here): the missing-name guard, the isolation walker (t14_walker) and the Nauvis-only surface guard
   -- read it, which strips exactly these keys from every other surface (ARCHITECTURE.md, "D33 surface
   -- guard"). From climate-tiles also the climate redirects,
+  -- the marsh keys, the palm keys, and with Alien Biomes the vanilla tile keys and the exclusion key
   -- (absent keys are by design on a world without AB).
                  "water_level", "segmentation_multiplier", "nauvis_segmentation_multiplier",
                  "temperature", "moisture", "aux", CT.MARSH_MUD, CT.MARSH_SHALLOW, CT.MARSH_GRASS,
@@ -547,6 +616,9 @@ return {
                  "entity:iron-ore:richness", "entity:copper-ore:richness", "entity:coal:richness",
                  "entity:stone:richness", "entity:uranium-ore:richness", "entity:crude-oil:richness",
                  "enemy_base_probability", REN.K_HOTSPOTS, REN.EU_FIELDS_KEY, REN.AT_FIELDS_KEY, REN.OW_FIELDS_KEY,
+                 "entity:offshore-oil:probability", "entity:offshore-oil:richness",
+                 -- edge-and-lakes: the inland lakes switch and the new versions' city offset names
+                 -- destroyed-europe: the zone toggle (temperature and the city numbers are listed above)
 
   -- decorative or Cliff root on a Terra Nauvis preset may reach one. The start land guarantee is
   -- analytic but belongs to the field by ARCHITECTURE.md's firewall rule; the spawn lake, the bias,
@@ -641,10 +713,23 @@ return {
     },
     {
       release = "0.1.0",
+      map = "europe",
+      geography = 14,
+    },
+    {
+      release = "0.1.0",
       map = "atlantic",
     {
       release = "0.1.0",
       map = "olde_world",
+    -- The Destroyed Europe bodies (destroyed-europe). They belong to no geography: the zone and its heat
+    -- read the region layer's zone depth and the spawn distance; the temperature's next version reads
+    -- climate-tiles' Alien Biomes temperature, so it exists only with Alien Biomes and is registered from
+    -- the M2 dump; each pool reads its map's city fold hash and prototypes/tables/destroyed.lua.
+    {
+      release = "0.1.0",
+      files = {"prototypes/tables/destroyed.lua"},
+    },
   },
 
   -- Elevation composition tunables (ARCHITECTURE.md, "Elevation composition"):
@@ -673,6 +758,26 @@ return {
     far_floor = -100,
     edge_water = -1,
     edge_min_scale = 3,
+    -- edge = true replaces its box's inside (inf, and the edge_water ring) with a second coast, the
+    -- version's own transfer of b = clamp(d / tn_scale + warp - width_px, -transfer_clamp_px,
+    -- transfer_clamp_px), d the box distance in tiles, so land sinks into deep water where b < 0 with
+    -- the same beach and deepwater profile as a real coast. warp = warp_px * clamp(sum of the octaves,
+    -- -1, 1), each octave a basis noise in geo tiles with its own seed1 and wavelength in reference px,
+    -- so the cut reads as a wavy coastline that moves with the map seed. The band's water edge lies
+    -- between width_px - warp_px and width_px + warp_px reference px inside the box: never closer than
+    -- 4 px, so every land column the box cuts ends in water before it, and never deeper than 20 px,
+    -- short of the nearest land the box does not cut (Cyprus 22 px, Alaska 24 px, Ireland and Stewart
+    -- Island 25 px). The pixel-centre coast check masks reference land within width_px + warp_px + 1
+    edge_band = {
+      width_px = 12,
+      warp_px = 8,
+      mask_px = 21,
+      octaves = {
+        {seed1 = 7401, wavelength_px = 32, weight = 1},
+        {seed1 = 7402, wavelength_px = 12, weight = 0.5},
+        {seed1 = 7403, wavelength_px = 4, weight = 0.25},
+      },
+    },
   },
 
   -- scale, and keeps starting ore off the spawn lake as vanilla's mask does with its own lake:
@@ -910,12 +1015,29 @@ return {
     start_factor = 2,
   },
 
+  -- prototypes/expressions/destroyed.lua builds, from the region layer's interface names only:
+  --   heat   where the zone is positive, clamp(rim + min(per_tile * zone, ramp) + noise, rim, cap) in Alien
+  --          Biomes units: a heat-1 rim (100 to 120) that climbs within ramp / per_tile tiles to a core
+  --          mixing heat-1 to heat-4 (heat-2 from 120, heat-3 from 135, heat-4 from 145 to 150; a small
+  --          disc ramped 0.49 per tile to its cap, which on this zone would pave it with heat-4);
+  --   temperature   the Alien Biomes temperature's next version: max(climate-tiles' first version, heat)
+  --          with the toggle on, the first version alone off (a folded `if` on the switch)
+  --   pools  per map with a city fold, its random pick over the cities outside the zone: the fold's hash
+  --          modulo the pool's size, then the pool's k-th city (prototypes/tables/destroyed.lua lists the
+  --          zone cities); a preset with the toggle on and the spawn city at random bakes it as the map's
+  --          city number, so the first fold reads it and resolves it as a chosen city
+  destroyed = {
+    switch_threshold = 0.5,
+  },
+
   -- Control-stage messages: the locale section and keys (locale/en/terra-nauvis.cfg). notice_withheld
   -- is the Map type notice where the map's preset is withheld (presets.withheld_with); drift_update
   -- is the drift line for a Map type fallback that moved with the mod itself rather than with a
   -- startup setting (a frozen fallback never should: the line is a tripwire); withheld_beside warns
   -- an Earth world whose preset is withheld beside a mod it now loads with; start is the start
   -- message, rso the RSO warning and drift_city the drift line for a changed spawn-city
+  -- setting on an Earth world (spawn-cities); destroyed_no_ab is the warning for Destroyed Europe on
+  -- without Alien Biomes (destroyed-europe). Messages name a world's
   -- map by its preset's name, which no version changes. A stored warning keeps its key here
   -- (scripts/guards.lua record_warning; ARCHITECTURE.md, "Guards", stored records), so a key that
   -- saves can hold is never removed or renamed: retire a message by leaving its key and locale
@@ -937,6 +1059,7 @@ return {
       toggle_on = "toggle-on",
       toggle_off = "toggle-off",
       cliff_reset = "cliff-reset",
+      destroyed_no_ab = "destroyed-no-ab",
     },
   },
 
@@ -959,6 +1082,17 @@ return {
     -- map's offshore stamp key follows the same setting (presets.lua).
     hotspots = {setting = "hotspots", preset_key = REN.K_HOTSPOTS, default = true, mechanism = "name switch",
                 on = ONE, off = ZERO, maps = {"europe", "atlantic", "olde_world"}},
+    -- folded `if`, so off compiles to the spawn lake alone (the spot noise is never evaluated) and on to
+    -- the previous version's composition. Every map lists it: a map's version without a spawn
+    -- record bakes it unread.
+    inland_lakes = {setting = "inland_lakes", preset_key = ELN.K_INLAND_LAKES, default = false,
+    -- Destroyed Europe (destroyed-europe): a name switch read by the temperature's next version through a
+    -- folded `if`, so the zone off compiles to climate-tiles' temperature alone. `requires` names the mod
+    -- without which a preset bakes it off whatever the setting says, and the drift line
+    -- compares with the same rule.
+    destroyed_europe = {setting = "destroyed_europe", preset_key = DE.K, default = false,
+                        mechanism = "name switch", on = ONE, off = ZERO, maps = {"europe", "atlantic", "olde_world"},
+                        requires = "alien-biomes"},
               on = ONE, off = ZERO, maps = {"europe", "atlantic", "olde_world"}},
   },
 
@@ -1152,6 +1286,10 @@ return {
   --             (score) + the grass key, its own score off: the key's body gives +bonus on land inside
   --             marshes (marsh_cut), 0 elsewhere (with AB the vanilla tile keys keep vanilla out of
   --             marshes, so AB's wetland grass lies between the pools)
+  --   palm      with or without Alien Biomes (so a world that gains it later meets the switch too):
+  --             Earth presets point each AB palm's
+  --             entity:<tree>:probability and :richness keys at Earth copies of its expressions with
+  --             every local expression, the
   --             constant where AB reads elevation (the richness too: its locals are in its scope, so
   --             the isolation walk reads them with it)
   --             The plain hook form (a key whose prototype
@@ -1195,6 +1333,10 @@ return {
   --             own): the gate's prototype holds gate_off and Earth presets bake the great-forests toggle;
   --             the key's prototype holds key_off (a neutral multiplier) and Earth presets name the region
   --             layer's multiplier (regions.names.tree_mult: 1 + forest boost 2 times the forest sum).
+  --             The base game's dead and dry trees are left alone (prototypes/tables/vanilla.lua),
+  --             and so are Alien Biomes' palm prototypes (tiles.palm.copies' trees stay AB's)
+  --   palm      on Earth presets with Alien Biomes the palms read their Earth copies (tiles.palm), so each
+  --             palm's probability key names its second version, the boost's formula around the
   --   restore   with Alien Biomes, the base game's living trees, rocks and decals AB takes off Nauvis,
   --             rebuilt from prototypes/tables/vanilla.lua: each behind the gate keys.on with its key, whose
   --             prototype holds the off value and which Earth presets point at its body, restricted to the

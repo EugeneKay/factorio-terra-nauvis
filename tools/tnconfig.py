@@ -335,6 +335,9 @@ VERSION_FIELDS = set(GEOGRAPHY_NAMES) | {"geo_id", "city_offset", "start_mask", 
 # (resources-enemies), the map-qualified per-save key of the map's offshore field stamp, which its entry
 # composes last (a Map type fallback mirroring the hotspots setting; the stamp body reads the layer
 # chain, so it is no version's own).
+# (edge-and-lakes) `edge`, true when the version's far-field box carries the soft map edge
+# (coast.edge_band), and `lakes`, the per-save inland lakes switch its entry reads its inland lakes
+# through (a toggle's preset key; only with a spawn record).
 # A waterways record: per kind, the set names by scale. The sets read the version's chain, so they are
 # its own: a later version that composes the waterways names sets of its own, and config.lua's
 # waterways.sets[map] is the record of the map's newest version that has one.
@@ -474,6 +477,14 @@ def geography_versions(cfg):
                 raise ConfigError(f"config.lua {where}.shore must be a noise name (the version's shore body)")
             if "fields" in v and (not isinstance(v["fields"], str) or not v["fields"]):
                 raise ConfigError(f"config.lua {where}.fields must be a noise name (the map's offshore stamp key)")
+            if "edge" in v and (v["edge"] is not True or not isinstance(((cfg.get("coast") or {}).get("edge_band")),
+                                                                       dict)):
+                raise ConfigError(f"config.lua {where}.edge must be true, with coast.edge_band defined")
+            if "lakes" in v:
+                keys = {t.get("preset_key") for t in (cfg.get("toggles") or {}).values() if isinstance(t, dict)}
+                if not isinstance(v["lakes"], str) or v["lakes"] not in keys or "spawn" not in v:
+                    raise ConfigError(f"config.lua {where}.lakes must be a toggle's preset key, on a version with a "
+                                      f"spawn record (the inland lakes switch)")
             for n in GEOGRAPHY_NAMES + ("start_mask",):
                 if not isinstance(v[n], str) or not v[n]:
                     raise ConfigError(f"config.lua {where}.{n} must be a noise name")
@@ -667,6 +678,12 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
     the map's tn_map id, the scale, the version's tn_geo id, its city offset under its own names,
     and vanilla's water-slider readers at their default-slider values; with a spawn record
     also the distance redirect, the map's city number and the spawn lake and bias keys; from
+    climate-tiles the climate redirects, the marsh keys and the palm keys (with or without Alien
+    Biomes), and with ab=True (Alien Biomes loaded, the M2 dump) the AB climate variant, the vanilla
+    tile keys and the exclusion key, else the fallback climate and the marsh grass key; from
+    trees-forests the tree keys; from ridges the cliff properties, the map's ridge keys and the Earth
+    ores' wrapper keys; from destroyed-europe, with
+    ab=True, the Alien Biomes temperature's next version."""
     K, m = cfg["keys"], cfg["maps"][map_key]
            K["land_coarse"]: version["land_coarse"], K["map"]: m["id"], K["scale"]: int(scale),
            K["geo"]: version["geo_id"], version["cx"]: version["city_offset"][0],
@@ -688,6 +705,9 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
     if cl and tl:
         for prop in ("temperature", "moisture", "aux"):
             pen[prop] = variant[prop]
+        # the palm keys with AB loaded or not
+        for c in tl["palm"]["copies"]:
+            pen[c["key"]] = c["body"]
         if ab:
             for tile in tl["vanilla"]["tiles"]:
                 pen[tl["vanilla"]["keys"][tile]] = tl["vanilla"]["body"]
@@ -728,6 +748,13 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
         tg = cfg["toggles"]["hotspots"]
         on = cfg["settings"][tg["setting"]]["default_value"]
         pen[version["fields"]] = cfg["fields"]["names"][map_key] if on else cfg["neutral"]["zero"]
+    # destroyed-europe (presets.lua destroyed_values, last): with Alien Biomes temperature names the Alien
+    # Biomes temperature's next version whatever the toggle (its folded switch keeps climate-tiles' first
+    # version when off); the random pool replaces the city number only with the zone on, never at the
+    # setting's default (off)
+    de = cfg.get("destroyed")
+    if ab and de and de.get("names"):
+        pen["temperature"] = de["names"]["temperature"]
     return pen
 
 
@@ -865,6 +892,7 @@ def release_names(cfg):
     return sorted(release_of(cfg))
 
 
+# requires (destroyed-europe): a mod without which a preset bakes the toggle off whatever its setting says
 
 
 def toggles(cfg):

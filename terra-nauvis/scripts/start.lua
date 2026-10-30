@@ -13,6 +13,11 @@
 --     generated before on_init. So on an Earth world with ridges on, a size of 0 is written back as
 --     reset_size (config.lua ridges) with a whole-table assignment, once, logged in one line: the
 --     preview and the starting chunks keep none, and every chunk generated from then on gets its
+--     active, the warning that the world has no zone, stored through guards.record_warning like the RSO
+--     warning. The preset baked the zone off for lack of Alien Biomes, so the save
+--     cannot tell an asked-for zone from none: this one check reads the startup setting, which on_init
+--     reads as the world was created with. With the zone on and the spawn city at random, the save's city
+--     number names the map's random pool, which counts as random (0) here.
 --
 local cfg = require("prototypes.config")
 local guards = require("scripts.guards")
@@ -80,10 +85,12 @@ function M.on_init()
   end
   local earth = storage.earth
     end
+    end
   end
   local rso = script.active_mods["rso-mod"]
   if rso then
     guards.record_warning("rso", {rso})
+  end
   end
 end
 

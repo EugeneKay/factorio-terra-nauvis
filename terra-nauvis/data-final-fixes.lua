@@ -200,6 +200,8 @@ end
 -- autoplace or takes them off Nauvis, so each is rebuilt from prototypes/tables/vanilla.lua behind the gate
 -- tn_on with its key (trees.lua), restricted to the vanilla land tiles so AB's land keeps AB's own, and
 -- listed on Nauvis where the base game lists it (trees ride the trees control). Then the great-forests
+-- hook on every living tree but AB's palms, every world (ARCHITECTURE.md, "Stable hooks"): its outermost
+-- if() is the forests gate, so on every world without an Earth preset each tree compiles its own autoplace.
 local TR = cfg.trees
 local VAN = require("prototypes.tables.vanilla")
 local TREES = require("prototypes.expressions.trees")
@@ -305,8 +307,12 @@ local function restore_vanilla()
 end
 
 local function boost_hooks()
+  local skip = {}
   for _, name in ipairs(VAN.dead_trees) do
+    skip[name] = true
+  end
   for _, c in ipairs(PALM.copies) do
+    skip[c.tree] = true
   end
   local names = {}
   for name, tree in pairs(data.raw.tree or {}) do

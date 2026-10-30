@@ -652,6 +652,10 @@ GUARDS_FILE = "scripts/guards.lua"
 # ------------------------------------------------------------------------------------------------ D33
 
 # D33's strip rule (ARCHITECTURE.md, "D33 surface guard"; slice ridges): from ridges config.lua's
+# preset_keys lists vanilla properties (cliff_elevation, cliffiness, the ore probabilities, beside
+# the water slider readers) whose vanilla values Space Age's planets also set themselves, so the
+# guard that strips keys from surfaces other than Nauvis may strip one only through guards.lua's
+# M.earth_valued (the save's default value names an Earth body, or the key is an Earth per-save key).
 D33_PREDICATE = "earth_valued"
 
 
@@ -726,8 +730,81 @@ def d33_fixtures():
     out.append(("d33: a guards.lua without the predicate fails", bool(d33_findings(real.replace(pred, ""))) if pred
                 else False, ""))
     return out
+
+
+# ------------------------------------------------------------------------------------------------ redefinitions
+
+# A file's chunk defines each function once. Lua lets a later `function M.x`, `M.x = function` or
+# `local function x` win without a word, so a stale copy a restack carries in silently replaces the
+# definition every earlier caller and the text rows read (the second M.kind of ridges' restack
+# dropped the base's storage branch; lua_function_body and luacheck both see only one of the two).
+
+def lua_redefinitions(text, where):
+    """Every function name one Lua chunk defines twice at its top level: a global or dotted
+    `function a.b()`, a method `function a:b()`, an assignment of a function to a dotted name, or a
+    `local function x`, each as '<where>:<line>: <name> redefined (first at line <n>)'. A chunk with
+    fewer than two `function` keywords defines at most one, so it is never parsed (the generated
+    tables hold none)."""
+    if text.count("function") < 2:
+        return []
     from luaparser import astnodes
+    out, seen = [], {}
+    for st in tnconfig.parse_lua(text, where).body.body:
+        names = []
+        if isinstance(st, astnodes.LocalFunction):
+            names = ["local " + st.name.id]
+        elif isinstance(st, astnodes.Method):
+            src = _dotted(st.source, astnodes)
+            names = [f"{src}:{st.name.id}"] if src else []
+        elif isinstance(st, astnodes.Function):
+            names = [_dotted(st.name, astnodes)]
+        elif isinstance(st, astnodes.Assign):
+            names = [_dotted(t, astnodes) for t, v in zip(st.targets, st.values)
+                     if isinstance(v, astnodes.AnonymousFunction)]
+        for n in names:
+            if not n:
+                continue
+            line = getattr(st, "line", None) or "?"
+            if n in seen:
+                out.append(f"{where}:{line}: {n} redefined (first at line {seen[n]}); the later copy wins for every "
+                           f"caller")
+            else:
+                seen[n] = line
+    return out
+
+
+def redefinition_findings(mod=MOD):
+    """lua_redefinitions over every Lua file the mod ships."""
+    out = []
+    for p in mod_lua(mod):
+        out += lua_redefinitions(Path(p).read_text(encoding="utf-8"), rel(p, mod))
+    return out
+
+
+def row_redefinitions(mod=MOD):
+    f = redefinition_findings(mod)
+    return f, f"{len(mod_lua(mod))} Lua files: each top-level function defined once"
+
+
+def redefinition_fixtures():
+    """The redefinition scan on guards.lua's text: the shipped file passes and the walk reads it; a
+    second function M.kind (as ridges' restack carried in), a second local function and a function
+    assigned over a defined M.kind each fail."""
+    guards = read_text_or_none(MOD / GUARDS_FILE) or ""
+    walked = any(rel(p, MOD) == GUARDS_FILE for p in mod_lua(MOD))
+    real = lua_redefinitions(guards, GUARDS_FILE) if guards else ["guards.lua is missing"]
+    out = [("redefinitions: the shipped guards.lua passes and the walk reads it", walked and not real, real[:1])]
+    cases = {
+        "redefinitions: a second function M.kind fails": "function M.kind(surface)\n  return nil\nend\n",
+        "redefinitions: a second local function fails": "local function pen_of(surface)\n  return {}\nend\n",
+        "redefinitions: a function assigned over a defined M.kind fails": "M.kind = function()\n  return nil\nend\n",
+    }
+    for label, extra in cases.items():
+        f = lua_redefinitions(guards.replace("\nreturn M", "\n" + extra + "\nreturn M"), GUARDS_FILE)
         out.append((label, bool(f), f[:1]))
+    return out
+
+
 STORED_FIELDS = {"warnings", "sent"}
 WARNING_WRITER = "record_warning"
 
@@ -2475,6 +2552,7 @@ def fixture_controls():
         results += ranges_fixtures(td)
         results += hotspots_fixtures(td)
         results += d33_fixtures()
+        results += redefinition_fixtures()
     return results
 
 
@@ -3894,11 +3972,15 @@ def region_name_fixtures(td, cfg):
 
         out.append((label, bool(f), f[:1]))
         out.append((label, bool(f), f[:1]))
+    return out
+
+
 ROWS = [
     ("lint", row_lint), ("info_json", row_info), ("locale", row_locale), ("dashes", row_dashes),
     ("registration", row_registration), ("storage", row_storage), ("names", row_names),
     ("data_src", row_data_src), ("frozen_static", row_frozen), ("bodies", row_bodies), ("append_only", row_append_only),
     ("fallbacks", row_fallbacks), ("zip", row_zip), ("regions", row_regions), ("ranges", row_ranges), ("hotspots", row_hotspots),
+    ("d33_guard", row_d33), ("redefinitions", row_redefinitions), ("fixtures", row_fixtures),
 ]
 
 

@@ -181,9 +181,12 @@ return {
       source = "the geography research's forests atlantic_forest outline, 11 vertices",
     },
     {
+      id = "pripet", layer = "marsh", shape = "path", warp = 0, radius_km = 90,
       maps = {"europe", "atlantic", "olde_world"},
       latlon = {
+        {51.84824, 25.853366}, {52.303521, 26.65601}, {51.747066, 27.401322}, {52.202347, 28.146634},
       },
+      source = "the geography research's marshes pripet box 480 x 225 km, walked as a bent path",
     },
     {
       id = "danube_delta", layer = "marsh", shape = "disc", warp = 0, lat = 45.2, lon = 29.5, radius_km = 36.4,

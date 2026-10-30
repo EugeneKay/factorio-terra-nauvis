@@ -60,8 +60,13 @@ Date: 2026-10-30
       around them, while trees still follow the climate.
     - With Alien Biomes, the base game's trees, rocks, decals and plants grow again on the vanilla
       ground of Terra Nauvis worlds, beside Alien Biomes' own.
+      cliffs on a Terra Nauvis map. A ridge wanders round its range, runs wider where the real
+      mountain is taller, breaks into runs of many lengths and frays out at its ends, with passes
+      at the historic crossings, a gap at least every 400 km and no cliffs across the starting
+      area. The cliffs sliders do not change them, and a world started with cliffs at none gets
     - Destroyed Europe startup setting (default off, needs Alien Biomes): from France to Warsaw and
       from the North Sea across Switzerland and Austria to Ljubljana and down Italy to about Rome,
+    - Exact coastlines startup setting (default on): on Atlantic and Old World each new chunk's coast
     - City markers map setting (default off, changeable in a running game): the map view names every
       city of a Terra Nauvis world's map where it lies; switching it off removes them.
   Changes:

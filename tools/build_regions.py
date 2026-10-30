@@ -15,6 +15,9 @@ destroyed zone), by the rules of the tuned prototype table:
               crest outside at every seed
   forest      every adopted forest: the researched outline as a polygon, else a disc of its equivalent radius;
               share 0.25 for discs, 0.4 for thin outlines, 1 for the rest; boost 1
+  marsh       every adopted marsh by its adopted extent: a box walked as a bent path, a buffered coast
+              line or a disc of its equivalent radius; warp share 0 (deltas and coasts stay put; the edge
+              comes from the marsh outline noise of regions.lua)
   hotspot     every adopted hotspot as a disc of its radius r at its adopted centre, jittered per
               seed by up to j = r / 2 in the data stage (a linear seed fold, a phase per row), warp 0,
               biter multiplier 4
@@ -57,6 +60,8 @@ SHARE_THIN_POLYGON = 0.4    # the Carpathian and Dinaric outlines were tuned to 
 SHARE_POLYGON = 1.0
 SHARE_EXCLUDE = 0.0
 SHARE_MARSH = 0.0
+MARSH_BENDS = ((-1, 0.15), (-0.3, -0.3), (0.35, 0.25), (1, -0.2))   # along the box, across it (shares)
+MARSH_BEND_WIDTH = 0.8      # the path's radius over the box's half height, so its bends stay inside
 SHARE_HOTSPOT = 0.0
 # A polygon is thin when its area over its perimeter, about half its mean width for a strip, is below
 # this: Carpathian 18.9 and Dinaric 17.2 px (the two thin outlines), Hyrcanian 10.6; the next is
@@ -363,9 +368,17 @@ def marsh_row(cfg, m, g, maps):
     kpp = km_per_px(cfg)
     fr = frame(cfg)
     if "west_east_km" in ext and "north_south_km" in ext:
+        # a box's extent centred on the article coordinate, its sides converted at km_per_px (a size in
+        # tiles does not depend on latitude), walked as a bent path as wide as the box, so the marsh
         cu, cv = to_px(float(c["lat"]), float(c["lon"]), fr)
         hu, hv = ext["west_east_km"] / kpp / 2, ext["north_south_km"] / kpp / 2
+        reach = hu - hv
+        bends = [(cu + reach * s, cv + hv * b) for s, b in MARSH_BENDS]
+        latlon = [[round(a, 6), round(b, 6)] for a, b in (to_latlon(u, v, fr) for u, v in bends)]
+        return {"id": rid, "layer": "marsh", "shape": "path", "warp": SHARE_MARSH, "maps": maps,
+                "radius_km": round(hv * kpp * MARSH_BEND_WIDTH, 3), "latlon": latlon,
                 "source": f"the geography research's marshes {m['id']} box {ext['west_east_km']} x "
+                          f"{ext['north_south_km']} km, walked as a bent path"}
     if ext.get("coast_polyline"):
         latlon = [[float(a), float(b)] for a, b in ext["coast_polyline"]]
         pts = [to_px(a, b, fr) for a, b in latlon]

@@ -43,6 +43,9 @@ def(MS.water_mud.key, MS.water_mud.off)
 def(MS.water_shallow.key, MS.water_shallow.off)
 def(MS.grass.key, MS.grass.off)
 
+-- The marsh pool noise, one named field: the pools read it and the vanilla bonus's edge reads it too.
+def(MS.pool.name, noise(MS.pool))
+
 -- The vanilla bonus: the temperate lean, 1 at lean_t falling to 0 lean_span away, plus clamped patch noise,
 -- gives +bonus on land below the band's top (temperate_below: the lean plus patch passes up to about
 -- 73.5, inside the hot band and its desert bin, where AB's tiles score at most about 1.5, so the
@@ -51,14 +54,20 @@ def(MS.grass.key, MS.grass.off)
 -- alone (with -inf there, a test render showed water-mud covering the band wherever the lean
 -- failed); at and above the band's top, below its bottom where the lean fails, on water and
 -- inside marshes -inf. The lean still reaches below the band's bottom, on its cold side.
+    ", if(elevation > 0, " .. num(V.bonus) .. ", -inf), -inf), if(elevation > 0, if(" .. t .. " >= " ..
     num(X.temperate_below) .. ", -inf, if(1 - abs(" .. t .. " - " .. num(V.lean_t) .. ") / " .. num(V.lean_span) ..
+    ", if(" .. t .. " >= " .. num(X.temperate_from) .. ", 0, -inf))), -inf))"
 end
 local PATCH = {patch = "clamp(" .. num(V.patch.amplitude) .. " * " .. noise(V.patch) .. ", " .. num(-V.patch.clamp) ..
   ", " .. num(V.patch.clamp) .. ")"}
 
 
 -- The exclusion of non-adopted Alien Biomes land tiles from the temperate band.
+-- Inside a marsh the tiles open up to AB's wet ground, but not to its alien palette: a dry belt's red
+-- lift can carry aux past the climate's cap there (the Volga delta went purple), and vanilla's bonus
+-- body takes that ground instead, since with nothing else open AB's water-mud would flood it.
   return "if(" .. t .. " >= " .. num(X.temperate_from) .. ", if(" .. t .. " < " .. num(X.temperate_below) ..
+    ", -inf, 0), -inf), 0), 0)"
 end
 
 -- The grain's tile copies (config.lua climate.grain): each key is its plain field, and the bonus and
@@ -78,6 +87,7 @@ local P = MS.pool
 def(MS.water_mud.body, "if(elevation > 0, if(distance > " .. num(MS.start_clear_tiles) .. ", if(" .. MARSH_W ..
   " > " .. num(V.marsh_cut) .. ", if(pool + " .. num(P.cut_per_weight) .. " * " .. MARSH_W .. " - " ..
   num(P.cut + P.cut_per_weight) .. " > 0, " .. num(MS.score) .. ", -inf), -inf), -inf), -inf)",
+  {pool = P.name})
   " > " .. num(V.marsh_cut) .. ", if(pool + " .. num(P.cut_per_weight) .. " * " .. MARSH_W .. " - " ..
   num(P.cut + P.cut_per_weight) .. " > 0, " .. num(MS.score) .. ", -inf), -inf), -inf), -inf)",
 def(MS.water_shallow.body, "if(" .. MARSH_W .. " > " .. num(V.marsh_cut) .. ", if(elevation < 0, if(elevation > " ..

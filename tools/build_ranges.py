@@ -7,7 +7,10 @@
 
 Rows, from data-src/approvals/approvals-data.json (which ranges and passes are adopted, each pass's
 arc along its crest, the pass-free stretches and the unnamed-gap rule), the geography research file
+the module reads (the measured crest polylines) and data-src/ridges/vertex-heights.json (each crest
+vertex's height):
   crest   every range approvals-data.json lists (16), as the researched crest polyline in degrees
+  heights one per crest vertex, in metres: a ridge runs wider where its mountain is taller
   pass    every adopted pass (54 of 56: Khyber and Bolan stand on no listed range and are dropped),
           at the crest point approvals-data.json's arc_km names: the point serving it, which
           the approval tool placed (the nearest crest point, the crest's end for Derbent, the crest
@@ -48,10 +51,16 @@ MOD = REPO / "terra-nauvis"
 TABLE = MOD / "prototypes" / "tables" / "ranges.lua"
 APPROVALS = REPO / "data-src" / "approvals" / "approvals-data.json"
 R7B = REPO / "docs" / "plan" / "research" / "R7b-geography.json"
+HEIGHTS = REPO / "data-src" / "ridges" / "vertex-heights.json"
+TOOL_VERSION = 2
 
 EARTH_R_KM = 6371.0088          # the approval tool's sphere, so arcs equal approvals-data.json's
 DEG_KM = math.pi * EARTH_R_KM / 180.0
 ARC_TOLERANCE_KM = 0.2          # approvals-data.json rounds arcs and stretches to 0.1 km
+# A ridge reaches its widest half-width plus its swell and its wander from the crest (config.lua
+# ridges), that many reference pixels at scale 1: a segment whose box comes within this of a map's
+# extent can put cliffs on it.
+MARGIN_PX = 200.0
 MAX_COLUMNS = 120               # tools/lint/luacheckrc.lua max_line_length
 KINDS = ("pass", "gap", "edge")
 TIP_KM = 0.5                    # an opening this close to a crest's end vertex sits at that end
@@ -177,9 +186,26 @@ def place_gaps(acc, a, b, n, every):
 
 # ------------------------------------------------------------------------------------------------ derive
 
+def heights_of(rid, g, doc):
+    """A range's vertex heights in metres (data-src/ridges/vertex-heights.json): one per crest vertex,
+    none above the researched highest point for the range."""
+    hs = (doc.get("ranges") or {}).get(rid)
+    want = len(g["crest_polyline"])
+    if not isinstance(hs, list) or len(hs) != want:
+        raise RangeError(f"{rid}: vertex-heights.json holds {len(hs) if isinstance(hs, list) else 'no'} heights "
+                         f"for {want} crest vertices")
+    top = float(g["highest_elevation_m"])
+    if max(hs) > top + 1:
+        raise RangeError(f"{rid}: a vertex height of {max(hs)} m tops the researched highest point, {top} m")
+    return [float(h) for h in hs]
+
+
 def derive(cfg, appr, r7b):
+    """The table's ranges from the approval data, the researched geography and the vertex heights, in
+    approvals-data.json's order, with the per-map facts that `list` reports."""
     ppd = float(cfg["coordinates"]["px_per_degree"])
     every = float(appr["rules"]["unnamed_gap_every_km"])
+    heights = json.loads(HEIGHTS.read_text(encoding="utf-8"))
     maps = [cfg["maps"][k] for k in cfg["map_order"]]
     geo = {r["id"]: r for r in r7b["ranges"]}
     passes = {}
@@ -268,6 +294,7 @@ def derive(cfg, appr, r7b):
                         o["seg"] = i + 1
                         break
         out.append({"id": rid, "name": g["name"], "crest_km": length, "crest": [list(p) for p in pts],
+                    "heights": heights_of(rid, g, heights), "segments": segments, "openings": openings})
     return out
 
 
@@ -336,6 +363,9 @@ def emit_range(cfg, r):
     out.append(inner + "crest = {")
     out += wrap_items(["{" + lua_num(a) + ", " + lua_num(b) + "}" for a, b in r["crest"]], inner + "  ")
     out.append(inner + "},")
+    out.append(inner + "heights = {")
+    out += wrap_items([lua_num(h) for h in r["heights"]], inner + "  ")
+    out.append(inner + "},")
     out.append(inner + "segments = {")
     for k in cfg["map_order"]:
         if k in r["segments"]:
@@ -363,12 +393,16 @@ HEADER = """\
 -- Written by tools/build_ranges.py (writer {tool}) from
 --   data-src/approvals/approvals-data.json sha256 {appr}
 --   docs/plan/research/R7b-geography.json sha256 {r7b}
+--   data-src/ridges/vertex-heights.json sha256 {heights}
 -- Never edit by hand: a change is an edit of approvals-data.json, then
 -- `python tools/build_ranges.py emit`; the static gate row re-emits this file and fails on a difference.
 --
 -- Pure data, like config.lua: the data stage reads it through require, the Python tools through
 -- tools/tnconfig.py's loader. prototypes/expressions/ridges.lua turns each map's ranges into the map's
 -- crest distance and openings. Fields: id; name (the researched name, ASCII); crest_km (ground km along the crest);
+-- crest (the researched crest polyline, lat and lon per vertex); heights (metres, one per crest vertex: the
+-- ridge's width follows them); segments (per map that holds any vertex, the crest segments its ridge
+-- reads, from 1); openings: kind (pass: an adopted pass at the crest point that
 -- serves it; gap: an unnamed pass-width gap at the lowest-curvature crest point, at least one every
 -- {every} km of crest; edge: where a range cut by the map's edge with no pass on that map meets the
 -- edge), id, lat and lon (on the crest), seg (the crest segment it lies on), arc_km (from the first
@@ -380,6 +414,8 @@ HEADER = """\
 
 def emit_text(cfg, ranges, appr, appr_sha, r7b_sha):
     every = float(appr["rules"]["unnamed_gap_every_km"])
+    out = HEADER.format(tool=TOOL_VERSION, appr=appr_sha, r7b=r7b_sha, heights=sha256(HEIGHTS),
+                        every=lua_num(every)).splitlines()
     out += ["return {", "  ranges = {"]
     for r in ranges:
         out += emit_range(cfg, r)
@@ -430,6 +466,9 @@ def range_problems(r):
     if not isinstance(crest, list) or len(crest) < 2 or not all(isinstance(p, list) and len(p) == 2 for p in crest):
         out.append("crest needs at least 2 {lat, lon} vertices")
         return out
+    hs = r.get("heights")
+    if not isinstance(hs, list) or len(hs) != len(crest) or not all(isinstance(h, (int, float)) for h in hs):
+        out.append("heights needs one number per crest vertex")
     segs = r.get("segments")
     if not isinstance(segs, dict) and segs != []:
         out.append("segments is not keyed by map")

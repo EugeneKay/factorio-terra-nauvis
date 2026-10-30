@@ -9,11 +9,27 @@
 --   1. the chunk's reference pixels: geo tile = world tile + the city offset read once in on_init, pixel
 --      floor(geo / scale) + the map's radius, tile offset geo mod scale (the coordinate chain's frame);
 --   2. a chunk with no K pixel returns before reading a tile;
+--   3. per run of K pixels of one class on a pixel row, one tile query finds the tiles of the wrong class:
+--      player-blocking water on land pixels, land on water pixels; kept tiles, the water a player walks, fords
+--      and marsh water, are neither, so the right tiles of a coast cost nothing;
+--   4. such a tile takes its pixel's class when it lies outside the spawn keep disc and the reference, blurred
+--      by a quadratic B-spline over the pixel's 3 x 3, reads its pixel's class at it by more than
+--      region holds no 2 x 2 block of tiles (an islet or a channel narrower than a pixel) is drawn as a blob
+--      around its centre, whatever the blur reads there; below smooth.min_scale the rule is
+--      the closed per-pixel rule. Land of an open-sea pixel (no land around it) becomes deep water, and where the chunk
+--      writes anything, so do those pixels' shallow tiles; in a chunk left with no land, all shallow tiles reading
+--      open sea do; so a false island sinks without a pale patch or a ghost of its shallows;
+--   5. the classes of the written tiles' bounding box are read once: a written tile that would stand as a
+--      strip one tile wide takes its neighbour in the box along, when that neighbour belongs to the same
+--      reference class;
 local cfg = require("prototypes.config")
 local guards = require("scripts.guards")
 
 local TABLES = {
   europe = {
+    },
+  },
+  atlantic = {
     },
   },
   olde_world = {
@@ -24,6 +40,7 @@ local TABLES = {
 local M = {}
 local B = cfg.bandfix
 local MSG = cfg.messages
+local floor, max, min = math.floor, math.max, math.min
 local byte, rep, find, sub, gsub, concat = string.byte, string.rep, string.find, string.sub, string.gsub, table.concat
 local band = bit32.band
 
@@ -52,9 +69,17 @@ local MASKED = {[S.water] = S.water_masked, [S.water_k] = S.water_masked, [S.lan
                 [S.land_k] = S.land_masked, [S.thin] = S.thin, [S.none] = S.none,
                 [S.water_masked] = S.water_masked, [S.land_masked] = S.land_masked}
 
+-- The save's state and what register() prepares from it: its tables, map, band and fill tables, tile lists,
+-- the blurred reference's values per mask and tile offset, filled as tiles ask, and the wobble.
 local STATE, SHARED, MASKS, MAP, LUT, THIN
+local SMOOTH, THIN_CENTRE, WOBBLE = {}, {}, {}
+local SM = B.smooth
+local WP = SM.period_tiles
+local WP_X, WP_Y = SM.shift_tiles[1], SM.shift_tiles[2]
 -- A geography version with the soft map edge (edge = true) sinks land into deep water within
 local EDGE = 0
+local WATER, KEEP, NONLAND, NONLAND_SET, FALLBACK = {}, {}, {}, {}, nil
+local GROUND, GROUND_STAMP = nil, nil
 
 ------------------------------------------------------------------------------------------------ the tables
 
@@ -97,16 +122,30 @@ local function decode(payload, masks)
   return {first = first, text = text}
 end
 
+-- Decoded rows, at most B.row_cache of them: a ring of row indices evicts the oldest one at a time, so a
+-- walk over more rows than that re-decodes only what it leaves behind.
+local CACHE, RING, RING_AT, CACHE_FOR = {}, {}, 0, nil
 
 -- The decoded row r of the save's tables, or false where the K+ table holds no pixel on that row.
 local function row_at(r)
   if CACHE_FOR ~= MASKS then
+    CACHE, RING, RING_AT, CACHE_FOR = {}, {}, 0, MASKS
   end
   local hit = CACHE[r]
+  if hit then
     return hit
   end
   local payload = SHARED.rows[r]
+  if not payload then
+    return false
   end
+  local row = decode(payload, MASKS.rows[r])
+  RING_AT = RING_AT % B.row_cache + 1
+  local old = RING[RING_AT]
+  if old then
+    CACHE[old] = nil
+  end
+  RING[RING_AT] = r
   CACHE[r] = row
   return row
 end
@@ -172,8 +211,69 @@ local function reach_lut(s)
   return lut
 end
 
+-- The reference at tile offset (i, j) of a pixel with other-class mask m, blurred by a quadratic B-spline over
+-- the pixel's 3 x 3: 1 where all of it is the pixel's class, 0 on a straight coast, 3/4 half a pixel in.
+local function smooth_at(m, j, i)
+  local s = STATE.scale
+  local half = floor(s / 2)
+  local function weight(d, k)
+    local u = (k - half) / s
+    if d == 0 then
+      return SM.spline_centre - u * u
+    end
+    local v = 1 / 2 + d * u
+    return v * v / 2
+  end
+  local other, bit = 0, 1
   for _, nb in ipairs(B.neighbours) do
+    if band(m, bit) ~= 0 then
+      other = other + weight(nb[1], i) * weight(nb[2], j)
+    end
+    bit = bit * 2
+  end
+  return 1 - 2 * other
+end
+
+    if d == 0 then
+      return SM.spline_centre - u * u
+    end
+    local v = 1 / 2 + d * u
+    return v * v / 2
+  end
+  local other, bit = 0, 1
   for _, nb in ipairs(B.neighbours) do
+    if band(m, bit) ~= 0 then
+    end
+    bit = bit * 2
+  end
+  return 1 - 2 * other
+end
+
+-- lattice indices.
+  local out, H = {}, SM.hash
+  local function lattice(n, i, j, seed)
+    local h = ((i % n) * H.x + (j % n) * H.y + seed * H.seed) % H.modulus
+    return (h * h * H.mix % H.modulus) / H.half - 1
+  end
+  local function ease(t)
+    return t * t * (SM.ease - 2 * t)
+  end
+      local sum, norm = 0, 0
+        local n = o.cells
+        local fx, fy = x / cell, y / cell
+        local ix, iy = floor(fx), floor(fy)
+        local tx, ty = ease(fx - ix), ease(fy - iy)
+        local a = lattice(n, ix, iy, k) * (1 - tx) + lattice(n, ix + 1, iy, k) * tx
+        local b2 = lattice(n, ix, iy + 1, k) * (1 - tx) + lattice(n, ix + 1, iy + 1, k) * tx
+        sum = sum + o.weight * (a * (1 - ty) + b2 * ty)
+        norm = norm + o.weight
+      end
+    end
+  end
+  return out
+end
+
+local function wobble_table()
 -- Per other-class mask (0 to 255), whether the band region holds no 2 x 2 block of tiles at scale s: such a
 -- pixel is a fill pixel, written whole (tools/build_geo.py's thin_lut).
 local function thin_lut(s, lut)
@@ -202,14 +302,27 @@ end
 
 -- Per-chunk scratch, reused: marks stamped with the current chunk, so a new stamp clears them.
 local stamp = 0
+local WET, KEPT, WROTE, WLAND, WDEEP, PM_STAMP, PM_MASK = {}, {}, {}, {}, {}, {}, {}
+local SEA = {}
 local QX, QY = {}, {}
 local NWET, MARKS_WET, NW = 0, true, 0
 local GX0, GY0, X0, Y0, C0, R0, WW, NEAR = 0, 0, 0, 0, 0, 0, 0, false
+-- The window's runs of K pixels of one class: pixel row RR[q], columns RA[q]..RB[q], class RL[q], NRUN of them.
+-- BX0..BX1, BY0..BY1 are the chunk tiles step 5 reads, NB of them.
+local RR, RA, RB, RL = {}, {}, {}, {}
+local NRUN = 0
+local BX0, BX1, BY0, BY1, NB = 0, 0, 0, 0, 0
+local AREA = {{0, 0}, {0, 0}}
+local F_WET, F_LAND, F_SHALLOW = {area = AREA}, {area = AREA, invert = true}, {area = AREA}
+
+-- The box's generated classes: its player-blocking water tiles (or, where water is the majority, the
 -- others) and its kept tiles are marked once.
 local function read_tiles(surface, area)
   NWET = surface.count_tiles_filtered{area = area, name = WATER}
   MARKS_WET = true
+  if NWET > 0 and NWET < NB then
     local list
+    if NWET * 2 > NB then
       list = surface.find_tiles_filtered{area = area, name = WATER, invert = true}
       MARKS_WET = false
     else
@@ -230,6 +343,7 @@ end
 local function generated_wet(idx)
   if NWET == 0 then
     return false
+  elseif NWET == NB then
     return true
   end
   return (WET[idx] == stamp) == MARKS_WET
@@ -260,6 +374,8 @@ local function kept_by_spawn(lx, ly)
   return x * x + y * y < KEEP_R2
 end
 
+local function mark_write(idx, lx, ly, land, open_sea)
+  WROTE[idx], WLAND[idx], WDEEP[idx] = stamp, land, open_sea
   NW = NW + 1
   QX[NW], QY[NW] = lx, ly
 end
@@ -277,17 +393,165 @@ end
 local function in_edge(c, r)
 end
 
-  local code = sym_in(row_at(r), c)
-    local row = row_at(r)
-    if row then
-    local row = row_at(r)
-    if row then
-    local row = row_at(r)
-    if row then
-  local s = STATE.scale
+-- Whether pixel (c, r) is open sea: water with no land among its 8 neighbours. A pixel outside the K+ table reads
+-- as water, so deep water can come one pixel nearer such land, never onto it. Computed once per chunk.
+local function open_sea(c, r)
+  local k = r * MAP.width_px + c
+  local sea = SEA[k]
+  if sea == nil then
+    sea = not landish(c, r) and other_mask(c, r, false) == 0
+    SEA[k] = sea
   end
+  return sea
+end
+
+-- Whether geo tile (gx, gy) reads open sea, its pixel looked up through the wobble (half a pixel, typically), so
+-- the line between shallow and deep water does not draw the raster's squares.
+local function sea_at(gx, gy)
+  local s = STATE.scale
+  local dx, dy = WOBBLE[gy % WP * WP + gx % WP], WOBBLE[(gy + WP_Y) % WP * WP + (gx + WP_X) % WP]
+  return open_sea(floor(gx / s + dx) + MAP.wr, floor(gy / s + dy) + MAP.hr)
+end
+
+  local code = sym_in(row_at(r), c)
+-- Step 2: the runs of K pixels of the window's columns C0..c1 and rows R0..r1 outside the edge band; returns
+-- false when there are none.
+local function collect_k(c1, r1)
+  NRUN = 0
+  for r = R0, r1 do
+    local row = row_at(r)
+    if row then
+      local a, b = C0 - row.first + 1, c1 - row.first + 1
+      if a < 1 then
+        a = 1
+      end
+      local seg = b >= a and sub(row.text, a, b) or ""
+      if find(seg, KPAT) then
+        local base = row.first + a - 2
+        local open = false
+        for k = 1, #seg do
+          local code = byte(seg, k)
+          local c = base + k
+          if IS_K[code] and not in_edge(c, r) then
+            local land = LANDISH[code] or false
+            if open and RL[NRUN] == land then
+              RB[NRUN] = c
+            else
+              NRUN = NRUN + 1
+              RR[NRUN], RA[NRUN], RB[NRUN], RL[NRUN] = r, c, c, land
+              open = true
+            end
+          else
+            open = false
+          end
+        end
       end
     end
+  end
+  return NRUN > 0
+end
+
+    local row = row_at(r)
+    if row then
+  for r = R0, r1 do
+    local row = row_at(r)
+    if row then
+      local seg = b >= a and sub(row.text, a, b) or ""
+        end
+      end
+    end
+  end
+  return NRUN > 0
+end
+
+-- Whether geo tile (gx, gy), jrow = its row inside its pixel times the scale, lies outside the band of a pixel
+-- with other-class mask m (step 4).
+local function outside(m, jrow, gx, gy)
+  local s = STATE.scale
+  if s < SM.min_scale then
+    return THIN[m] or band(m, LUT[jrow + gx % s]) == 0
+  end
+  local key = m * s * s + jrow + gx % s
+  local v = SMOOTH[key]
+  if not v then
+    v = smooth_at(m, jrow / s, gx % s)
+    SMOOTH[key] = v
+  end
+  if THIN[m] then
+    local c = THIN_CENTRE[m]
+    if not c then
+      c = smooth_at(m, floor(s / 2), floor(s / 2)) - SM.thin
+      THIN_CENTRE[m] = c
+    end
+  end
+end
+
+-- The world area of run q's tiles inside the chunk, into AREA.
+local function run_area(q)
+  local s = STATE.scale
+  local gy0 = (RR[q] - MAP.hr) * s
+  local lx0, lx1 = max((RA[q] - MAP.wr) * s - GX0, 0), min((RB[q] - MAP.wr + 1) * s - 1 - GX0, CT - 1)
+  local ly0, ly1 = max(gy0 - GY0, 0), min(gy0 + s - 1 - GY0, CT - 1)
+  AREA[1][1], AREA[1][2], AREA[2][1], AREA[2][2] = X0 + lx0, Y0 + ly0, X0 + lx1 + 1, Y0 + ly1 + 1
+end
+
+-- Steps 3 and 4 on run q.
+local function scan_run(surface, q)
+  local s = STATE.scale
+  local r, land = RR[q], RL[q]
+  local gy0 = (r - MAP.hr) * s
+  run_area(q)
+  local list = surface.find_tiles_filtered(land and F_WET or F_LAND)
+  for k = 1, #list do
+    local p = list[k].position
+    local lx, ly = p.x - X0, p.y - Y0
+    if not kept_by_spawn(lx, ly) then
+      local gx = GX0 + lx
+      local c = floor(gx / s) + MAP.wr
+      if not land and sea_at(gx, GY0 + ly) then
+        mark_write(ly * CT + lx, lx, ly, false, true)
+      elseif outside(pixel_mask(c, r, land), (ly + GY0 - gy0) * s, gx, GY0 + ly) then
+        mark_write(ly * CT + lx, lx, ly, land, false)
+      end
+    end
+  end
+end
+
+-- The shallow tiles in AREA that read open sea go deep.
+local function sink_area(surface)
+  local list = surface.find_tiles_filtered(F_SHALLOW)
+  for k = 1, #list do
+    local p = list[k].position
+    local lx, ly = p.x - X0, p.y - Y0
+    local idx = ly * CT + lx
+    if WROTE[idx] ~= stamp and sea_at(GX0 + lx, GY0 + ly) and not kept_by_spawn(lx, ly) then
+      mark_write(idx, lx, ly, false, true)
+    end
+  end
+end
+
+-- Where the chunk writes, the shallow tiles of its open-sea pixels go deep too. In a chunk left with no land, every
+-- shallow tile that reads open sea does, written or not: the rim of a false spit outlives the spit.
+local function sink_shallows(surface)
+  local sunk, wrote_land = 0, false
+  for q = 1, NW do
+    if WLAND[QY[q] * CT + QX[q]] then
+      wrote_land = true
+    else
+      sunk = sunk + 1
+    end
+  end
+  if NW > 0 then
+    for q = 1, NRUN do
+      if not RL[q] then
+        run_area(q)
+        sink_area(surface)
+      end
+    end
+  end
+  AREA[1][1], AREA[1][2], AREA[2][1], AREA[2][2] = X0, Y0, X0 + CT, Y0 + CT
+  if not wrote_land and surface.count_tiles_filtered(F_LAND) <= sunk then
+    sink_area(surface)
   end
 end
 
@@ -308,28 +572,103 @@ local function writable(n, nx, ny, land)
   return WROTE[n] ~= stamp and KEPT[n] ~= stamp and not kept_by_spawn(nx, ny) and open_class(nx, ny) == land
 end
 
+-- Step 5: a written tile whose neighbours along one axis inside the box all hold the other class takes one
+-- of them along (the + side first), when that neighbour may be written to the same class.
 local function extend_axis(q, dx, dy)
   local lx, ly = QX[q], QY[q]
   local wet = post_wet(ly * CT + lx)
   local ax, ay, bx, by = lx + dx, ly + dy, lx - dx, ly - dy
+  local a_in = ax >= BX0 and ax <= BX1 and ay >= BY0 and ay <= BY1
+  local b_in = bx >= BX0 and bx <= BX1 and by >= BY0 and by <= BY1
   local a, b = ay * CT + ax, by * CT + bx
   if (a_in and post_wet(a) == wet) or (b_in and post_wet(b) == wet) then
     return
   end
   if a_in and writable(a, ax, ay, not wet) then
+    mark_write(a, ax, ay, not wet, false)
   elseif b_in and writable(b, bx, by, not wet) then
+    mark_write(b, bx, by, not wet, false)
   end
+end
+
+    local grown = {}
+    for j = 0, n - 1 do
+      for i = 0, n - 1 do
+        local k = j * n + i
+-- The land tile for written land: the nearest land on a lattice of the chunk's generated tiles, so a written
+-- strip carries on the ground beside it; FALLBACK in a chunk whose lattice holds no land.
+local function land_lattice(surface)
+  local step, n = SM.lattice_tiles, floor(CT / SM.lattice_tiles) + 1
+  local cells, found = {}, 0
+  for j = 0, n - 1 do
+    for i = 0, n - 1 do
+      local name = surface.get_tile(X0 + min(i * step, CT - 1), Y0 + min(j * step, CT - 1)).name
+      if not NONLAND_SET[name] then
+        cells[j * n + i] = name
+        found = found + 1
+      end
+    end
+  end
+  local total = n * n
+  while found > 0 and found < total do
+    local grown = {}
+    for j = 0, n - 1 do
+      for i = 0, n - 1 do
+        local k = j * n + i
+        local name = cells[k] or (i > 0 and cells[k - 1]) or (i < n - 1 and cells[k + 1]) or
+          (j > 0 and cells[k - n]) or (j < n - 1 and cells[k + n])
+        grown[k] = name or nil
+      end
+    end
+    cells, found = grown, 0
+    for _ in pairs(cells) do
+      found = found + 1
+    end
+  end
+end
+
+-- The land tile for a chunk whose lattice holds no land: the first land on rings of samples around it, inside the
+-- 7 x 7 chunks the game has already given tiles when the event fires, or FALLBACK, once per chunk. A sample
+-- can read land this handler wrote there, so the ground of such a chunk can follow generation order; its land
+-- and water cannot.
+local function chunk_ground(surface)
+  if GROUND_STAMP == stamp then
+    return GROUND
+  end
+  GROUND_STAMP, GROUND = stamp, FALLBACK
+  for ring = 1, B.ground_rings do
+    for dy = -1, 1 do
+      for dx = -1, 1 do
+        local t = surface.get_tile(X0 + CT / 2 + dx * ring * CT, Y0 + CT / 2 + dy * ring * CT)
+        if t.valid and not NONLAND_SET[t.name] then
+          GROUND = t.name
+          return GROUND
+        end
+      end
+    end
+  end
+  return GROUND
 end
 
 local RECS = {}
 
+-- Step 6: one set_tiles call; written land takes the ground around it, and written water is deep in an open-sea
+-- pixel, so a false island sinks into the open sea without a pale patch.
+local function write(surface)
   for q = 1, NW do
+    local lx, ly = QX[q], QY[q]
+    local idx = ly * CT + lx
+    local name = WDEEP[idx] and B.new_deep or B.new_water
+    if WLAND[idx] then
+      if not cells then
       end
     end
     local rec = RECS[q]
     if rec then
       rec.name = name
+      rec.position[1], rec.position[2] = X0 + lx, Y0 + ly
     else
+      RECS[q] = {name = name, position = {X0 + lx, Y0 + ly}}
     end
   end
   for q = #RECS, NW + 1, -1 do
@@ -337,16 +676,35 @@ local RECS = {}
   end
 end
 
+-- Plans the tiles one chunk needs written (steps 1 to 5) into QX, QY and WLAND, NW of them.
 local function plan_chunk(surface, chx, chy)
   local c1, r1
   GX0, GY0, C0, c1, R0, r1 = window(chx, chy)
   NW = 0
+  stamp = stamp + 1
   WW = c1 - C0 + 1
+    return
+  end
+  SEA = {}
   X0, Y0 = chx * CT, chy * CT
   local dx = X0 > 0 and X0 or (X0 + CT - 1 < 0 and -(X0 + CT - 1) or 0)
   local dy = Y0 > 0 and Y0 or (Y0 + CT - 1 < 0 and -(Y0 + CT - 1) or 0)
   NEAR = dx * dx + dy * dy < KEEP_R2
+  for q = 1, NRUN do
+    scan_run(surface, q)
   end
+  sink_shallows(surface)
+  if NW == 0 then
+    return
+  end
+  local x0, x1, y0, y1 = CT, -1, CT, -1
+  for q = 1, NW do
+    local lx, ly = QX[q], QY[q]
+    x0, x1, y0, y1 = min(x0, lx), max(x1, lx), min(y0, ly), max(y1, ly)
+  end
+  BX0, BX1, BY0, BY1 = max(x0 - 2, 0), min(x1 + 2, CT - 1), max(y0 - 2, 0), min(y1 + 2, CT - 1)
+  NB = (BX1 - BX0 + 1) * (BY1 - BY0 + 1)
+  read_tiles(surface, {{X0 + BX0, Y0 + BY0}, {X0 + BX1 + 1, Y0 + BY1 + 1}})
   local q = 1
   while q <= NW do
     extend_axis(q, 1, 0)
@@ -357,6 +715,8 @@ end
 
 local function fix_chunk(surface, chx, chy)
   plan_chunk(surface, chx, chy)
+  if NW > 0 then
+    write(surface)
   end
   return NW
 end
@@ -401,6 +761,22 @@ local function tile_lists()
   table.sort(WATER)
   table.sort(KEEP)
   table.sort(NONLAND)
+  F_WET.name, F_LAND.name, F_SHALLOW.name = WATER, NONLAND, B.new_water
+  NONLAND_SET = {}
+  for _, name in ipairs(NONLAND) do
+    NONLAND_SET[name] = true
+  end
+  FALLBACK = B.land_fallback
+  if not prototypes.tile[FALLBACK] then
+    local names = {}
+    for name, t in pairs(prototypes.tile) do
+      if t.autoplace_specification and not t.collision_mask.layers.water_tile then
+        names[#names + 1] = name
+      end
+    end
+    table.sort(names)
+    FALLBACK = names[1]
+  end
 end
 
   local gv = guards.geography_of(st.geo)
@@ -418,6 +794,7 @@ local function prepare(st)
   EDGE = (gv and gv.version and gv.version.edge) and cfg.coast.edge_band.mask_px or 0
   LUT = reach_lut(st.scale)
   THIN = thin_lut(st.scale, LUT)
+  SMOOTH, THIN_CENTRE, WOBBLE = {}, {}, wobble_table()
   tile_lists()
   return true
 end

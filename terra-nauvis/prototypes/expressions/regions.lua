@@ -5,6 +5,8 @@
 --                               point moved by the row's share of the shared warp, plus the shared
 --   row.w .. id .. suffix       the membership weight clamp(mid + sd / width, 0, 1), the soft edge
 --   row.depth .. id .. suffix   the same signed distance in tiles
+-- A marsh row's signed distance also reads the marsh outline noise and its weight a wider ramp (config.lua
+-- regions.marsh), so no marsh shows its exact disc or path.
 -- A hotspot row's disc sits at its adopted centre moved per seed by up to its jitter radius (a
 -- linear fold of map_seed: constants only, so it folds the same on every peer); row.hu and row.hv
 -- name that centre. The destroyed zone's polygon moves each vertex by the same fold (seeded_polygon).
@@ -304,6 +306,19 @@ local function row_names(r)
   return {sd = rn.sd .. r.id .. SUF, w = rn.w .. r.id .. SUF, depth = rn.depth .. r.id .. SUF,
 end
 
+local function weight(sd_name, width_px)
+  return "clamp(" .. num(R.ramp.mid) .. " + " .. sd_name .. " / " .. num(width_px or R.ramp.width_px) .. ", 0, 1)"
+end
+
+-- A marsh's own edge (config.lua regions.marsh): the one outline noise every marsh row reads at its
+-- own amplitude, and the row's wider ramp, both from the row's radius in reference pixels.
+local MH = R.marsh
+def(N.marsh_rough, noise(MH.seed1, MH))
+
+local function marsh_edge(r)
+  local radius = r.radius_km / R.km_per_px
+  local ramp = math.min(MH.ramp_cap_px, MH.ramp_share * radius)
+  return math.min(MH.cap_px, MH.share * radius), math.max(R.ramp.width_px, ramp)
 end
 
   local nm = row_names(r)
@@ -331,6 +346,12 @@ end
     else
       text, L = path(pts, r.radius_km / R.km_per_px, qu, qv)
     end
+  end
+  if r.layer == "marsh" then
+    local amplitude, width = marsh_edge(r)
+      N.marsh_rough .. " + " .. num(MH.bias) .. ")", L)
+    def(nm.w, weight(nm.sd, width))
+  else
   end
   def(nm.depth, nm.sd .. " * " .. K.scale)
 local ROWS = {}

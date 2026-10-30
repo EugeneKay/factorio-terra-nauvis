@@ -1,5 +1,37 @@
 --
+-- Every range of prototypes/tables/ranges.lua (tools/build_ranges.py writes it from the approval data,
+-- the geography sources and the vertex heights) becomes a messy band of cliffs around its crest polyline,
+-- written in contour units so the cliffs slider is inert:
+--   cliff_elevation = cliff_elevation_0 + cliff_elevation_interval * clamp(1 + h, low, high)
 --   cliffiness = cliffiness_on * (1 - opening) outside the ridge-free start disc, 0 inside it
+-- never read cliff_richness, so continuity and richness have nothing to act on, and contours stand at
+--   depth    tiles inside the ridge: per crest segment the half-width at the tile's nearest crest point
+--            (from the vertex heights, so wider where the mountain is taller, and below zero at a
+--            crest's ends) times the run multiplier, minus the distance to that point; the largest
+--            over the segments. Distances read the wandering axis, the map's chain pushed about by
+--            slow noise, so a ridge wanders round its range's axis and never runs straight
+--   run      the width's multiplier, slow noise: a ridge swells, thins and at 0 is gone, so it breaks
+--            into runs that taper out instead of closing round their ends
+--   opening  a slot across the crest at a pass or an unnamed gap (pass_tiles along the crest, past the
+--            ridge's half-width to each side), moving with the wandering axis; where a range cut by the
+--            map's edge has no pass on that map, a band along the edge near the crossing, so the ridge
+--            stops short of the edge; or a noise gap, more of them the thinner the ridge,
+--            so a line breaks into cliffs of many lengths and a thin stretch frays into scattered ones
+--   keep     1 at a slot, 0 past collar_tiles: it pulls the run to 1 and shuts the noise gaps, so round
+--            a slot the ridge stands at its true width, a pass reads as a doorway in a wall and not as
+--            one more gap, and the slot reaches right across the ridge
+-- The bodies a preset names through a key, as tn_land_coarse is: the crest (h) and the openings, which
+-- only the Cliff program reads, and the crest band (tn_band) the ore clearance reads in the Entity
+-- program, a cheap superset of the tiles whose centre lies within ore_clear_tiles of the unwandered
+-- crest (read at the centre, where an ore entity stands, not at the integer corner the program samples;
+-- cliff out, which reads as one more gap. All read the map's own coordinate chain, so they are
+-- firewall-clean. Shared bodies: the effective height, which the ridges toggle (a name switch to tn_one
+-- or tn_zero) turns into -inf when off, so nothing of a ridge compiles and no cliff is placed (a
+-- cliff properties; and the ore clearance that data-final-fixes.lua multiplies into every Earth ore
+-- probability, without a global cliff_removal_probability edit. Every noise reads the
+-- frame's geo tiles, so a seed's ridges are one shape for every spawn city; only the Cliff program pays
+-- for the noise, on the 4-tile lattice. Every name and number comes from config.lua; the
+-- toggle selects a body through a folded if() and never multiplies.
 local cfg = require("prototypes.config")
 local T = require("prototypes.tables.ranges")
 
@@ -68,6 +100,15 @@ end
 
 local S = K.scale
 local scale2 = S .. " * " .. S
+
+-- A vertex's half-width in tiles from its height; a crest's end vertices sit below zero, so the ridge
+-- narrows to nothing on its last segment and frays out instead of closing round its end.
+local function half_width(height, tip)
+  if tip then
+    return RD.width.tip_tiles
+  end
+  return RD.width.min_tiles + RD.width.gain_tiles * (height / RD.width.ref_m) ^ RD.width.power
+end
 
 -- The crest band of one run of consecutive kept segments (pts: chain px), as band terms of one piece
 -- each: a piece is a run of segments monotone along one axis within band_max_angle_degrees of it,
@@ -149,10 +190,14 @@ end
 -- One opening on a map: a slot across the crest at a pass or a gap; at an edge crossing, the tiles
 -- within edge_tiles of the map's extent (its edges at -1/2 and W - 1/2 in this frame) and within
 -- edge_reach_tiles of the crossing.
+local function add_opening(O, m, pts, o, wide)
   local cu, cv = to_px(m, o.lat, o.lon)
   local a, b = pts[o.seg], pts[o.seg + 1]
   local dx, dy = b[1] - a[1], b[2] - a[2]
   local len = math.sqrt(dx * dx + dy * dy)
+  -- across the crest the slot outreaches the ridge's half-width there, the collar holding the run at 1
+  local along = len > 0 and math.max(0, math.min(1, ((cu - a[1]) * dx + (cv - a[2]) * dy) / (len * len))) or 0
+  local reach = math.max(RD.reach_tiles, wide[o.seg] + along * (wide[o.seg + 1] - wide[o.seg]) + RD.reach_margin_tiles)
   if o.vertex and len > 0 then
     -- at an interior vertex: across the bisector of the incoming and the outgoing segment
     local p, q = pts[o.vertex - 1], pts[o.vertex]
@@ -164,19 +209,35 @@ end
     end
   end
   local s = tostring(#O.terms + 1)
+  -- a pass moves with the wandering crest; an edge stays where the map's extent is
+  local ou, ov = O.u, O.v
+  if o.kind == "edge" then
+    ou, ov = O.fixed_u, O.fixed_v
+  end
+  O.L["pu" .. s] = minus(ou, cu)
+  O.L["pv" .. s] = minus(ov, cv)
   local pu, pv = "pu" .. s, "pv" .. s
   if o.kind == "edge" then
+    O.L["ed" .. s] = "min(" .. ou .. " + 1 / 2, " .. num(m.width_px) .. " - 1 / 2 - " .. ou .. ", " .. ov ..
+      " + 1 / 2, " .. num(m.height_px) .. " - 1 / 2 - " .. ov .. ")"
     O.terms[#O.terms + 1] = "(ed" .. s .. " * " .. S .. " < " .. num(RD.edge_tiles) .. ") * ((" .. pu .. " * " ..
       pu .. " + " .. pv .. " * " .. pv .. ") * " .. scale2 .. " < " .. num(RD.edge_reach_tiles ^ 2) .. ")"
   elseif len > 0 then
     -- along the crest, outward at a tip (the crest's end vertex): from pass_tiles / 2 inside it to
     -- tip_tiles past it, so the end cap goes too; elsewhere pass_tiles / 2 either side
     local tx, ty = dx / len, dy / len
+    local slot = "abs(" .. pu .. " * " .. num(tx) .. " + " .. pv .. " * " .. num(ty) .. ") * " .. S .. " < " ..
     if o.tip then
       tx, ty = tx * o.tip, ty * o.tip
       local lo, hi = -RD.pass_tiles / 2, RD.tip_tiles
+      slot = "abs((" .. pu .. " * " .. num(tx) .. " + " .. pv .. " * " .. num(ty) .. ") * " .. S .. " - " ..
         num((lo + hi) / 2) .. ") < " .. num((hi - lo) / 2)
     end
+    O.terms[#O.terms + 1] = "(" .. slot .. ") * (abs(" .. pv .. " * " .. num(tx) .. " - " .. pu .. " * " .. num(ty) ..
+      ") * " .. S .. " < " .. num(reach) .. ")"
+    -- the collar: the ridge stands whole round the slot, so a pass reads as a doorway and not one more gap
+    O.keeps[#O.keeps + 1] = "clamp(1 - (" .. pu .. " * " .. pu .. " + " .. pv .. " * " .. pv .. ") * " .. scale2 ..
+      " / " .. num(RD.collar_tiles ^ 2) .. ", 0, 1)"
   end
 end
 
@@ -199,12 +260,28 @@ end
   flush()
 end
 
+-- A segment the crest band reads: the ore clearance only reaches ore_clear_tiles, so a segment past
+-- band_margin_px of the map's extent has no ore to clear, however far its cliffs reach.
+local function in_band(m, a, b)
+  local M = RD.band_margin_px
+  return math.max(a[1], b[1]) >= -M and math.min(a[1], b[1]) < m.width_px + M and
+    math.max(a[2], b[2]) >= -M and math.min(a[2], b[2]) < m.height_px + M
+end
+
   local centre = " + " .. num(RD.centre_tiles)
     local segs = r.segments[key]
     if segs then
+      local pts, wide = {}, {}
       for i, ll in ipairs(r.crest) do
         local pu, pv = to_px(m, ll[1], ll[2])
         pts[i] = {pu, pv}
+        wide[i] = half_width(r.heights[i], i == 1 or i == #r.crest)
+      end
+      local banded = {}
+      for _, i in ipairs(segs) do
+        if in_band(m, pts[i], pts[i + 1]) then
+          banded[#banded + 1] = i
+        end
       end
       for _, o in ipairs(r.openings) do
         if on_map(o.maps, key) then
@@ -220,20 +297,54 @@ local function map_bodies(key)
     error("config.lua layer_chain_geo names no geography version of " .. key .. " for the ridges")
   end
   local m = cfg.maps[key]
+  -- every noise of the map's ridge reads the frame's geo tiles, so a seed's ridge is one shape whatever
+  -- the spawn city
+  local function wave(seed1, wavelength, per_scale)
+    local input = num(1 / wavelength)
+    if per_scale then
+      input = input .. " / " .. S
+    end
+    return "basis_noise{x = x, y = y, seed0 = map_seed, seed1 = " .. num(seed1) .. ", input_scale = " .. input ..
+      ", output_scale = 1, offset_x = " .. g.cx .. ", offset_y = " .. g.cy .. "}"
+  end
+  local function waves(rows, per_scale)
+    local parts = {}
+    for _, row in ipairs(rows) do
+      parts[#parts + 1] = num(row.amplitude) .. " * " .. wave(row.seed1, row.wavelength, per_scale)
+    end
+    return table.concat(parts, " + ")
+  end
+  -- the wandering axis: the chain coordinates pushed about by slow noise, all in reference pixels, so
+  -- the wander is one shape on the map at every scale
+  def(N.wander_u[key], g.u .. " + " .. waves(RD.wander.u, true))
+  def(N.wander_v[key], g.v .. " + " .. waves(RD.wander.v, true))
+  -- the width's multiplier: at 0 the ridge has thinned to nothing and only the fray is left
+  def(N.run[key], "max(0, (" .. num(RD.run_base) .. " + " .. waves(RD.run) .. ") * (1 - " .. N.keep[key] .. ") + " ..
+    N.keep[key] .. ")")
   local centre = " + " .. num(RD.centre_tiles)
   for _, r in ipairs(T.ranges) do
     local segs = r.segments[key]
     if segs then
+      local pts, wide = {}, {}
       for i, ll in ipairs(r.crest) do
         local pu, pv = to_px(m, ll[1], ll[2])
         pts[i] = {pu, pv}
+        wide[i] = half_width(r.heights[i], i == 1 or i == #r.crest)
+      end
+      local banded = {}
+      for _, i in ipairs(segs) do
+        if in_band(m, pts[i], pts[i + 1]) then
+          banded[#banded + 1] = i
+        end
       end
       for _, o in ipairs(r.openings) do
         if on_map(o.maps, key) then
+          add_opening(O, m, pts, o, wide)
         end
       end
     end
   end
+  def(N.keep[key], joined("max", O.keeps, "0"), O.L)
   if #Bd.terms == 0 then
     def(N.band[key], "0")
   else
@@ -260,14 +371,22 @@ end
       g = v
     end
   end
+    local parts = {}
+    for _, row in ipairs(rows) do
+    end
+    return table.concat(parts, " + ")
+  end
     local segs = r.segments[key]
     if segs then
+      local pts, wide = {}, {}
       for i, ll in ipairs(r.crest) do
         local pu, pv = to_px(m, ll[1], ll[2])
         pts[i] = {pu, pv}
+        wide[i] = half_width(r.heights[i], i == 1 or i == #r.crest)
       end
       for _, o in ipairs(r.openings) do
         if on_map(o.maps, key) then
+          add_opening(O, m, pts, o, wide)
         end
       end
     end
@@ -275,9 +394,12 @@ end
 end
 
 for _, key in ipairs(cfg.map_order) do
+-- The effective height: the map's crest with ridges on, -inf with ridges off.
 local on = K.ridges .. " > " .. num(RD.switch_threshold)
+def(N.height, "if(" .. on .. ", " .. K.crest .. ", -inf)")
 def(N.free, "distance < max(" .. num(RD.start.radius_tiles) .. ", starting_area_radius) + " ..
   num(RD.start.margin_tiles))
+-- The two cliff properties: the contours of the height, and the cliffiness gaps.
 def(N.cliffiness, "if(" .. on .. ", " .. num(RD.cliffiness) .. " * (1 - " .. K.openings .. ") * (1 - " .. N.free ..
   "), 0)")
 -- The ore clearance: 0 in the map's crest band (every tile within ore_clear_tiles of a crest, and a

@@ -1,0 +1,116 @@
+{
+ "format": "tn-bandfix-manifest/1",
+ "tool": "tools/build_geo.py",
+ "emitter_version": 1,
+ "map": "atlantic",
+ "inputs": {
+  "land_sha256": "150af4cb1634045dc62ad07c5e9c46081733a6e6476bfedb91c5ec08a38518f4",
+  "thinwater_sha256": "547c262029ffbf8000e16f62bf5428368a9922233940fecd77664cfb5c395dfc",
+  "coast_detail": [
+   0.45,
+   1
+  ],
+  "margin_px": 0.01,
+  "warp_reach_px": 1.1859
+ },
+ "rule": {
+  "band": "closed: a sample point at least half a reference pixel from every other-class square is outside the band",
+  "fill": "a K pixel whose band region at the save's scale holds no 2 x 2 block of tiles is written whole; the handler decides it from the shared table",
+  "pricing": "the band rule's writes with the fit alone deciding (detail 0), every scored pixel, no masks, the map's own chunk grid (city offset 0)",
+  "shipped": "the shipped rule's writes with the fit alone deciding: K pixels outside the scale's masks, fill pixels whole"
+ },
+ "shared": {
+ },
+ "scales": {
+  "1": {
+   "s12_rule": {
+    "chunks": 100368,
+    "tiles_per_touched_chunk": {
+    },
+   },
+   "shipped_rule": {
+    "chunks": 100368,
+    "tiles_per_touched_chunk": {
+    },
+   },
+   "chunks_read": {
+   },
+  },
+  "2": {
+   "s12_rule": {
+    "chunks": 400656,
+    "tiles_per_touched_chunk": {
+    },
+   },
+   "shipped_rule": {
+    "chunks": 400656,
+    "tiles_per_touched_chunk": {
+    },
+   },
+   "chunks_read": {
+   },
+  },
+  "3": {
+   "s12_rule": {
+    "chunks": 900864,
+    "tiles_per_touched_chunk": {
+    },
+   },
+   "shipped_rule": {
+    "chunks": 900864,
+    "tiles_per_touched_chunk": {
+    },
+   },
+   "chunks_read": {
+   },
+  },
+  "4": {
+   "s12_rule": {
+    "chunks": 1600992,
+    "tiles_per_touched_chunk": {
+     "max": 1024
+    },
+   },
+   "shipped_rule": {
+    "chunks": 1600992,
+    "tiles_per_touched_chunk": {
+     "max": 1024
+    },
+   },
+   "chunks_read": {
+   },
+  },
+  "5": {
+   "s12_rule": {
+    "chunks": 2501040,
+    "tiles_per_touched_chunk": {
+     "max": 1024
+    },
+   },
+   "shipped_rule": {
+    "chunks": 2501040,
+    "tiles_per_touched_chunk": {
+     "max": 1024
+    },
+   },
+   "chunks_read": {
+   },
+  },
+  "6": {
+   "s12_rule": {
+    "chunks": 3601008,
+    "tiles_per_touched_chunk": {
+     "max": 1024
+    },
+   },
+   "shipped_rule": {
+    "chunks": 3601008,
+    "tiles_per_touched_chunk": {
+     "max": 1024
+    },
+   },
+   "chunks_read": {
+   },
+  }
+ }
+}

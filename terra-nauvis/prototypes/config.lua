@@ -86,6 +86,7 @@ local RG_WK = NOISE .. "region_wk" .. RG_V
 local RG_WX = NOISE .. "region_wx" .. RG_V
 local RG_WY = NOISE .. "region_wy" .. RG_V
 local RG_ROUGH = NOISE .. "region_rough" .. RG_V
+local RG_MARSH_ROUGH = NOISE .. "region_marsh_rough" .. RG_V
 
 -- The Earth climate: latitude and longitude on the map's chain, the dry belts, the temperature core and
 -- the Alien Biomes and fallback variants the presets redirect temperature, moisture and aux to.
@@ -99,6 +100,7 @@ local CT = {
   CL_LON = NOISE .. "lon_v1",
   CL_DRY = NOISE .. "dry_v1",
   CL_CORE = NOISE .. "t_core_v1",
+  CL_MEANDER = NOISE .. "climate_meander_v1",
   CL_SHIFT = NOISE .. "climate_shift_v1",
   CL_T_AB = NOISE .. "temperature_ab_v1",
   CL_M_AB = NOISE .. "moisture_ab_v1",
@@ -138,6 +140,7 @@ local CT = {
   AB_EXCLUDE = NOISE .. "ab_exclude",
   AB_EXCLUDE_BODY = NOISE .. "ab_exclude_v1",
   MARSH_MUD = NOISE .. "marsh_water_mud",
+  MARSH_POOL = NOISE .. "marsh_pool_v1",
   MARSH_MUD_BODY = NOISE .. "marsh_water_mud_v1",
   MARSH_SHALLOW = NOISE .. "marsh_water_shallow",
   MARSH_SHALLOW_BODY = NOISE .. "marsh_water_shallow_v1",
@@ -218,12 +221,25 @@ local RDN = {
   K_CREST = NOISE .. "crest",
   K_OPENINGS = NOISE .. "openings",
   K_BAND = NOISE .. "band",
+  RD_HEIGHT = NOISE .. "ridge_height" .. RD_V,
   RD_FREE = NOISE .. "ridge_free" .. RD_V,
   RD_CLIFFINESS = NOISE .. "cliffiness" .. RD_V,
   RD_CLEAR = NOISE .. "ridge_clear" .. RD_V,
   EU_BAND = NOISE .. "band_europe" .. RD_V,
   AT_BAND = NOISE .. "band_atlantic" .. RD_V,
   OW_BAND = NOISE .. "band_olde_world" .. RD_V,
+  EU_WANDER_U = NOISE .. "ridge_u_europe" .. RD_V,
+  AT_WANDER_U = NOISE .. "ridge_u_atlantic" .. RD_V,
+  OW_WANDER_U = NOISE .. "ridge_u_olde_world" .. RD_V,
+  EU_WANDER_V = NOISE .. "ridge_v_europe" .. RD_V,
+  AT_WANDER_V = NOISE .. "ridge_v_atlantic" .. RD_V,
+  OW_WANDER_V = NOISE .. "ridge_v_olde_world" .. RD_V,
+  EU_RUN = NOISE .. "ridge_run_europe" .. RD_V,
+  AT_RUN = NOISE .. "ridge_run_atlantic" .. RD_V,
+  OW_RUN = NOISE .. "ridge_run_olde_world" .. RD_V,
+  EU_KEEP = NOISE .. "ridge_keep_europe" .. RD_V,
+  AT_KEEP = NOISE .. "ridge_keep_atlantic" .. RD_V,
+  OW_KEEP = NOISE .. "ridge_keep_olde_world" .. RD_V,
   ORE_IRON = ORE .. "iron_ore_p" .. RD_V,
   ORE_COPPER = ORE .. "copper_ore_p" .. RD_V,
   ORE_COAL = ORE .. "coal_p" .. RD_V,
@@ -486,7 +502,11 @@ return {
       name = ID .. "-destroyed-europe", type = "bool-setting", setting_type = "startup", default_value = false,
       order = "c-f",
     },
+    -- Exact coastlines (on by default, because Old World's and Atlantic's coasts need it to match
+    -- Europe's): a new world's preset bakes the band-fix
+    -- key from it, for the maps bandfix.maps lists.
     exact_coast = {
+      name = ID .. "-exact-coast", type = "bool-setting", setting_type = "startup", default_value = true,
     },
     -- it in a running game; on, the map view shows every city of the world's map (scripts/markers.lua).
     city_markers = {
@@ -745,6 +765,7 @@ return {
       release = "0.1.0",
       names = {RG_DESTROYED_SD, RG_DESTROYED_W, RG_DESTROYED_DEPTH, RG_FOREST_W, RG_FOREST_SUM, RG_TREE_MULT,
                RG_MARSH_W, RG_HOTSPOT_W, RG_ENEMY_MULT, RG_U .. RG_V, RG_V_ .. RG_V, RG_OX, RG_OY, RG_AX, RG_AY, RG_WK,
+               RG_WX, RG_WY, RG_ROUGH, RG_MARSH_ROUGH},
       files = {"prototypes/tables/regions.lua"},
     },
     -- The climate and tile bodies (climate-tiles). They belong to no geography: every map's preset names
@@ -752,11 +773,14 @@ return {
     -- controls, so they exist only with Alien Biomes and are registered from the M2 dump.
     {
       release = "0.1.0",
+      names = {CT.CL_LAT, CT.CL_LON, CT.CL_MEANDER, CT.CL_DRY, CT.CL_CORE, CT.CL_SHIFT, CT.CL_T_AB, CT.CL_M_AB,
+               CT.CL_A_AB, CT.CL_GRAIN, CT.CL_T_AB_G, CT.CL_M_AB_G, CT.CL_A_AB_G, CT.CL_T_FB,
       CT.CL_M_FB, CT.CL_A_FB,
                CT.VT_GRASS_1, CT.VT_GRASS_2, CT.VT_GRASS_3, CT.VT_GRASS_4, CT.VT_DRY_DIRT, CT.VT_DIRT_1, CT.VT_DIRT_2,
                CT.VT_DIRT_3,
                CT.VT_DIRT_4, CT.VT_DIRT_5, CT.VT_DIRT_6, CT.VT_DIRT_7, CT.VT_SAND_1, CT.VT_SAND_2, CT.VT_SAND_3,
                CT.VT_RED_0, CT.VT_RED_1,
+               CT.MARSH_POOL, CT.MARSH_MUD_BODY, CT.MARSH_SHALLOW,
                CT.MARSH_SHALLOW_BODY, CT.MARSH_GRASS, CT.MARSH_GRASS_BODY},
     },
     {
@@ -865,6 +889,20 @@ return {
       {seed1 = 7102, frequency = 2, weight = 0.5},
       {seed1 = 7103, frequency = 4, weight = 0.25},
     },
+    -- of few terms per pixel, the lattice detail is a dithered halo: Old World's and Atlantic's fits cross
+    -- zero at a median slope of 0.75 and 0.6 per px (Europe 1.46, their 5th percentile about 0.2), so a
+    -- detail of 0.45 flips the sign of c up to 2 px either side of the coast, in speckles 1 px wide.
+    -- The geographies listed read their fit at warped coordinates instead and their detail body is 0: u
+    -- and v each add these terms, amplitude_px * basis_noise at wavelength_px reference px, geo-locked
+    -- through the city offset. That moves the coast by the same bounded distance at any slope, so its
+    -- roughness stays one line. The noise calls are 4 against the detail's 3. water_gain multiplies their
+    -- shore body's water gain, so the shallows' width, set by the fit's slope, reads like Europe's rim.
+    warp = {
+      u = {{seed1 = 7411, wavelength_px = 5, amplitude_px = 0.45},
+           {seed1 = 7413, wavelength_px = 1.2, amplitude_px = 0.22}},
+      v = {{seed1 = 7412, wavelength_px = 5, amplitude_px = 0.45},
+           {seed1 = 7414, wavelength_px = 1.2, amplitude_px = 0.22}},
+    },
     far_floor = -100,
     edge_water = -1,
     edge_min_scale = 3,
@@ -943,6 +981,9 @@ return {
     ore_margin = 3,
     shrink = 0.75,
     min_radius = 4,
+    -- moved by gain times the hotspot blob's deviation from its mean over the disc, never past the radius
+    -- find_spot proved land for; grow widens that radius so the kept tiles hold about the planned area.
+    outline = {blob = REN.HS_BLOB, inner = 0.7, gain = 0.3, grow = 1.25},
   },
 
   -- builds every spawn body from (the names are each geography version's own, in its spawn record).
@@ -998,15 +1039,30 @@ return {
   },
 
   -- ridge bodies use; prototypes/expressions/ridges.lua builds them from prototypes/tables/ranges.lua:
+  --   ramp_tiles, bias_tiles, contour   cliff_elevation = cliff_elevation_0 + cliff_elevation_interval * f,
+  --   width      a vertex's half-width in tiles: min_tiles + gain_tiles * (height / ref_m) ^ power, tip_tiles
+  --              at a crest's end vertices (below zero, so the ridge ends in a taper, never a cap)
+  --   wander     the wandering axis: per axis of the chain, noise rows in reference pixels, so one shape
+  --              on the map at every scale (at scale 6, about 100 and 36 tiles over 1,500 and 300)
+  --   run_base, run   the width's multiplier: base plus noise rows in tiles, floored at 0
+  --   gaps       noise gaps: an opening where the noise rows read under threshold, plus thin_gain as the
+  --              ridge's width at the tile falls from thin_tiles to 0, less collar_gain inside a collar
+  --   collar_tiles   the radius round an opening's slot where the ridge stands whole (ridges.lua keep)
+  --   flank_tiles   the near edge of the ridge as measured: earth_test.py's ridge metrics read it
   --   cliffiness   the cliffiness of a ridge cell; 0 inside an opening and inside the ridge-free start
   --   pass_tiles   an opening's cliffiness gap along the crest (at least 12, for 8 tiles
   --              clear; a 16-tile gap once measured 16 clear, but a 16-tile slot read 7.5 at Verecke
+  --              on a diagonal crest, the limit again, so 28), reach_tiles
+  --              its least half-length across, reach_margin_tiles how far it outreaches the half-width;
+  --              tip_tiles how far past a crest's end vertex an opening there reaches
   --   edge_tiles, edge_reach_tiles   a range cut by a map's edge with no pass on that map: no ridge cell
   --              within edge_tiles of the edge and edge_reach_tiles of the crossing
   --   start      the ridge-free disc round the spawn: max(radius_tiles, starting_area_radius) plus
   --              find 0 cliffs and 0 ridge cliffiness within 150 tiles)
   --   ore_clear_tiles   no ore within this of a crest outside the start disc, past the
   --              flank cliffs' boxes, so no ore entity stands on a ridge cell
+  --   band_margin_px   the crest band reads the segments within this of the map's extent, the reach of
+  --              the ore clearance at scale 1, however far the cliffs reach
   --   band_max_angle_degrees   the ore clearance reads, in the Entity program, each map's crest band: a
   --              superset of the tiles within ore_clear_tiles of a crest, built from crest pieces monotone
   --              along one axis whose segments lie within this angle of it, each a piecewise-linear
@@ -1023,21 +1079,37 @@ return {
   --              baked on every Earth preset at their default-slider values
   ridges = {
     flank_tiles = 16.37,
+    bias_tiles = 3,
+    width = {ref_m = 4800, min_tiles = 10, gain_tiles = 38, power = 0.8, tip_tiles = -20},
+    wander = {
+      u = {{seed1 = 7501, wavelength = 250, amplitude = 16}, {seed1 = 7502, wavelength = 50, amplitude = 6}},
+      v = {{seed1 = 7503, wavelength = 250, amplitude = 16}, {seed1 = 7504, wavelength = 50, amplitude = 6}},
+    },
+    run_base = 1.15,
     cliffiness = 10,
+    pass_tiles = 28,
     reach_tiles = 32,
+    reach_margin_tiles = 40,
+    collar_tiles = 96,
     tip_tiles = 24,
     edge_tiles = 16,
     edge_reach_tiles = 256,
     start = {radius_tiles = 150, margin_tiles = 8},
     ore_clear_tiles = 24,
+    band_margin_px = 40,
     band_max_angle_degrees = 60,
     centre_tiles = 0.5,
     switch_threshold = 0.5,
     reset_size = 1,
     max_arguments = 255,
     names = {
+      cliffiness = RDN.RD_CLIFFINESS,
       clear = RDN.RD_CLEAR,
       band = {europe = RDN.EU_BAND, atlantic = RDN.AT_BAND, olde_world = RDN.OW_BAND},
+      wander_u = {europe = RDN.EU_WANDER_U, atlantic = RDN.AT_WANDER_U, olde_world = RDN.OW_WANDER_U},
+      wander_v = {europe = RDN.EU_WANDER_V, atlantic = RDN.AT_WANDER_V, olde_world = RDN.OW_WANDER_V},
+      run = {europe = RDN.EU_RUN, atlantic = RDN.AT_RUN, olde_world = RDN.OW_RUN},
+      keep = {europe = RDN.EU_KEEP, atlantic = RDN.AT_KEEP, olde_world = RDN.OW_KEEP},
     },
     ores = {
       {resource = "iron-ore", key = "entity:iron-ore:probability", name = RDN.ORE_IRON},
@@ -1127,6 +1199,9 @@ return {
     target = {fade_from = 150, fade_span = 300, double_from = 300, double_span = 1300, rich_offset = 1000,
               rich_span = 2600, per_km2 = 1000000, reference_strength = 2, reference_factor = 2,
               density_floor = 15},
+    -- dots): half the candidates carry nothing and the rest share the amount by a squared uniform, so a
+    -- few large bodies stand among small ones; mean 1 over all candidates, so a row's amount holds on
+    size = {keep = 0.5, power = 2, gain = 6},
             octaves = {{input_scale = 1 / 8, output_scale = 1}, {input_scale = 1 / 24, output_scale = 1},
                        {input_scale = 1 / 64, output_scale = 1.5}}},
     resources = {
@@ -1332,6 +1407,14 @@ return {
             seed1_y = 7802},
     rough = {amplitude_px = 1.5, clamp_px = 3, wavelength_px = 6, octaves = 2, persistence = 0.5, seed1 = 7803},
     ramp = {mid = 0.5, width_px = 6},
+    -- zoom). One more noise, wavelength_px the finest octave, joins every marsh row's signed distance at
+    -- share of the row's radius, at most cap_px, over rough_gain times the shared roughness, and the
+    -- row's ramp widens to ramp_share of its radius, at most ramp_cap_px and never under ramp.width_px,
+    -- so the pools thin out into dry ground across the band instead of stopping at a line. Marsh rows
+    -- are the Tile program's only readers of the region noise, so these two octaves cost that program
+    -- little. bias leans the noise outward, so a small delta's seed rarely sinks it below the marsh cut
+    -- (the Danube delta vanished at seed 1002 without it). A marsh's reach is the row's radius plus about
+    marsh = {wavelength_px = 24, octaves = 2, persistence = 0.5, seed1 = 7804, share = 0.6, cap_px = 24,
     share_hundredths = 100,
     octave_shift_px = 10000.37,
     max_arguments = 255,
@@ -1346,6 +1429,7 @@ return {
       hotspot_w = RG_HOTSPOT_W, enemy_mult = RG_ENEMY_MULT,
       -- the query point: u, v .. suffix unwarped; u, v .. share .. <hundredths> .. suffix for a share
       u = RG_U, v = RG_V_, ox = RG_OX, oy = RG_OY, ax = RG_AX, ay = RG_AY, wk = RG_WK, wx = RG_WX, wy = RG_WY,
+      rough = RG_ROUGH, marsh_rough = RG_MARSH_ROUGH,
     },
   },
 
@@ -1396,6 +1480,10 @@ return {
   climate = {
     -- the pixel centre in reference pixels (lat_top_edge - (v + centre_px) / px_per_degree)
     centre_px = 0.5,
+    -- The latitude meander's noise is one named field, and the dry belts read it again at their own
+    -- reach: a belt is a latitude and longitude box, whose edge ran dead straight for thousands of tiles
+    -- on the map view until it wandered by about this many degrees (no new noise, one more use of it).
+    meander = {name = CT.CL_MEANDER, degrees = 0.6, wavelength_px = 360, seed1 = 7601, dry_lat = 3, dry_lon = 4},
     -- The city offset folded into a seed1 shift (tiles modulo `modulus`, x times `stride` plus y): each
     -- spawn city's climate noise gets its own seed (climate.lua). The largest value stays under 2^24, so
     -- float32 holds it exactly.
@@ -1519,6 +1607,13 @@ return {
       off = "-inf",
       bonus = 10, lean_t = 45, lean_span = 30, lean_cut = 0.5,
       patch = {amplitude = 0.36, clamp = 0.45, wavelength_px = 10, octaves = 3, persistence = 0.5, seed1 = 7605},
+      -- the patch's finest octave is 10 px (60 tiles at scale 6), so where it failed the lean the hole in
+      -- the bonus showed as a smooth oval of Alien Biomes ground; the marsh pool noise, already in the
+      -- Tile program, carries the edge down to 3 px at no cost
+      fine = 0.15,
+      -- marsh ground starts where the lifted moisture has cleared Alien Biomes' mid band (0.4 to 0.6, its
+      -- beige and grey dirt): at 0.5 those tiles ran round every marsh as a one-width rim
+      marsh_cut = 0.68,
     },
     -- The adopted Alien Biomes tiles: six land tiles plus water-mud.
     ab_adopted = {"vegetation-turquoise-grass-1", "vegetation-olive-grass-2", "mineral-grey-dirt-1",
@@ -1526,11 +1621,14 @@ return {
     exclude = {
       prefixes = {"vegetation-", "mineral-"},
       key = CT.AB_EXCLUDE, off = "0", body = CT.AB_EXCLUDE_BODY, body_grain = CT.AB_EXCLUDE_BODY_G,
+      temperate_from = 25, temperate_below = 65, marsh_cut = 0.68,
     },
     marsh = {
       water_shallow = {key = CT.MARSH_SHALLOW, off = "-inf", body = CT.MARSH_SHALLOW_BODY},
       grass = {tile = "grass-1", key = CT.MARSH_GRASS, off = "0", body = CT.MARSH_GRASS_BODY, bonus = 10},
       score = 50, shallow_score = 300, shallow_depth = 1.5, start_clear_tiles = 64,
+      pool = {name = CT.MARSH_POOL, cut = 0.3, cut_per_weight = 1, wavelength_px = 3, octaves = 2, persistence = 0.5,
+              seed1 = 7606},
     },
             copies = {{tree = "tree-palm-a", field = "probability", key = CT.PALM_A_P_KEY, body = CT.PALM_A_P},
                       {tree = "tree-palm-a", field = "richness", key = CT.PALM_A_R_KEY, body = CT.PALM_A_R},
@@ -1591,6 +1689,15 @@ return {
   --       start land guarantee and the spawn tile keep what the noise draws
   --   fill  K pixels whose band region holds no 2 x 2 block of tiles (an islet or a channel narrower than
   --       a pixel) are written whole instead of as a one-tile line; the tool marks them
+  --   new_water, new_deep, land_fallback  the tile a written water tile gets, the one it gets in open sea
+  --       (a pixel with no land among its 8 neighbours); land_fallback is written land in a chunk that shows no land
+  --       on its lattice nor on ground_rings rings of chunks around it
+  --   smooth  the write rule at scales from min_scale up: the reference blurred by a quadratic B-spline must read
+  --       name the noise's cells per period_tiles and weights, hash its lattice values, shift_tiles the second
+  --       reading the deep-water line takes; written land takes the nearest land on a lattice of the chunk's
+  --       own tiles, lattice_tiles apart; spline_centre and ease are the formulas' own constants
+  --   row_cache  decoded table rows a peer keeps cached, the oldest evicted one at a time (a cache of
+  --       shipped data, never game state): at scale 6 they span 12,288 tiles north to south
   --   encoding  each table row is its first column, then runs (length - 1) * #symbol_order + symbol index
   --       (0-based in symbol_order), every number a varint of varint_base digits written in alphabet (a
   --       digit at or above varint_base continues the number); a decoded row is one symbol character per
@@ -1598,6 +1705,8 @@ return {
   --       class, thin water, and a pixel of either class inside a waterway footprint (masked)
   bandfix = {
     setting = "exact_coast", key = BFN.K, on = ONE,
+    maps = {"atlantic", "olde_world"},
+    checks = {europe = {scale = 1}, atlantic = {scale = 4}, olde_world = {scale = 6}},
     version = 1,
     float_margin_px = 0.01,
     correction_tiles = 2,
@@ -1605,6 +1714,9 @@ return {
     spawn_keep_tiles = 24,
     chunk_tiles = 32,
     row_cache = 2048,
+    new_water = "water", new_deep = "deepwater", land_fallback = "sand-1", ground_rings = 3,
+              period_tiles = 64, lattice_tiles = 4, shift_tiles = {21, 32},
+              octaves = {{cells = 4, weight = 1}, {cells = 12, weight = 0.6}},
     neighbours = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}},
     alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
     varint_base = 32,

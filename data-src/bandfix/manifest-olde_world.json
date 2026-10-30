@@ -10,6 +10,8 @@
    0.45,
    1
   ],
+  "margin_px": 0.01,
+  "warp_reach_px": 1.1859
  },
  "rule": {
   "band": "closed: a sample point at least half a reference pixel from every other-class square is outside the band",

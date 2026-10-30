@@ -39,6 +39,7 @@ checkpoint gives byte-identical Lua.
 import argparse
 import hashlib
 import json
+import math
 import sys
 import tempfile
 from collections import defaultdict
@@ -1034,6 +1035,9 @@ def adopt(map_key, work, version=1, budget=None):
 # bandfix.mask_margin_tiles) holding a tile outside its band that the coast fit may misclassify: the
 # game adds the lattice detail (|detail| <= coast.detail_amplitude_px * coast.detail_clamp, 0 at pixel
 # centres) to the fit, which no offline model reproduces, so a tile is possibly wrong unless
+# the fit alone is right by more than that bound plus bandfix.float_margin_px. A map with a coast warp
+# has no detail: it reads the fit up to warp_reach_px away, so a tile is possibly wrong while the other
+# class lies within that many pixels (on top of bandfix.correction_tiles). K+ is K and its 8
 # neighbours, whose classes the band needs. A K pixel whose band region holds no 2 x 2 block of tiles
 # (an islet or a channel narrower than a pixel) is a fill pixel, written whole, since no 2 x 2 block
 # of tiles there could hold the other class.
@@ -1053,6 +1057,7 @@ BANDFIX_PRICE_SCALES = (1, 3, 6)        # the scales the offline pricing re-pric
 TQ1B_MS_PER_WRITTEN_CHUNK = 0.34        # the measured cost per written chunk (TQ1b), for the estimate column only
 F32_SENSITIVE = 0.005                   # |fit| under this may change class in float32 (measured drift <= 3.0e-3)
 ROW_BAND = 128                          # pixel rows per vectorized band
+BASIS_NOISE_MAX = 1.77                  # basis_noise's measured extreme
 
 
 def bandfix_cfg(cfg=None):
@@ -1265,11 +1270,40 @@ def chunk_axis(n_px, radius, s, offset, chunk):
 
 
 def dilate_tiles(A, k):
+    """bool array grown by k tiles in Chebyshev distance (separable: rows, then columns; each axis doubles
+    its reach over a padded copy, so a pass costs log k)."""
     import numpy as np
     if k <= 0:
         return A.copy()
+    P = np.pad(A, k)
+    H, W = P.shape
+    for axis in (1, 0):
+        reach = 0
+        while reach < k:
+            d = min(2 * reach + 1, k - reach)
+            out = P.copy()
+            if axis == 1:
+                out[:, d:] |= P[:, :W - d]
+                out[:, :W - d] |= P[:, d:]
+            else:
+                out[d:, :] |= P[:H - d, :]
+                out[:H - d, :] |= P[d:, :]
+            P = out
+            reach += d
+    return P[k:-k, k:-k]
 
 
+def warp_reach_px(cfg, map_key):
+    """The farthest a map's coast warp can move a sample point along one axis, in reference px (0 for a map
+    with no warped geography): the sum of the larger axis's amplitudes at basis noise's extreme."""
+    W = (cfg.get("coast") or {}).get("warp") or {}
+    ids = {v["geo_id"] for v in cfg["geography"][map_key]["versions"]}
+    if not ids & set(W.get("geographies") or []):
+        return 0.0
+    return BASIS_NOISE_MAX * max(sum(abs(float(o["amplitude_px"])) for o in W[axis]) for axis in ("u", "v"))
+
+
+def bandfix_pass1(cfg, B, mref, cls, om, Gp, lines, s, mask, scored, L, margin, warp_px=0.0):
     """One scale, first pass, on the tile grid of a band of pixel rows at a time: the possibly-wrong pixels
     (K without the masks: a scored pixel holding a tile outside its band whose class the fit and the
     lattice detail may get wrong, or that the game's water correction may turn, a tile of the other
@@ -1279,6 +1313,7 @@ def dilate_tiles(A, k):
     H, W = cls.shape
     reach = reach_lut(s, [tuple(x) for x in B["neighbours"]])
     chunk = int(B["chunk_tiles"])
+    corr = int(B["correction_tiles"]) + math.ceil(warp_px * s)
     halo = -(-corr // s)
     K = np.zeros((H, W), bool)
     rowc = [chunk_axis(H, mref.hr, s, j, chunk) for j in range(s)]
@@ -1506,12 +1541,18 @@ def emit_bandfix(map_key, out_dir=BANDFIX_GENERATED, manifest=True, scales=None,
     Gp = np.pad(level0_grid(meta, idx, coef), ((1, 0), (1, 0)))
     lines = edge_lines(meta, idx, coef)
     C = cfg["coast"]
+    warp_px = warp_reach_px(cfg, map_key)
+    margin = float(B["float_margin_px"])
+    if not warp_px:
+        margin += float(C["detail_amplitude_px"]) * float(C["detail_clamp"])
     scored, L = cls != 2, cls == 1
     rel_ck = ck.relative_to(REPO).as_posix()
     label = cfg["maps"][map_key]["display"]
     inputs = {"checkpoint": rel_ck, "checkpoint_sha256": sha256_file(ck),
               "land_sha256": sha256_file(mref.land_path), "thinwater_sha256": sha256_file(mref.thin_path),
               "coast_detail": [C["detail_amplitude_px"], C["detail_clamp"]], "margin_px": round(margin, 6)}
+    if warp_px:
+        inputs["warp_reach_px"] = round(warp_px, 6)
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     P1, masks, t = {}, {}, {}
@@ -1520,6 +1561,7 @@ def emit_bandfix(map_key, out_dir=BANDFIX_GENERATED, manifest=True, scales=None,
         t0 = time.time()
         masks[s], ww_sha = waterway_footprint(cfg, mref, map_key, s, float(B["mask_margin_tiles"]))
         masks[s] &= scored
+        P1[s] = bandfix_pass1(cfg, B, mref, cls, om, Gp, lines, s, masks[s], scored, L, margin, warp_px)
         P1[s]["ww_sha"] = ww_sha
         K |= P1[s]["K"]
         t[s] = time.time() - t0
@@ -1598,22 +1640,51 @@ def emit_bandfix(map_key, out_dir=BANDFIX_GENERATED, manifest=True, scales=None,
     return rec
 
 
+def emit_bandfix_masks(map_key, out_dir=BANDFIX_GENERATED, log=print):
+    """The map's per-scale mask tables alone, from the committed K+ table and the waterway manifests: the K+
+    table reads no waterway, so after a waterway change this writes what a full emission would, in a minute
+    instead of half an hour. The manifest keeps its pricing, which masks barely move."""
     import numpy as np
     import earthgeo as eg
+    cfg, B = bandfix_cfg()
+    mref = eg.MapRef(map_key)
     order = B["symbol_order"]
     nsym = len(order)
+    rows, _ = read_bandfix_table(Path(out_dir) / shared_name)
+    sym = np.full(cls.shape, order.index("none"), np.uint8)
     for r, payload in rows.items():
         c0, vals = decode_runs(payload, nsym, B)
+        sym[r, c0:c0 + len(vals)] = vals
+    Kp = sym != order.index("none")
+    scored = cls != 2
     label = cfg["maps"][map_key]["display"]
+    mp = BANDFIX_DATA / f"manifest-{map_key}.json"
+    rec = json.loads(mp.read_text(encoding="utf-8"))
+        mask, ww_sha = waterway_footprint(cfg, mref, map_key, s, float(B["mask_margin_tiles"]))
+        mask &= scored
+        M = mask & Kp
         bits = M.astype(np.uint8)
         mrows = encode_runs(bits, M, 2, B)
         round_trip(mrows, bits, M, 2, B, f"{map_key} s{s} masks")
         mheader = [f"Generated by tools/build_geo.py (band fix emitter {BANDFIX_EMITTER}) from",
+                   f"data-src/waterways/manifest-{map_key}.json (sha256 {ww_sha})",
                    f"and {shared_name}.",
                    f"{label} at scale {s}: {int(M.sum())} K+ pixels inside a waterway, canal, dam or basin footprint",
                    f"in {len(mrows)} rows (runs of open 0 and masked 1 over each row's span).",
                    "Name-free data: scripts/bandfix.lua reads it with config.lua's bandfix group.",
+                   "Never edit by hand: rerun the tool."]
+        f = Path(out_dir) / name
+        _write_lf(f, render_rows(mheader, mrows, {"format": BANDFIX_EMITTER, "scale": s, "width": mref.W,
                                                   "height": mref.H, "masked_pixels": int(M.sum())}))
+        srec = rec["scales"][str(s)]
+                     "data_bytes_with_shared": f.stat().st_size + rec["shared"]["bytes"],
+                     "masked_kplus_pixels": int(M.sum()), "footprint_pixels": int(mask.sum()),
+                     "waterway_manifest_sha256": ww_sha})
+        log(f"{map_key} s{s}: {int(M.sum())} masked K+ pixels, {f.stat().st_size} B")
+    _write_json(mp, rec)
+    return rec
+
+
 TABLE_ROW_RE = None
 
 
@@ -1809,6 +1880,8 @@ def main(argv=None):
         if name in ("emit", "check"):
             p.add_argument("--bandfix", action="store_true",
                            help="the Exact coastlines K+ tables and their pricing instead of the fit bodies")
+            p.add_argument("--masks-only", action="store_true",
+                           help="with --bandfix on emit: rewrite the mask tables from the committed K+ table")
             p.add_argument("--scales", help="comma list of scales (default: every offered scale)")
     p.add_argument("--map", required=True)
     p = sub.add_parser("refit-islands")
@@ -1859,6 +1932,9 @@ def main(argv=None):
         print(f"RESULT ok adopted {rep['geo']['checkpoint']} and {rep['land_coarse']['checkpoint']}")
         return 0
     scales = [int(x) for x in a.scales.split(",")] if getattr(a, "scales", None) else None
+    if a.cmd == "emit" and a.bandfix and a.masks_only:
+        rec = emit_bandfix_masks(a.map)
+        print(f"RESULT ok rewrote {[r['file'] for r in rec['scales'].values()]} and "
               f"data-src/bandfix/manifest-{a.map}.json")
         return 0
     if a.cmd == "emit" and a.bandfix:

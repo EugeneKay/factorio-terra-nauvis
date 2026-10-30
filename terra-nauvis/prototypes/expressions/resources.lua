@@ -189,6 +189,10 @@ for _, h in ipairs(HC.resources) do
       end
     end
   end)
+  -- per candidate: its share of the row's amount (config hotspots.size), so the spots stop being equal
+  local Z = HC.size
+  L.hs_size = num(Z.gain) .. " * clamp((random_penalty{x = x, y = y, source = 1, amplitude = 1, seed = " ..
+    num(h.seed1) .. "} - " .. num(Z.keep) .. ") / " .. num(1 - Z.keep) .. ", 0, 1) ^ " .. num(Z.power)
   if h.sea then
     L.hs_land = "(" .. K.land_coarse .. " < " .. num(-HC.sea_px) .. ")"
     L.hs_grade = "clamp(-(" .. minus(K.land_coarse, -HC.sea_px) .. ") / " .. num(HC.land_grade_px) .. ", 0, 1)"

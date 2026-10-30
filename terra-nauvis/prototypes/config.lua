@@ -339,6 +339,7 @@ return {
     author = "Jake Mismas",
     homepage = "https://github.com/jakemismas/factorio-terra-nauvis",
     factorio_version = "2.1",
+    base_version = "2.1.24",
     setting_prefix = ID .. "-",
     noise_prefix = NOISE,
   },

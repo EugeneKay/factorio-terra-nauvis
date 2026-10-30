@@ -4178,6 +4178,8 @@
       },
       {
        "interval": 10,
+      }
+     ],
     },
     {
      "kind": "river",
@@ -10099,6 +10101,8 @@
       },
       },
       {
+      }
+     ],
        "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
        "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
     },

@@ -2,7 +2,10 @@
     - The mod is titled Terra Nauvis: Earth Maps, with a shorter description. The mod ID, every
       setting name and the log and chat prefix stay as they were.
 Version: 0.1.0
+Date: 2026-10-30
   Features:
+    - First release: three Earth maps for Nauvis, Terra Nauvis: Europe, Atlantic and Old World, as
+      map-gen presets and Map types at map scales 1 to 6.
     - Map scale startup setting: 1 to 6 tiles per reference pixel, default 6; each value's label
       gives the world size of every map at that scale. A world made from a Terra Nauvis preset keeps
       the scale it was created with; a world that uses a Terra Nauvis map type alone follows the
@@ -56,5 +59,7 @@ Version: 0.1.0
     - City markers map setting (default off, changeable in a running game): the map view names every
       city of a Terra Nauvis world's map where it lies; switching it off removes them.
   Changes:
+  Compatibility:
+    - With Alien Biomes enabled every Terra Nauvis preset is offered: the palms read the
       climate alone, never the coast. A world made from a preset without Alien Biomes does the same
       once Alien Biomes is added.

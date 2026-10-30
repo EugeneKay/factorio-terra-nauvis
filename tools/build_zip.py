@@ -3,6 +3,7 @@
 
 The static gate's zip row checks it; ARCHITECTURE.md, "Build-time data flow", step 7.
 
+  python tools/build_zip.py                    the zip under dist/ (installCheck, ci.yml and latest.yml)
   python tools/build_zip.py --release          the release zip plus its .sha256 (release.yml)
   python tools/build_zip.py --check-tag v0.1.0 fail unless the tag is "v" plus info.json's version,
                                                names the checked-out commit and sits on origin/main

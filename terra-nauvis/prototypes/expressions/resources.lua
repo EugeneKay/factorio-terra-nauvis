@@ -3,6 +3,15 @@
 -- Every row of prototypes/tables/hotspots.lua is a hotspot whose disc is the region layer's row of
 -- the same id, jittered per seed there. At scale s its footprint radius is
 --   R = min(max(r * s, floor_tiles), cap * s) tiles
+-- (a floor at small scales, capped at r + 50 km), an exact disc about the jittered centre. Per
+-- resource, one spot_noise with its own seed1 places the spots: only land candidates inside a
+-- row's start disc (core_share of R, at most the disc of max_spots candidates) carry quantity, and each
+-- cone is held to the room its row leaves it, so ore never leaves the disc and no per-tile mask is
+-- needed (config.lua hotspots.size). Each row's amount is strength times vanilla's regular patch amount at
+-- the candidate's distance (quantity and richness factor) times the ramp, spread over the start disc's
+-- expected candidates, and the region's target is the sum of its candidates' quantities, so the realised
+-- controls, and the amount multiplies richness alone. The per-map rows fold on tn_map (a preset-only
+-- number: the wrappers that read these bodies exist on preset worlds only).
 --
 -- Each map's offshore field stamp is stamp_elevation inside every offshore row's footprint grown by
 -- cover_px, else 0, on the map's own chain (Tile only, a firewall body); the map's newer elevation
@@ -19,6 +28,7 @@ local K = cfg.keys
 local S = K.scale
 local SUFFIX = cfg.regions.names.suffix
 local DEPTH = cfg.regions.names.row.depth
+local PD = cfg.regions.names.row.pd
 local HU = cfg.regions.names.row.hu
 local HV = cfg.regions.names.row.hv
 
@@ -140,8 +150,27 @@ local function start_radius(r)
     PER_CANDIDATE .. " / pi))"
 end
 
+-- How far a resource's capped blob lifts ore past a cone's rim, in tiles (config.lua hotspots.size note).
+local function blob_height(h)
   local unit = TG.per_km2 / h.spots_per_km2 * h.base_density * h.mean_size
   local q_ref = TG.reference_strength * unit * TG.reference_factor / HC.patches
+  return SP.cone_factor * q_ref ^ SP.cube_root / (math.pi * h.rq * h.rq) / B.divisor
+end
+local function blob_reach(h)
+  return B.cap * blob_height(h) / (SP.cone_factor / (math.pi * h.rq * h.rq * h.rq))
+end
+
+-- The tiles left for a cone at the candidate inside row r: its disc less the blob's reach, and clear of the
+-- same around each rival.
+local function room_of(h, r, rivals)
+  local edge = num(blob_reach(h))
+  local parts = {footprint(r) .. " - " .. PD .. r.id .. SUFFIX .. " * " .. S .. " - " .. edge}
+  for _, o in ipairs(rivals) do
+    parts[#parts + 1] = PD .. o.id .. SUFFIX .. " * " .. S .. " - " .. footprint(o) .. " - " .. edge
+  end
+  return #parts == 1 and parts[1] or ("min(" .. table.concat(parts, ", ") .. ")")
+end
+
 -- One resource's spot noise on one map over its rows there, as local expressions of the resource's
 -- body: the quantity "q<i>" and the spot "s<i>" for the map's index i. A map that adopts none of the
 -- resource's rows has none; the body's spot folds to the basement there.
@@ -150,16 +179,38 @@ end
 -- candidates, and the region's target is exactly the sum of those quantities (the density is a
 -- candidate's quantity over the tiles per candidate), so every one of them is placed and rows of a
 -- resource that share a region never draw on each other's target. A row's realised amount is then
+-- more than half sea. A candidate's cone is held to the room the row leaves it, so no ore
+-- leaves the row's disc or enters a rival's (config.lua hotspots.size note), and a candidate with
+-- no room or too little quantity for a cone of the bounded slope carries nothing.
+local function map_spot(h, rows, i, L, M)
   local unit = TG.per_km2 / h.spots_per_km2 * h.base_density * h.mean_size
+  local all = rows_of(M.key, nil)
   local qty, fav, cap = {}, {}, {}
+  for j, r in ipairs(rows) do
     local sr = start_radius(r)
+    local rivals = {}
+    for _, id in ipairs(HC.rivals[r.id] or {}) do
+      for _, o in ipairs(all) do
+        if o.id == id then
+          rivals[#rivals + 1] = o
+        end
+      end
+    end
+    local room = "r" .. i .. "_" .. j
+    L[room] = room_of(h, r, rivals)
+    local start = "(" .. DEPTH .. r.id .. SUFFIX .. " > " .. num(r.radius_px) .. " * " .. S .. " - " .. sr .. ") * (" ..
+      room .. " > " .. num(SP.min_room) .. ")"
     -- the row's amount, at least density_floor times vanilla's mean amount per tile over the footprint
     local amount = "max(" .. num(r.strength * unit) .. ", " .. num(TG.density_floor * h.base_density * RS.frequency) ..
       " * pi * " .. footprint(r) .. " * " .. footprint(r) .. ")"
     qty[#qty + 1] = start .. " * " .. amount .. " / (pi * " .. sr .. " * " .. sr .. " / " .. PER_CANDIDATE .. ")"
     fav[#fav + 1] = start
+    cap[#cap + 1] = start .. " * " .. room
   end
   local q = "q" .. i
+  local raw = "raw" .. i
+  L[raw] = "hs_each * " .. sum(qty, "0") .. " * hs_land * hs_size"
+  L[q] = raw .. " * (" .. raw .. " > " .. num((SP.min_radius / h.rq) ^ (1 / SP.cube_root)) .. ")"
   local radius_cap = #cap == 1 and cap[1] or ("max(" .. table.concat(cap, ", ") .. ")")
   local spacing = "if(" .. S .. " > " .. num(SP.fine_scale) .. ", " .. num(SP.spacing) .. ", " ..
     num(SP.spacing_fine) .. ")"
@@ -181,6 +232,7 @@ for _, h in ipairs(HC.resources) do
   local branch = {}
   for i, M in ipairs(MAPS) do
     local rows = rows_of(M.key, h.resource)
+    branch[i] = #rows > 0 and map_spot(h, rows, i, L, M) or num(SP.basement)
   end
   L.hs_spot = by_map(function(M)
     for i, X in ipairs(MAPS) do
@@ -189,6 +241,10 @@ for _, h in ipairs(HC.resources) do
       end
     end
   end)
+  -- per candidate: vanilla's distance curve and the ramp, and land (sea for a field: its spots start on
+  -- open water) with its grade, how far past the gate the coarse field reads, so a region's spots go
+  -- first to its most inland (for a field the farthest offshore) candidates (config hotspots.land_px)
+  L.hs_each = distance_factor
   -- per candidate: its share of the row's amount (config hotspots.size), so the spots stop being equal
   local Z = HC.size
   L.hs_size = num(Z.gain) .. " * clamp((random_penalty{x = x, y = y, source = 1, amplitude = 1, seed = " ..
@@ -200,10 +256,18 @@ for _, h in ipairs(HC.resources) do
     L.hs_land = "(" .. K.land_coarse .. " > " .. num(HC.land_px) .. ")"
     L.hs_grade = "clamp((" .. minus(K.land_coarse, HC.land_px) .. ") / " .. num(HC.land_grade_px) .. ", 0, 1)"
   end
+  -- the blob at a typical spot's height at the reference strength and distance factor, its rise capped
+  def(N.v, "hs_spot + min(" .. B.name .. " - " .. num(B.mean) .. ", " .. num(B.cap) .. ") * " .. num(blob_height(h)), L)
+  -- multiplies richness only, so it moves no outline.
+  local amount = K.hotspot_amount
   if h.fluid then
     local F = h.fluid
+    def(N.p, "clamp(" .. N.v .. ", 0, 1) * random_penalty{x = x, y = y, source = 1, amplitude = " ..
       num(F.penalty) .. ", seed = " .. num(F.seed) .. "}")
+    def(N.r, amount .. " * (" .. N.v .. " * " .. num(F.penalty) .. " + " .. num(F.additional) .. ")")
   else
+    def(N.p, "clamp(" .. N.v .. ", 0, 1)")
+    def(N.r, amount .. " * " .. N.v)
   end
 end
 
@@ -236,5 +300,80 @@ for _, M in ipairs(MAPS) do
     def(name, text, L)
   end
 end
+
+-- Natural regular patches (config.lua resources.natural): the gap to the nearest hotspot footprint, read
+-- per candidate, and the Earth copy of vanilla's patch function.
+local NP = RS.natural
+local Z, O, V = NP.size, NP.outline, NP.spot
+
+def(NP.gap, "if(" .. K.hotspots .. " > " .. num(cfg.ridges.switch_threshold) .. ", " .. by_map(function(M)
+  local parts = {}
+  for _, r in ipairs(rows_of(M.key, nil)) do
+    parts[#parts + 1] = PD .. r.id .. SUFFIX .. " * " .. S .. " - " .. footprint(r)
+  end
+  return #parts == 0 and num(NP.no_gap) or #parts == 1 and parts[1] or ("min(" .. table.concat(parts, ", ") .. ")")
+end) .. ", " .. num(NP.no_gap) .. ")")
+
+local function deep(v)
+  if type(v) ~= "table" then
+    return v
+  end
+  local out = {}
+  for k, w in pairs(v) do
+    out[k] = deep(w)
+  end
+  return out
+end
+
+local function basis(wavelength, seed)
+  return "basis_noise{x = x, y = y, seed0 = map_seed, seed1 = " .. seed .. ", input_scale = 1 / " .. num(wavelength) ..
+    "}"
+end
+
+local fn = deep(data.raw["noise-function"][NP.vanilla_fn])
+fn.name = NP.fn
+local L = fn.local_expressions
+L.basement_value = num(O.basement) .. " * (" .. L.basement_value .. ")"
+L.broad = basis(O.broad, "seed1")
+L.coarse = basis(O.coarse.wavelength, num(O.coarse.seed1))
+L.warp_x = "x + " .. num(NP.warp.amplitude) .. " * broad"
+L.warp_y = "y + " .. num(NP.warp.amplitude) .. " * coarse"
+L.spot_size = "(" .. num(Z.floor) .. " + " .. num(Z.gain) .. " * random_penalty_between(0, 1, 1) ^ " .. num(Z.power) ..
+  ")"
+L.typical_quantity = "(random_spot_size_minimum + random_spot_size_maximum) / 2 * " ..
+  "regular_spot_quantity_base_at(distance)"
+L.spot_radius = "min(" .. num(Z.radius_cap) .. ", regular_rq_factor * typical_quantity ^ " .. num(V.cube_root) ..
+  " * sqrt(spot_size)) * if(random_spot_size_minimum == random_spot_size_maximum, " .. num(Z.fixed_radius) .. ", 1)"
+L.clear = "(" .. NP.gap .. " > " .. num(NP.reach) .. " * spot_radius + " .. num(NP.warp_reach) .. ")"
+L.regular_spot_quantity_expression = "clear * spot_size * typical_quantity"
+L.outline = "min(" .. num(O.cap) .. ", (" .. basis(O.fine, "seed1") .. " + " .. num(O.w24) .. " * " ..
+  basis(O.mid, "seed1") .. " + " .. num(O.w64) .. " * broad + " .. num(O.w128) .. " * coarse - " .. num(O.mean) ..
+  ") * (1 + " .. num(O.vary) .. " * coarse))"
+L.height = "max(1, regular_spot_height_typical_at(distance))"
+L.body = "spot_noise{x = warp_x, y = warp_y," ..
+  " density_expression = regular_density_at(distance)," ..
+  " spot_quantity_expression = regular_spot_quantity_expression," ..
+  " spot_radius_expression = max(1, clear * spot_radius)," ..
+  " spot_favorability_expression = clear * (" .. num(NP.province.base) ..
+  " + basis_noise{x = x, y = y, seed0 = map_seed," ..
+  " seed1 = " .. num(NP.province.seed1) .. ", input_scale = 1 / " .. num(NP.province.wavelength) ..
+  ", offset_x = " .. num(NP.province.offset) .. " * regular_patch_set_index})," ..
+  " seed0 = map_seed, seed1 = seed1, region_size = " .. num(V.region_size) ..
+  ", candidate_spot_count = candidate_spot_count," ..
+  " suggested_minimum_candidate_point_spacing = " .. num(V.spacing) .. ", skip_span = regular_patch_set_count," ..
+  " skip_offset = regular_patch_set_index, hard_region_target_quantity = 0, basement_value = basement_value," ..
+  " maximum_spot_basement_radius = " .. num(V.basement_radius) .. "} + outline * regular_blob_amplitude_at(distance)"
+L.field = "body + clamp(1 - abs(body) / (" .. num(NP.rim.width) .. " * height), 0, 1) * " .. num(NP.rim.gain) ..
+  " * blobs0 * regular_blob_amplitude_at(distance)"
+L.regular_patches = "if(random_spot_size_minimum >= " .. num(NP.few_size) .. ", " .. num(NP.level_few) .. ", " ..
+  num(NP.level) .. ") * (1 + " .. num(NP.pockets) .. " * clamp(blobs0, " .. num(-NP.pocket_clamp) .. ", " ..
+  num(NP.pocket_clamp) .. ")) * field / (1 + " .. num(NP.plateau) .. " * max(0, field) / height)"
+L.start_body = (string.gsub(L.starting_patches, "%(blobs0 %- " .. num(O.start_mean):gsub("%.", "%%.") .. "%)",
+  "(blobs0 + " .. num(O.start_w64) .. " * broad + " .. num(O.start_coarse) .. " * coarse - " .. num(O.start_mean) ..
+  ")"))
+L.starting_patches = num(O.start_level) .. " * (start_body + clamp(1 - abs(start_body) / (" .. num(NP.rim.width) ..
+  " * starting_blob_amplitude / starting_blob_amplitude_multiplier), 0, 1) * " .. num(NP.rim.gain) ..
+  " * blobs0 * starting_blob_amplitude)"
+E[#E + 1] = fn
 
 data:extend(E)

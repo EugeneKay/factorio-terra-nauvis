@@ -873,773 +873,1081 @@
   },
   "tn_hu_coal_donbas_v1": {
    "type": "noise-expression",
+   "sha256": "32a3125642ee7509dcacdb4dd198d84a0a78a430a69e602c948dc956e6ceb9cf",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_coal_ekibastuz_v1": {
    "type": "noise-expression",
+   "sha256": "d69b56aaa6227721bf3ec08cc2fdb9e2240bcb6cd84f1e9759ee9b53d8ee80d0",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_coal_jharia_damodar_v1": {
    "type": "noise-expression",
+   "sha256": "c0a58c7f7997751b634f812fe5823ae2000fc42c1ec23916197612135cc534d2",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_coal_kuzbass_v1": {
    "type": "noise-expression",
+   "sha256": "9efd62d8512bca5994cdb3ab57ffce0e8b99d29d7588d004d44beb7617e1f600",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_coal_nord_pas_de_calais_v1": {
    "type": "noise-expression",
+   "sha256": "62acfad9e5997b96b7f4210bc8122f686c6ffd1c95c66659280cc8b5198e6b17",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_coal_ordos_v1": {
    "type": "noise-expression",
+   "sha256": "c65c8fbc32329eb6a6a59951b5047afd2620c51eb46d326cd83e1d56a1c8c7af",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_coal_pocahontas_v1": {
    "type": "noise-expression",
+   "sha256": "0789549f9663e7863219efcfd929d93330e0f124836a01aac762e98e0820d718",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_coal_ruhr_v1": {
    "type": "noise-expression",
+   "sha256": "b294fe50a29e194d371f51bf25754a8b19e7db77bdf0ad25365bb8a3126b7bdf",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_coal_south_wales_v1": {
    "type": "noise-expression",
+   "sha256": "1b86c1cc25ebf9b3fb329a2a209adc4243a75009de5cebd5e385ef0e1b7aa4e1",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_coal_upper_silesia_v1": {
    "type": "noise-expression",
+   "sha256": "70d9712831fbe6741df1e875fe6ad0a5235e9b04b28188d5e3fae023b35951bb",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_coal_witbank_highveld_v1": {
    "type": "noise-expression",
+   "sha256": "21f5363b8aa5552d48e0fc3bd30d48c62e98434d28dc02dc9f4951443a888e1d",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_copper_atacama_v1": {
    "type": "noise-expression",
+   "sha256": "1138704592b2d79109c9ec58a035e5c3c64677db4c93d95c54f6c834f32422f6",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_copper_bor_v1": {
    "type": "noise-expression",
+   "sha256": "253b0cd08033b39257cc0ae0f9a8de8d1059e59d67ec6171da1f60378b73796f",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_copper_central_african_copperbelt_v1": {
    "type": "noise-expression",
+   "sha256": "42a26fb320f27c5c5ec00190ab05e44e2ee59690efad33f736724948a12acdb4",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_copper_iberian_pyrite_belt_v1": {
    "type": "noise-expression",
+   "sha256": "0b6f73b21fceed8aea42fa3c2d35b8e79ff92a27bc673d0c70a70c4a68e8b951",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_copper_legnica_glogow_v1": {
    "type": "noise-expression",
+   "sha256": "85c3858f0acbf5410c9f4b02c9f2bde022e87c5fa00db5f3cb851e6a414494ab",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_copper_norilsk_v1": {
    "type": "noise-expression",
+   "sha256": "bd4925a2ba5937ddcbd7b519ce2d77a8efba763cc07975e56c25ac38caa176ca",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_copper_oyu_tolgoi_v1": {
    "type": "noise-expression",
+   "sha256": "9e97b207ad0c35fe1c31e540637842241d1d29aa6f940ceed791a4f80d5d19e6",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_copper_sarcheshmeh_v1": {
    "type": "noise-expression",
+   "sha256": "9f0de44a775fb785d2913c2c5463371bde7025bd59b1252b30a1fb20ec2920a7",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_copper_zhezkazgan_v1": {
    "type": "noise-expression",
+   "sha256": "e04739f0b12b01012c5718344df7bec0affd2dfe88a44fac3e8184b6a8ebc021",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_iron_anshan_v1": {
    "type": "noise-expression",
+   "sha256": "84d2ac2b14774f9175261fac939ae579a0c7234c0ea73ee1223070abb73a6d77",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_iron_barbil_v1": {
    "type": "noise-expression",
+   "sha256": "5d8c841d373b2b5e22c760cffad3897ccbeb367841a0e2b73ddd44fabe098626",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_iron_carajas_v1": {
    "type": "noise-expression",
+   "sha256": "aab77036b7053066fe9ec8e7062d951d5a5f56f52b3c479972988d365751d8a4",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_iron_gara_djebilet_v1": {
    "type": "noise-expression",
+   "sha256": "44887dae94c8e265bdb8eca5e155a7a0841135a70baef1a84fcbea7c357aa8e9",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_iron_kediet_ej_jill_v1": {
    "type": "noise-expression",
+   "sha256": "8a3e6b52ae91048c0696008e39944c9f8af08f1d690dfad536cdf9012d764dce",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_iron_kiruna_malmberget_v1": {
    "type": "noise-expression",
+   "sha256": "836b9e11b4566aa453241ab12b116eef26c2c31656594dc4e23fc1e34b206790",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_iron_kryvbas_v1": {
    "type": "noise-expression",
+   "sha256": "4ef63240f9ee7e777a175f5f0dddf9565ece27968e5ef8d75aa956a86ac90b9c",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_iron_kursk_magnetic_anomaly_v1": {
    "type": "noise-expression",
+   "sha256": "0190ea72f6311c7dc66d00ee8cdaf6d41eb284aeb81044d35b8ba0ed17429eda",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_iron_labrador_trough_v1": {
    "type": "noise-expression",
+   "sha256": "41801d9f904c82297994a0e8c174c33d15f3b8f658535a461c13762199c9a736",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_iron_lorraine_minette_v1": {
    "type": "noise-expression",
+   "sha256": "6c7f3218d22868d84615d6e5c8ad63b30451ce1612bdc4d6c46b1a4891fa4a9c",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_iron_mesabi_range_v1": {
    "type": "noise-expression",
+   "sha256": "9bcecdc97e9e58a9165fb10f877feb74dcf6e0c5c24af4d9fbad79f5cd9491e3",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_iron_simandou_v1": {
    "type": "noise-expression",
+   "sha256": "43899aa0ce848deaa71781928d5fd6c779d233be671ffc9f635e343068d66af7",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_iron_sishen_v1": {
    "type": "noise-expression",
+   "sha256": "4be92d4e4fbcdb5007317a28148a4c386545b6f974df71d0750c4af3b50e2180",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_angola_block_17_v1": {
    "type": "noise-expression",
+   "sha256": "ab5865224a3fe23f95720ccb8257b05ed2052e4bb7a1666530a9155a1a3d03c9",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_cantarell_v1": {
    "type": "noise-expression",
+   "sha256": "437a042f38adc42eac4b22ff8b79f548f09368d972dcf7c2d330abb97f5499c3",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_caspian_acg_v1": {
    "type": "noise-expression",
+   "sha256": "44977b5fa768d86ca58c531d1e3a1cbd7d48641908e020a05a28fef498ee2956",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_ekofisk_v1": {
    "type": "noise-expression",
+   "sha256": "5cc17a26055e4ea5268166b1796167503aa303132a3f2018a429e75c2fef7ece",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_forties_v1": {
    "type": "noise-expression",
+   "sha256": "02e79c7fc7b52a089b4f2b596ab9fb8bbe1ebcecff33a23e633ccf186b231b81",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_gulf_of_mexico_deepwater_v1": {
    "type": "noise-expression",
+   "sha256": "28d10960cf07bfba7452165a1a72a6434a6952e06a4783b599a7e76505336d01",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_guyana_stabroek_v1": {
    "type": "noise-expression",
+   "sha256": "b5b4f7f174328673f00606a10a0899d9ee6d78c504f94f43ec80959ecb7947d3",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_kashagan_v1": {
    "type": "noise-expression",
+   "sha256": "26833aa12f49b56ea7f64720d2aaea23867d2124d28f128a9190fa87c0b0cf97",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_mumbai_high_v1": {
    "type": "noise-expression",
+   "sha256": "ab4a76ddf0013ed5ccf7c1a2340b6972f84ec6b582c1170d535b7edcc48b7979",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_nigeria_deepwater_v1": {
    "type": "noise-expression",
+   "sha256": "e7a32611d749e2867c3e6055d5b640a3c420b41b6c25b61dd2b1dd46338092b6",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_safaniya_v1": {
    "type": "noise-expression",
+   "sha256": "7e0a4d324fd87845296fa6a7cc82b2ae83f5c8accb30a3125a80a1abd681b0e2",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_tampen_east_shetland_v1": {
    "type": "noise-expression",
+   "sha256": "46ffb2967aca1d288ef5e57d39e63a193867a03abca25271e94c2cf164ae0cd4",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_tupi_presalt_v1": {
    "type": "noise-expression",
+   "sha256": "5dc7083b943b0eed428a772ed584ff487922c049aec9903e7f83acdb4a9ed618",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_upper_zakum_v1": {
    "type": "noise-expression",
+   "sha256": "0246b03c166634f38463f712985bdb98f6c6b9c452dcb47bc62dfab38c4e5f74",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_offshore_utsira_high_v1": {
    "type": "noise-expression",
+   "sha256": "2722d1c1f29eeb2f71dae66d38fac7b16deb3f2bdedd233375d14e03b2b26c5e",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_ahvaz_v1": {
    "type": "noise-expression",
+   "sha256": "3f27818d8902a6557aace0254b0335b7de8543ddc5c4d9cf43f02c9dbcdaf452",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_athabasca_oil_sands_v1": {
    "type": "noise-expression",
+   "sha256": "1fec26cc4c53d0e851b67d396ee2478533cba94d449c66448ff4d9e65a787054",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_baku_absheron_v1": {
    "type": "noise-expression",
+   "sha256": "ad9e0152ccb58cd0bc9c16cb84a0d669dd066e9e53dc76eb43d7e196063dd10b",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_basra_kuwait_v1": {
    "type": "noise-expression",
+   "sha256": "03dd5f3af7806a7d983ac7236979fd39b66e63be555743aedf091c545b77cc3e",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_daqing_v1": {
    "type": "noise-expression",
+   "sha256": "ce086a4f8b16ed9d71f4e72cb1936e95cfaf166385d70d6818dc8a4ac4181058",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_ghawar_v1": {
    "type": "noise-expression",
+   "sha256": "fe8fe5f5cd34da691c942c37d79319ab4fe7a8d71efc77deef209a1f921797a3",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_hassi_messaoud_v1": {
    "type": "noise-expression",
+   "sha256": "2d76e81e8dfa9df5133b26a6c030695917fe9390f75e8f058e2ef5533b94eefe",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_kirkuk_v1": {
    "type": "noise-expression",
+   "sha256": "17f9924c0fce116461062ff6df5bf1a5da9aaeb7e187641f0dd640c9ca5933a2",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_niger_delta_v1": {
    "type": "noise-expression",
+   "sha256": "a9c090bceab92c5c334539898eca9f78d2c779bcb454751cda2b5c8105d81505",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_orinoco_belt_v1": {
    "type": "noise-expression",
+   "sha256": "01fd3d739d9dc2038e1aac7fdbd309288a861bb9539985aa48cba32549bc045f",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_permian_basin_v1": {
    "type": "noise-expression",
+   "sha256": "ef8c99a70210e722336008dc8a8adeaa65a38a6a445438d156398cfb63c809d6",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_samotlor_v1": {
    "type": "noise-expression",
+   "sha256": "aaf3b8bd80557c5a5c493e3e9a708b25fb43e37201f3803591f660bb8481e33c",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_sirte_basin_v1": {
    "type": "noise-expression",
+   "sha256": "34e2817dd49e5c3fb0b93fef271192799521a2c391bb6d7daa96d850d82d5538",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_tengiz_v1": {
    "type": "noise-expression",
+   "sha256": "0305fd90cf38544a21bcc05993e949aa776449db51bf0e25f919d5d5459c9473",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_oil_volga_ural_v1": {
    "type": "noise-expression",
+   "sha256": "2e783e3b68d1f8e6d67d6402145c3a5b579d97e1901d36cfc8ffcc6907494223",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_stone_aswan_v1": {
    "type": "noise-expression",
+   "sha256": "a57650ecfec4e76e16c4565a09c3857e8efb21b13a953d2946628344105fc2c9",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_stone_carrara_v1": {
    "type": "noise-expression",
+   "sha256": "2a1c197baa455a696868d51135490f3701b9b170afc33fcba8bf3475371ce712",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_stone_indiana_limestone_v1": {
    "type": "noise-expression",
+   "sha256": "d730777a9f2c9321f489f03670a8fb79b415f0e36c26fdf5d813460aaaf9aacd",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_stone_makrana_v1": {
    "type": "noise-expression",
+   "sha256": "c815ce6ee45ba1c0567fec7fd57af580864bffd0dfcd4ffd08fb1ea85eaaabeb",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_stone_marmara_island_v1": {
    "type": "noise-expression",
+   "sha256": "c8a73f59ee707278aeaae431ca1ea5c9fd0ad33d7e50cd9dc4916308743344f6",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_stone_pentelicus_v1": {
    "type": "noise-expression",
+   "sha256": "6ccb01015d1adf105bad18043f55b7ffa4a73d5076c1188905cfab92adb7e875",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_stone_portland_v1": {
    "type": "noise-expression",
+   "sha256": "5871792163f24df2f28ef81f3744494bdfc42e4b942f8b18c09f5ed33d179654",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_uranium_arlit_v1": {
    "type": "noise-expression",
+   "sha256": "eb2faa9946713632e3f0b0600166012080ea08b44427a65c3d8f37d5ed0400ed",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_uranium_athabasca_basin_v1": {
    "type": "noise-expression",
+   "sha256": "266b7621536136bdbfc16e18cdc6591cf1f92016aa07bccd449e3734dc2c8428",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_uranium_chu_sarysu_v1": {
    "type": "noise-expression",
+   "sha256": "dc00bb95acbefe0d345077474518d2ea682551432983d146b61a4770049400cb",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_uranium_erongo_v1": {
    "type": "noise-expression",
+   "sha256": "21b341f20ff43fc38ee7bfaa4a6a3de363c71a339768b85144f64ce32c00775c",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_uranium_krasnokamensk_v1": {
    "type": "noise-expression",
+   "sha256": "f47a43060f5e2ab04af1b98b2080d683cb09229f8c2c8857c3f69f0633742eea",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_uranium_kyzylkum_v1": {
    "type": "noise-expression",
+   "sha256": "49ec93ab7b04861cc8cbd402905c9e12732d0782ef58600a794a3212c0900ebd",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hu_uranium_ore_mountains_v1": {
    "type": "noise-expression",
+   "sha256": "23d9e70ad8c03b597d0d7e3005642253789c5279f6391d68ec93643ffec468e6",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_coal_donbas_v1": {
    "type": "noise-expression",
+   "sha256": "05dd305716b76729a67cf8c9190555c645cf84966333e698005865010c52b632",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_coal_ekibastuz_v1": {
    "type": "noise-expression",
+   "sha256": "0a682df800c65146c1e97741e9a7c1f99a6ce68df404a63488aa0e752d93f1a0",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_coal_jharia_damodar_v1": {
    "type": "noise-expression",
+   "sha256": "c14945c8c8603296693c1176ff52d8d3b65d1724a90040b91c92ae6f10b2b8f5",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_coal_kuzbass_v1": {
    "type": "noise-expression",
+   "sha256": "01ebb37fe6cf2a3c41454a8525c2979be3920e1a23de77c229bdbb3d84e2dd79",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_coal_nord_pas_de_calais_v1": {
    "type": "noise-expression",
+   "sha256": "79dc17cda74af45e1ab262eadf6eb0d110b492fb7240741c68801ed42d88f6a4",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_coal_ordos_v1": {
    "type": "noise-expression",
+   "sha256": "e2a8b9550a62b9fd3cf0d215c20bf2a2e226a4b849a7d888cc6231d6a427bd21",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_coal_pocahontas_v1": {
    "type": "noise-expression",
+   "sha256": "091c23d6c86d6cc9788d02c12c3e4f1111fa856bd3a8d9efb04238231bdb79b4",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_coal_ruhr_v1": {
    "type": "noise-expression",
+   "sha256": "575de96af43f500b83d1c7aa762c99163f34aa2bc8761e8beddc0fe3c1664ef4",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_coal_south_wales_v1": {
    "type": "noise-expression",
+   "sha256": "853dcec41cd04f005c563cc07da919d3aa0a8e9705c4fd6b33bbbd92aaa5ac8d",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_coal_upper_silesia_v1": {
    "type": "noise-expression",
+   "sha256": "037d1a5041feefab80270e7fd50b60fc847cd1c2f948ec0c150796843bb4dd12",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_coal_witbank_highveld_v1": {
    "type": "noise-expression",
+   "sha256": "458458f59dcdfe65a8e50bbb20abf1b1d4ff9ca26f77cfb883466d0c2eb6ece8",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_copper_atacama_v1": {
    "type": "noise-expression",
+   "sha256": "9eb61072172f2d1695689693fac886e3dfd5b95b7e12a40aa88aa4cc36d59962",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_copper_bor_v1": {
    "type": "noise-expression",
+   "sha256": "935885b5a1f98395ae20ae8357ab6cd47fae007ffcebe993cdaf2d2db80ad7d7",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_copper_central_african_copperbelt_v1": {
    "type": "noise-expression",
+   "sha256": "a0965141dc0be0530fff502dcca677f937bf191586b9b7b2d1f56ebd23be2bdd",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_copper_iberian_pyrite_belt_v1": {
    "type": "noise-expression",
+   "sha256": "bc463025ae917cc559e68137905ebbb1fe1d7fd100eefbea6c1af44fa71497b3",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_copper_legnica_glogow_v1": {
    "type": "noise-expression",
+   "sha256": "979631a9c506f948775cef80e1092fed1f87176070793e8367cba021a04eb35b",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_copper_norilsk_v1": {
    "type": "noise-expression",
+   "sha256": "e9a59e1a5413f327095124dec858aa31e97d47a271ad49ef7a224052322d8491",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_copper_oyu_tolgoi_v1": {
    "type": "noise-expression",
+   "sha256": "116272a1df5f6fff46be0ad374951cc31df38e9bd664a21cad8026c415e2b4f4",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_copper_sarcheshmeh_v1": {
    "type": "noise-expression",
+   "sha256": "d5c8cd48de93971d802ed66ab1276318bc1e163791491d47a5d7d57a8a921885",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_copper_zhezkazgan_v1": {
    "type": "noise-expression",
+   "sha256": "66cf21ebbdd96fb0572c9718f1a87d4b5c521e6853a839613bc6e4ac4e89e7b6",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_iron_anshan_v1": {
    "type": "noise-expression",
+   "sha256": "0010695239d742ba756964c61351220b2a9bed8ff4b00fba0505426dd9697077",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_iron_barbil_v1": {
    "type": "noise-expression",
+   "sha256": "5e98d9ea66d2653ef1f41fe494f5296965fc478748c5281c8af378b294151419",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_iron_carajas_v1": {
    "type": "noise-expression",
+   "sha256": "8d8b6c788e71335da2509dadabe8a04eefe842af13040e2917ab5e2551d54f68",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_iron_gara_djebilet_v1": {
    "type": "noise-expression",
+   "sha256": "c1e474a7c3848298fc7f604161581e7b55eb40a2159276b5fe4bfe4939dda7e5",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_iron_kediet_ej_jill_v1": {
    "type": "noise-expression",
+   "sha256": "0a463ee57b4ff81b27c2f725c65e2c5317fa9f906ebfaa95e4fe5e8f7b40295b",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_iron_kiruna_malmberget_v1": {
    "type": "noise-expression",
+   "sha256": "8e4eb2ae3f39673506657b0044d2de740edcdbd35b7e3700565153015da575a6",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_iron_kryvbas_v1": {
    "type": "noise-expression",
+   "sha256": "445a3451af13247520e669d72cd9d02d93129b37c5b373e9fb3be8b49a218cb1",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_iron_kursk_magnetic_anomaly_v1": {
    "type": "noise-expression",
+   "sha256": "6dc39140b755c3b07c4d9f25b8fd9b0ab03a694266c9b3bacfa03c52a68d3caa",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_iron_labrador_trough_v1": {
    "type": "noise-expression",
+   "sha256": "d7cf54f3be7512bc02fe4cf49b9a7ec20beefba3389347a33fc81506675cb18b",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_iron_lorraine_minette_v1": {
    "type": "noise-expression",
+   "sha256": "7208b0363366c3a72b0e34f0f4205569a30ed11134d7850ce4e6f9c5f3c3f05f",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_iron_mesabi_range_v1": {
    "type": "noise-expression",
+   "sha256": "2ea56914b957594a48d1e654730c5aa1a32708135dccf1df5f393e4b2d4377af",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_iron_simandou_v1": {
    "type": "noise-expression",
+   "sha256": "12400e68c3a3c55967b8a975a8851e9318b77191405f7cc6c62bdabd601f7e77",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_iron_sishen_v1": {
    "type": "noise-expression",
+   "sha256": "e2247b02c0457c47ec6769c48e1ed86154730a2824106f8d0cc000f47eea3792",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_angola_block_17_v1": {
    "type": "noise-expression",
+   "sha256": "8cbefc0bc17200a6b84ad0d4da8cb7a344b4788a143752691ee1293f3f5a145d",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_cantarell_v1": {
    "type": "noise-expression",
+   "sha256": "abe235044fdd67509b7b1d24a80f09cbe0b72d11c8f345046adabd0e7bee4904",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_caspian_acg_v1": {
    "type": "noise-expression",
+   "sha256": "a16d07713db435fcced4c2d09fbc571fa3feac17f66ed2a61f8ede868be1d0d5",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_ekofisk_v1": {
    "type": "noise-expression",
+   "sha256": "0c0a2372f5e3746d2611b53eafb88e22433a8d2d669485ade9594a8a31f73f09",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_forties_v1": {
    "type": "noise-expression",
+   "sha256": "33511424d93273a5e7ee7ef01244f630abf20c2b2a535d242b5e0b5673ad1d26",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_gulf_of_mexico_deepwater_v1": {
    "type": "noise-expression",
+   "sha256": "63c4f3bb5d6f4b959f645351b6de2a74628e6d9ed2588a5771a94ab8bc319e97",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_guyana_stabroek_v1": {
    "type": "noise-expression",
+   "sha256": "4d77c872163f8b1d4b3a5f86f941507c9e56571126ea71711383ff9052de41c2",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_kashagan_v1": {
    "type": "noise-expression",
+   "sha256": "c7a1ac84bc060dee161f9b81c7cb6dd3b84c65e23668ed906a6ff0705c43c642",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_mumbai_high_v1": {
    "type": "noise-expression",
+   "sha256": "a815411ece9fd74ea8e0973920c8e0e4a6ec7a7c0c5c9976fd90870721fad19c",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_nigeria_deepwater_v1": {
    "type": "noise-expression",
+   "sha256": "70fcc7256b6ebb4a1e3684b3d4ff06d2f70a220fd436df7eb12e17dbfc74a1fc",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_safaniya_v1": {
    "type": "noise-expression",
+   "sha256": "c1a1682e344d4c94420ac69e0dba52063ab4be8a942801309c192042b1c3df13",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_tampen_east_shetland_v1": {
    "type": "noise-expression",
+   "sha256": "3c9f3fce66cc6b4bcad476d9f8b8f03e5084d6b983801827a8e091a17f7923c2",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_tupi_presalt_v1": {
    "type": "noise-expression",
+   "sha256": "fe2c6a06a3260f114ba8cbcfd31c18fc33cd13b059a76fc8e2e4f4a87232ff9d",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_upper_zakum_v1": {
    "type": "noise-expression",
+   "sha256": "7cd6b8720f80689ec692afa05ac75fced3d5845f024a0cec6156ebff91095835",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_offshore_utsira_high_v1": {
    "type": "noise-expression",
+   "sha256": "3054462cd5b4064fcd1a788be329f6cc6204549656252781c8b4674e45f2437e",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_ahvaz_v1": {
    "type": "noise-expression",
+   "sha256": "a55b1226235f66f62a6e76b24812809f912ab2943540d5029b6a88fb7e0dc102",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_athabasca_oil_sands_v1": {
    "type": "noise-expression",
+   "sha256": "a6a04c678f1a05990c569ba007b40080d7e6f4273be15f53b73ac928fd6edab4",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_baku_absheron_v1": {
    "type": "noise-expression",
+   "sha256": "3f37370d4709655f3f93305de4f26e64ad2349d04c28e694a24c7f2675b0fd87",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_basra_kuwait_v1": {
    "type": "noise-expression",
+   "sha256": "b2484976de0832aa1abee593d14cfe70ac35031f2424ac8024f1a8ac309d70f9",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_daqing_v1": {
    "type": "noise-expression",
+   "sha256": "8607c7bf9fefbed657b9ff0a6d3c22c0469d2d9c3bc3fdc3e79d0766633d9266",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_ghawar_v1": {
    "type": "noise-expression",
+   "sha256": "258afebcbad09962cd7635fabfc2af982d1dcd96ab556c5a9cb4b3e61ae6f91a",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_hassi_messaoud_v1": {
    "type": "noise-expression",
+   "sha256": "c8da6d1056dcf0cf32d67a305680f2c63adb9b959b3912823e5bd66b9ec42358",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_kirkuk_v1": {
    "type": "noise-expression",
+   "sha256": "48a69e55e0aea9b978055eb68419c6ace3be0264d51d3eed76b0e98c36aa0cf6",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_niger_delta_v1": {
    "type": "noise-expression",
+   "sha256": "4c34b388bfaacac709f69d6f1062c83d58cc5f35c4012b6b609e8db3db4c2eb1",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_orinoco_belt_v1": {
    "type": "noise-expression",
+   "sha256": "4df3b80409eba204eeb0d8d08aa42ab71b60c682158db51e02517cb6e38134b9",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_permian_basin_v1": {
    "type": "noise-expression",
+   "sha256": "5f6a613a87c745017ad86a8e9c36094db2d521fbec9b707265adf692cbfab96c",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_samotlor_v1": {
    "type": "noise-expression",
+   "sha256": "79e2f90719334571b734117fc9654f1c0345af7db012015bf1a6b9636fc02fc6",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_sirte_basin_v1": {
    "type": "noise-expression",
+   "sha256": "67c245e1d7fa8391f9bab4105747cdbc2977817e99b80e20c777c80a8e1ab676",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_tengiz_v1": {
    "type": "noise-expression",
+   "sha256": "edec2a8517018c9232dc42ca5f84d5d403225a5f2f0c57e29a0a7f2f0bd9836e",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_oil_volga_ural_v1": {
    "type": "noise-expression",
+   "sha256": "8e2266447bfc03fb6e06fc4e6ff6816b8e181027471d717650789d768ddb5d02",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_stone_aswan_v1": {
    "type": "noise-expression",
+   "sha256": "eb0af9fadbf398e3214278d6d31ca16823a280849743f18be007c029fd128942",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_stone_carrara_v1": {
    "type": "noise-expression",
+   "sha256": "a0261ebadff0e59a2b8b9d3ed5787525f2f231fed44824ca60680dfce01196c9",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_stone_indiana_limestone_v1": {
    "type": "noise-expression",
+   "sha256": "a6c0c3be788ca6fbea76b7195622a0a681335a1e2d119ca95b201aee6dbf866c",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_stone_makrana_v1": {
    "type": "noise-expression",
+   "sha256": "ea91ca429e1a60b1c2e4fbd934a71bab25da3203a6cef4c3e347223285fd79b0",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_stone_marmara_island_v1": {
    "type": "noise-expression",
+   "sha256": "ae568435e133e850e8c5190768ea6e5ac66fe85dabcb9f9d812076b3ff2de790",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_stone_pentelicus_v1": {
    "type": "noise-expression",
+   "sha256": "1f0f92e6c527c5d8f4b434e6eb427fd771e09b5c1de072d5b8db6050661f0e23",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_stone_portland_v1": {
    "type": "noise-expression",
+   "sha256": "d77c7b76379fc02cd24858cb9c5b349069d4065481dd7c4b2ae65f5ca9cbc81b",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_uranium_arlit_v1": {
    "type": "noise-expression",
+   "sha256": "2f22bb8bd176ea6340abe57126e9d6dec7a10116163f141772fe4766eba75606",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_uranium_athabasca_basin_v1": {
    "type": "noise-expression",
+   "sha256": "792a42fcc398cbb4b800c276b83ffcc389cb79bece6edfac3a3f093b629ea5f4",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_uranium_chu_sarysu_v1": {
    "type": "noise-expression",
+   "sha256": "215106db53e45f423a67d8330b7d0a70c5ce7a5186938cc93716cf69c14e512c",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_uranium_erongo_v1": {
    "type": "noise-expression",
+   "sha256": "8717d6bccaf4f08ee5146766f7c14a3f1fe969f8614d2f9a5d0dc8864891697d",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_uranium_krasnokamensk_v1": {
    "type": "noise-expression",
+   "sha256": "557d0e3eba8d8333ec11fdd1d1046fd44608e815e01b4a138778e3ecc96add60",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_uranium_kyzylkum_v1": {
    "type": "noise-expression",
+   "sha256": "11c27c2733c44d188614c3e5e7f6f56eec00b71d56ecd9d5e1c98867c1c63b71",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_hv_uranium_ore_mountains_v1": {
    "type": "noise-expression",
+   "sha256": "0bdbaae500c8bd40244b93b03cc4e1703fe964729ff908dbc075b952a061962e",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_marsh_w_v1": {
    "type": "noise-expression",
@@ -1776,6 +2084,7 @@
   },
   "tn_sd_camargue_v1": {
    "type": "noise-expression",
+   "sha256": "6ee19bd181056d0c4c113deae7dc82d1c4213f688c2bf328bf8e03913a461dbb",
    "dump": "m1",
    "slice": "region-layer",
    "registered": "2026-10-30"
@@ -1789,58 +2098,80 @@
   },
   "tn_sd_coal_donbas_v1": {
    "type": "noise-expression",
+   "sha256": "ea8144d8f54216365fc9298e6789bc14c9bb8e8ed5a695b610a2d02093453901",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_coal_ekibastuz_v1": {
    "type": "noise-expression",
+   "sha256": "d248222b9d0cd97e89046bd1d4ac13d7b7e724a3004b66b2929ddb1f5691f8e6",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_coal_jharia_damodar_v1": {
    "type": "noise-expression",
+   "sha256": "dd431027e9203c68b4af5501e8390001a3fe24982e58f2895c02c1c4a97f76a1",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_coal_kuzbass_v1": {
    "type": "noise-expression",
+   "sha256": "4fa36ca7c8612531c6bbbe66c318a6cf9a4d3695c071c425eec253daae2e5de8",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_coal_nord_pas_de_calais_v1": {
    "type": "noise-expression",
+   "sha256": "a355015432a90e3aac9cd7c8cda14b6b61b5d4650d8c33d92fdc719b999d7093",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_coal_ordos_v1": {
    "type": "noise-expression",
+   "sha256": "a76b8e11bc468e1ed62549e22d90f3587ec5d53e8851d4f6cdd4c1c447391473",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_coal_pocahontas_v1": {
    "type": "noise-expression",
+   "sha256": "eeac45241b122942ebaaabec2a9275427959bfa2ff87ee1a8a56f9c8156f50fe",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_coal_ruhr_v1": {
    "type": "noise-expression",
+   "sha256": "432375247b42d099b2ce0948a4b8138b117029266a71d2b063438b2ed353ac8b",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_coal_south_wales_v1": {
    "type": "noise-expression",
+   "sha256": "0f0e7be03bf00835049b261029a8d23ad4cec884a8418164ce125bd5b9db3dd4",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_coal_upper_silesia_v1": {
    "type": "noise-expression",
+   "sha256": "27c1b05a12f2c253c31ccbf5d683a57727e09dfbce2bbf14c0bb6a1a1c1e5f9e",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_coal_witbank_highveld_v1": {
    "type": "noise-expression",
+   "sha256": "d44b9e314379cb45b5963618f38892fa51db3adccbf76dd6f28ea47bd27b2dfd",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_congolian_v1": {
    "type": "noise-expression",
@@ -1851,51 +2182,70 @@
   },
   "tn_sd_copper_atacama_v1": {
    "type": "noise-expression",
+   "sha256": "e748b64e5d2ba947dcc1ab399fbb8ad0eb368675c7d794b8e2a28be3fb4785b1",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_copper_bor_v1": {
    "type": "noise-expression",
+   "sha256": "752d645ed9aa906b89e4e34079f00cc4c479d05cba0a024c2f6851ee002473c9",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_copper_central_african_copperbelt_v1": {
    "type": "noise-expression",
+   "sha256": "64060e3fb887c4e7eb043a1b0c5fde54d0ab7a2f42db4fbbec9b0bde59658e85",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_copper_iberian_pyrite_belt_v1": {
    "type": "noise-expression",
+   "sha256": "041d2016aa44d3aac0ecd9ee03c25182d78f45fd91dbec531552933f14f2cd07",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_copper_legnica_glogow_v1": {
    "type": "noise-expression",
+   "sha256": "7392af4bc516096d4d690117f41774d0da589fd51e54a275f69de93a84d9d2a4",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_copper_norilsk_v1": {
    "type": "noise-expression",
+   "sha256": "78f20eeccfb3af02b68a904beee7f7bee871db9fb8645eb177f9643ebb7a5fae",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_copper_oyu_tolgoi_v1": {
    "type": "noise-expression",
+   "sha256": "c1ad97c0acd4b0238a523dbccc4c2c8c90f102042694d6b9aac47bd46834c419",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_copper_sarcheshmeh_v1": {
    "type": "noise-expression",
+   "sha256": "7acb06a0c1183b48d596e5d4441dda25a438dbd2b99d8ad08174929953fa433f",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_copper_zhezkazgan_v1": {
    "type": "noise-expression",
+   "sha256": "da947160237cda49065f860c0584846bded16c6a0d210e43bbe42efad58e2e36",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_danube_delta_v1": {
    "type": "noise-expression",
+   "sha256": "4e60a427d9066d1dba0dbcc8978ebb6c13f79401a176f3660d6c70753d55670c",
    "dump": "m1",
    "slice": "region-layer",
    "registered": "2026-10-30"
@@ -1923,6 +2273,7 @@
   },
   "tn_sd_everglades_v1": {
    "type": "noise-expression",
+   "sha256": "d8184e5be24da4b424e38fdad5f5456431a39f38b765a95ad83bd19b04d58684",
    "dump": "m1",
    "slice": "region-layer",
    "registered": "2026-10-30"
@@ -1936,68 +2287,94 @@
   },
   "tn_sd_iron_anshan_v1": {
    "type": "noise-expression",
+   "sha256": "f3cff972fdbf31ff0c28994d470d4b1b5e8d273ca9ac9b4482d73ecdd4bcc5d6",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_iron_barbil_v1": {
    "type": "noise-expression",
+   "sha256": "ddd42712fddb25d47e2ef03cda4c8a31ba33643fe265ddfe332a1d8cda6cbfd0",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_iron_carajas_v1": {
    "type": "noise-expression",
+   "sha256": "0513f9a776276dd25af2012a8fd296d3bc6b6694b7a91c47426d6d4d813a789c",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_iron_gara_djebilet_v1": {
    "type": "noise-expression",
+   "sha256": "4400aab2baf10687780bb080504a7637ac8d5512da2343c7588237fa2fcefeea",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_iron_kediet_ej_jill_v1": {
    "type": "noise-expression",
+   "sha256": "acfa05981e9c38c8f1df9717f1e95b141fa39995b1984de84dcdbae96736480e",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_iron_kiruna_malmberget_v1": {
    "type": "noise-expression",
+   "sha256": "2ed396e4a430a6740afbcf8153a312ce930869e4ece0b0d3b3024f14d0e5573c",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_iron_kryvbas_v1": {
    "type": "noise-expression",
+   "sha256": "61ce4b0a31983d6be250a1ef097e6bd3f3cd6353a0900aa2ed87577b07ec601f",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_iron_kursk_magnetic_anomaly_v1": {
    "type": "noise-expression",
+   "sha256": "50e55abb586b3609d37b43a318e1ba8511c9cd9bdd4372c3ade1ea235eef52f8",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_iron_labrador_trough_v1": {
    "type": "noise-expression",
+   "sha256": "2de0c95195110564736b7bcf9afe706761a49f98847176382c5395563d928116",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_iron_lorraine_minette_v1": {
    "type": "noise-expression",
+   "sha256": "523fe7c6fab729abe3c4fb44cf008234ef3de6e2a0202e82a3cb4eab42944613",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_iron_mesabi_range_v1": {
    "type": "noise-expression",
+   "sha256": "8a41e5c139e71875a70ca4827cd3ee219caecd2f0cbef1596db2297e89e9601e",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_iron_simandou_v1": {
    "type": "noise-expression",
+   "sha256": "5dc0d7411331e07e3b569624d35ec934cc5d165f6374e7d9d057669301bf44f1",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_iron_sishen_v1": {
    "type": "noise-expression",
+   "sha256": "d8b7416a380bf90210db5d61217173b904237c524e71ad85af530359500026a3",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_landes_v1": {
    "type": "noise-expression",
@@ -2008,180 +2385,245 @@
   },
   "tn_sd_mesopotamian_v1": {
    "type": "noise-expression",
+   "sha256": "1c10c371320686fbb05d05eab5910d2ce47526b8484df92514cb9a39429e9181",
    "dump": "m1",
    "slice": "region-layer",
    "registered": "2026-10-30"
   },
   "tn_sd_offshore_angola_block_17_v1": {
    "type": "noise-expression",
+   "sha256": "9e801d96f623ae23b5050566ec63e6625ca211417ee4ef0b02efb46587eda128",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_cantarell_v1": {
    "type": "noise-expression",
+   "sha256": "e2f3d8ff51ca43ce4afc8bfde2df74ca3d87ddcc78c0b634723be94259a1bedf",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_caspian_acg_v1": {
    "type": "noise-expression",
+   "sha256": "49b400cd0c759b4b5e67644b5c9c9c92fb2b5c8e2b8f8f715f96edada0884764",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_ekofisk_v1": {
    "type": "noise-expression",
+   "sha256": "ad70609231e5dd80fe9aac2f55859188735db0ceee7f5a2e44b5b408e8e9c4f8",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_forties_v1": {
    "type": "noise-expression",
+   "sha256": "2e319b98adf648a157aeb4b197a406f7302865cc6444e9d16791dc12fcb7b3dc",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_gulf_of_mexico_deepwater_v1": {
    "type": "noise-expression",
+   "sha256": "28b121c54f3ad3470a0c317167bc28873b726478734af69eb9c3ad4a4c5af26b",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_guyana_stabroek_v1": {
    "type": "noise-expression",
+   "sha256": "3923b1c04d733d74fa95ad078448b3de44758927572ae88b6f99d7104265be58",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_kashagan_v1": {
    "type": "noise-expression",
+   "sha256": "02a5e8e92c00a0b5bdc7eca4c31ddb9d9e4930bfbbd8d4c9dc4d17c8badc2dc0",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_mumbai_high_v1": {
    "type": "noise-expression",
+   "sha256": "e43db0d2584c95cd19eb47f2e69af8e3e45b76e50eb24ad75a64d5ac0709b8f5",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_nigeria_deepwater_v1": {
    "type": "noise-expression",
+   "sha256": "de0f1adbd4246d4db5ccc0b9dafdab761d844878ee0646bdc457d6eaa130635b",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_safaniya_v1": {
    "type": "noise-expression",
+   "sha256": "fe16883d251d923d3bb4afe9df092967411c0889bc4a766a7feb74d4ab240d91",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_tampen_east_shetland_v1": {
    "type": "noise-expression",
+   "sha256": "dfac0b9e597e613bf52b2f5c802152c2bb13642aae5ccd5058218c34580809ba",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_tupi_presalt_v1": {
    "type": "noise-expression",
+   "sha256": "cfc79a461df8990497bd452a103a3484e21612f9b8dbb89bfc304574405a5c36",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_upper_zakum_v1": {
    "type": "noise-expression",
+   "sha256": "f7c234a045e0e9965023f2c9566ea583689a33bbe24bd326bd855db690c76d80",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_offshore_utsira_high_v1": {
    "type": "noise-expression",
+   "sha256": "15c0ca94c033f1829d781c567e065164c201b63c1f2c7cd62389b7620b2ae170",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_ahvaz_v1": {
    "type": "noise-expression",
+   "sha256": "b17961a5ff0bec102d02ca6fc1fffdf08032e88c66d4cf3745439da5cf9ad113",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_athabasca_oil_sands_v1": {
    "type": "noise-expression",
+   "sha256": "c2f479e54a7d616b5142b9898b980b785762ebe77d5b6b5877abec8b03dceb67",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_baku_absheron_v1": {
    "type": "noise-expression",
+   "sha256": "8640cb767015948c386ef39241ba60f9f53cc354fd3d359fa57b3adefa2a6fab",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_basra_kuwait_v1": {
    "type": "noise-expression",
+   "sha256": "7785999effeef532f94657f1b7236d1c9788d1ba7f309b0db200ef829725236c",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_daqing_v1": {
    "type": "noise-expression",
+   "sha256": "a43e73b55a8ec2a919fa7c62b99459177610acc62a52098219ecbca75ad049ea",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_ghawar_v1": {
    "type": "noise-expression",
+   "sha256": "287fad499836e405c6100301b15dfc67d6f4f127a2775af0ebfb0d15a8f100ba",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_hassi_messaoud_v1": {
    "type": "noise-expression",
+   "sha256": "d3450295b4778ae8657e069802525488d5a0241941737dbad0ec45bde1757cda",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_kirkuk_v1": {
    "type": "noise-expression",
+   "sha256": "e40c191309f565c6783fd3b070f635d772e381fa227bfe3015cf2e9be74a3df7",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_niger_delta_v1": {
    "type": "noise-expression",
+   "sha256": "28cf67a2958c417e7373baa4ccc6cc7c62d34acceec0255f992acbe395d5693e",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_orinoco_belt_v1": {
    "type": "noise-expression",
+   "sha256": "54d7b82f072fc547b27b117c35bc9f60dfd3091b1a54a855057f9b7b33553940",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_permian_basin_v1": {
    "type": "noise-expression",
+   "sha256": "1a185983e6b2c923365e6b37a930b22e04e550a7b3a045e119d401c912e1a109",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_samotlor_v1": {
    "type": "noise-expression",
+   "sha256": "16c9ea46695ce2218e1236489d44e5a1d607016e47b4465eaf3d99b9006f5f34",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_sirte_basin_v1": {
    "type": "noise-expression",
+   "sha256": "d11cdeca837c5e8fd94ae146268874408641a4a5dd0a60f6af726225d57cd000",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_tengiz_v1": {
    "type": "noise-expression",
+   "sha256": "1c699c5aa5571292787bc8b4d9b8919759f60b41b9c18f3a0766bb294077d3cd",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_oil_volga_ural_v1": {
    "type": "noise-expression",
+   "sha256": "d5d5336060cf4de121e79290e5788218476fe8c9d6193f40466bcc2c08f0419d",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_okavango_v1": {
    "type": "noise-expression",
+   "sha256": "e2cee7958bafcb77a63140adc68b10133fac15918bafb32eb5765ce068f13009",
    "dump": "m1",
    "slice": "region-layer",
    "registered": "2026-10-30"
   },
   "tn_sd_pantanal_v1": {
    "type": "noise-expression",
+   "sha256": "b82fd1e22094e14b66e3b3f958c58879afeb3efb8d4cee9681f538f18a62c3e5",
    "dump": "m1",
    "slice": "region-layer",
    "registered": "2026-10-30"
   },
   "tn_sd_po_delta_v1": {
    "type": "noise-expression",
+   "sha256": "a9447b636ac1b71decdcdbb54be17a27c7cf0089ef831318b1c9a501470311e3",
    "dump": "m1",
    "slice": "region-layer",
    "registered": "2026-10-30"
   },
   "tn_sd_pripet_v1": {
    "type": "noise-expression",
+   "sha256": "157b7c89d4565471d2ad001235c2d4094098538bda7002146b396d38095e0d15",
    "dump": "m1",
    "slice": "region-layer",
    "registered": "2026-10-30"
@@ -2195,41 +2637,56 @@
   },
   "tn_sd_stone_aswan_v1": {
    "type": "noise-expression",
+   "sha256": "89ace4ba77d80b8a8c40862297057a76ad2c87cb4db2ffdb8d5ff7ce04f0fdc8",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_stone_carrara_v1": {
    "type": "noise-expression",
+   "sha256": "dd5e6794612ba63a0823bc4f08b4613fcaaf3fc32bbe7beb9ddd6cc0e807a921",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_stone_indiana_limestone_v1": {
    "type": "noise-expression",
+   "sha256": "4caac3331739dd6395718d0b70dfb1e2649ed03bbde9051a233ae6f66f8cfeb3",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_stone_makrana_v1": {
    "type": "noise-expression",
+   "sha256": "b91a2532120cc961bfed91beaee6912a604cd460d0bcf4306b23446bba14d0e8",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_stone_marmara_island_v1": {
    "type": "noise-expression",
+   "sha256": "04dd50556f601dc205b9e15fc54a04027e8a1596ca3e14a3b26949a0116d71fd",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_stone_pentelicus_v1": {
    "type": "noise-expression",
+   "sha256": "903b403ea3055ee444d54ec756c534382f7346e9cec8a0395482c57dcad09ffd",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_stone_portland_v1": {
    "type": "noise-expression",
+   "sha256": "d3c360ac7ddc713403cb2c078e9291dd573b42c87c418c08433c596caa5ada81",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_sudd_v1": {
    "type": "noise-expression",
+   "sha256": "977b80d7af9b484a43350b301442a34c20db3cc1459a863e9a3c71ff02ab6037",
    "dump": "m1",
    "slice": "region-layer",
    "registered": "2026-10-30"
@@ -2250,53 +2707,70 @@
   },
   "tn_sd_uranium_arlit_v1": {
    "type": "noise-expression",
+   "sha256": "f4217a4023cb11b7c6d596af6419db0b4fb59ed1d54d51327a546e9127d3ee63",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_uranium_athabasca_basin_v1": {
    "type": "noise-expression",
+   "sha256": "7b45047a4fc00a2c78419ad433263b8ccf10561c5774289a3d5a1b5fb1ac634e",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_uranium_chu_sarysu_v1": {
    "type": "noise-expression",
+   "sha256": "2e1c5103dec22ff81a13508939ba669f96f3b56be11cbb671ef9d226814eed71",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_uranium_erongo_v1": {
    "type": "noise-expression",
+   "sha256": "855645ebd24f69d78c5a925c5d64ad58b987d5ec51972a4a570fde138ba78c10",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_uranium_krasnokamensk_v1": {
    "type": "noise-expression",
+   "sha256": "2c44e04094f5c2410f127d3338070a3a31e5a151c43476d5ef015bbf91066811",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_uranium_kyzylkum_v1": {
    "type": "noise-expression",
+   "sha256": "29ebb4db8d1d846271d7e5e31838e238bd1a5458a3696c42aaa2997e4aedd1f8",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_uranium_ore_mountains_v1": {
    "type": "noise-expression",
+   "sha256": "3398ce2b5ef362982ddd6d31e86da095cc29da41e2d8d7d172bddc34ac4bb15c",
    "dump": "m1",
    "slice": "region-layer",
+   "registered": "2026-10-30"
   },
   "tn_sd_vasyugan_v1": {
    "type": "noise-expression",
+   "sha256": "20bd450809017dd856804018dcc53b74c739d9e2e2a6c16f88fac26ba25868dd",
    "dump": "m1",
    "slice": "region-layer",
    "registered": "2026-10-30"
   },
   "tn_sd_volga_delta_v1": {
    "type": "noise-expression",
+   "sha256": "89837991b7cfefb9737bd9420d6663565a3db32e3ae60b56da342382ccb1f114",
    "dump": "m1",
    "slice": "region-layer",
    "registered": "2026-10-30"
   },
   "tn_sd_wadden_sea_v1": {
    "type": "noise-expression",
+   "sha256": "207f82402989b843b9699405932e794e776e2b365f5fdfa3c2d6f2830fc2b719",
    "dump": "m1",
    "slice": "region-layer",
    "registered": "2026-10-30"
@@ -3367,12 +3841,14 @@
   },
   "tn_aux_ab_v1": {
    "type": "noise-expression",
+   "sha256": "9fca4adccbe8f75164fb5d272423c08a02a7b441b5fd226489142dcfc6f05632",
    "dump": "m2",
    "slice": "climate-tiles",
    "registered": "2026-10-30"
   },
   "tn_moisture_ab_v1": {
    "type": "noise-expression",
+   "sha256": "d83e631bdb230cf69dd8fdb1bd539d0db793b9a399ec1c19e95b8b563238f496",
    "dump": "m2",
    "slice": "climate-tiles",
    "registered": "2026-10-30"
@@ -4107,112 +4583,147 @@
   },
   "tn_hs_coal_p_v1": {
    "type": "noise-expression",
+   "sha256": "db5e224f3bd1d0b57144b04e66e0e608f1ad984e1faa23900ceb84bd2635770f",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_coal_r_v1": {
    "type": "noise-expression",
+   "sha256": "1f9abdbd84e5cbd03c0c92ffdcef7224c5b5504b9f73d0dbe68e4c9d5e9cd498",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_coal_v1": {
    "type": "noise-expression",
+   "sha256": "79abb9ba616bef92de98a998ac22a32759c773a10854b383281e55d3f1651f69",
    "dump": "m1",
    "slice": "resources-enemies",
    "registered": "2026-10-30"
   },
   "tn_hs_copper_ore_p_v1": {
    "type": "noise-expression",
+   "sha256": "7531ba43fdd1a95c4454fdb390082a2ecb04351d3c75511c4f170e2d2f76d7c1",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_copper_ore_r_v1": {
    "type": "noise-expression",
+   "sha256": "214c9e385c382c4d5e70ce8d38fe77776a62f840fea599e9663b156b8d0db837",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_copper_ore_v1": {
    "type": "noise-expression",
+   "sha256": "1d60fc721d7b83a42c2a818f5513a3c5a2b8b21b15d602f16ea3a7b64100ae44",
    "dump": "m1",
    "slice": "resources-enemies",
    "registered": "2026-10-30"
   },
   "tn_hs_crude_oil_p_v1": {
    "type": "noise-expression",
+   "sha256": "c89af7ffe2caecff557f6ee840749df8cfecb6d091f2a037959cbc0a143dd1a0",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_crude_oil_r_v1": {
    "type": "noise-expression",
+   "sha256": "b20fa79d374ec18a81fed355ff0530cd79549abf8a761c43c2f6617b5c6eb230",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_crude_oil_v1": {
    "type": "noise-expression",
+   "sha256": "dceeb760381321fc18fcfb59d6ff5caa635908f3f237dcfc2ce63e17109230f9",
    "dump": "m1",
    "slice": "resources-enemies",
    "registered": "2026-10-30"
   },
   "tn_hs_iron_ore_p_v1": {
    "type": "noise-expression",
+   "sha256": "49f22e0a71aaa940fbcc35d8358f17c0809e730c0df9d5bc7a46804f0f449f34",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_iron_ore_r_v1": {
    "type": "noise-expression",
+   "sha256": "6e529823d8f396ed6625d64470e538f231c471e6ee595d70fda5cc879dea6ab9",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_iron_ore_v1": {
    "type": "noise-expression",
+   "sha256": "6e7013d97cf3f4e4466b60e61b30897fdef301ee83b29b08122ca2b5704a8f71",
    "dump": "m1",
    "slice": "resources-enemies",
    "registered": "2026-10-30"
   },
   "tn_hs_offshore_oil_p_v1": {
    "type": "noise-expression",
+   "sha256": "ca7546021d8d8bc69e2756131434840e5c5d201f3442091566ed1bb54dcf598d",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_offshore_oil_r_v1": {
    "type": "noise-expression",
+   "sha256": "d5227a458ad3ad7efd153d0779f98da86ae1e54fbc014be7c75c85c834cec809",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_offshore_oil_v1": {
    "type": "noise-expression",
+   "sha256": "ab4f10d4e55c0eab9a397f13b04192de5fc05b00afeeaf76bbf8b600e94690d7",
    "dump": "m1",
    "slice": "resources-enemies",
    "registered": "2026-10-30"
   },
   "tn_hs_stone_p_v1": {
    "type": "noise-expression",
+   "sha256": "f0ed457d576fc344dad084205cea88fc3986f7b5ed18dca6b6e4bcfd534e9904",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_stone_r_v1": {
    "type": "noise-expression",
+   "sha256": "67833be53c1bf5c21757ddb56c7b62ad4ca032acf73c95c72e45a9d5610dfc0b",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_stone_v1": {
    "type": "noise-expression",
+   "sha256": "6a4f93756b0f0f4c05e5cde34f0ec875d697f34a6b91172db09e1b0f0c98c16c",
    "dump": "m1",
    "slice": "resources-enemies",
    "registered": "2026-10-30"
   },
   "tn_hs_uranium_ore_p_v1": {
    "type": "noise-expression",
+   "sha256": "0ec5da06364907d50410e6ad6f1b9663aff28b12bbd512ba563b8cdb15828e31",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_uranium_ore_r_v1": {
    "type": "noise-expression",
+   "sha256": "fa2601346ce443db7256b73ea0d845466e829126f0b87e6c5abf378ebd7f31d5",
    "dump": "m1",
    "slice": "resources-enemies",
+   "registered": "2026-10-30"
   },
   "tn_hs_uranium_ore_v1": {
    "type": "noise-expression",
+   "sha256": "3eba11c7b56e012d071009e99872e6422152a34d73d0e0befe53504426033825",
    "dump": "m1",
    "slice": "resources-enemies",
    "registered": "2026-10-30"
@@ -4382,14 +4893,17 @@
   },
   "tn_destroyed_heat_v1": {
    "type": "noise-expression",
+   "sha256": "e7fdc4df897694f8af2513032481e0a037bbfd3cb1da72b40eb93941859d685a",
    "dump": "m1",
    "slice": "destroyed-europe",
    "registered": "2026-10-30"
   },
   "tn_destroyed_zone_v1": {
    "type": "noise-expression",
+   "sha256": "492da35f150d4527b85448335a52f45602bfe2768ff44376994182fdbe92ca90",
    "dump": "m1",
    "slice": "destroyed-europe",
+   "registered": "2026-10-30"
   },
   "tn_temperature_ab_v2": {
    "type": "noise-expression",
@@ -4546,26 +5060,31 @@
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "cd33e6713f77c3ebe934ebfd661abf64cae4558acc27241353fd6cc8b2407935",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "61df3bbe9827b0d3d7f7d28aba913b1682c0061e7002c00ee877422d6907cf47",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "4a565e91660928b5a5f25d7100d678cde2594a07ad7dd1f434f272d2875820ea",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "c5a81e91045dd4cac371ab3c91873f1bbbbaeab61b064790f47fd7be6f8a204b",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "ea9c807f6f792c4c08aab1d1585ab4c8851b99b917b0bb50a8c3eb83a95ba470",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-10-30"
@@ -4589,6 +5108,7 @@
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "fbca0c9e2ab60d5603f4a2f4f48ea076a97bfd42c3fda110ca21c86fb12c2b5f",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-10-30"
@@ -4693,15 +5213,18 @@
   },
   "tn_ridge_run_atlantic_v1": {
    "type": "noise-expression",
+   "sha256": "b3a541bb5a25260dfd2406ef3def74fb0d51747c89e34c8f941a613dcca6c9cf",
    "dump": "m1",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "1bcec7298926423abaa57593fe294c954d182ee1e7b9d4a02410824af67faf43",
    "dump": "m1",
    "registered": "2026-10-30"
   },
   "tn_ridge_run_olde_world_v1": {
    "type": "noise-expression",
+   "sha256": "557a7bedc5c8b3f80d03ea90855a34c1e6c3eabe339ae4123110ec79cb18bfd7",
    "dump": "m1",
    "registered": "2026-10-30"
   },
@@ -4736,44 +5259,70 @@
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "0331a85748db89c91bd842cdf8df10124adfacbacf8e0202489de8761d3b3fc3",
    "dump": "m1",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "664ca61c4c4df712effc6f7b4bbfecab42cc647b113c3d23ee4f100878717863",
    "dump": "m1",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "7fe58b73b32c89accf4687c2755445b45c514e273727b639e6ad45ba33b3fab8",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "47f660cc761e0164f89e883cd0ca3ad1f0ef3176ebf4a1cf9bb3ac0ac36bbc88",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "f09b0cf3589478f43d5bc907e9e18db84143506113dd0087ae06b378f7e9e188",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "e669b72e666c2e689cd3ad037708bfc82d86d4d6c9273ce03f795832698adfc2",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "ffa968e83eb1449e7a839e031298a330c7d63c0e64715308fc675e27d4b3d8da",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "7380314b6a747cd3e0eb17fe44200acc94d28ee6af872e80e9ca1b9cea7ff6d1",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "type": "noise-expression",
+   "sha256": "03abbb522f5d25fd4f62e762b4f99a6203914666f8cb4999e6c7b27288344a32",
+   "dump": "m2",
+   "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "8fef32fdff1cf94cd74f36a9e494285b437390c505fdc34125b8815a98c85dbe",
    "dump": "m1",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "d3c170638b2d1cb9b173560c815dac33d91322ffe8b20e2bbbefabb3fa4811e8",
    "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
   },
+  "tn_highland_fray_tile_v1": {
    "type": "noise-expression",
    "slice": "extras",
    "registered": "2026-10-30"
@@ -4798,480 +5347,948 @@
    "slice": "extras",
    "registered": "2026-10-30"
   },
+  "tn_highland_rise_tile_v1": {
    "type": "noise-expression",
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "type": "noise-expression",
+   "sha256": "847e9ced4a708bf184c5a805b1270d4e7f0cc102ffb1f92cd3ed5ae429c5fff0",
    "dump": "m1",
    "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
+   "sha256": "28f3796589b0e22f7a9bdaf74935683ee1ee522971972f31ff9fd6a49c8ae0a0",
    "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "527a2412611c29360c6b1db82f4bc05bea1c6a518f96ceac9e7fcfc432f8b50c",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "bd33098df24e76865944c686fa716e7aedca6a58940cdc8afd7b0bf579922042",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "d96941b6f59c344fc7a1b2794f851fe981b8d59a684d0ef0cba174c8db5db69a",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "b6f5cf5c086e064359461394aa4ceff8388961992d1354e33402e39e19584aa4",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_ore_all_patches_v1": {
+   "type": "noise-function",
+   "sha256": "5ff55017255febb4ed81a4040bb9e2b4eeb9ab897539b91b77c3c06ca668cb8f",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "f950ee02c541b0596eabb71517f4f8379e7585126fc00adc3f46ce145c5e2755",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_ore_copper_ore_patches_v1": {
+   "type": "noise-expression",
+   "sha256": "f9b20738d65c871eb7905f0b0d02964be25a4afa408791f4ff34ef6e549f68fc",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_ore_crude_oil_patches_v1": {
+   "type": "noise-expression",
+   "sha256": "7db24e3009909949809c1fb434c1681a8aba3bf897a9745a12f513ae002d7b0a",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "0e3cebaca68d866646d1a43388086802e60f6d244102b820a7ae38a648240d5e",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_ore_iron_ore_patches_v1": {
+   "type": "noise-expression",
+   "sha256": "febfcd656fca65d797b77e0ea232e2faf24eb5c1ced56d3f9e9fdcfa8675fe49",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "8a626723fc90e53772059b7f38428f99c3cb93476e79f5c2f5bfc7693d57fe3c",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_ore_uranium_ore_patches_v1": {
+   "type": "noise-expression",
+   "sha256": "ab4893fc107001518878cafc37d2940b25450965ff853e5fb73dedf636f70c91",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "7e64923fb7cab3944f4bcd6a0dd6f8404537049fbaf9abe552d77a57ccb580af",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "798020df3fb9530f596bd38f3749f8ba9163955a2494b4fe075296345e690626",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_coal_jharia_damodar_v1": {
+   "type": "noise-expression",
+   "sha256": "5f28fda4666eef661b102ff03540bec1a9223e95d3165085b4407765ae5e58d1",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "bef663c11913cb44b19edff8dae638e076aaa72554d776628d603a388d3dac8f",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_coal_nord_pas_de_calais_v1": {
+   "type": "noise-expression",
+   "sha256": "56d1d73280ad4745b3119830aadb0809cd24ad3a86f1c0485e4e4ff59db278fa",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "2613bf42cff786f4e9cb4d3a70bb1bc0c948b3d9dd1c4c0053a763bf3a22c28e",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_coal_pocahontas_v1": {
+   "type": "noise-expression",
+   "sha256": "9a703f5beaf55a0fef81018896a207b75676a69814e6f55613b7274da4a02c0b",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "5b5652ca1e4f243705ce997c56990907b2ff15b13693726fe156f275258468aa",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_coal_south_wales_v1": {
+   "type": "noise-expression",
+   "sha256": "f4912a23656cc6e66ce2c4450b4ef46b63b7e349ff4f472a468861dc205ccf4b",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_coal_upper_silesia_v1": {
+   "type": "noise-expression",
+   "sha256": "af4214f4d981d6c68a547c52728c20a9e73d9df179e42acdbb28678c93042a0f",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_coal_witbank_highveld_v1": {
+   "type": "noise-expression",
+   "sha256": "ad23e2aefbdc28a35bd28d445c2c3b5ca42d2b7f9cddaac7062fedfb627533b8",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "e413142205c2c81cc46df06594a651a1aecf0ca5a9047a244e79b829be1a2d67",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "5c984c998f3bc7bd0493431a8523cea4bdc4ff435dbc36c4725be2e1672ff7c2",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_copper_central_african_copperbelt_v1": {
+   "type": "noise-expression",
+   "sha256": "87369ffce963354d4395b27343413ff53ce9fc3c5fe1ef17790e64ebaca699a0",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_copper_iberian_pyrite_belt_v1": {
+   "type": "noise-expression",
+   "sha256": "f16920b9754274be3cc8b74439e91329c5e9e067f54128e7493ec755fd237cc6",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_copper_legnica_glogow_v1": {
+   "type": "noise-expression",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_copper_oyu_tolgoi_v1": {
+   "type": "noise-expression",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_copper_sarcheshmeh_v1": {
+   "type": "noise-expression",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_copper_zhezkazgan_v1": {
+   "type": "noise-expression",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_iron_gara_djebilet_v1": {
+   "type": "noise-expression",
+   "sha256": "b4dba011923c03a1cf2652e60897c4a168ac9f8181d005773cfbc02bf11631e1",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_iron_kediet_ej_jill_v1": {
+   "type": "noise-expression",
+   "sha256": "03cfb51a4609547e33465459712ad790a0b409ec70266833f3f446b2ffdf9ddf",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_iron_kiruna_malmberget_v1": {
+   "type": "noise-expression",
+   "sha256": "dff27c016baa59fd8db31b0e9dbaa4fcc83b697c2ef70b9fe7f301cd74a76c6c",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "ccad7106c3dc9ed1f118b48f72bfdb72378f1827c072aa82a660a1ed3fe84867",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_iron_kursk_magnetic_anomaly_v1": {
+   "type": "noise-expression",
+   "sha256": "2b623d0fc68a3ccbac8d8a9fed245c2d2c5a05edd84ece3a84ac175c7af3a988",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_iron_labrador_trough_v1": {
+   "type": "noise-expression",
+   "sha256": "77e85985cb4adf9fd3dae83bf107930774115f559ef980980b900249a1b71dee",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_iron_lorraine_minette_v1": {
+   "type": "noise-expression",
+   "sha256": "d3099b3d29b2001185580dbf9ea7511905012172ce2f7f7a5774cf71864b76cf",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_iron_mesabi_range_v1": {
+   "type": "noise-expression",
+   "sha256": "9ceb64af64d56b3f00fbb381651c978ba7b5cd0e89121f475e3fe633dc4b8487",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "9831aa884e4cd12dcf05e817f7e60f9a7c1a9b7c1b4ddeca440599f77e86aafc",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "b84a4f248fb5742a294a1be22695fd15d4dd8bb795fdca4dcba04fee04a15b60",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_angola_block_17_v1": {
+   "type": "noise-expression",
+   "sha256": "f2a1bed20435fa8e171445a8cc07dee52b53174683c57addecd10345bb6a961c",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_cantarell_v1": {
+   "type": "noise-expression",
+   "sha256": "cbf2584bc014f0ddd7f2e9371ca1d7a9c5ac615195d4ffe9e0bed81b593fef84",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_caspian_acg_v1": {
+   "type": "noise-expression",
+   "sha256": "afb2c6e90d520a0cbe3fe2781ba9b36e629ce70d40c7a25c7765d47b04afd5a8",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_ekofisk_v1": {
+   "type": "noise-expression",
+   "sha256": "6280ef2082b92faae37b8e2ed3f7a95f49b863ba7e8a58917cc42451166f94ea",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_forties_v1": {
+   "type": "noise-expression",
+   "sha256": "41fe01f4193c84aeced27c6e6f9781053723edf39c44f0d8d2eed088692c5ca0",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_gulf_of_mexico_deepwater_v1": {
+   "type": "noise-expression",
+   "sha256": "54f0baf1786b80537c44eabd21ddb619bbaab04e219aa42661f1b94cd57c4b58",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_guyana_stabroek_v1": {
+   "type": "noise-expression",
+   "sha256": "a2a2259011d1c0011b22c971b389cbfe0d03785ec2fe6a0aada4e5ca7adcfcf9",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_kashagan_v1": {
+   "type": "noise-expression",
+   "sha256": "55802f97df20bbbe1eca30e2374fdbd26580f717f356f6bbedd7b6fab878eb65",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_mumbai_high_v1": {
+   "type": "noise-expression",
+   "sha256": "b307b563142a09f17368f75e068247b9aa3a2869f81fce32feecc657e1ff4ab3",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_nigeria_deepwater_v1": {
+   "type": "noise-expression",
+   "sha256": "9ffa2221709e8477813530f6f37e118f904dd24b2ec40b1b2ea42640caf696aa",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_tampen_east_shetland_v1": {
+   "type": "noise-expression",
+   "sha256": "87fc494c65df30317efff33459eddf48fed9eace9bdd4035186d7cd0f5ea71ee",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_tupi_presalt_v1": {
+   "type": "noise-expression",
+   "sha256": "42610e67584bd8cdec735e548823bd1560fb57ea1ce26ece595f74868cec9109",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_upper_zakum_v1": {
+   "type": "noise-expression",
+   "sha256": "aa7e835e0adc88757a201ef2135a69e988fee6a9b907d0c85e41c1ce48c3702c",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_offshore_utsira_high_v1": {
+   "type": "noise-expression",
+   "sha256": "d9acb0d6f390467505742e4a86f3887e2ed79d85d568bf4bbc939bd356cdf943",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "d16f606d987a260f4a47446ffb391b7d4e7a0883b0edb192cc36a535d65c5848",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_oil_athabasca_oil_sands_v1": {
+   "type": "noise-expression",
+   "sha256": "76c0ae223c91551b65aa3af53b538ab1f313c6ca43fe9fbdb5f29af7eff353a7",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_oil_baku_absheron_v1": {
+   "type": "noise-expression",
+   "sha256": "97e481e24465193e7f3dc3112a38dbb5edcb3313b8566f7cf221cebc3d773a03",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_oil_basra_kuwait_v1": {
+   "type": "noise-expression",
+   "sha256": "707b9fb941b4446351d1855b71b3689329d5fa1c1810a503943d6aa2a2faa9e0",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "a77dcbb2dbd9e689c1b02d7fc7a667101e7740d684eb821df003cba3532c6a4b",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "3b59dc7cebdbc3268de847ae5eba6e4745f2aac425478facce0220ca1b4a5f45",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_oil_hassi_messaoud_v1": {
+   "type": "noise-expression",
+   "sha256": "39905d9a6a9fc9726351db401b3fc451e1f97a155c087e50735ecc507402c7a5",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "635d98e8faa402bfd810a0e8b64b2b0efb7dfa253897bf0c80026f9874ff1e66",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "cb4c13db04a7f1eba4c43f73abe934baab449d8cfbb2d5c29db2513706b3f523",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_oil_orinoco_belt_v1": {
+   "type": "noise-expression",
+   "sha256": "0935036af98f7dc05eb02361c4c41f71ebb8baa21261eaa4ab94ed7cbe75a548",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_oil_permian_basin_v1": {
+   "type": "noise-expression",
+   "sha256": "9b04c9852217dce646b06e81575f1d2196b4a6a86da3abf6809552ef418f097d",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "bb5666079ff97b7e0ffc7ecbc125bd28830462dea329670ee388043cabfd8ea1",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "00efcefafba05ec2d4c1c42ddd3516e9762f04127a302403b179b385372e356d",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "e7e901fea295fa4cd3ad8acd440f5721955d854c81f5d484f1a72c196b164bfd",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "cab83724476986562ff223bf784a66b184b0325ce470061830eace2acc5458cf",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "20490080f0c9fdbfeabd12666db439a19586eb8b7934458b2b6a04caa879f2e7",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "aaf8a664cc1b8d465c54c70d69c405a3187f92406b5570c842f8bdd96f5e4991",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_stone_indiana_limestone_v1": {
+   "type": "noise-expression",
+   "sha256": "a11ba45118b575cced0e2409683b8dfb2b9e19b1ada1f318c7fc84c634596a14",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "8092312a059604765cfcf7dfdc61cc3b5b072f7419ddb363155c5ce8f8de9618",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_stone_marmara_island_v1": {
+   "type": "noise-expression",
+   "sha256": "fe4b59113fe9854f836fabbd33bcf29ec83125b64b8dbc06bd6f4cc70a415b7d",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_stone_pentelicus_v1": {
+   "type": "noise-expression",
+   "sha256": "af28cd7e1382e1bed8bc2968b50316020473d04771f6bec5480eb6d94cac0c47",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "7093c5a0f4f0eaae6cd1b551793e71e21c83e7315cdb711a2206993d053b9c7b",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "23863b446ef859ff54a40cc75eb14ef0689273883c585680d3e19e1915f17d10",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_uranium_athabasca_basin_v1": {
+   "type": "noise-expression",
+   "sha256": "66eed258f9b966f6b16c5cc487e1fa0af9866bcbae80b870ec5a0319bac34b21",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_uranium_chu_sarysu_v1": {
+   "type": "noise-expression",
+   "sha256": "b8b36b12fb7b48a881a403f82183f32acce49f2a60104ce99a8796c0e30b54f1",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "098c65e5863f23a0c3bd4ec727a7dfb773a754baed0a98e74f8714888e186a36",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_uranium_krasnokamensk_v1": {
+   "type": "noise-expression",
+   "sha256": "487760434b0bd1f1f706460cf475beca568f195d90f590270ac6299f38d05d38",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_uranium_kyzylkum_v1": {
+   "type": "noise-expression",
+   "sha256": "5b17d051c709ab423da990e9f81bd8ba21158ac0bd65e87c5c72fb5793abb598",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_pd_uranium_ore_mountains_v1": {
+   "type": "noise-expression",
+   "sha256": "5e5d71e9f7e74e3aec9b39deec97f7cd42a8939412445ace6cd2ce4d26ff3cd3",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "14e4c487419c2576406b90b6d23193d0222f671b7028c0db43179aa92f06967d",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "2ded8ad613d0fa32fbb50483c0e7c3dd4e3e9d6871d2a15800a7387bf2f228b2",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "f5d982c61691d741e911e1c47f2a9fb748a6ea26e411951f57527f54651decfd",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "9d395feeb1091df9f2b72123982735689f3e690994a371c33a3851002ad97bb8",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "7423dd6d09903d01d0b83b5ca9e9d264412564c46b5ae5b77c5226444d6ea7bd",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "1217549c2ceab82bb5f729f85ad8f186d515cbaa9b9d39917a6de8fdb8d4d385",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "51fc4a2ceb4098f351ba282795a8bc04914725e1028fe30123917201a579964b",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "8819bac5940b49ceae303d4cb86ae2f93c78059d125d27f5571d6fad5d2c9166",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_vrock_big_sand_rock_v2": {
+   "type": "noise-expression",
+   "sha256": "5190c48ab9e5dd2ff6b9f8adf679732fd5ab45678bfef024ba85cf2d29cbfab7",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "b0a64740fb757d7a2bad711c91c0ff2a60561e9307439cdf13583bd258e8549c",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "3a7eb1a7f752161493ec6660547922dd47dc580134f5db04fb318a628745c08c",
+   "dump": "m1",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "18c5258fdda500f020a8dddf4ebe824b6b7c3d39ea9def83e01417bf4ab2baf1",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "991e65dd45b50bdadd31e9d5397622d28fc4a769c7211857117c1622f2ed5e13",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "4548024198c4bc6643c5a170e06cebbc7361bba1243c52f02e91a24b89478b08",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "1ac031bfd27c9480f3d0414f983f7c8a28a76b992601455d32db83e12e11fe32",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "b94cab0c39fe2ca13420a10be572afea9d88492b8b78bd5f7fcb42fcad453293",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "6e5cc3e92ee9452f4d5f8bd3244abc27f695468f42a6a1495a1873d4a008ce7b",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "f6f2e01a1c9c87ac360b81bfa84833f4158660441fb867c5304b29bcc84683eb",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "149d9b5968abbdf581c4e10a2155ee6dc62a8640e73be9726ce91d9629559c79",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "a98c8d64d4307ca1305087285de87aaac1b8199055e1e365436ab109d52a5c1b",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "583c61a62b6f1ba13cae869aa82f250f74b7a0c6b9058c24cd5d454a39657661",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "8410bb14cac40a3a86c28983466806469e37c8c8f5a3588069a96bd4ea441f87",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "b7139b4d9c45cc633ec00e89f974e9bbc3ff4a084436d764752747c85007b01a",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "749ed2b97f68b9e5776e93b66a0272f64525ed0e41a0411bc94eb37323a51019",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_tile_temperature_veg": {
+   "type": "noise-expression",
+   "sha256": "b324cfd9d92df7658fdf69fe1dd7c2925b975a002ec0d14b4c333df191ef10cf",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+   "type": "noise-expression",
+   "sha256": "02bcd1071f8e3df4126686db38b2d81bd8307219af395d3a73296f56ff5851de",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-10-30"
+  },
+  "tn_ore_offshore_oil_patches_v1": {
+   "type": "noise-expression",
+   "sha256": "89cfc3803c8653f1aeae7c853b900b09a99186f7c69ad2abbf20e4aab7cdb39f",
+   "dump": "m3",
    "slice": "extras",
    "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
    "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "dump": "m1",
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "dump": "m1",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
   },
+   "type": "noise-expression",
    "slice": "extras",
-   "registered": "2026-10-30"
-  },
-   "slice": "extras",
-   "registered": "2026-10-30"
-  },
   }
  }
 }

@@ -68,13 +68,29 @@ end
 water_hook(H.fords.tile, {H.fords.key, TL.marsh.water_shallow.key}, H.fords.off, "ford and marsh hook")
 water_hook(TL.marsh.water_mud.tile, {TL.marsh.water_mud.key}, TL.marsh.water_mud.off, "marsh hook")
 
+local function mixed_noise(seed1)
+  local NS = TL.noise_share
+  local n, steps = #NS.fields, #NS.steps
+  local seed = tonumber(seed1)
+  local j = math.floor(seed / n)
+  local a = seed % n
+  local b = (a + NS.steps[j % steps + 1]) % n
+  local signs = math.floor(j / steps) % NS.sign_patterns
+  local w = num(NS.weight)
+  return "(" .. (signs >= 2 and "-" or "") .. w .. " * " .. NS.fields[a + 1] .. (signs % 2 == 1 and " - " or " + ") ..
+    w .. " * " .. NS.fields[b + 1] .. ")"
+end
+
 -- The vanilla land tiles beside Alien Biomes: AB keeps their autoplace on the
 -- prototypes and takes them off Nauvis's tile list; re-listed here behind the gate, each adds its key.
 local function vanilla_hooks()
   local V = TL.vanilla
+  for i, name in ipairs(V.tiles) do
     local tile = data.raw.tile[name]
     if tile and tile.autoplace and tile.autoplace.probability_expression then
       tile.autoplace.probability_expression = hook("(" .. tostring(tile.autoplace.probability_expression) .. ") + " ..
+        V.keys[name] .. " + " .. V.mix.key .. " * " .. mixed_noise(V.mix.first_seed1 + i - 1) ..
+        " * (" .. V.keys[name] .. " > " .. num(V.bonus / 2) .. ")", V.off)
       register(name)
     else
       log(cfg.identity.title .. ": vanilla tile " .. name .. " is missing or has no autoplace")
@@ -82,16 +98,23 @@ local function vanilla_hooks()
   end
 end
 
+-- A tile score with the three climate fields read through the grain's copies (config.lua climate.grain)
+-- and its own noise through the shared fields.
 local function grain_scores(text)
   for field, key in pairs(cfg.climate.grain.keys) do
     text = string.gsub(text, "%f[%w_:]" .. field .. "%f[^%w_:]", key)
   end
 end
 
+-- The grain's copies reach every Alien Biomes land tile: snow, volcanic and the adopted tiles too, and ice
+-- gives up score on its on branch (config.lua climate.grain.ice).
+local function grain_hooks(excluded, n)
+  local G = cfg.climate.grain
   local others = {}
   for name in pairs(tile_settings or {}) do
     local t = data.raw.tile[name]
     if not excluded[name] and t and t.autoplace and t.autoplace.probability_expression then
+      for _, p in ipairs(G.prefixes) do
         if string.sub(name, 1, #p) == p then
           others[#others + 1] = name
           break
@@ -103,9 +126,56 @@ end
   for _, name in ipairs(others) do
     local autoplace = data.raw.tile[name].autoplace
     local original = "(" .. tostring(autoplace.probability_expression) .. ")"
+    local on = grain_scores(original)
+    if G.ice[name] then
+      on = on .. " - " .. num(G.ice[name])
+    end
+    autoplace.probability_expression = hook(on, original)
+  end
+  log(cfg.identity.title .. ": climate grain copies on " .. (n + #others) .. " Alien Biomes tiles")
+end
+
+-- Vegetation tiles read a temperature of their own, excluded or adopted alike (config.lua climate.grain),
+-- and the brown green grasses give up score on their on branch, which alone holds the exclusion key.
+local function vegetation_hooks()
+  local G, key = cfg.climate.grain, TL.exclude.key
   for name in pairs(tile_settings or {}) do
+    local autoplace = data.raw.tile[name] and data.raw.tile[name].autoplace
+    local text = autoplace and autoplace.probability_expression
+    if text and string.sub(name, 1, #G.veg_prefix) == G.veg_prefix then
+      text = string.gsub(text, "%f[%w_:]" .. G.keys.temperature .. "%f[^%w_:]", G.veg_key)
+      if G.brown[name] then
+        text = string.gsub(text, "%f[%w_]" .. key .. "%f[^%w_]", key .. " - " .. num(G.brown[name]))
+      end
+      autoplace.probability_expression = text
+    end
+  end
+end
+
 -- Only the adopted Alien Biomes tiles mix into temperate bands: every other AB land
 -- tile on Nauvis adds the exclusion key, and its own score stays the off value.
+-- The red palette's tiles take the max with their score (config.lua destroyed.chaos): the exclusion is
+-- -inf in the temperate band, and these tiles must win there inside the zone.
+local function with_chaos(name, text)
+  for _, t in ipairs(cfg.destroyed.chaos.tiles) do
+    if t.tile == name then
+      return "max(" .. text .. ", " .. t.body .. ")"
+    end
+  end
+    if t.tile == name then
+      return "max(" .. text .. ", " .. t.body .. ")"
+    end
+  end
+  return text
+end
+
+    if t.tile == name then
+      return "max(" .. text .. ", " .. t.body .. ")"
+    end
+  end
+  return text
+end
+
 local function exclusion_hooks()
   local X = TL.exclude
   local adopted = {}
@@ -132,6 +202,8 @@ local function exclusion_hooks()
     local original = "(" .. tostring(autoplace.probability_expression) .. ")"
   end
   log(cfg.identity.title .. ": temperate exclusion on " .. #names .. " Alien Biomes tiles")
+  grain_hooks(excluded, #names)
+  vegetation_hooks()
 end
 
 local PALM = TL.palm
@@ -206,7 +278,19 @@ local function marsh_grass_hook()
   tile.autoplace.probability_expression = hook(o .. " + " .. G.key, o)
 end
 
+-- Without Alien Biomes: the highland's lean on the stony vanilla tiles, (score) + the ground key behind the gate
+-- (ridges.lua); beside it their tile keys name the lean with the bonus (presets.lua).
+local function ground_hooks()
+  for _, name in ipairs(TL.vanilla.stony) do
     local tile = data.raw.tile[name]
+    local original = tile and tile.autoplace and tile.autoplace.probability_expression
+    if original ~= nil then
+      local o = "(" .. tostring(original) .. ")"
+      tile.autoplace.probability_expression = hook(o .. " + " .. cfg.keys.ground, o)
+    end
+  end
+end
+
 -- so the map view and the new-game preview tell them apart. Map colours only; no world changes.
 local function heat_map_colors()
   local C = cfg.destroyed.map_colors
@@ -227,6 +311,7 @@ if AB then
   end
 else
   marsh_grass_hook()
+  ground_hooks()
 end
 
 -- back on Earth presets: AB nils their
@@ -277,11 +362,27 @@ local function extend_restriction(autoplace)
 end
 
 -- The living trees: each rebuilt behind the gate with its probability and richness keys.
+-- 1 where AB's trees are off (config.lua tiles.scan), 0 where they grow.
+local function tree_band()
+  return "(1 - " .. TL.scan.body .. ")"
+end
+
+-- The restored trees stand on the adopted tiles too and stop where tiles.scan.body opens to AB's trees, so a
+-- forest crosses the adopted AB tiles inside the band: AB's trees are off there and vanilla's were not listed.
 local function restore_trees(R)
   local n = 0
+  local band = tree_band()
+  local tiles = land_tiles()
+  for _, t in ipairs(TL.ab_adopted) do
+      tiles[#tiles + 1] = t
+    end
+  end
   for _, row in ipairs(VAN.trees) do
     local tree, names = data.raw.tree[row.tree], R.trees[row.tree]
     if tree and names then
+      tree.autoplace = {control = row.control, order = row.order,
+                        probability_expression = hook(names.p .. " * " .. band, R.tree_off),
+                        richness_expression = hook(names.r, R.tree_off), tile_restriction = tiles}
       n = n + 1
     else
       log(cfg.identity.title .. ": vanilla tree " .. row.tree .. " is missing; not restored")
@@ -307,16 +408,30 @@ local function restore_rocks(R)
   return n
 end
 
+-- A base game text on the vanilla-scale temperature, which is what its boxes mean.
+local function vanilla_scale(text)
+  return (string.gsub(text, "%f[%w_]temperature%f[^%w_]", TR.temperature))
+end
+
   local list, seen = land_tiles(), {}
   for _, t in ipairs(list) do
     seen[t] = true
   end
+-- The decoratives AB keeps but takes off Nauvis: (own score) + key behind the gate, re-listed. The off value
+-- reads none of these locals, so the vanilla-scale text changes no other world.
 local function relist_decoratives(R)
   local n = 0
   for _, name in ipairs(VAN.relist) do
     local proto, key = data.raw["optimized-decorative"][name], R.decoratives[name]
     local autoplace = proto and proto.autoplace
     if autoplace and autoplace.probability_expression ~= nil and key then
+      autoplace.probability_expression = hook("(" .. vanilla_scale(tostring(autoplace.probability_expression)) ..
+        ") + " .. key, R.deco_off)
+      for k, v in pairs(autoplace.local_expressions or {}) do
+        if type(v) == "string" then
+          autoplace.local_expressions[k] = vanilla_scale(v)
+        end
+      end
       list_on_nauvis("decorative", name)
       n = n + 1
     else
@@ -341,12 +456,60 @@ local function extend_restrictions()
   return n
 end
 
+-- The base game's score where vanilla land lies, AB's elsewhere (config.lua trees.decor). A row's own text
+-- reads its box under the local D.box, since six of these still hold vanilla's region_box on the other branch.
+local function decor_hooks()
+  local D = TR.decor
+  local n = 0
+  for _, row in ipairs(VAN.decor) do
+    local proto = data.raw["optimized-decorative"][row.name]
     local autoplace = proto and proto.autoplace
+    if autoplace and autoplace.probability_expression ~= nil then
+      local own = "(" .. tostring(autoplace.probability_expression) .. ")"
+      local text = string.gsub(row.text, "%f[%w_]region_box%f[^%w_]", D.box)
+      if row.box then
+        autoplace.local_expressions = autoplace.local_expressions or {}
+        autoplace.local_expressions[D.box] = vanilla_scale(row.box)
+      end
+      local thin = D.thin[row.name]
+      local on = vanilla_scale(text)
+      -- `if` evaluates both branches, and a text AB left alone places nothing on its land at this temperature.
+      if tostring(autoplace.probability_expression) ~= row.text then
+        on = "if(" .. TL.scan.body .. " > " .. num(H.threshold) .. ", " ..
+          (thin and (num(thin) .. " * " .. own) or own) .. ", " .. on .. ")"
+      end
+      autoplace.probability_expression = hook(on, own)
+      n = n + 1
+    else
+      log(cfg.identity.title .. ": vanilla decorative " .. row.name .. " is missing or has no autoplace; no band score")
+    end
+  end
+  return n
+end
+
+-- The same for the dead trees: AB's score elsewhere, and where vanilla land lies the base game's, off the
+-- restored trees' keys, which read the vanilla-scale temperature.
+local function dead_hooks(R)
   for _, name in ipairs(VAN.dead_trees) do
+    local autoplace = data.raw.tree[name] and data.raw.tree[name].autoplace
+    if autoplace and autoplace.probability_expression ~= nil then
+      local keys = {}
+      for i, t in ipairs(VAN.dead_scores[name]) do
+        keys[i] = R.trees[t].p
+      end
+      local own = "(" .. tostring(autoplace.probability_expression) .. ")"
+      autoplace.probability_expression = hook("if(" .. TL.scan.body .. " > " .. num(H.threshold) .. ", " .. own ..
+        ", " .. string.format(VAN.dead_score, table.concat(keys, ", ")) .. ")", own)
+    end
+  end
+end
+
 local function restore_vanilla()
   local R = TR.restore
   local trees, rocks, relisted, extended = restore_trees(R), restore_rocks(R), relist_decoratives(R),
     extend_restrictions()
+  decor_hooks()
+  dead_hooks(R)
   log(cfg.identity.title .. ": restored " .. trees .. " vanilla trees and " .. rocks .. " rocks and decals, " ..
     "re-listed " .. relisted .. " decoratives, extended " .. extended .. " restrictions beside Alien Biomes")
 end
@@ -386,6 +549,8 @@ local function boost_hooks()
   end
   for _, name in ipairs(names) do
     local autoplace = data.raw.tree[name].autoplace
+    autoplace.probability_expression = TREES.boost(tostring(autoplace.probability_expression), base_tree[name],
+      AB and tree_band())
   end
   log(cfg.identity.title .. ": the great-forests hook on " .. #names .. " living trees")
 end
@@ -434,16 +599,44 @@ local function list_hooks()
   log(cfg.identity.title .. ": the list hook on " .. n .. " Alien Biomes autoplaces")
 end
 
+-- The highland lift on Alien Biomes' big rocks (ridges.lua): they read a noise of their own, not rock_density,
+-- and stand on Alien Biomes' tiles, which is most of a range outside the temperate band. Each adds the key to
+-- its peak, behind the gate, so on every world without an Earth preset the hook folds to Alien Biomes' text.
+local function rock_lift_hooks()
+  local RK = cfg.ridges.rocks
+  local names = {}
+  for name, proto in pairs(data.raw["simple-entity"] or {}) do
+    local locals = proto.autoplace and proto.autoplace.local_expressions
+    local skip = not (locals and locals.peaks_expr)
+    for _, s in ipairs(RK.ab_skip) do
+      skip = skip or string.find(name, s, 1, true) ~= nil
+    end
+    for _, p in ipairs(RK.ab_prefixes) do
+      if not skip and string.sub(name, 1, #p) == p then
+        names[#names + 1] = name
+        break
+      end
+    end
+  end
+  table.sort(names)
   for _, name in ipairs(names) do
+    local locals = data.raw["simple-entity"][name].autoplace.local_expressions
+    locals.peaks_expr = hook(locals.peaks_expr .. " + " .. cfg.keys.rock_lift, locals.peaks_expr)
+  end
+  log(cfg.identity.title .. ": the highland rock hook on " .. #names .. " Alien Biomes rocks")
+end
+
 if AB then
   restore_vanilla()
   list_hooks()
+  rock_lift_hooks()
 end
 boost_hooks()
 
   for name in pairs(data.raw.tree or {}) do
     table.sort(names)
     for _, name in ipairs(names) do
+      local own = "(" .. tostring(autoplace.probability_expression) .. ")"
 -- ore of config.lua's ridges group whose resource has an autoplace, a wrapper body holds the live
 -- probability expression (as the pack leaves it: base, Alien Biomes, the Oil Rig and the rest load
 -- before this) times the ore clearance of prototypes/expressions/ridges.lua, and every Terra Nauvis
@@ -594,8 +787,25 @@ local function offshore_wrappers(W, keys)
   end
 end
 
+-- Natural regular patches (config.lua resources.natural): each live patch expression's own text, its call
+-- moved to the Earth copy of vanilla's function, with the preset's redirect of the live name. The wrappers
+-- above keep reading the live autoplace, whose text names the live patch expression, so they stay as they
+-- are, and a mod that replaced a patch expression keeps its own.
+local function natural_patches(W, keys)
+  local NP = RS.natural
+  for _, b in ipairs(NP.bodies) do
+    local live = NE[b.live]
+    local text = live and text_of(live.expression)
+    if type(text) == "string" and string.find(text, NP.vanilla_fn, 1, true) then
+      W[#W + 1] = {type = "noise-expression", name = b.name, expression = (string.gsub(text, NP.vanilla_fn, NP.fn))}
+      keys[b.live] = b.name
+    end
+  end
+end
+
 ridge_wrappers()
 local W, keys = {}, {}
+natural_patches(W, keys)
 ore_wrappers(W, keys)
 enemy_wrapper(W, keys)
 offshore_wrappers(W, keys)

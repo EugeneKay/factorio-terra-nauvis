@@ -21,3 +21,4 @@ in the same commit, and the commit cites the timed run that called for it.
 | File | sha256 | Role |
 |---|---|---|
 | `europe.json` | `32fb091c247b7436c03f158fe557d9e28b93bc02e5b5d5b55ac956d4f9253e4e` | tool input |
+| `manifest-europe.json` | `c49f8302f788cc6401f6acea3b314d2b1caf3dd7e075abb9c21177a3b55b436b` | emission manifest |

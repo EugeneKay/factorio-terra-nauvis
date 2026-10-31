@@ -6,6 +6,9 @@
 -- Per new chunk of the Nauvis surface, a pure function of the chunk's position, its generated tiles and
 -- the shipped K+ data of the save's map and scale (scripts/generated/, tools/build_geo.py --bandfix): the
 -- map's K+ table (its K pixels at every offered scale with the reference classes of their neighbours)
+-- and the scale's mask table (the K+ pixels inside a waterway, canal, dam or basin footprint there). The tables
+-- read the reference with the sea's thin channels as water and the islets the raster lost as land
+-- (tools/build_geo.py bandfix_classes), so straits and islets under a pixel come back here:
 --   1. the chunk's reference pixels: geo tile = world tile + the city offset read once in on_init, pixel
 --      floor(geo / scale) + the map's radius, tile offset geo mod scale (the coordinate chain's frame);
 --   2. a chunk with no K pixel returns before reading a tile;
@@ -14,6 +17,9 @@
 --      and marsh water, are neither, so the right tiles of a coast cost nothing;
 --   4. such a tile takes its pixel's class when it lies outside the spawn keep disc and the reference, blurred
 --      by a quadratic B-spline over the pixel's 3 x 3, reads its pixel's class at it by more than
+--      a threshold (bandfix.smooth): about a fifth of a pixel from a straight coast, so the coast follows the
+--      reference on every shore, however far the coast fit strays, and the line where a write stops is a rounded,
+--      wobbling curve instead of the raster's stairs. A pixel whose band
 --      region holds no 2 x 2 block of tiles (an islet or a channel narrower than a pixel) is drawn as a blob
 --      around its centre, whatever the blur reads there; below smooth.min_scale the rule is
 --      the closed per-pixel rule. Land of an open-sea pixel (no land around it) becomes deep water, and where the chunk
@@ -23,6 +29,10 @@
 --      strip one tile wide takes its neighbour in the box along, when that neighbour belongs to the same
 --      reference class;
 --   7. the written land takes the trees, rocks and decoratives of the land beside it (scripts/coastcover.lua).
+-- it decides land and water from its own chunk only, so generation order does not change them: what it reads
+-- outside its own chunk can only pick the name of a land tile. No player state, no storage write. Decoded
+-- table rows are a cache of shipped data, so a joining peer that starts with an empty cache computes the same
+-- tiles.
 local cfg = require("prototypes.config")
 local guards = require("scripts.guards")
 local coastcover = require("scripts.coastcover")
@@ -86,6 +96,8 @@ local EDGE = 0
 local EDGE_SIDE = {}
 local WATER, KEEP, NONLAND, NONLAND_SET, FALLBACK = {}, {}, {}, {}, nil
 local GROUND, GROUND_STAMP = nil, nil
+-- The corner ground (config.lua bandfix.smooth.corners), on the maps it lists: CORNERS is that table.
+local CORNERS, CORNER, CORNER_READ = nil, {}, {}
 
 ------------------------------------------------------------------------------------------------ the tables
 
@@ -116,14 +128,20 @@ local function decode(payload, masks)
   local first, text = vals[1], concat(parts)
   if masks then
     local mv = varints(masks)
+    local c, from, out = mv[1], 1, {}
     for k = 2, #mv do
       local x = mv[k]
       local len = floor(x / 2) + 1
       if x % 2 == 1 then
         local a = c - first + 1
+        out[#out + 1] = sub(text, from, a - 1)
+        out[#out + 1] = (gsub(sub(text, a, a + len - 1), ".", MASKED))
+        from = a + len
       end
       c = c + len
     end
+    out[#out + 1] = sub(text, from)
+    text = concat(out)
   end
   return {first = first, text = text}
 end
@@ -619,13 +637,46 @@ local function extend_axis(q, dx, dy)
   end
 end
 
+-- The land near written land on a world lattice reaching past the chunk (config.lua bandfix.smooth.corners), each
+-- node grown over reach steps: a node's value depends only on nodes within reach of it, all of them read by every
+-- chunk that holds the node, so chunks agree along their borders. Only every other node is read, by world parity,
+-- so every chunk reads the same nodes for half the calls; the first step fills the rest.
+local function shared_lattice(surface)
+  local step, reach = CORNERS.step, CORNERS.reach
+  local margin = reach + 1
+  local n = floor(CT / step) + 1 + 2 * margin
+  local x0, y0 = X0 - margin * step, Y0 - margin * step
+  local odd = floor(x0 / step) + floor(y0 / step)
+  local cells = {}
+  for j = 0, n - 1 do
+    for i = (odd + j) % 2, n - 1, 2 do
+      local t = surface.get_tile(x0 + i * step, y0 + j * step)
+      local name = t.valid and t.name
+      if name and not NONLAND_SET[name] and name ~= "out-of-map" then
+        cells[j * n + i] = name
+      end
+    end
+  end
+  for _ = 1, reach do
     local grown = {}
     for j = 0, n - 1 do
       for i = 0, n - 1 do
         local k = j * n + i
+        grown[k] = cells[k] or (i > 0 and cells[k - 1]) or (i < n - 1 and cells[k + 1]) or
+          (j > 0 and cells[k - n]) or (j < n - 1 and cells[k + n]) or nil
+      end
+    end
+    cells = grown
+  end
+  return cells, n, step, margin
+end
+
 -- The land tile for written land: the nearest land on a lattice of the chunk's generated tiles, so a written
 -- strip carries on the ground beside it; FALLBACK in a chunk whose lattice holds no land.
 local function land_lattice(surface)
+  if CORNERS then
+    return shared_lattice(surface)
+  end
   local step, n = SM.lattice_tiles, floor(CT / SM.lattice_tiles) + 1
   local cells, found = {}, 0
   for j = 0, n - 1 do
@@ -653,6 +704,7 @@ local function land_lattice(surface)
       found = found + 1
     end
   end
+  return cells, n, step, 0
 end
 
 -- The land tile for a chunk whose lattice holds no land: the first land on rings of samples around it, inside the
@@ -678,18 +730,72 @@ local function chunk_ground(surface)
   return GROUND
 end
 
+-- The first land on rings of samples around one chunk corner. Every chunk that meets at the corner reads the same
+-- samples, so what they write there meets without a seam.
+local function corner_sample(surface, cx, cy)
+  for _, r in ipairs(CORNERS.rings) do
+    for dy = -1, 1 do
+      for dx = -1, 1 do
+        local t = surface.get_tile(cx + dx * r, cy + dy * r)
+        local name = t.valid and t.name
+        if name and not NONLAND_SET[name] and name ~= "out-of-map" then
+          return name
+        end
+      end
+    end
+  end
+  return nil
+end
+
+-- The ground of written land out of reach of the chunk's own lattice: the nearest of the chunk's four corners, the
+-- borders between them wandering with the wobble, so a chunk's edge always takes its own corners and no chunk
+-- is a rectangle of one tile (config.lua bandfix.smooth.corners).
+local function corner_at(surface, i, j)
+  local k = j * 2 + i
+  if CORNER_READ[k] ~= stamp then
+    CORNER_READ[k] = stamp
+    CORNER[k] = corner_sample(surface, X0 + i * CT, Y0 + j * CT)
+  end
+  return CORNER[k]
+end
+
+local function corner_ground(surface, lx, ly)
+  local x, y = X0 + lx, Y0 + ly
+  local half = 1 / 2
+  local i = (lx + half) / CT + CORNERS.wander * WOBBLE[y % WP * WP + x % WP] >= half and 1 or 0
+  local j = (ly + half) / CT + CORNERS.wander * WOBBLE[(y + WP_Y) % WP * WP + (x + WP_X) % WP] >= half and 1 or 0
+  return corner_at(surface, i, j) or corner_at(surface, 1 - i, j) or corner_at(surface, i, 1 - j) or
+    corner_at(surface, 1 - i, 1 - j)
+end
+
+      end
+    end
+  end
+  return nil
+end
+
 local RECS = {}
 
 -- Step 6: one set_tiles call; written land takes the ground around it, and written water is deep in an open-sea
 -- pixel, so a false island sinks into the open sea without a pale patch.
 local function write(surface)
+  local cells, n, step, margin
   for q = 1, NW do
     local lx, ly = QX[q], QY[q]
     local idx = ly * CT + lx
     local name = WDEEP[idx] and B.new_deep or B.new_water
     if WLAND[idx] then
       if not cells then
+        cells, n, step, margin = land_lattice(surface)
       end
+      local rx, ry = lx, ly
+      if CORNERS then
+        -- read the lattice a little off the tile, so no 4 x 4 block of a node shows
+        local x, y = X0 + lx, Y0 + ly
+        rx = lx + step * WOBBLE[y % WP * WP + x % WP]
+        ry = ly + step * WOBBLE[(y + WP_Y) % WP * WP + (x + WP_X) % WP]
+      end
+        (CORNERS and corner_ground(surface, lx, ly)) or chunk_ground(surface)
     end
     local rec = RECS[q]
     if rec then

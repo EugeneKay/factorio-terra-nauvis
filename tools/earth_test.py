@@ -10641,6 +10641,7 @@ def re_centre_px(cfg, reg_row, seed):
     R = cfg["regions"]
     J = R["jitter"]
     cu, cv = br.to_px(reg_row["lat"], reg_row["lon"], br.frame(cfg))
+    reach = reg_row["jitter_km"] * J["hotspot_share"] / R["km_per_px"] / math.sqrt(2)
     small = int(seed) & 0xFFFF
     high = math.floor(int(seed) / 2 ** 32 * J["high_bits"])
 
@@ -11323,6 +11324,8 @@ def row_re_dump_facts(ctx, mods, sec6, row, cache):
 def row_re_t4_fg(ctx, mods, sec6, row, cache):
     """T4 (FG; size none): Europe at scale 6, seed 1000, London's spawn, a window over Upper Silesia's
     coal and Legnica's copper: with every hotspot resource at size none and enemy bases at none, the
+    preview with hotspots on still differs from the one with hotspots off, since no map slider reaches a
+    sizes at the preset's, they differ too (G6)."""
     cfg = mods.cfg
     mk, s = "europe", int(cfg["settings"]["scale"]["default_value"])
     rows, offsets, reg = re_rows()
@@ -11356,6 +11359,9 @@ def row_re_t4_fg(ctx, mods, sec6, row, cache):
         for dd in dirs:
             fails += g1(dd) + g3(dd)
         im = [derive_preview(dd)["images"] for dd in dirs]
+        if im[0] == im[1]:
+            fails.append("size none: the preview with hotspots on equals the one with hotspots off: the size "
+                         "slider removed the hotspots (T4)")
         if im[2] == im[3]:
             fails.append("at the preset's sizes hotspots on and off render alike, so size none proves nothing (G6)")
         # the slider reached the map: with hotspots off, size none removes the base ore the preset's sizes
@@ -11971,7 +11977,11 @@ def re_suite_checks(ctx, mods, sec6, checks, d, limits, ctl, timing, sig):
             if r_own is None or abs(r_earth - r_own) > RE_T4_OIL_TOL * r_own:
                 fails.append(f"{mk}: masked random wells at {label} move by {r_earth:.3g}, the Oil Rig's own by {r_own} "
                              f"(want within {RE_T4_OIL_TOL:.0%}: the vanilla way)")
+        if not got["size-none"]["field"]:
+            fails.append(f"{mk}: no field wells at offshore-oil size none")
+        if not got["size-low"]["field_amount"] == base["field_amount"] == got["size-high"]["field_amount"]:
             fails.append(f"{mk}: field amounts {got['size-low']['field_amount']:.3g}, {base['field_amount']:.3g}, "
+                         f"{got['size-high']['field_amount']:.3g} at size 1/6, 1, 6 (want equal)")
         # frequency inert: the field bodies' values at every lattice point equal at 1/6, 1 and 6 (the random
         # wells' rise above is the positive control that the slider reached the map)
         vals = []
@@ -13099,13 +13109,30 @@ def ct_hook_text(cfg, name, original=None, ab=True):
     if not ab:
         if G and name == G["tile"]:
             return f"if({gate}, ({original}) + {G['key']}, ({original}))"
+        if name in TL["vanilla"].get("stony", ()):
+            return f"if({gate}, ({original}) + {cfg['keys']['ground']}, ({original}))"
         return None
     V = TL["vanilla"]
     if name in V["keys"]:
+        mix = ct_mixed_noise(TL, V["mix"]["first_seed1"] + V["tiles"].index(name))
+        return (f"if({gate}, ({original}) + {V['keys'][name]} + {V['mix']['key']} * {mix} * ({V['keys'][name]} > "
+                f"{ww_num(V['bonus'] / 2)}), {V['off']})")
     X = TL["exclude"]
     if name not in TL["ab_adopted"] and any(name.startswith(pf) for pf in X["prefixes"]):
         return f"if({gate}, ({original}) + {X['key']}, ({original}))"
     return None
+
+
+def ct_mixed_noise(TL, seed):
+    """A tile's own noise as two of the shared fields (data-final-fixes.lua mixed_noise)."""
+    NS = TL["noise_share"]
+    n, steps = len(NS["fields"]), len(NS["steps"])
+    j, first = seed // n, seed % n
+    second = (first + NS["steps"][j % steps]) % n
+    signs = (j // steps) % NS["sign_patterns"]
+    w = ww_num(NS["weight"])
+    return (f"({'-' if signs >= 2 else ''}{w} * {NS['fields'][first]}{' - ' if signs % 2 == 1 else ' + '}"
+            f"{w} * {NS['fields'][second]})")
 
 
 def ct_listed_tiles(cfg):
@@ -14962,8 +14989,23 @@ def ct_family(name):
 
 
 # The tile families each climate band admits, with Alien Biomes and without: the far
+# north is AB snow and ice with its pale tundra (config.lua climate.tile_belts), or the fallback's dry and
+# dead ground; hot desert is sand either way.
+CT_FAMILIES = {True: {"coldest": ("frozen", "dirt", "sand", "grass"), "cold": ("grass", "dirt", "sand", "frozen"),
                       "hot_desert": ("sand", "dirt")},
                        "hot_desert": ("sand", "dirt")}}
+
+
+def ct_alien_place(cfg, map_key, scale, pt, tile):
+    """Iceland's belt, the one place a left-out colour is Earth's own (its basalt): true for a black tile at probe point `pt`, within the belt's box and its wander."""
+    if "-black-" not in tile:
+        return False
+    import earthgeo as eg
+    mref = eg.MapRef(map_key)
+    b = next(x for x in cfg["climate"]["tile_belts"] if x["id"] == "iceland")
+    W = cfg["climate"]["tile_belts_wander"]
+    lon, lat = mref.pixel_lonlat((pt[0] - scale // 2) // scale + mref.wr, (pt[1] - scale // 2) // scale + mref.hr)
+    return b["lat"][0] - W["lat"] <= lat < b["lat"][1] + W["lat"] and b["lon"][0] - W["lon"] <= lon < b["lon"][1] + W["lon"]
 
 
 def ct_controls(dump, controls, label):
@@ -15061,6 +15103,7 @@ def ct_names(cfg):
     """The climate names a probe reads: the AB-unit core, the redirected properties and the marsh
     weight (the region layer's interface name)."""
     return ",".join([cfg["climate"]["names"]["core"], "temperature", "moisture", "aux", "elevation",
+                     cfg["regions"]["names"]["marsh_w"], cfg["climate"]["names"]["belts"]["wild"]])
 
 
 def ct_brief_places(O):
@@ -15875,6 +15918,9 @@ def ct_suite_checks(ctx, mods, sec6, checks, d, limits, ctl, timing, sig):
     # D11 (SS; M2; every map; seeds 1000, 1002 and 1004; scales 1 and 6): on a
     # probe grid over each map, from the real tiles: the vanilla share of land at least 0.8 where the AB
     # temperature is 40 to 50, 0 below 0 and in the desert band (hot and dry); outside marshes, every AB
+    # tile in the temperate band (the exclusion's) in the approved adopted set; no alien-palette AB tile
+    # but Iceland's basalt; every vanilla land tile sampled somewhere on M2 (all maps, scales and seeds
+    # together). A wild belt (config.lua climate.tile_belts) lies out of the band whatever its temperature.
     d11_plan = []
     for mk in maps:
         mref = eg.MapRef(mk)
@@ -15889,11 +15935,15 @@ def ct_suite_checks(ctx, mods, sec6, checks, d, limits, ctl, timing, sig):
         V, X = cfg["tiles"]["vanilla"], cfg["tiles"]["exclude"]
         vanilla, adopted = set(V["tiles"]), set(cfg["tiles"]["ab_adopted"])
         mw = cfg["regions"]["names"]["marsh_w"]
+        wild_name = cfg["climate"]["names"]["belts"]["wild"]
+        WB = cfg["climate"]["tile_belts_wild"]
+        wild_cut = WB["cut"] - WB["fine"]
         seen = set()
         for x, (label, mk, s, ab, pts, _, seed) in zip(dirs, d11_plan):
             vals = point_values(read_dump(x, "ct11"))
             bins = {"below_0": [0, 0], "40_50": [0, 0], "desert": [0, 0]}
             bad_ab, alien = {}, {}
+            for pt, v in vals.items():
                 tile, t, m = v.get("tile"), v.get("temperature"), v.get("moisture")
                 if not isinstance(t, (int, float)) or ct_family(tile) in ("water", "other") or tile is None:
                     continue
@@ -15902,13 +15952,17 @@ def ct_suite_checks(ctx, mods, sec6, checks, d, limits, ctl, timing, sig):
                 isv = tile in vanilla
                 if isv:
                     seen.add(tile)
+                wild = isinstance(v.get(wild_name), (int, float)) and v[wild_name] > wild_cut
+                band = "below_0" if t < 0 else ("40_50" if not wild else None) if 40 <= t < 50 else \
                     "desert" if ct_band(cfg, t, m) == "hot_desert" else None
                 if band:
                     bins[band][0] += 1
                     bins[band][1] += int(isv)
                 in_marsh = isinstance(v.get(mw), (int, float)) and v[mw] > X["marsh_cut"]
+                if not isv and not in_marsh and not wild and X["temperate_from"] <= t < X["temperate_below"] and \
                         tile not in adopted and ct_family(tile) not in ("wetland",):
                     bad_ab[tile] = bad_ab.get(tile, 0) + 1
+                if not isv and any(a in tile for a in CT_ALIEN) and not ct_alien_place(cfg, mk, s, pt, tile):
                     alien[tile] = alien.get(tile, 0) + 1
             share = {k: (b / a if a else None) for k, (a, b) in bins.items()}
             meas[label] = {"vanilla_share": share, "counts": bins, "non_adopted_temperate": bad_ab, "alien": alien}
@@ -16722,6 +16776,7 @@ def tf_preset_keys(cfg, ab):
             out[n["p"]] = n["body"]
             out[n["r"]] = R["richness"]
         for n in R["rocks"].values():
+            out[n["key"]] = n.get("high") or n["body"]
         for key in R["decoratives"].values():
             out[key] = R["deco_body"]
         for p in TR["palm"]:
@@ -16756,7 +16811,58 @@ def tf_bodies(cfg):
     return list(dict.fromkeys(out))
 
 
+def tf_boost_text(cfg, own, lift=False, band=None):
+    """The great-forests hook around a tree's own probability (trees.lua M.boost): the base game's living trees
+    take the boreal lift, scaled by `band` beside Alien Biomes."""
     B = cfg["trees"]["boost"]
+    inner = f"({own})"
+    if lift:
+        inner = f"(({own}) + {B['lift']}" + (f" * {band}" if band else "") + ")"
+    return f"if({tf_gate(cfg, B['gate'])}, min({ww_num(B['cap'])}, {inner} * {B['key']}), {own})"
+
+
+def tf_vanilla_scale(cfg, text):
+    """A base game text on the vanilla-scale temperature (data-final-fixes.lua vanilla_scale)."""
+    return re.sub(r"(?<!\w)temperature(?!\w)", cfg["trees"]["temperature"], text)
+
+
+def tf_tree_band(cfg):
+    """1 where AB's trees are off (data-final-fixes.lua tree_band)."""
+    return f"(1 - {cfg['tiles']['scan']['body']})"
+
+
+def tf_tree_tiles(cfg):
+    """A restored tree's list: the vanilla land tiles, then the approved adopted land tiles."""
+    return tf_land(cfg) + [t for t in cfg["tiles"]["ab_adopted"] if t != cfg["tiles"]["marsh"]["water_mud"]["tile"]]
+
+
+def tf_dead_text(cfg, n, prob):
+    """A dead tree's score (data-final-fixes.lua dead_hooks): AB's own, or the base game's where the keep body is 0."""
+    own = f"({tf_lua_text(prob)})"
+    V = tf_vanilla()
+    keys = ", ".join(cfg["trees"]["restore"]["trees"][t]["p"] for t in V["dead_scores"][n])
+    return tf_restore_text(cfg, f"if({cfg['tiles']['scan']['body']} > {ww_num(cfg['hooks']['threshold'])}, {own}, "
+                                f"{V['dead_score'] % keys})", own)
+
+
+def tf_decor_want(cfg, row, ba):
+    """A decorative with vanilla.lua's band score (data-final-fixes.lua decor_hooks): the base game's score where
+    the keep body is 0, its own, thinned by trees.decor, elsewhere."""
+    D = cfg["trees"]["decor"]
+    own = f"({tf_lua_text(ba.get('probability_expression'))})"
+    text = re.sub(r"(?<!\w)region_box(?!\w)", D["box"], row["text"])
+    thin = D["thin"].get(row["name"])
+    outside = f"{ww_num(thin)} * {own}" if thin else own
+    on = tf_vanilla_scale(cfg, text)
+    if tf_lua_text(ba.get("probability_expression")) != row["text"]:
+        on = f"if({cfg['tiles']['scan']['body']} > {ww_num(cfg['hooks']['threshold'])}, {outside}, {on})"
+    want = dict(ba, probability_expression=tf_restore_text(cfg, on, own))
+    if row.get("box"):
+        want["local_expressions"] = dict(ba.get("local_expressions") or {},
+                                         **{D["box"]: tf_vanilla_scale(cfg, row["box"])})
+    if ba.get("tile_restriction") is not None:
+        want["tile_restriction"] = tf_extended(cfg, ba["tile_restriction"])
+    return want
 
 
 def tf_restore_text(cfg, on_branch, off):
@@ -16823,13 +16929,19 @@ def tf_hook_change(cfg, t, n, earth, base):
             names = R["trees"][n]
             if row is None:
                 return False
+            band = tf_tree_band(cfg)
+            own = tf_restore_text(cfg, f"{names['p']} * {band}", R["tree_off"])
             want = {"control": row["control"], "order": row["order"],
+                    "probability_expression": tf_boost_text(cfg, own, lift=True, band=band),
                     "richness_expression": tf_restore_text(cfg, names["r"], R["tree_off"]),
+                    "tile_restriction": tf_tree_tiles(cfg)}
             return ea == want
         if not isinstance(ba, dict):
             return False
         if n in dead:
             return ba.get("tile_restriction") is not None and \
+                ea == dict(ba, probability_expression=tf_dead_text(cfg, n, ba["probability_expression"]),
+                           tile_restriction=tf_extended(cfg, ba.get("tile_restriction")))
         own = ba.get("probability_expression")
         if own in (None, ""):
             return False
@@ -16846,8 +16958,24 @@ def tf_hook_change(cfg, t, n, earth, base):
         return ea == want
     if not isinstance(ba, dict):
         return False
+    # the highland lift on Alien Biomes' big rocks (data-final-fixes.lua rock_lift_hooks)
+    peaks = (ba.get("local_expressions") or {}).get("peaks_expr")
+    RK = (cfg.get("ridges") or {}).get("rocks")
+    if t == "simple-entity" and RK and isinstance(peaks, str) and not any(s in n for s in RK["ab_skip"]) and \
+            any(n.startswith(p) for p in RK["ab_prefixes"]):
+        on = f"{peaks} + {cfg['keys']['rock_lift']}"
+        return ea == dict(ba, local_expressions=dict(ba["local_expressions"], peaks_expr=tf_restore_text(cfg, on, peaks)))
     if t == "optimized-decorative" and n in R["decoratives"]:
         own = ba.get("probability_expression")
+        on = f"({tf_vanilla_scale(cfg, tf_lua_text(own))}) + {R['decoratives'][n]}"
+        want = dict(ba, probability_expression=tf_restore_text(cfg, on, R["deco_off"]), tile_restriction=tf_land(cfg))
+        if ba.get("local_expressions"):
+            want["local_expressions"] = {k: tf_vanilla_scale(cfg, v) if isinstance(v, str) else v
+                                         for k, v in ba["local_expressions"].items()}
+        return ea == want
+    row = next((r for r in V["decor"] if r["name"] == n), None)
+    if t == "optimized-decorative" and row is not None:
+        return ea == tf_decor_want(cfg, row, ba)
     if t == "optimized-decorative" and n in V["extend"] and ba.get("tile_restriction") is not None:
         return ea == dict(ba, tile_restriction=tf_extended(cfg, ba.get("tile_restriction")))
     if t == "optimized-decorative" and tf_list_hooked(cfg, ba):
@@ -16893,6 +17021,8 @@ def tf_controls():
     cfg = tnconfig.load()
     out = {}
     tree0 = {"type": "tree", "name": "tree-01", "autoplace": {"control": "trees", "probability_expression": "tree_01"}}
+    tree1 = {"type": "tree", "name": "tree-01",
+             "autoplace": {"control": "trees", "probability_expression": tf_boost_text(cfg, "tree_01", lift=True)}}
     out["trees: the boost alone on a living tree passes"] = (tf_hook_change(cfg, "tree", "tree-01", tree1, tree0), "")
     out["trees: the boost plus another change fails"] = (
         not tf_hook_change(cfg, "tree", "tree-01", dict(tree1, max_health=1), tree0), "")
@@ -16925,6 +17055,8 @@ def tf_controls():
                                                                           "probability_expression": "1"}), tree0), "")
     dead0 = {"type": "tree", "name": "dry-tree", "autoplace": {"probability_expression": "x", "tile_restriction": ["a"]}}
     dead1 = {"type": "tree", "name": "dry-tree",
+             "autoplace": {"probability_expression": tf_dead_text(cfg, "dry-tree", "x"),
+                           "tile_restriction": tf_extended(cfg, ["a"])}}
     out["trees: a dead tree's restriction gaining vanilla land passes"] = (
         tf_hook_change(cfg, "tree", "dry-tree", dead1, dead0), "")
     out["trees: a boosted dead tree fails"] = (

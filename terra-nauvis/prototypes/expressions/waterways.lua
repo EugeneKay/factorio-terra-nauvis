@@ -77,6 +77,9 @@ local E = {}
         error("waterways.lua has no generated file for " .. key .. " at scale " .. s)
       end
       local function set(kind, expression, functions)
+        if kind == "ww" then
+          locals.T = gen.taper
+        end
         local lf = {}
         for _, f in ipairs(functions) do
           lf[f] = fn(gen.functions[f])

@@ -3,8 +3,10 @@
 -- the region frame (config.lua regions.frame):
 --   row.sd .. id .. suffix      the signed distance to the row's shape, positive inside, at the query
 --                               point moved by the row's share of the shared warp, plus the shared
+--                               edge roughness (a hotspot row takes none: its disc is exact)
 --   row.w .. id .. suffix       the membership weight clamp(mid + sd / width, 0, 1), the soft edge
 --   row.depth .. id .. suffix   the same signed distance in tiles
+-- and a hotspot row also row.pd .. id .. suffix, the plain distance to its jittered centre in reference pixels.
 -- A marsh row's signed distance also reads the marsh outline noise and its weight a wider ramp (config.lua
 -- regions.marsh), so no marsh shows its exact disc or path.
 -- A hotspot row's disc sits at its adopted centre moved per seed by up to its jitter radius (a
@@ -304,6 +306,7 @@ end
 local function row_names(r)
   local rn = N.row
   return {sd = rn.sd .. r.id .. SUF, w = rn.w .. r.id .. SUF, depth = rn.depth .. r.id .. SUF,
+          hu = rn.hu .. r.id .. SUF, hv = rn.hv .. r.id .. SUF, pd = rn.pd .. r.id .. SUF}
 end
 
 local function weight(sd_name, width_px)
@@ -321,15 +324,25 @@ local function marsh_edge(r)
   return math.min(MH.cap_px, MH.share * radius), math.max(R.ramp.width_px, ramp)
 end
 
+-- A marsh row's gain on the shared roughness (config.lua regions.marsh.edge_gain), folded on the map.
+local function marsh_gain(r)
+  local G = MH.edge_gain
+  local gain = math.min(G.top, math.max(MH.rough_gain, G.share * r.radius_km / R.km_per_px))
+  return by_map(function(M) return num(G.maps[M.key] and gain or MH.rough_gain) end)
+end
+
   local nm = row_names(r)
   local qu, qv = query(r.warp)
   local text, L
   if r.shape == "disc" then
     local cu, cv = to_px(r.lat, r.lon)
     if r.layer == "hotspot" then
+      local reach = r.jitter_km * JT.hotspot_share / R.km_per_px / math.sqrt(2)
       def(nm.hu, jittered(cu, JT.mult_x, r.phase, reach))
       def(nm.hv, jittered(cv, JT.mult_y, r.phase, reach))
       text, L = disc(nm.hu, nm.hv, r.radius_km / R.km_per_px, qu, qv)
+      -- the plain distance to the jittered centre, in reference pixels, for the hard footprint (resources.lua)
+      def(nm.pd, "sqrt(du * du + dv * dv)", {du = L.du, dv = L.dv})
     else
       text, L = disc(cu, cv, r.radius_km / R.km_per_px, qu, qv)
     end
@@ -349,9 +362,13 @@ end
   end
   if r.layer == "marsh" then
     local amplitude, width = marsh_edge(r)
+    def(nm.sd, "(" .. text .. ") + (" .. marsh_gain(r) .. ") * " .. N.rough .. " + " .. num(amplitude) .. " * (" ..
       N.marsh_rough .. " + " .. num(MH.bias) .. ")", L)
     def(nm.w, weight(nm.sd, width))
   else
+    -- a hotspot's disc stays exact: its footprint is a hard limit on its ore (config.lua hotspots.size), so
+    -- its signed distance takes no roughness, and the ore inside shapes the outline
+    def(nm.sd, r.layer == "hotspot" and text or ("(" .. text .. ") + " .. N.rough), L)
   end
   def(nm.depth, nm.sd .. " * " .. K.scale)
 local ROWS = {}
@@ -420,6 +437,14 @@ def(N.marsh_w, by_map(function(M) return joined("max", each(on_map(M, "marsh"), 
 
   return #terms > 0 and table.concat(terms, " + ") or "0"
 end))
+-- The highland's noise (ridges.lua), in reference pixels, all of it noise this layer already computes: the fray
+-- rocks read, the one tile scores read, and the massif factor, which breaks a long even crest.
+def(N.highland_fray, num(HF.fray_warp) .. " * " .. N.wx)
+def(N.highland_fray_tile, num(HF.fray_warp) .. " * " .. N.wx .. " + " .. num(HF.fray_rough) .. " * " .. N.rough ..
+  " + " .. num(HF.fray_massif) .. " * " .. N.marsh_rough)
+def(N.highland_massif, "clamp(1 + " .. num(GM.gain) .. " * " .. N.wy .. ", " .. num(GM.low) .. ", " .. num(GM.high) ..
+  ")")
+
 -- Hotspot regions and the biter multiplier inside them.
 def(N.hotspot_w, by_map(function(M) return joined("max", each(on_map(M, "hotspot"), function(x) return x.names.w end),
   "0") end))

@@ -1,6 +1,7 @@
 {
  "format": "tn-waterways-manifest/1",
  "tool": "tools/build_waterways.py",
+ "emitter_version": 4,
  "map": "atlantic",
  "input": {
   "file": "data-src/waterways/atlantic.json",
@@ -26,6 +27,8 @@
   "ford": {
    "every_px": 60,
    "length_tiles": 10,
+   "full_scale": 6,
+   "least_length_tiles": 5,
    "margin_tiles": 3,
    "bank_tiles": 3,
    "score": 10000,
@@ -62,6 +65,8 @@
     "seed1": 7507,
     "wavelength": [60, 60],
     "amplitude": 0.3,
+    "tip_half_tiles": 1,
+    "floor_half_tiles": [1.5, 1.5, 2.25, 3.75, 4.5, 5.5]
    },
    "bank": {
     "seed1": 7508,
@@ -72,13 +77,20 @@
    "ford_edge": {
     "seed1": 7509,
     "wavelength": [5, 0.5],
+    "amplitude": [0.6, 0.2]
    },
    "profile": {
     "source": 0.7,
     "mouth": 1.35,
+    "tip": 0.12,
+    "taper_tiles": [10, 45],
+    "step_tiles": 0.75,
+    "taper_full_scale": 6
    },
    "basin": {
     "half_length_tiles": 8,
+    "radius_tiles": 12,
+    "least_river_scale": 4
    },
    "deloop": {
     "gap_px": 8,
@@ -102,6 +114,7 @@
     "height": 20
    }
   },
+  "river_floor_tiles": 3,
   "river_k": {
    "major": 3,
    "minor": 2
@@ -135,7 +148,9 @@
      "canal": 15,
      "dam": 20
     },
+    "basins": 3,
     "classes": {
+     "ww": 8,
      "canals": 2
     }
    },
@@ -149,6 +164,8 @@
      "kind": "river",
      "id": "danube",
      "name": "Danube",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "window_tiles": 33,
      "polyline_geo": [
      "depth": -2.2,
@@ -158,61 +175,98 @@
       "covered": true
      },
      "class": "major",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
        "arc_tiles": 158.682,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 5,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 6,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 7,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 8,
        "tangent": [0.066635, 0.997777],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 9,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 10,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 11,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 12,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 13,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 14,
+       "half_length": 2.5,
       },
       {
        "interval": 15,
+       "half_length": 2.5,
+       "half_width": 6.675
       },
       {
        "interval": 16,
+       "half_length": 2.5,
+       "half_width": 6.675
       },
       {
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -221,6 +275,8 @@
      "kind": "river",
      "id": "dnieper",
      "name": "Dnieper",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "polyline_geo": [
       [1161.0, -1431.0]
      ],
@@ -231,39 +287,64 @@
       "covered": true
      },
      "class": "major",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 5,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 6,
+       "half_length": 2.5,
       },
       {
        "interval": 7,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 8,
+       "half_length": 2.5,
       },
       {
        "interval": 9,
+       "half_length": 2.5,
       },
       {
        "interval": 10,
+       "half_length": 2.5,
+       "half_width": 6.675
+       "half_length": 2.5,
+       "half_width": 6.675
+       "half_length": 2.5,
+       "half_width": 6.675,
       }
      ],
      "fords_skipped": [],
@@ -272,36 +353,56 @@
      "kind": "river",
      "id": "rhine",
      "name": "Rhine",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "window_tiles": 17,
      "polyline_geo": [
      ],
      "depth": -2.2,
      "bend": {
+      "basins": [],
       "covered": true
      },
      "class": "major",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 12.847,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
        "arc_tiles": 98.4,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "arc_tiles": 206.706,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
       },
       {
        "interval": 5,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 6,
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -310,6 +411,8 @@
      "kind": "river",
      "id": "vistula",
      "name": "Vistula",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "window_tiles": 49,
      "polyline_geo": [
      ],
@@ -320,22 +423,37 @@
       "covered": true
      },
      "class": "major",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 29.788,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -344,6 +462,8 @@
      "kind": "river",
      "id": "elbe",
      "name": "Elbe",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "window_tiles": 33,
      "polyline_geo": [
      ],
@@ -354,24 +474,38 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 24.0,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
        "arc_tiles": 105.035,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -380,6 +514,8 @@
      "kind": "river",
      "id": "loire",
      "name": "Loire",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "window_tiles": 13,
      "polyline_geo": [
      ],
@@ -390,26 +526,40 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 44.894,
        "centre": [-121.7952, -1454.9659],
        "tangent": [-0.258705, -0.965956],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
        "arc_tiles": 162.494,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "arc_tiles": 214.165,
        "tangent": [-0.979091, -0.203423],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "arc_tiles": 273.882,
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -419,6 +569,8 @@
      "kind": "river",
      "id": "daugava",
      "name": "Daugava",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 9,
      "window_tiles": 13,
      "polyline_geo": [
@@ -431,26 +583,42 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 22.588,
        "centre": [1080.5939, -1820.137],
        "tangent": [-0.991935, 0.126747],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "arc_tiles": 96.0,
+       "centre": [1012.4078, -1840.916],
        "tangent": [-0.885589, -0.46447],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "arc_tiles": 166.588,
+       "centre": [944.074, -1854.1833],
        "tangent": [-0.99533, -0.09653],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -460,6 +628,8 @@
      "kind": "river",
      "id": "oder",
      "name": "Oder",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 10,
      "window_tiles": 17,
      "polyline_geo": [
@@ -476,24 +646,40 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 19.2,
        "centre": [531.7313, -1625.9072],
        "tangent": [-0.951494, -0.307669],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "arc_tiles": 100.659,
+       "centre": [462.947, -1666.1889],
        "tangent": [-0.935948, -0.352139],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "arc_tiles": 138.918,
+       "centre": [429.195, -1681.7837],
        "tangent": [-0.979688, -0.20053],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "arc_tiles": 196.094,
+       "centre": [388.2615, -1714.9468],
        "tangent": [-0.701901, -0.712274],
+       "half_length": 2.5,
+       "half_width": 5.7
       }
      ],
      "fords_skipped": [],
@@ -503,6 +689,8 @@
      "kind": "river",
      "id": "tagus",
      "name": "Tagus",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 8,
      "window_tiles": 13,
      "polyline_geo": [
@@ -517,20 +705,33 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 18.788,
+       "centre": [-441.2868, -1133.6885],
        "tangent": [-0.973313, 0.22948],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
        "arc_tiles": 133.835,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "tangent": [-0.729573, 0.683903],
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -540,6 +741,8 @@
      "kind": "river",
      "id": "po",
      "name": "Po",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "window_tiles": 13,
      "polyline_geo": [
      ],
@@ -550,15 +753,25 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 5.7
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -567,6 +780,8 @@
      "kind": "river",
      "id": "seine",
      "name": "Seine",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 7,
      "window_tiles": 13,
      "polyline_geo": [
@@ -582,18 +797,32 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 34.882,
+       "centre": [-104.298, -1520.2796],
        "tangent": [-0.99266, 0.120941],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "arc_tiles": 101.765,
+       "centre": [-162.8176, -1541.0987],
        "tangent": [-0.974213, -0.225629],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "arc_tiles": 143.729,
+       "centre": [-201.0499, -1556.8498],
        "tangent": [-0.841466, -0.54031],
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -603,6 +832,8 @@
      "kind": "river",
      "id": "rhone",
      "name": "Rhone",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "window_tiles": 17,
      "polyline_geo": [
      ],
@@ -610,21 +841,32 @@
      "bend": {
       "violations": 0,
       "worst_deg": 76.8,
+      "basins": [],
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 5.7
       }
      ],
      "fords_skipped": [],
@@ -633,6 +875,8 @@
      "kind": "river",
      "id": "ebro",
      "name": "Ebro",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 6,
      "window_tiles": 25,
      "polyline_geo": [
@@ -646,13 +890,20 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 21.882,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
        "arc_tiles": 72.706,
+       "half_length": 2.5,
+       "half_width": 5.7
       }
      ],
      "fords_skipped": [],
@@ -662,6 +913,8 @@
      "kind": "river",
      "id": "dniester",
      "name": "Dniester",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 5,
      "window_tiles": 13,
      "polyline_geo": [
@@ -677,16 +930,24 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 20.906,
+       "centre": [1012.7126, -1509.6783],
        "tangent": [0.895088, 0.445889],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
        "arc_tiles": 79.765,
        "centre": [1053.7086, -1472.4449],
        "tangent": [0.389911, 0.920853],
+       "half_length": 2.5,
+       "half_width": 5.7
       }
      ],
      "fords_skipped": [],
@@ -696,6 +957,8 @@
      "kind": "river",
      "id": "garonne",
      "name": "Garonne",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 5,
      "window_tiles": 25,
      "polyline_geo": [
@@ -711,14 +974,24 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 36.859,
+       "centre": [-220.6374, -1322.9948],
        "tangent": [-0.933618, -0.358269],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "arc_tiles": 91.341,
+       "centre": [-268.3867, -1348.5667],
        "tangent": [-0.833944, -0.551849],
+       "half_length": 2.5,
+       "half_width": 5.7
       }
      ],
      "fords_skipped": [],
@@ -728,6 +1001,8 @@
      "kind": "river",
      "id": "weser",
      "name": "Weser",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 5,
      "window_tiles": 25,
      "polyline_geo": [
@@ -743,16 +1018,24 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 30.929,
+       "centre": [163.4703, -1679.5812],
        "tangent": [-0.75881, -0.651312],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
        "arc_tiles": 95.435,
        "centre": [137.452, -1730.3012],
        "tangent": [-0.779957, -0.625834],
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -762,6 +1045,8 @@
      "kind": "river",
      "id": "douro",
      "name": "Douro",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 4,
      "window_tiles": 13,
      "polyline_geo": [
@@ -777,16 +1062,24 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 26.4,
+       "centre": [-540.3548, -1203.2605],
        "tangent": [-0.845774, 0.533541],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
        "arc_tiles": 92.894,
        "centre": [-601.8721, -1191.073],
        "tangent": [-0.994711, 0.102715],
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -796,6 +1089,8 @@
      "kind": "river",
      "id": "neman",
      "name": "Neman",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 4,
      "window_tiles": 13,
      "polyline_geo": [
@@ -810,14 +1105,24 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 29.541,
+       "centre": [791.2713, -1816.8804],
        "tangent": [-0.972498, -0.232909],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "arc_tiles": 85.929,
+       "centre": [734.984, -1816.9641],
        "tangent": [-0.967537, -0.252729],
+       "half_length": 2.5,
+       "half_width": 5.7
       }
      ],
      "fords_skipped": [],
@@ -827,6 +1132,8 @@
      "kind": "river",
      "id": "thames",
      "name": "Thames",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 4,
      "window_tiles": 13,
      "polyline_geo": [
@@ -841,10 +1148,16 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 37.694,
+       "centre": [-280.4485, -1653.6316],
        "tangent": [0.991084, 0.133235],
+       "half_length": 2.5,
+       "half_width": 5.7
       }
      ],
      "fords_skipped": [],
@@ -854,6 +1167,8 @@
      "kind": "river",
      "id": "guadalquivir",
      "name": "Guadalquivir",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 3,
      "window_tiles": 13,
      "polyline_geo": [
@@ -868,10 +1183,16 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 30.506,
+       "centre": [-500.2873, -1034.4642],
        "tangent": [-0.960056, 0.279809],
+       "half_length": 2.5,
+       "half_width": 5.7
       }
      ],
      "fords_skipped": [],
@@ -881,6 +1202,8 @@
      "kind": "river",
      "id": "don_lower",
      "name": "Don (lower)",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 3,
      "window_tiles": 13,
      "polyline_geo": [
@@ -895,10 +1218,16 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 33.624,
+       "centre": [1562.0566, -1470.2902],
        "tangent": [-0.886247, 0.463212],
+       "half_length": 2.5,
+       "half_width": 5.7
       }
      ],
      "fords_skipped": [],
@@ -908,6 +1237,8 @@
      "kind": "river",
      "id": "neva",
      "name": "Neva",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 2,
      "window_tiles": 13,
      "polyline_geo": [
@@ -922,9 +1253,16 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 12.553,
+       "centre": [1130.2463, -2032.5924],
+       "tangent": [-0.936329, 0.351123],
+       "half_length": 2.5,
+       "half_width": 5.7,
       }
      ],
      "fords_skipped": [],
@@ -934,75 +1272,123 @@
      "kind": "river",
      "id": "niger",
      "name": "Niger",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "window_tiles": 13,
      "polyline_geo": [
      "depth": -2.2,
      "bend": {
       "violations": 1,
+      "basins": [],
       "covered": true
      },
      "class": "major",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 43.624,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 5,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 6,
        "arc_tiles": 387.812,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 7,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 8,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 9,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 10,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 11,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 12,
+       "arc_tiles": 753.6,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 13,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 14,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 15,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 16,
+       "half_length": 2.5,
       },
       {
        "interval": 17,
+       "half_length": 2.5,
       },
       {
        "interval": 18,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 6.675
+       "half_length": 2.5,
+       "half_width": 6.675
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -1011,6 +1397,8 @@
      "kind": "river",
      "id": "mackenzie",
      "name": "Mackenzie",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "window_tiles": 33,
      "polyline_geo": [
      "depth": -2.2,
@@ -1020,40 +1408,78 @@
       "covered": true
      },
      "class": "major",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 6.675
       },
       {
+       "half_length": 2.5,
+       "half_width": 6.675
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
     },
@@ -1068,55 +1494,93 @@
       "covered": true
      },
      "class": "major",
+     "width_tiles": 3,
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "arc_tiles": 133.671,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
        "arc_tiles": 211.765,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 5,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 6,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 7,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 8,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 9,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 10,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 11,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 12,
+       "half_length": 2.5,
       },
       {
        "interval": 13,
+       "half_length": 2.5,
       {
        "interval": 14,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7,
       }
      ],
      "fords_skipped": [],
@@ -1129,59 +1593,107 @@
      "polyline_geo": [
      "depth": -2.2,
      "bend": {
+      "basins": [],
       "covered": true
      },
      "class": "major",
+     "width_tiles": 3,
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "arc_tiles": 101.082,
+       "half_length": 2.5,
+       "half_width": 5.7
+      },
+      {
+       "interval": 2,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 5,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 6,
        "arc_tiles": 381.318,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 7,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 8,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 9,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 10,
+       "arc_tiles": 613.694,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 11,
+       "arc_tiles": 672.282,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 12,
+       "half_length": 2.5,
       },
       {
        "interval": 13,
        "arc_tiles": 795.812,
+       "half_length": 2.5,
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       }
      ],
     },
@@ -1189,6 +1701,8 @@
      "kind": "river",
      "id": "nile",
      "name": "Nile",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "polyline_geo": [
      "depth": -2.2,
      "bend": {
@@ -1197,67 +1711,127 @@
       "covered": true
      },
      "class": "major",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "arc_tiles": 151.612,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 5,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 6,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 7,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 8,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 9,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 10,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 11,
+       "half_length": 2.5,
       },
       {
        "interval": 12,
+       "half_length": 2.5,
+      {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
       },
       {
+       "half_length": 2.5,
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 6.675
+       "half_length": 2.5,
+       "half_width": 6.675
+       "half_length": 2.5,
+       "half_width": 6.675
+       "half_length": 2.5,
+       "half_width": 6.675
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -1266,6 +1840,8 @@
      "kind": "river",
      "id": "zambezi",
      "name": "Zambezi",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "polyline_geo": [
      "depth": -2.2,
      "bend": {
@@ -1274,48 +1850,75 @@
       "covered": true
      },
      "class": "major",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
       },
       {
        "interval": 5,
+       "half_length": 2.5,
       },
       {
        "interval": 6,
+       "half_length": 2.5,
       },
       {
        "interval": 7,
-      {
-      {
+       "half_length": 2.5,
       },
       {
+       "half_length": 2.5,
+      {
+       "half_length": 2.5,
+      },
+      {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 12,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 13,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 14,
+       "half_length": 2.5,
+       "half_width": 6.675
       },
       {
+       "half_length": 2.5,
       }
      ],
      "fords_skipped": [
+      {
        "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
        "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
       }
@@ -1329,53 +1932,102 @@
       "basins": [],
       "covered": true
      },
+     "width_tiles": 3,
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 6,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 8,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 9,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 11,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 12,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 13,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
+       "half_length": 2.5,
+       "half_width": 5.7
+       "half_length": 2.5,
+       "half_width": 5.7,
       }
      ],
        "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
@@ -1386,6 +2038,8 @@
      "kind": "river",
      "id": "st_lawrence",
      "name": "St. Lawrence",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "segments": 12,
      "window_tiles": 13,
      "polyline_geo": [
@@ -1396,21 +2050,35 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 5,
+       "half_length": 2.5,
+       "half_width": 6.675,
      ],
      "fords_skipped": [
       {
@@ -1423,6 +2091,8 @@
      "kind": "river",
      "id": "parana",
      "name": "Parana",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "polyline_geo": [
      "bend": {
       "violations": 0,
@@ -1430,35 +2100,67 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 5.7,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 5.7,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 6,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 8,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 9,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 11,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 12,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 13,
+       "half_length": 2.5,
+       "half_width": 6.675
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -1468,6 +2170,8 @@
      "kind": "river",
      "id": "orinoco",
      "name": "Orinoco",
+     "hw_tiles": 1.5,
+     "reach_tiles": 18.975,
      "window_tiles": 13,
      "polyline_geo": [
      "bend": {
@@ -1476,33 +2180,58 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 3,
+     "half_widths": [1.5, 2.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 38.694,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 6,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 8,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
       {
        "interval": 9,
+       "half_length": 2.5,
+       "half_width": 5.7
       },
+       "half_length": 2.5,
+       "half_width": 6.675
       }
      ],
      "fords_skipped": [],
@@ -2051,23 +2780,32 @@
      "name": "London",
      "spawn_geo": [-244, -1662],
      "corridors": [
+      ["seine", 95.3],
+      ["thames", 8.79],
       ["dover", 50.13]
      ],
+     "move": [0, -4],
      "banks": [
       {
        "corridor": "seine",
        "nx": 0.095229,
        "ny": -0.995455,
+       "c": 100.784,
+       "distance_tiles": 100.78
       },
       {
        "corridor": "thames",
        "nx": 0.04101,
        "ny": -0.999159,
+       "c": 14.291,
+       "distance_tiles": 14.29
       },
       {
        "corridor": "dover",
        "nx": -0.684222,
        "ny": -0.729274,
+       "c": 59.727,
+       "distance_tiles": 59.73
       }
      ]
     },
@@ -2075,6 +2813,10 @@
      "name": "Madrid",
      "spawn_geo": [-444, -1162],
      "corridors": [
+      ["tagus", 26.68],
+      ["ebro", 116.84],
+      ["douro", 82.56],
+      ["guadalquivir", 120.52]
      ],
      "move": [0, 0],
      "banks": [
@@ -2191,6 +2933,7 @@
      "name": "Prague",
      "spawn_geo": [356, -1662],
      "corridors": [
+      ["oder", 55.3]
      ],
      "move": [0, 0],
      "banks": [
@@ -2319,7 +3062,9 @@
      "canal": 24,
      "dam": 20
     },
+    "basins": 5,
     "classes": {
+     "ww": 12,
      "canals": 1
     }
    },
@@ -2332,6 +3077,8 @@
      "kind": "river",
      "id": "danube",
      "name": "Danube",
+     "hw_tiles": 3.0,
+     "reach_tiles": 29.405,
      "window_tiles": 33,
      "polyline_geo": [
      "depth": -2.2,
@@ -2341,63 +3088,99 @@
       "covered": true
      },
      "class": "major",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 2,
        "arc_tiles": 317.365,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 4,
+       "half_length": 2.5,
       },
       {
        "interval": 5,
        "arc_tiles": 634.447,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 6,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 7,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 8,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 9,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 10,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 11,
+       "half_length": 2.5,
       },
       {
        "interval": 12,
+       "half_length": 2.5,
+       "half_width": 8.775
       },
       {
        "interval": 13,
+       "half_length": 2.5,
+       "half_width": 8.775
       },
       {
        "interval": 14,
+       "half_length": 2.5,
+       "half_width": 8.775
       },
       {
        "interval": 15,
        "tangent": [0.904445, -0.42659],
+       "half_length": 2.5,
+       "half_width": 8.775
       },
       {
        "interval": 16,
+       "half_length": 2.5,
+       "half_width": 8.775
       },
       {
        "interval": 17,
+       "half_length": 2.5,
+       "half_width": 8.775
       }
      ],
      "fords_skipped": [],
@@ -2406,6 +3189,8 @@
      "kind": "river",
      "id": "dnieper",
      "name": "Dnieper",
+     "hw_tiles": 3.0,
+     "reach_tiles": 29.405,
      "window_tiles": 25,
      "polyline_geo": [
      "depth": -2.2,
@@ -2415,39 +3200,59 @@
       "covered": true
      },
      "class": "major",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 5,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 6,
+       "half_length": 2.5,
       },
       {
        "interval": 7,
+       "half_length": 2.5,
       },
       {
        "interval": 8,
+       "half_length": 2.5,
       },
       {
        "interval": 9,
+       "half_length": 2.5,
       },
       {
        "interval": 10,
+       "half_length": 2.5,
+       "half_width": 8.775
       }
      ],
      "fords_skipped": [],
@@ -2456,6 +3261,8 @@
      "kind": "river",
      "id": "rhine",
      "name": "Rhine",
+     "hw_tiles": 3.0,
+     "reach_tiles": 29.405,
      "window_tiles": 25,
      "polyline_geo": [
      "depth": -2.2,
@@ -2465,24 +3272,37 @@
       "covered": true
      },
      "class": "major",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 4,
+       "half_length": 2.5,
       },
       {
        "interval": 5,
+       "half_length": 2.5,
+       "half_width": 8.775
       }
      ],
      "fords_skipped": [],
@@ -2491,6 +3311,8 @@
      "kind": "river",
      "id": "vistula",
      "name": "Vistula",
+     "hw_tiles": 3.0,
+     "reach_tiles": 29.405,
      "window_tiles": 65,
      "polyline_geo": [
      ],
@@ -2501,24 +3323,37 @@
       "covered": true
      },
      "class": "major",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 4,
+       "half_length": 2.5,
       },
       {
        "interval": 5,
+       "half_length": 2.5,
+       "half_width": 8.775
       }
      ],
      "fords_skipped": [],
@@ -2528,29 +3363,43 @@
      "kind": "river",
      "id": "elbe",
      "name": "Elbe",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 33,
      "polyline_geo": [
      ],
      "depth": -2.2,
      "bend": {
+      "basins": [],
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 4,
+       "half_length": 2.5,
       }
      ],
      "fords_skipped": [],
@@ -2559,6 +3408,8 @@
      "kind": "river",
      "id": "loire",
      "name": "Loire",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 25,
      "polyline_geo": [
      ],
@@ -2570,22 +3421,35 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 2,
+       "arc_tiles": 318.988,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 4,
        "tangent": [-0.957307, 0.289074],
+       "half_length": 2.5,
+       "half_width": 6.825
       }
      ],
      "fords_skipped": [],
@@ -2595,6 +3459,8 @@
      "kind": "river",
      "id": "daugava",
      "name": "Daugava",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 25,
      "polyline_geo": [
       [2207.0, -3645.0], [2140.375, -3636.0625], [2085.8125, -3668.3125], [2029.8125, -3678.5],
@@ -2606,26 +3472,42 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 45.176,
        "centre": [2162.2246, -3638.9935],
        "tangent": [-0.991122, 0.132955],
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
+       "arc_tiles": 193.0,
+       "centre": [2024.986, -3681.0915],
        "tangent": [-0.881031, -0.473058],
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 2,
+       "arc_tiles": 337.176,
+       "centre": [1885.3656, -3707.8617],
        "tangent": [-0.99525, -0.097356],
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 3,
+       "arc_tiles": 452.247,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 4,
+       "half_length": 2.5,
       }
      ],
      "fords_skipped": [],
@@ -2635,6 +3517,8 @@
      "kind": "river",
      "id": "oder",
      "name": "Oder",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 33,
      "polyline_geo": [
       [1101.0, -3239.0], [1018.0625, -3280.125], [980.5, -3292.3125], [960.3125, -3318.9375],
@@ -2646,24 +3530,37 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 36.4,
+       "centre": [1068.389, -3255.1704],
        "tangent": [-0.895908, -0.444241],
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
        "arc_tiles": 201.318,
        "centre": [926.6964, -3331.3679],
        "tangent": [-0.937931, -0.346823],
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 2,
+       "arc_tiles": 277.835,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 3,
        "arc_tiles": 392.188,
        "tangent": [-0.706261, -0.707951],
+       "half_length": 2.5,
+       "half_width": 6.825
       }
      ],
      "fords_skipped": [],
@@ -2673,6 +3570,8 @@
      "kind": "river",
      "id": "tagus",
      "name": "Tagus",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 25,
      "polyline_geo": [
      ],
@@ -2683,21 +3582,31 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 35.576,
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
+       "arc_tiles": 190.706,
        "tangent": [-0.999961, -0.008793],
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 3,
        "arc_tiles": 446.4,
+       "half_length": 2.5,
       }
      ],
      "fords_skipped": [],
@@ -2707,6 +3616,8 @@
      "kind": "river",
      "id": "po",
      "name": "Po",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 25,
      "polyline_geo": [
      ],
@@ -2717,15 +3628,24 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
+       "arc_tiles": 149.929,
+       "half_length": 2.5,
       },
       {
        "interval": 2,
+       "arc_tiles": 282.435,
+       "half_length": 2.5,
+       "half_width": 6.825
       }
      ],
      "fords_skipped": [],
@@ -2735,6 +3655,8 @@
      "kind": "river",
      "id": "seine",
      "name": "Seine",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 25,
      "polyline_geo": [
      ],
@@ -2745,18 +3667,26 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 67.765,
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
        "arc_tiles": 207.529,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 2,
        "tangent": [-0.84028, -0.542152],
+       "half_length": 2.5,
+       "half_width": 6.825
       }
      ],
      "fords_skipped": [],
@@ -2766,6 +3696,8 @@
      "kind": "river",
      "id": "rhone",
      "name": "Rhone",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 25,
      "polyline_geo": [
       [-91.5, -2611.3125], [-77.0, -2567.0]
@@ -2777,15 +3709,22 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 2,
+       "half_length": 2.5,
       }
      ],
      "fords_skipped": [],
@@ -2794,6 +3733,8 @@
      "kind": "river",
      "id": "ebro",
      "name": "Ebro",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "segments": 11,
      "window_tiles": 25,
      "polyline_geo": [
@@ -2805,15 +3746,24 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
+       "arc_tiles": 128.412,
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 6.825
       }
      ],
      "fords_skipped": [],
@@ -2823,6 +3773,8 @@
      "kind": "river",
      "id": "dniester",
      "name": "Dniester",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "segments": 7,
      "window_tiles": 25,
      "polyline_geo": [
@@ -2838,14 +3790,24 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 38.812,
+       "centre": [2023.7313, -3019.677],
        "tangent": [0.894866, 0.446335],
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
+       "arc_tiles": 162.529,
+       "centre": [2109.9495, -2941.7945],
        "tangent": [0.336258, 0.94177],
+       "half_length": 2.5,
+       "half_width": 6.825
       }
      ],
      "fords_skipped": [],
@@ -2855,6 +3817,8 @@
      "kind": "river",
      "id": "garonne",
      "name": "Garonne",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "segments": 5,
      "window_tiles": 49,
      "polyline_geo": [
@@ -2870,16 +3834,24 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 71.718,
        "centre": [-438.2908, -2644.4252],
        "tangent": [-0.935557, -0.353175],
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
+       "arc_tiles": 188.682,
+       "centre": [-540.8119, -2699.2585],
        "tangent": [-0.83465, -0.55078],
+       "half_length": 2.5,
+       "half_width": 6.825
       }
      ],
      "fords_skipped": [],
@@ -2889,6 +3861,8 @@
      "kind": "river",
      "id": "weser",
      "name": "Weser",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "segments": 7,
      "window_tiles": 49,
      "polyline_geo": [
@@ -2900,13 +3874,23 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 50.859,
+       "centre": [334.7003, -3349.6783],
+       "tangent": [-0.477787, -0.878476],
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
+       "arc_tiles": 190.871,
        "tangent": [-0.78255, -0.622588],
+       "half_length": 2.5,
+       "half_width": 6.825
       }
      ],
      "fords_skipped": [],
@@ -2916,6 +3900,8 @@
      "kind": "river",
      "id": "douro",
      "name": "Douro",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 25,
      "polyline_geo": [
      ],
@@ -2926,13 +3912,21 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 51.8,
+       "centre": [-1078.9304, -2406.261],
        "tangent": [-0.84412, 0.536154],
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 6.825
       }
      ],
      "fords_skipped": [],
@@ -2942,6 +3936,8 @@
      "kind": "river",
      "id": "neman",
      "name": "Neman",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "segments": 5,
      "window_tiles": 25,
      "polyline_geo": [
@@ -2955,12 +3951,19 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 62.082,
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 6.825
       }
      ],
      "fords_skipped": [],
@@ -2970,6 +3973,8 @@
      "kind": "river",
      "id": "thames",
      "name": "Thames",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 25,
      "polyline_geo": [
      ],
@@ -2980,9 +3985,13 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.825
       }
      ],
      "fords_skipped": [],
@@ -2992,6 +4001,8 @@
      "kind": "river",
      "id": "guadalquivir",
      "name": "Guadalquivir",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 25,
      "polyline_geo": [
      ],
@@ -3002,12 +4013,16 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 59.012,
        "centre": [-997.6456, -2068.4572],
        "tangent": [-0.959903, 0.280331],
+       "half_length": 2.5,
+       "half_width": 5.85
       }
      ],
      "fords_skipped": [],
@@ -3017,6 +4032,8 @@
      "kind": "river",
      "id": "don_lower",
      "name": "Don (lower)",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "segments": 4,
      "window_tiles": 25,
      "polyline_geo": [
@@ -3030,9 +4047,14 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 62.247,
+       "half_length": 2.5,
+       "half_width": 6.825
       }
      ],
      "fords_skipped": [],
@@ -3042,6 +4064,8 @@
      "kind": "river",
      "id": "neva",
      "name": "Neva",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 25,
      "polyline_geo": [
      ],
@@ -3052,9 +4076,13 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 7.8
       }
      ],
      "fords_skipped": [],
@@ -3064,6 +4092,8 @@
      "kind": "river",
      "id": "niger",
      "name": "Niger",
+     "hw_tiles": 3.0,
+     "reach_tiles": 29.405,
      "window_tiles": 25,
      "polyline_geo": [
      "depth": -2.2,
@@ -3073,66 +4103,105 @@
       "covered": true
      },
      "class": "major",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 87.247,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 3,
+       "arc_tiles": 416.318,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 4,
        "tangent": [0.804535, -0.593906],
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 5,
+       "half_length": 2.5,
       },
       {
        "interval": 6,
        "arc_tiles": 775.624,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 7,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 8,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 9,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 10,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 11,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 12,
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "interval": 13,
+       "arc_tiles": 1602.353,
+       "half_length": 2.5,
       },
       {
        "interval": 14,
+       "half_length": 2.5,
       },
       {
        "interval": 15,
+       "half_length": 2.5,
+       "half_width": 8.775
       },
       {
        "interval": 16,
+       "half_length": 2.5,
+       "half_width": 8.775
       },
       {
        "interval": 17,
+       "half_length": 2.5,
+       "half_width": 8.775
       },
       {
        "interval": 18,
+       "half_length": 2.5,
+       "half_width": 8.775
       }
      ],
      "fords_skipped": [],
@@ -3141,48 +4210,82 @@
      "kind": "river",
      "id": "mackenzie",
      "name": "Mackenzie",
+     "hw_tiles": 3.0,
+     "reach_tiles": 29.405,
      "window_tiles": 49,
      "polyline_geo": [
      "depth": -2.2,
      "bend": {
       "violations": 1,
+      "basins": [],
       "covered": true
      },
      "class": "major",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 64.094,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 6.825
       },
       {
        "interval": 2,
+       "half_length": 2.5,
       },
       {
+       "half_length": 2.5,
       },
       {
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
+       "half_length": 2.5,
+       "half_width": 7.8
       },
       {
        "tangent": [-0.918891, -0.394511],
+       "half_length": 2.5,
+       "half_width": 8.775
       },
       {
+       "half_length": 2.5,
+       "half_width": 8.775
       },
       {
+       "half_length": 2.5,
+       "half_width": 8.775
       },
       {
+       "half_length": 2.5,
+       "half_width": 8.775
       },
       {
+       "half_length": 2.5,
+       "half_width": 8.775
     },
     {
      "kind": "river",
@@ -3198,6 +4301,7 @@
       },
       {
        "interval": 15,
+       "half_length": 2.5,
       }
      ],
      "fords_skipped": [],
@@ -3206,6 +4310,7 @@
      "kind": "river",
      "id": "congo",
      "name": "Congo",
+     "reach_tiles": 29.405,
      "segments": 54,
      "polyline_geo": [
      "bend": {
@@ -3219,6 +4324,8 @@
      "kind": "river",
      "id": "nile",
      "name": "Nile",
+     "hw_tiles": 3.0,
+     "reach_tiles": 29.405,
      "polyline_geo": [
      "bend": {
       "violations": 0,
@@ -3231,6 +4338,8 @@
      "kind": "river",
      "id": "zambezi",
      "name": "Zambezi",
+     "hw_tiles": 3.0,
+     "reach_tiles": 29.405,
      "polyline_geo": [
      "depth": -2.2,
      "bend": {
@@ -3258,6 +4367,8 @@
      "kind": "river",
      "id": "st_lawrence",
      "name": "St. Lawrence",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "polyline_geo": [
      ],
      "depth": -2.2,
@@ -3267,6 +4378,8 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
       {
       }
      ],
@@ -3279,6 +4392,8 @@
      "kind": "river",
      "id": "parana",
      "name": "Parana",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 25,
      "polyline_geo": [
      "depth": -2.2,
@@ -3289,7 +4404,11 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
       {
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
       }
@@ -3305,6 +4424,8 @@
      "kind": "river",
      "id": "orinoco",
      "name": "Orinoco",
+     "hw_tiles": 2.0,
+     "reach_tiles": 28.43,
      "window_tiles": 25,
      "polyline_geo": [
      "depth": -2.2,
@@ -3314,37 +4435,51 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 4,
+     "half_widths": [1.5, 3.0],
       {
+       "half_length": 2.5,
+       "half_width": 5.85
       },
       {
        "interval": 1,
+       "half_length": 2.5,
       },
       {
        "interval": 2,
+       "half_length": 2.5,
       },
       {
        "interval": 3,
+       "half_length": 2.5,
       },
       {
        "interval": 4,
+       "half_length": 2.5,
       },
       {
        "interval": 5,
+       "half_length": 2.5,
       },
       {
        "interval": 6,
+       "half_length": 2.5,
       },
       {
        "interval": 7,
+       "half_length": 2.5,
       },
       {
        "interval": 8,
+       "half_length": 2.5,
       },
       {
        "interval": 9,
+       "half_length": 2.5,
       },
       {
        "interval": 10,
+       "half_length": 2.5,
       }
      ],
      "fords_skipped": [],
@@ -3430,6 +4565,7 @@
      "bend": {
       "violations": 0,
       "worst_deg": 82.7,
+      "basins": [],
       "covered": true
      },
     },
@@ -4068,57 +5204,91 @@
      },
      "class": "major",
      "width_tiles": 9,
+     "half_widths": [3.0, 6.0],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 8.925
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 8.925
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 8.925
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 8.925
       },
       {
        "interval": 5,
+       "half_length": 2.5,
+       "half_width": 8.925
       },
       {
        "interval": 6,
+       "half_length": 2.5,
+       "half_width": 9.9
       },
       {
        "interval": 7,
+       "half_length": 2.5,
+       "half_width": 9.9
       },
       {
        "interval": 8,
+       "half_length": 2.5,
+       "half_width": 9.9
       },
       {
        "interval": 9,
+       "half_length": 2.5,
+       "half_width": 9.9
       },
       {
        "interval": 10,
+       "half_length": 2.5,
+       "half_width": 9.9
       },
       {
        "interval": 11,
+       "half_length": 2.5,
+       "half_width": 10.875
       },
       {
        "interval": 12,
+       "half_length": 2.5,
+       "half_width": 10.875
       },
       {
        "interval": 13,
+       "half_length": 2.5,
+       "half_width": 10.875
       },
       {
        "interval": 14,
+       "half_length": 2.5,
+       "half_width": 10.875
       },
       {
        "interval": 15,
+       "half_length": 2.5,
+       "half_width": 10.875
       },
       {
        "interval": 16,
+       "half_length": 2.5,
        "half_width": 11.85
       },
       {
@@ -4143,33 +5313,48 @@
      },
      "class": "major",
      "width_tiles": 9,
+     "half_widths": [3.0, 6.0],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 8.925
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 8.925
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 8.925
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 9.9
       },
       {
        "interval": 5,
       },
       {
        "interval": 7,
+       "half_length": 2.5,
+       "half_width": 10.875
       },
       {
        "interval": 8,
       },
       {
        "interval": 9,
+       "half_length": 2.5,
+       "half_width": 10.875
       },
       {
        "interval": 10,
@@ -4193,21 +5378,32 @@
      },
      "class": "major",
      "width_tiles": 9,
+     "half_widths": [3.0, 6.0],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 8.925
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 9.9
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 9.9
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 10.875
       },
       {
        "interval": 5,
@@ -4229,21 +5425,32 @@
      },
      "class": "major",
      "width_tiles": 9,
+     "half_widths": [3.0, 6.0],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 8.925
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 9.9
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 9.9
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 10.875
       },
       {
        "interval": 5,
@@ -4255,6 +5462,8 @@
      "kind": "river",
      "id": "elbe",
      "name": "Elbe",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "segments": 21,
      "window_tiles": 49,
      "polyline_geo": [
@@ -4266,18 +5475,28 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.975
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 4,
@@ -4289,6 +5508,8 @@
      "kind": "river",
      "id": "loire",
      "name": "Loire",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "window_tiles": 49,
      "polyline_geo": [
      ],
@@ -4299,21 +5520,33 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.975
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 8.925
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 8.925
       }
      ],
      "fords_skipped": [],
@@ -4323,6 +5556,8 @@
      "kind": "river",
      "id": "daugava",
      "name": "Daugava",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "segments": 9,
      "window_tiles": 49,
      "polyline_geo": [
@@ -4334,22 +5569,34 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.975
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 2,
        "tangent": [-0.993377, -0.114898],
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 8.925
       },
       {
        "interval": 4,
+       "half_length": 2.5,
+       "half_width": 8.925
       }
      ],
      "fords_skipped": [],
@@ -4359,6 +5606,8 @@
      "kind": "river",
      "id": "oder",
      "name": "Oder",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "segments": 14,
      "window_tiles": 49,
      "polyline_geo": [
@@ -4370,20 +5619,32 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 64.6,
+       "centre": [1593.1443, -4887.738],
        "tangent": [-0.8956, -0.444861],
+       "half_length": 2.5,
+       "half_width": 6.975
       },
       {
        "interval": 1,
        "tangent": [-0.939943, -0.341332],
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 8.925
       }
      ],
      "fords_skipped": [],
@@ -4393,6 +5654,8 @@
      "kind": "river",
      "id": "tagus",
      "name": "Tagus",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "window_tiles": 49,
      "polyline_geo": [
      ],
@@ -4403,18 +5666,28 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.975
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 3,
+       "half_length": 2.5,
+       "half_width": 8.925
       }
      ],
      "fords_skipped": [],
@@ -4424,6 +5697,8 @@
      "kind": "river",
      "id": "po",
      "name": "Po",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "segments": 11,
      "window_tiles": 49,
      "polyline_geo": [
@@ -4435,12 +5710,18 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.975
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 2,
@@ -4453,6 +5734,8 @@
      "kind": "river",
      "id": "seine",
      "name": "Seine",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "segments": 7,
      "window_tiles": 49,
      "polyline_geo": [
@@ -4464,16 +5747,23 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.975
       },
       {
        "interval": 1,
        "tangent": [-0.970393, -0.24153],
+       "half_length": 2.5,
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 8.925
       }
      ],
      "fords_skipped": [],
@@ -4483,6 +5773,8 @@
      "kind": "river",
      "id": "rhone",
      "name": "Rhone",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "window_tiles": 49,
      "polyline_geo": [
      ],
@@ -4493,12 +5785,18 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.975
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 2,
@@ -4510,6 +5808,8 @@
      "kind": "river",
      "id": "ebro",
      "name": "Ebro",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "segments": 9,
      "window_tiles": 49,
      "polyline_geo": [
@@ -4521,16 +5821,26 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 65.647,
+       "centre": [-1034.1381, -3733.0814],
        "tangent": [0.957574, 0.288186],
+       "half_length": 2.5,
+       "half_width": 6.975
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 2,
+       "half_length": 2.5,
+       "half_width": 8.925
       }
      ],
      "fords_skipped": [],
@@ -4540,6 +5850,8 @@
      "kind": "river",
      "id": "dniester",
      "name": "Dniester",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "window_tiles": 49,
      "polyline_geo": [
      ],
@@ -4550,12 +5862,18 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.975
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 8.925
       }
      ],
      "fords_skipped": [],
@@ -4565,6 +5883,8 @@
      "kind": "river",
      "id": "garonne",
      "name": "Garonne",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "segments": 5,
      "polyline_geo": [
      ],
@@ -4575,12 +5895,19 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 6.975
       },
       {
        "interval": 1,
+       "tangent": [-0.600735, -0.799448],
+       "half_length": 2.5,
+       "half_width": 7.95
       }
      ],
      "fords_skipped": [],
@@ -4590,6 +5917,8 @@
      "kind": "river",
      "id": "weser",
      "name": "Weser",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "window_tiles": 49,
      "polyline_geo": [
       [538.0, -4958.0], [511.8125, -4993.4375], [505.8125, -5026.9375], [499.1875, -5039.3125],
@@ -4605,13 +5934,24 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 106.788,
+       "centre": [487.6895, -5048.3987],
+       "tangent": [-0.784589, -0.620016],
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 1,
+       "arc_tiles": 287.306,
+       "centre": [434.2646, -5175.4087],
        "tangent": [-0.893792, -0.448482],
+       "half_length": 2.5,
+       "half_width": 8.925
       }
      ],
      "fords_skipped": [],
@@ -4621,6 +5961,8 @@
      "kind": "river",
      "id": "douro",
      "name": "Douro",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "window_tiles": 49,
      "polyline_geo": [
      ],
@@ -4631,12 +5973,18 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 7.95
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 8.925
       }
      ],
      "fords_skipped": [],
@@ -4646,6 +5994,8 @@
      "kind": "river",
      "id": "neman",
      "name": "Neman",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "window_tiles": 49,
      "polyline_geo": [
      ],
@@ -4656,12 +6006,16 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
       },
       {
        "interval": 1,
+       "half_length": 2.5,
+       "half_width": 8.925
       }
      ],
      "fords_skipped": [],
@@ -4671,6 +6025,8 @@
      "kind": "river",
      "id": "thames",
      "name": "Thames",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "window_tiles": 49,
      "polyline_geo": [
       [-723.8125, -4983.6875], [-626.0, -4967.0]
@@ -4682,9 +6038,13 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 7.95
       }
      ],
      "fords_skipped": [],
@@ -4694,6 +6054,8 @@
      "kind": "river",
      "id": "guadalquivir",
      "name": "Guadalquivir",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "window_tiles": 49,
      "polyline_geo": [
      ],
@@ -4704,12 +6066,16 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [3.0, 3.75],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 88.518,
        "centre": [-1496.7529, -3102.4595],
        "tangent": [-0.957469, 0.288535],
+       "half_length": 2.5,
+       "half_width": 7.95
       }
      ],
      "fords_skipped": [],
@@ -4719,6 +6085,8 @@
      "kind": "river",
      "id": "don_lower",
      "name": "Don (lower)",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "window_tiles": 49,
      "polyline_geo": [
      ],
@@ -4729,9 +6097,13 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [2.25, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 7.95
       }
      ],
      "fords_skipped": [],
@@ -4741,6 +6113,8 @@
      "kind": "river",
      "id": "neva",
      "name": "Neva",
+     "hw_tiles": 3.0,
+     "reach_tiles": 37.885,
      "window_tiles": 49,
      "polyline_geo": [
      ],
@@ -4751,9 +6125,13 @@
       "covered": true
      },
      "class": "minor",
+     "width_tiles": 6,
+     "half_widths": [3.0, 3.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 2.5,
+       "half_width": 7.95
       }
      ],
      "fords_skipped": [],
@@ -5508,6 +6886,7 @@
      "id": "elbe",
      "name": "Elbe",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "depth": -2.2,
      "bend": {
       "violations": 0,
@@ -5525,6 +6904,7 @@
      "id": "loire",
      "name": "Loire",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "window_tiles": 49,
      "polyline_geo": [
      "depth": -2.2,
@@ -5544,6 +6924,7 @@
      "id": "daugava",
      "name": "Daugava",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "window_tiles": 49,
      "polyline_geo": [
      "depth": -2.2,
@@ -5561,6 +6942,7 @@
     {
      "kind": "river",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "segments": 18,
      "window_tiles": 49,
      "polyline_geo": [
@@ -5581,6 +6963,7 @@
      "id": "tagus",
      "name": "Tagus",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "window_tiles": 49,
      "polyline_geo": [
      "depth": -2.2,
@@ -5628,6 +7011,7 @@
      "id": "rhone",
      "name": "Rhone",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "segments": 18,
      "window_tiles": 49,
      "polyline_geo": [
@@ -5662,6 +7046,7 @@
      "id": "dniester",
      "name": "Dniester",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "window_tiles": 49,
      "polyline_geo": [
      "depth": -2.2,
@@ -5681,6 +7066,7 @@
      "id": "garonne",
      "name": "Garonne",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "segments": 6,
      "window_tiles": 97,
      "polyline_geo": [
@@ -5699,6 +7085,7 @@
     {
      "kind": "river",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "window_tiles": 49,
      "polyline_geo": [
      "depth": -2.2,
@@ -5718,6 +7105,7 @@
      "id": "douro",
      "name": "Douro",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "window_tiles": 49,
      "polyline_geo": [
       [-2576.0, -4752.0625], [-2602.0, -4742.0]
@@ -5739,6 +7127,7 @@
      "id": "neman",
      "name": "Neman",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "window_tiles": 49,
      "polyline_geo": [
      "depth": -2.2,
@@ -5758,6 +7147,7 @@
      "id": "thames",
      "name": "Thames",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "segments": 6,
      "window_tiles": 49,
      "polyline_geo": [
@@ -5778,6 +7168,7 @@
      "id": "guadalquivir",
      "name": "Guadalquivir",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "segments": 4,
      "window_tiles": 49,
      "polyline_geo": [
@@ -5798,6 +7189,7 @@
      "id": "don_lower",
      "name": "Don (lower)",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "segments": 4,
      "window_tiles": 49,
      "polyline_geo": [
@@ -5818,6 +7210,7 @@
      "id": "neva",
      "name": "Neva",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "window_tiles": 49,
      "polyline_geo": [
      "depth": -2.2,
@@ -5859,6 +7252,7 @@
      "name": "Mississippi",
      "window_tiles": 17,
      "polyline_geo": [
+      "basins": [],
       "covered": true
      },
      "class": "major",
@@ -5897,6 +7291,7 @@
      "id": "st_lawrence",
      "name": "St. Lawrence",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "window_tiles": 49,
      "polyline_geo": [
      "depth": -2.2,
@@ -5906,6 +7301,11 @@
       "covered": true
      },
      "class": "minor",
+      }
+     ],
+     "fords_skipped": [
+      {
+       "interval": 6,
        "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
        "reasons": ["a bank is water in the reference or the coast fit (lake, sea or coast)"],
     },
@@ -5914,6 +7314,7 @@
      "id": "parana",
      "name": "Parana",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "window_tiles": 49,
      "polyline_geo": [
      "depth": -2.2,
@@ -5926,6 +7327,7 @@
      "id": "orinoco",
      "name": "Orinoco",
      "hw_tiles": 4.0,
+     "reach_tiles": 48.315,
      "depth": -2.2,
      "bend": {
       "violations": 0,
@@ -6604,6 +8006,7 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
       }
      ],
      "fords_skipped": [],
@@ -6626,13 +8029,22 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
+       "half_length": 4.16665,
+       "half_width": 10.2
+       "half_length": 4.16665,
+       "half_width": 10.2
       },
       {
        "interval": 2,
+       "half_length": 4.16665,
+       "half_width": 11.175
       },
       {
        "interval": 3,
+       "half_length": 4.16665,
        "half_width": 12.15
+       "half_length": 4.16665,
        "half_width": 13.125
       }
      ],
@@ -6657,6 +8069,7 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
       }
      ],
      "fords_skipped": [],
@@ -6678,12 +8091,20 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
+       "half_length": 4.16665,
+       "half_width": 8.25
+       "half_length": 4.16665,
+       "half_width": 10.2
       },
       {
        "interval": 2,
+       "half_length": 4.16665,
+       "half_width": 11.175
       },
       {
        "interval": 3,
+       "half_length": 4.16665,
        "half_width": 12.15
       }
      ],
@@ -6706,19 +8127,28 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 88.941,
+       "half_length": 4.16665,
+       "half_width": 8.25
       },
       {
        "interval": 1,
+       "arc_tiles": 463.765,
+       "half_length": 4.16665,
+       "half_width": 10.2
       },
       {
        "interval": 2,
+       "half_length": 4.16665,
+       "half_width": 11.175
       },
       {
        "interval": 3,
+       "half_length": 4.16665,
        "half_width": 13.125
       }
      ],
@@ -6737,14 +8167,21 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
+       "half_length": 4.16665,
+       "half_width": 10.2
       },
       {
        "interval": 1,
        "arc_tiles": 374.824,
+       "half_length": 4.16665,
+       "half_width": 10.2
       },
       {
        "interval": 2,
+       "half_length": 4.16665,
        "half_width": 12.15
+       "half_length": 4.16665,
        "half_width": 13.125
       }
      ],
@@ -6767,10 +8204,16 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
+       "half_length": 4.16665,
+       "half_width": 8.25
+       "half_length": 4.16665,
+       "half_width": 11.175
       },
       {
        "interval": 2,
        "tangent": [-0.842207, -0.539154],
+       "half_length": 4.16665,
        "half_width": 12.15
       }
      ],
@@ -6793,12 +8236,20 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
+       "half_length": 4.16665,
+       "half_width": 10.2
+       "half_length": 4.16665,
+       "half_width": 10.2
       },
       {
        "interval": 2,
+       "half_length": 4.16665,
+       "half_width": 11.175
       },
       {
        "interval": 3,
+       "half_length": 4.16665,
        "half_width": 12.15
       }
      ],
@@ -6821,12 +8272,19 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
+       "half_length": 4.16665,
+       "half_width": 8.25
       },
       {
        "interval": 1,
+       "arc_tiles": 363.529,
+       "half_length": 4.16665,
+       "half_width": 10.2
       },
       {
        "interval": 2,
+       "half_length": 4.16665,
        "half_width": 12.15
       }
      ],
@@ -6850,13 +8308,18 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 101.529,
+       "half_length": 4.16665,
+       "half_width": 8.25
       },
       {
        "interval": 1,
+       "half_length": 4.16665,
+       "half_width": 11.175
       }
      ],
      "fords_skipped": [],
@@ -6879,9 +8342,14 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
+       "half_length": 4.16665,
+       "half_width": 8.25
       },
       {
        "interval": 1,
+       "half_length": 4.16665,
+       "half_width": 11.175
       }
      ],
      "fords_skipped": [],
@@ -6904,12 +8372,17 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 116.647,
+       "half_length": 4.16665,
+       "half_width": 8.25
       },
       {
        "interval": 1,
+       "half_length": 4.16665,
        "half_width": 12.15
       }
      ],
@@ -6935,9 +8408,13 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
+       "half_length": 4.16665,
+       "half_width": 8.25
       },
       {
        "interval": 1,
+       "half_length": 4.16665,
        "half_width": 12.15
       }
      ],
@@ -6961,9 +8438,13 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
+       "half_length": 4.16665,
+       "half_width": 8.25
       },
       {
        "interval": 1,
+       "half_length": 4.16665,
        "half_width": 12.15
       }
      ],
@@ -6987,6 +8468,9 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
+       "half_length": 4.16665,
+       "half_width": 10.2
       }
      ],
      "fords_skipped": [],
@@ -7009,6 +8493,9 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
+       "half_length": 4.16665,
+       "half_width": 8.25
       }
      ],
      "fords_skipped": [],
@@ -7031,9 +8518,13 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 158.118,
+       "half_length": 4.16665,
+       "half_width": 8.25
       }
      ],
      "fords_skipped": [],
@@ -7055,10 +8546,13 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 127.765,
+       "half_length": 4.16665,
+       "half_width": 10.2
       }
      ],
      "fords_skipped": [],
@@ -7118,8 +8612,10 @@
      },
      "class": "major",
       {
+       "half_length": 4.16665,
        "half_width": 13.125
       {
+       "half_length": 4.16665,
        "half_width": 13.125
       {
       }
@@ -7136,62 +8632,82 @@
      },
      "class": "major",
      "width_tiles": 15,
+     "half_widths": [5.25, 10.5],
      "fords": [
       {
        "interval": 0,
+       "half_length": 4.16665,
+       "half_width": 8.25
       },
       {
        "interval": 1,
+       "half_length": 4.16665,
       },
       {
        "interval": 2,
+       "half_length": 4.16665,
        "half_width": 12.15
       },
       {
        "interval": 3,
+       "half_length": 4.16665,
        "half_width": 12.15
       },
       {
        "interval": 4,
+       "half_length": 4.16665,
       },
       {
        "interval": 5,
+       "half_length": 4.16665,
       },
       {
        "interval": 6,
+       "half_length": 4.16665,
       },
       {
        "interval": 7,
+       "half_length": 4.16665,
       },
       {
        "interval": 8,
+       "half_length": 4.16665,
       },
       {
        "interval": 9,
+       "half_length": 4.16665,
       },
       {
        "interval": 10,
+       "half_length": 4.16665,
       },
       {
        "interval": 11,
+       "half_length": 4.16665,
       },
       {
        "interval": 12,
+       "half_length": 4.16665,
       },
       {
        "interval": 13,
+       "half_length": 4.16665,
       },
       {
        "interval": 14,
+       "half_length": 4.16665,
       },
       {
        "interval": 15,
+       "half_length": 4.16665,
       },
       {
        "interval": 16,
+       "half_length": 4.16665,
       },
       {
        "interval": 17,
+       "half_length": 4.16665,
        "half_width": 17.025
       }
      ],
@@ -7213,39 +8729,51 @@
      },
      "class": "major",
      "width_tiles": 15,
+     "half_widths": [5.25, 10.5],
      "fords": [
       {
        "interval": 0,
+       "half_length": 4.16665,
       },
       {
        "interval": 1,
+       "half_length": 4.16665,
        "half_width": 12.15
       },
       {
        "interval": 2,
+       "half_length": 4.16665,
       },
       {
        "interval": 3,
+       "half_length": 4.16665,
       },
       {
        "interval": 4,
+       "half_length": 4.16665,
       },
       {
        "interval": 5,
+       "half_length": 4.16665,
       },
       {
        "interval": 6,
+       "half_length": 4.16665,
       },
       {
        "interval": 7,
+       "half_length": 4.16665,
        "half_width": 16.05
       },
       {
+       "half_length": 4.16665,
        "half_width": 16.05
       },
       {
+       "half_length": 4.16665,
       },
       {
+       "half_length": 4.16665,
       }
      ],
        "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
@@ -7264,35 +8792,71 @@
      "width_tiles": 15,
      "fords": [
       {
+       "half_length": 4.16665,
+       "half_width": 8.25
       },
       {
        "interval": 1,
+       "half_length": 4.16665,
+       "half_width": 10.2
       },
       {
        "interval": 2,
+       "half_length": 4.16665,
+       "half_width": 10.2
+       "half_length": 4.16665,
+       "half_width": 10.2
+       "half_length": 4.16665,
+       "half_width": 10.2
+       "half_length": 4.16665,
+       "half_width": 10.2
+       "half_length": 4.16665,
+       "half_width": 11.175
+       "half_length": 4.16665,
+       "half_width": 11.175
+       "half_length": 4.16665,
+       "half_width": 11.175
+       "half_length": 4.16665,
+       "half_width": 11.175
+       "half_length": 4.16665,
+       "half_width": 11.175
       },
       {
+       "half_length": 4.16665,
        "half_width": 12.15
+       "half_length": 4.16665,
        "half_width": 12.15
+       "half_length": 4.16665,
        "half_width": 12.15
+       "half_length": 4.16665,
        "half_width": 12.15
+       "half_length": 4.16665,
        "half_width": 12.15
+       "half_length": 4.16665,
        "half_width": 13.125
+       "half_length": 4.16665,
        "half_width": 13.125
+       "half_length": 4.16665,
+       "half_width": 13.125
+       "half_length": 4.16665,
+      },
+      {
+       "half_length": 4.16665,
        "half_width": 13.125
       },
       {
-       "half_width": 13.125
-      },
-      {
+       "half_length": 4.16665,
        "half_width": 14.1
       },
       {
+       "half_length": 4.16665,
        "half_width": 14.1
       },
       {
+       "half_length": 4.16665,
       },
       {
+       "half_length": 4.16665,
       }
      ],
        "reason": "a bank is water in the reference or the coast fit (lake, sea or coast)",
@@ -7315,24 +8879,31 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 4.16665,
       },
       {
        "interval": 1,
+       "half_length": 4.16665,
       },
       {
        "interval": 2,
+       "half_length": 4.16665,
       },
       {
        "interval": 3,
+       "half_length": 4.16665,
       },
       {
        "interval": 4,
+       "half_length": 4.16665,
       },
       {
        "interval": 5,
+       "half_length": 4.16665,
       }
      ],
      "fords_skipped": [
@@ -7355,24 +8926,46 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 4.16665,
       },
       {
        "interval": 1,
+       "half_length": 4.16665,
+       "half_width": 10.2
       },
       {
        "interval": 2,
+       "half_length": 4.16665,
       },
       {
        "interval": 3,
+       "half_length": 4.16665,
+       "half_width": 10.2
+       "half_length": 4.16665,
+       "half_width": 10.2
+       "half_length": 4.16665,
+       "half_width": 10.2
+       "half_length": 4.16665,
+       "half_width": 11.175
+       "half_length": 4.16665,
+       "half_width": 11.175
+       "half_length": 4.16665,
+       "half_width": 11.175
+       "half_length": 4.16665,
        "half_width": 12.15
       },
       {
+       "half_length": 4.16665,
        "half_width": 12.15
+       "half_length": 4.16665,
        "half_width": 12.15
+       "half_length": 4.16665,
        "half_width": 12.15
+       "half_length": 4.16665,
        "half_width": 13.125
       }
      ],
@@ -7395,26 +8988,42 @@
      },
      "class": "minor",
      "width_tiles": 10,
+     "half_widths": [4.5, 6.75],
      "fords": [
       {
        "interval": 0,
+       "half_length": 4.16665,
       },
       {
        "interval": 1,
+       "half_length": 4.16665,
+       "half_width": 10.2
       },
       {
        "interval": 2,
+       "half_length": 4.16665,
       },
       {
        "interval": 3,
+       "half_length": 4.16665,
       },
       {
        "interval": 4,
+       "half_length": 4.16665,
+       "half_width": 10.2
+       "half_length": 4.16665,
+       "half_width": 11.175
+       "half_length": 4.16665,
+       "half_width": 11.175
       },
       {
+       "half_length": 4.16665,
        "half_width": 12.15
+       "half_length": 4.16665,
        "half_width": 12.15
+       "half_length": 4.16665,
        "half_width": 12.15
+       "half_length": 4.16665,
        "half_width": 13.125
       }
      ],
@@ -8105,6 +9714,7 @@
      "dam": 20
     },
     "classes": {
+     "ww": 22,
      "canals": 2
     }
    },
@@ -8127,10 +9737,12 @@
      },
      "class": "major",
      "width_tiles": 18,
+     "half_widths": [6.75, 12.0],
      "fords": [
       {
        "interval": 0,
        "half_length": 5.0,
+       "half_width": 9.375
       },
       {
        "interval": 1,
@@ -8223,6 +9835,7 @@
      },
      "class": "major",
      "width_tiles": 18,
+     "half_widths": [6.0, 12.0],
      "fords": [
       {
        "interval": 0,
@@ -8272,7 +9885,9 @@
      },
      "class": "major",
      "width_tiles": 18,
+     "half_widths": [6.75, 12.0],
        "half_length": 5.0,
+       "half_width": 8.4
       },
       {
        "interval": 1,
@@ -8317,7 +9932,9 @@
      },
      "class": "major",
      "width_tiles": 18,
+     "half_widths": [6.0, 12.0],
        "half_length": 5.0,
+       "half_width": 11.325
       },
       {
        "interval": 1,
@@ -8358,7 +9975,9 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
        "half_length": 5.0,
+       "half_width": 7.425
       },
       {
        "interval": 1,
@@ -8395,7 +10014,9 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
        "half_length": 5.0,
+       "half_width": 11.325
       },
       {
        "interval": 1,
@@ -8435,11 +10056,15 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 74.529,
+       "centre": [6546.9451, -10926.6034],
        "tangent": [-0.993633, 0.112661],
        "half_length": 5.0,
+       "half_width": 7.425
       },
       {
        "interval": 1,
@@ -8483,6 +10108,7 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
      "fords": [
       {
        "interval": 0,
@@ -8490,6 +10116,7 @@
        "centre": [3217.7312, -9759.3352],
        "tangent": [-0.895681, -0.444698],
        "half_length": 5.0,
+       "half_width": 7.425
       },
       {
        "interval": 1,
@@ -8528,7 +10155,9 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
        "half_length": 5.0,
+       "half_width": 7.425
       },
       {
        "interval": 1,
@@ -8567,7 +10196,9 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
        "half_length": 5.0,
+       "half_width": 9.375
       },
       {
        "interval": 1,
@@ -8604,7 +10235,9 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
        "half_length": 5.0,
+       "half_width": 10.35
       },
       {
        "interval": 1,
@@ -8636,7 +10269,9 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
        "half_length": 5.0,
+       "half_width": 11.325
       },
       {
        "interval": 1,
@@ -8675,7 +10310,9 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
        "half_length": 5.0,
+       "half_width": 8.4
       },
       {
        "interval": 1,
@@ -8709,11 +10346,13 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 123.435,
        "half_length": 5.0,
+       "half_width": 8.4
       },
       {
        "interval": 1,
@@ -8750,6 +10389,7 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
      "fords": [
       {
        "interval": 0,
@@ -8757,6 +10397,7 @@
        "centre": [-1304.5372, -7935.829],
        "tangent": [-0.924952, -0.380084],
        "half_length": 5.0,
+       "half_width": 10.35
       },
       {
        "interval": 1,
@@ -8788,8 +10429,10 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
       {
        "half_length": 5.0,
+       "half_width": 9.375
       },
       {
        "interval": 1,
@@ -8817,8 +10460,10 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
       {
        "half_length": 5.0,
+       "half_width": 9.375
       },
       {
        "interval": 1,
@@ -8847,8 +10492,10 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
       {
        "half_length": 5.0,
+       "half_width": 10.35
       },
       {
        "interval": 1,
@@ -8876,7 +10523,9 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
        "half_length": 5.0,
+       "half_width": 11.325
       }
      ],
      "fords_skipped": [],
@@ -8899,10 +10548,13 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
      "fords": [
       {
        "interval": 0,
+       "arc_tiles": 170.035,
        "half_length": 5.0,
+       "half_width": 9.375
       }
      ],
      "fords_skipped": [],
@@ -8925,11 +10577,13 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
      "fords": [
       {
        "interval": 0,
        "arc_tiles": 189.741,
        "half_length": 5.0,
+       "half_width": 10.35
       }
      ],
      "fords_skipped": [],
@@ -8951,7 +10605,9 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
        "half_length": 5.0,
+       "half_width": 11.325
       }
      ],
      "fords_skipped": [],
@@ -8973,7 +10629,9 @@
      },
      "class": "major",
      "width_tiles": 18,
+     "half_widths": [6.0, 12.0],
        "half_length": 5.0,
+       "half_width": 12.3
       },
       {
        "interval": 1,
@@ -9087,6 +10745,7 @@
       {
        "interval": 0,
        "half_length": 5.0,
+       "half_width": 9.375
       },
       {
        "interval": 1,
@@ -9308,6 +10967,7 @@
      },
      "class": "major",
      "width_tiles": 18,
+     "half_widths": [6.75, 12.0],
      "fords": [
       {
        "interval": 0,
@@ -9393,6 +11053,7 @@
       },
       {
        "half_length": 5.0,
+       "half_width": 12.3
       },
        "half_length": 5.0,
        "half_width": 12.3
@@ -9481,6 +11142,7 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
      "fords": [
       {
        "interval": 0,
@@ -9523,10 +11185,12 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
      "fords": [
       {
        "interval": 0,
        "half_length": 5.0,
+       "half_width": 11.325
       },
       {
        "interval": 1,
@@ -9547,6 +11211,7 @@
       },
       {
        "half_length": 5.0,
+       "half_width": 12.3
       },
        "half_length": 5.0,
        "half_width": 12.3
@@ -9594,10 +11259,12 @@
      },
      "class": "minor",
      "width_tiles": 12,
+     "half_widths": [5.5, 8.25],
      "fords": [
       {
        "interval": 0,
        "half_length": 5.0,
+       "half_width": 10.35
       },
       {
        "interval": 1,
@@ -9613,6 +11280,7 @@
        "half_width": 11.65
       },
        "half_length": 5.0,
+       "half_width": 12.3
       },
        "half_length": 5.0,
        "half_width": 12.3

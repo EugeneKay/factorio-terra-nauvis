@@ -6302,8 +6302,10 @@
    },
    "tn_spawn_lake_europe_v1": {
     "type": "noise-expression",
+    "sha256": "a835304783de04ad052d1715f121b8cbaebf1e3e728f8706b8bbdf00ecd44444",
     "dump": "m1",
     "slice": "spawn-cities",
+    "registered": "2026-10-30"
    },
    "tn_start_land_v1": {
     "type": "noise-expression",
@@ -6320,5 +6322,6 @@
     "registered": "2026-10-29"
    }
   },
+  "sha256": "747f69dcf48b2e0357a353aa463d8a52ce0358d5cc62d36e2cc6a7c302dc8912"
  }
 }

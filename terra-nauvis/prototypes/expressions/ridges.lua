@@ -5,6 +5,8 @@
 --   cliff_elevation = cliff_elevation_0 + cliff_elevation_interval * clamp(1 + h, low, high)
 --   cliffiness = cliffiness_on * (1 - opening) outside the ridge-free start disc, 0 inside it
 -- never read cliff_richness, so continuity and richness have nothing to act on, and contours stand at
+-- whole h whatever the frequency slider makes the interval. The clamp leaves one contour, the ridge's
+-- edge at h = 0 with its high side inward, because more ran parallel to it as ranks. On each map:
 --   depth    tiles inside the ridge: per crest segment the half-width at the tile's nearest crest point
 --            (from the vertex heights, so wider where the mountain is taller, and below zero at a
 --            crest's ends) times the run multiplier, minus the distance to that point; the largest
@@ -12,6 +14,8 @@
 --            slow noise, so a ridge wanders round its range's axis and never runs straight
 --   run      the width's multiplier, slow noise: a ridge swells, thins and at 0 is gone, so it breaks
 --            into runs that taper out instead of closing round their ends
+--   h        (depth - bias) / ramp + fray: the fray moves the edge along the strike, so a line does not
+--            hold to one lattice row
 --   opening  a slot across the crest at a pass or an unnamed gap (pass_tiles along the crest, past the
 --            ridge's half-width to each side), moving with the wandering axis; where a range cut by the
 --            map's edge has no pass on that map, a band along the edge near the crossing, so the ridge
@@ -32,6 +36,15 @@
 -- frame's geo tiles, so a seed's ridges are one shape for every spawn city; only the Cliff program pays
 -- for the noise, on the 4-tile lattice. Every name and number comes from config.lua; the
 -- toggle selects a body through a folded if() and never multiplies.
+--
+-- wider and stronger the taller the range, faded in outside the ridge-free start disc, frayed by noise the region
+-- layer already computes. It costs only what it reads again:
+--   rocks    in the Entity program, on the crest band's own pieces and one reach per piece: lifts rock_density
+--            as the three big vanilla rocks read it and Alien Biomes' big rocks by a hook, outside the openings
+--   tiles    in the Tile program, at the wandering point with a reach that follows the vertex heights: lifts the
+--            stony vanilla tiles' score and, beside Alien Biomes, lowers the tile temperature and moisture, so
+--            the top of a tall range turns to Alien Biomes' grey ground and snow. Trees and decoratives keep the
+--            plain fields
 local cfg = require("prototypes.config")
 local T = require("prototypes.tables.ranges")
 
@@ -151,16 +164,26 @@ local function band_pieces(pts, run)
   return out
 end
 
+-- A vertex's highland reach in reference pixels (config.lua ridges.high).
+local function reach_px(height)
+  local HG = RD.high
+  return HG.min_px + HG.gain_px * (height / HG.ref_m) ^ HG.power
+end
+
 -- One band term (and its locals) for a piece; P and Q name the scaled axis and cross coordinates.
+  local vs, tops = {}, {}
   for j = piece.first, piece.last do
     if j == piece.first then
       vs[#vs + 1] = pts[run[j]]
+      tops[#tops + 1] = heights[run[j]]
     end
     vs[#vs + 1] = pts[run[j] + 1]
+    tops[#tops + 1] = heights[run[j] + 1]
   end
   local p, q = "bu", "bv"
   local list = {}
   for n, v in ipairs(vs) do
+    list[n] = piece.axis == "x" and {v[1], v[2], height = tops[n]} or {v[2], v[1], height = tops[n]}
   end
   if piece.axis == "y" then
     p, q = "bv", "bu"
@@ -173,16 +196,28 @@ end
     list = rev
   end
   local terms, c, steep = {}, list[1][2], 0
+  -- the reach along the piece, the same clamps at the reach's own slopes
+  local W, c2, sum, top, arc = {}, reach_px(list[1].height), list[1].height, list[1].height, 0
   for n = 2, #list do
     local a, b = list[n - 1], list[n]
     local slope = (b[2] - a[2]) / (b[1] - a[1])
     steep = math.max(steep, math.abs(slope))
     c = c - slope * a[1]
+    local bounds = "clamp(" .. p .. ", " .. S .. " * " .. num(a[1]) .. ", " .. S .. " * " .. num(b[1]) .. ")"
+    terms[#terms + 1] = num(slope) .. " * " .. bounds
+    local rise = (reach_px(b.height) - reach_px(a.height)) / (b[1] - a[1])
+    c2 = c2 - rise * a[1]
+    W[#W + 1] = num(rise) .. " * " .. bounds
+    sum, top = sum + b.height, math.max(top, b.height)
+    arc = arc + (b[1] - a[1]) * math.sqrt(1 + slope * slope)
   end
   local half = RD.ore_clear_tiles * math.sqrt(1 + steep * steep)
   local mid, span = (list[1][1] + list[#list][1]) / 2, (list[#list][1] - list[1][1]) / 2
   local f = "f" .. k
   B[f] = S .. " * " .. num(c) .. " + " .. table.concat(terms, " + ")
+  -- the piece's mean cosine, and its one reach for the Entity program: halfway between its mean vertex and its
+  -- highest
+               reach_text = S .. " * " .. num(c2) .. " + " .. table.concat(W, " + ")}
   return "(abs(" .. q .. " - " .. f .. ") < " .. num(half) .. ") * (abs(" .. p .. " - " .. S .. " * " .. num(mid) ..
     ") < " .. S .. " * " .. num(span) .. " + " .. num(RD.ore_clear_tiles) .. ")"
 end
@@ -209,6 +244,9 @@ local function add_opening(O, m, pts, o, wide)
     end
   end
   local s = tostring(#O.terms + 1)
+  if RD.rocks.clear_kinds[o.kind] then
+    O.named[#O.named + 1] = {cu, cv}
+  end
   -- a pass moves with the wandering crest; an edge stays where the map's extent is
   local ou, ov = O.u, O.v
   if o.kind == "edge" then
@@ -268,6 +306,56 @@ local function in_band(m, a, b)
     math.max(a[2], b[2]) >= -M and math.min(a[2], b[2]) < m.height_px + M
 end
 
+-- A map's highland reach and the named passes the rock lift keeps clear. The reach reads the crest band's
+-- own pieces through the same locals, so in the Entity program the crest functions and the distance along
+-- each piece cost nothing more: per piece the band is the largest reach less the wandering distance across
+-- it, cut off past the piece's ends. Only the passes' squared distances cost per pass.
+  local HG = RD.high
+  local L = {wu = N.wander_u[key] .. " * " .. S .. " + " .. num(RD.centre_tiles),
+             wv = N.wander_v[key] .. " * " .. S .. " + " .. num(RD.centre_tiles)}
+  for k, v in pairs(Bd.L) do
+    L[k] = v
+  end
+  local terms = {}
+  for _, h in ipairs(Bd.pieces) do
+    if h.arc >= RD.rocks.short_px then
+      local reach = S .. " * " .. num(h.reach) .. " + " .. num(HG.rock_tiles) .. " / " .. S
+      local wq = h.q == "bu" and "wu" or "wv"
+      terms[#terms + 1] = "min(" .. reach .. " - abs(" .. wq .. " - " .. h.f .. "), " .. reach .. " + " .. S .. " * " ..
+        num(h.span) .. " - abs(" .. h.p .. " - " .. S .. " * " .. num(h.mid) .. "))"
+    end
+  end
+  -- The tiles pay for their own crest functions, so they read them at the wandering point itself, their reach
+  -- follows the vertex heights, one local per piece, and a piece ends round: its box's corners drew flat-topped
+  -- tabs of grey ground.
+  local T2 = {}
+  terms = {}
+  for k, v in pairs(Bd.L) do
+    T2[k] = v
+  end
+  T2.bu, T2.bv = L.wu, L.wv
+  for k, h in ipairs(Bd.pieces) do
+    local s = tostring(k)
+    T2["a" .. s] = num(h.cos) .. " * abs(" .. h.q .. " - " .. h.f .. ")"
+    T2["e" .. s] = "max(0, abs(" .. h.p .. " - " .. S .. " * " .. num(h.mid) .. ") - " .. S .. " * " .. num(h.span) ..
+      ")"
+    terms[k] = h.reach_text .. " - sqrt(a" .. s .. " * a" .. s .. " + e" .. s .. " * e" .. s .. ")"
+  end
+  local P, ds = {}, {}
+  for i, c in ipairs(O.named) do
+    local s = tostring(i)
+    P["pu" .. s] = minus(O.u, c[1])
+    P["pv" .. s] = minus(O.v, c[2])
+    ds[i] = "pu" .. s .. " * pu" .. s .. " + pv" .. s .. " * pv" .. s
+  end
+  local R = RD.rocks
+  local inner, outer = R.clear_tiles ^ 2, (R.clear_tiles + R.fade_tiles) ^ 2
+  if #ds == 0 then
+  else
+      " - " .. num(inner / (outer - inner)) .. ", 0, 1)", P)
+  end
+end
+
   local centre = " + " .. num(RD.centre_tiles)
     local segs = r.segments[key]
     if segs then
@@ -321,7 +409,10 @@ local function map_bodies(key)
   -- the width's multiplier: at 0 the ridge has thinned to nothing and only the fray is left
   def(N.run[key], "max(0, (" .. num(RD.run_base) .. " + " .. waves(RD.run) .. ") * (1 - " .. N.keep[key] .. ") + " ..
     N.keep[key] .. ")")
+  local O = {u = N.wander_u[key], v = N.wander_v[key], fixed_u = g.u, fixed_v = g.v, L = {}, terms = {}, keeps = {},
+             named = {}}
   local centre = " + " .. num(RD.centre_tiles)
+  local Bd = {L = {bu = g.u .. " * " .. S .. centre, bv = g.v .. " * " .. S .. centre}, terms = {}, pieces = {}}
   for _, r in ipairs(T.ranges) do
     local segs = r.segments[key]
     if segs then
@@ -337,6 +428,7 @@ local function map_bodies(key)
           banded[#banded + 1] = i
         end
       end
+      add_band(Bd, pts, banded, r.heights)
       for _, o in ipairs(r.openings) do
         if on_map(o.maps, key) then
           add_opening(O, m, pts, o, wide)
@@ -376,6 +468,9 @@ end
     end
     return table.concat(parts, " + ")
   end
+  local L = {wu = N.wander_u[key] .. " * " .. S .. " + " .. num(RD.centre_tiles),
+             wv = N.wander_v[key] .. " * " .. S .. " + " .. num(RD.centre_tiles)}
+  local O = {u = N.wander_u[key], v = N.wander_v[key], fixed_u = g.u, fixed_v = g.v, L = {}, terms = {}, keeps = {},
     local segs = r.segments[key]
     if segs then
       local pts, wide = {}, {}
@@ -406,6 +501,41 @@ def(N.cliffiness, "if(" .. on .. ", " .. num(RD.cliffiness) .. " * (1 - " .. K.o
 -- little more where the crest bends or climbs) outside the start disc, else 1.
 def(N.clear, "if(" .. on .. ", max(1 - " .. K.band .. ", " .. N.free .. "), 1)")
 
+-- The highland: the map's reach frayed by noise the region layer already computes, the warp for rocks and the
+-- warp, roughness and marsh outline for tiles, over the falloff, faded in outside the ridge-free start disc; 0
+-- with ridges off.
+local HG = RD.high
+local FRAY, FRAY_TILE = cfg.regions.names.highland_fray, cfg.regions.names.highland_fray_tile
+local MASSIF = cfg.regions.names.highland_massif
+def(N.rise, "max(0, " .. K.high .. " + " .. S .. " * " .. FRAY .. ")")
+def(N.rise_tile, "max(0, " .. K.high_tile .. " + " .. S .. " * " .. FRAY_TILE .. ")")
+def(N.gate, "clamp((distance - max(" .. num(RD.start.radius_tiles) .. ", starting_area_radius) - " ..
+  num(RD.start.margin_tiles) .. ") / " .. num(HG.start.ramp_tiles) .. ", 0, 1)")
+local function high(r, fall)
+  return "if(" .. on .. ", min(1, " .. r .. " / (" .. S .. " * " .. num(HG.fall_px) .. " + " .. fall .. ")) * " ..
+    N.gate .. ", 0)"
+end
+def(N.high, high(N.rise, num(HG.rock_fall) .. " / " .. S))
+def(N.high_tile, high(N.rise_tile, num(HG.fall_tiles)))
+-- The tile temperature's fall, with ridges off 0, and the stony tiles' lean without Alien Biomes.
+local GD = RD.ground
+def(N.lapse, "if(" .. on .. ", " .. num(GD.lapse_per_px2) .. " * over * over * " .. N.gate .. " * clamp(" ..
+  cfg.climate.names.core .. " / " .. num(GD.cold_t) .. ", " .. num(GD.cold_min) .. ", 1), 0)",
+  {over = "max(0, " .. N.rise_tile .. " / " .. S .. " - " .. num(GD.lapse_from_px) .. ") * " .. MASSIF})
+def(N.ground, num(RD.ground.lean) .. " * " .. N.high_tile)
+def(K.ground, num(0))
+-- The grain's bodies read the tile reach, and a save from before the highlands names those bodies but not this
+-- key: its prototype leaves such a save no rise, so its ground stays.
+def(K.high_tile, "-inf")
+-- The rock lift: the highland outside the openings. The three big vanilla rocks read rock_density with it added
+-- (trees.lua, their high bodies); Alien Biomes' big rocks read their own noise, so data-final-fixes.lua hooks the
+-- key on them.
+local RK = RD.rocks
+def(N.rock_lift, N.high .. " * " .. K.passes)
+def(N.rock_density, "rock_density + " .. num(RK.gain) .. " * " .. N.rock_lift)
+def(N.rock_lift_ab, num(RK.gain_ab) .. " * " .. N.rock_lift)
+def(K.rock_lift, num(0))
+
 -- The toggle's neutral bodies, shared with waterways' canals switch: defined here unless an earlier
 -- module did (one definition per name).
 local NE = data.raw["noise-expression"] or {}
@@ -417,3 +547,18 @@ if not NE[SW.off] then
 end
 
 data:extend(E)
+
+-- The cliff's art beside Alien Biomes (config.lua ridges.cliff_art): the sheets swap one for one, the
+-- shadows stay vanilla's (Alien Biomes' shadow sheets have another frame width).
+if mods[RD.cliff_art.mod] then
+  for _, o in pairs(data.raw.cliff[RD.cliff_art.cliff].orientations) do
+    o.pictures_lower = nil
+    for _, picture in ipairs(o.pictures) do
+      for _, layer in ipairs(picture.layers) do
+        if not layer.draw_as_shadow then
+          layer.filename = RD.cliff_art.to .. layer.filename:sub(#RD.cliff_art.from + 1)
+        end
+      end
+    end
+  end
+end

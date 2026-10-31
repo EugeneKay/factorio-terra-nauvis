@@ -16,6 +16,10 @@ re-emits the tables twice and compares each byte for byte with the committed fil
 
 | File | sha256 | Role |
 |---|---|---|
+| `manifest-europe.json` | `9cea1dfea318f88415be23ef594bd91ffa6aba11ec83bf8b54f460f94d0f9575` | emission manifest |
+| `islets-atlantic.json` | `0e73d0d8c88335b68f62c55d536e03be8225a9ddf2a124f2e9eb62bd46e10c04` | islets the raster lacks (`tools/build_islets.py`) |
+| `islets-europe.json` | `2af133292cf312976dfaa0d1c3d3f669e0eda9ae8871a7110d6945a740fd90db` | islets the raster lacks (`tools/build_islets.py`) |
+| `islets-olde_world.json` | `5838e39dbc88ebca0425e4c2f5704c178337b280865cd99e648f99fd35c979f3` | islets the raster lacks (`tools/build_islets.py`) |
 
 `bandfix.tables` gained Europe's geography 14 and Old World's 16 and 18 (the soft-edge
 versions; the handler skips the edge band on them). The emitter reads that list only to check the
@@ -29,3 +33,13 @@ group moved (`maps`, `new_deep`, `smooth`, `ground_rings`), which feed no table.
 still counts the band rule's closed band, not the blurred write rule, so it is an estimate. After a change that moves
 waterways only, `build_geo.py emit --map <map> --bandfix --masks-only` rewrites the mask tables from the
 committed K+ table, byte-identical to a full emission.
+
+The tables read the reference through `build_geo.py bandfix_classes`. Thin water of the
+ocean class within `bandfix.channel_px` pixels of open water along thin water counts as water, and K holds every
+scored pixel that touches the other class, because the handler's write band narrowed to about a fifth of a pixel.
+`islets-<map>.json` lists the pixels of islands the reference raster lacks, written by `python tools/build_islets.py
+--map <map> --shp <folder>/Ecoregions2017.shp` from RESOLVE Ecoregions 2017 (Dinerstein et al., CC BY 4.0,
+https://storage.googleapis.com/teow2016/Ecoregions2017.zip, 149,248,653 bytes, sha256
+below): polygons registered to the raster block by block, in open sea with a clear pixel between them and all
+reference land. Only the K+ tables read these lists; the reference rasters and the coast fit are unchanged.
+`Ecoregions2017.zip` sha256 `be36d6209e443038d02e309f0447c6e7f2a62f5fe60c605ffe90d064952f2a60`.

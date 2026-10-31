@@ -19,6 +19,7 @@ remembers its file (Config.source), so the accessors read the region table besid
 they were given, in a staged mod copy as in the repo.
 """
 import hashlib
+import json
 import math
 import re
 import sys
@@ -407,12 +408,15 @@ def fine_names(version):
     inland lakes and the start land guarantee; its waterway sets and its shore body."""
     sp = spawn_of(version)
     return ([version[n] for n in FINE_ROLES] + ([sp[n] for n in SPAWN_FINE] if sp else []) + waterway_names(version) +
+            shore_names(version) + ([version["basin"]["name"]] if version.get("basin") else []))
 
 
 def own_names(version):
     """The noise names a version takes as its own, which no other version may name: its
     GEOGRAPHY_NAMES and, with a spawn record, the spawn names that read its chain; its waterway sets
     and its shore body."""
+    if version.get("over"):
+        return [version["entry"], version["basin"]["name"]]
     sp = spawn_of(version)
     return ([version[n] for n in GEOGRAPHY_NAMES] + ([sp[n] for n in SPAWN_OWN] if sp else []) + waterway_names(version) +
             shore_names(version))
@@ -498,6 +502,9 @@ def geography_versions(cfg):
             if "edge" in v and (v["edge"] is not True or not isinstance(((cfg.get("coast") or {}).get("edge_band")),
                                                                        dict)):
                 raise ConfigError(f"config.lua {where}.edge must be true, with coast.edge_band defined")
+            if "over" in v and (v["over"] not in [o["entry"] for o in versions[: i - 1]] or
+                                not isinstance(v.get("basin"), dict) or not v["basin"].get("name")):
+                raise ConfigError(f"config.lua {where}.over must name an older version's entry, with a basin record")
             if "lakes" in v:
                 keys = {t.get("preset_key") for t in (cfg.get("toggles") or {}).values() if isinstance(t, dict)}
                 if not isinstance(v["lakes"], str) or v["lakes"] not in keys or "spawn" not in v:
@@ -555,6 +562,7 @@ def geography(cfg):
 REGION_MAX_SHARE = 3                               # the destroyed zone's warp runs past the shared warp
 REGION_TABLE = "prototypes/tables/regions.lua"     # relative to the mod folder, as `files` spells it
 REGION_ROW_KINDS = ("sd", "w", "depth")            # every row's signed distance, weight and depth
+REGION_CENTRE_KINDS = ("hu", "hv", "pd")           # a hotspot disc's jittered centre and plain distance
 REGION_AGGREGATES = ("destroyed_sd", "destroyed_w", "destroyed_depth", "forest_w", "forest_sum", "tree_mult",
                      "marsh_w", "hotspot_w", "enemy_mult")
 REGION_OWN = ("ox", "oy", "ax", "ay", "wk", "wx", "wy", "rough")   # the noise anchor, the warp, the roughness
@@ -735,6 +743,9 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
             for tile in tl["vanilla"]["tiles"]:
                 pen[tl["vanilla"]["keys"][tile]] = tl["vanilla"]["body"]
             pen[tl["exclude"]["key"]] = tl["exclude"]["body"]
+            mix = tl["vanilla"]["mix"]
+            if map_key in mix["maps"]:
+                pen[mix["key"]] = mix["amount"]
         else:
             pen[tl["marsh"]["grass"]["key"]] = tl["marsh"]["grass"]["body"]
     # the tree keys (trees-forests; presets.lua tree_names), after the climate keys: the multiplier key at
@@ -758,6 +769,13 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
     # which data-final-fixes.lua adds to every preset (M1 holds all six resources)
     rd = cfg.get("ridges")
     if rd:
+            for name, r in cfg["trees"]["restore"]["rocks"].items():
+                if r.get("high"):
+                    pen[r["key"] if ab else f"entity:{name}:probability"] = r["high"]
+            if ab:
+                pen[K["rock_lift"]] = n["rock_lift_ab"]
+            else:
+                pen[K["ground"]] = n["ground"]
         pen.update({o["key"]: o["name"] for o in rd["ores"]})
     # resources-enemies: the ore keys at the next probability wrappers and the richness keys at theirs,
     # the enemy property at its wrapper (data-final-fixes.lua adds them to every preset; the Oil Rig's
@@ -767,6 +785,12 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
     if rs:
         for o in rs["ores"]:
         pen[K["enemy"]] = cfg["enemies"]["wrapper"]
+        # the ores: the hotspot amount and each live patch expression at its Earth body (the Oil Rig's
+        # exists only beside it)
+        amount = cfg["settings"]["hotspot_amount"]["default_value"]
+        pen[K["hotspot_amount"]] = int(amount) / cfg["hotspots"]["amount_percent"]
+        for b in rs["natural"]["bodies"]:
+            if rs["offshore"]["resource"] not in b["live"]:
     if version.get("fields"):
         tg = cfg["toggles"]["hotspots"]
         on = cfg["settings"][tg["setting"]]["default_value"]
@@ -1124,6 +1148,12 @@ def schema_problems(cfg):
     except ConfigError as e:
         out.append(str(e))
     return out
+
+
+def bandfix_digest(group):
+    """sha256 of config.lua's bandfix group as its tables were built under it. Each map's geographies list
+    counts as its first id: a later geography version that keeps the map's coast appends its id and serves
+    tables = {k: dict(v, geographies=list(v.get("geographies") or [])[:1]) for k, v in (group.get("tables") or {}).items()}
 
 
 def placeholder_names(cfg):

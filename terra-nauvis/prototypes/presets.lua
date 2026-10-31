@@ -82,6 +82,8 @@ local function geography(map_key)
 end
 
 local scale = tonumber(settings.startup[cfg.settings.scale.name].value)
+-- The hotspot amount is a percentage in the setting and a multiplier in the bodies.
+local hotspot_amount = tonumber(settings.startup[cfg.settings.hotspot_amount.name].value) / cfg.hotspots.amount_percent
 
 -- The per-save city number a spawn-city setting stands for: its value's position in the setting's
 -- allowed values, less one, so random (the first) is 0 and the first city 1.
@@ -146,10 +148,21 @@ local function tree_names()
 end
 
 -- clearance its crest band through tn_band), so ridges are the only cliffs on every Terra Nauvis
+-- the ground key the stony tiles' hook (with it their tile keys name the lean, grain_values below).
 local function ridge_values(map_key)
   if not (crest and openings and band) then
     return {}
   end
+  for name, n in pairs(cfg.trees.restore.rocks) do
+    if n.high then
+    end
+  end
+  if AB then
+    out[K.rock_lift] = RN.rock_lift_ab
+  else
+    out[K.ground] = RN.ground
+  end
+  return out
 end
 
 -- names the map's stamp body when the hotspots setting is on and the neutral zero body when it is off
@@ -190,6 +203,11 @@ local function grain_values(map_key)
     out[TL.exclude.key] = TL.exclude.body_grain
     for _, t in ipairs(TL.vanilla.tiles) do
     end
+    for _, t in ipairs(TL.vanilla.stony) do
+    end
+  end
+  if AB and cfg.tiles.vanilla.mix.maps[map_key] then
+    out[cfg.tiles.vanilla.mix.key] = cfg.tiles.vanilla.mix.amount
   end
   return out
 end
@@ -253,6 +271,7 @@ local function baked(map_key, v)
     [K.land_coarse] = v.land_coarse,
     [K.map] = cfg.maps[map_key].id,
     [K.scale] = scale,
+    [K.hotspot_amount] = hotspot_amount,
     [K.geo] = v.geo_id,
     [v.cx] = v.city_offset[1],
     [v.cy] = v.city_offset[2],

@@ -59,8 +59,11 @@
    "setting_type": "startup",
    "default_value": true
   },
+  "hotspot_amount": {
    "type": "string-setting",
    "setting_type": "startup",
+   "default_value": "100",
+  },
    "type": "string-setting",
    "setting_type": "startup",
   "inland_lakes": {

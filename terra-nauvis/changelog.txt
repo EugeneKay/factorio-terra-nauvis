@@ -6,6 +6,14 @@ Date: 2026-10-30
   Features:
     - First release: three Earth maps for Nauvis, Terra Nauvis: Europe, Atlantic and Old World, as
       map-gen presets and Map types at map scales 1 to 6.
+    - Regular ore on Terra Nauvis presets forms natural mineral fields: lobed outlines with satellite
+      pockets, a few large fields among many small ones, gathered in provinces, with rich pockets
+      instead of a rich centre.
+    - Ore hotspots startup setting (default on): historic ore fields at their real sites, with about
+      three times the base game's biter nests inside them, and offshore oil fields on deep water
+      where the Oil Rig mod is installed.
+    - Ore hotspot amount startup setting: 50, 100, 200 or 400 percent. Hotspots ignore the map's ore
+      sliders, stay inside their discs at their real sites, and ordinary ore stays out of them.
     - Map scale startup setting: 1 to 6 tiles per reference pixel, default 6; each value's label
       gives the world size of every map at that scale. A world made from a Terra Nauvis preset keeps
       the scale it was created with; a world that uses a Terra Nauvis map type alone follows the
@@ -64,9 +72,23 @@ Date: 2026-10-30
       mountain is taller, breaks into runs of many lengths and frays out at its ends, with passes
       at the historic crossings, a gap at least every 400 km and no cliffs across the starting
       area. The cliffs sliders do not change them, and a world started with cliffs at none gets
+      its ridges back beyond the starting area. Beside Alien Biomes cliffs use its grey stone art,
+      which sits on its ground as vanilla's orange brown does not, on every Nauvis world.
+    - Mountain ranges read as highlands: big rocks thicken round each range, clear of its passes and
+      of every start, the ground leans to dry dirt, and beside Alien Biomes the tops of tall ranges
+      turn to grey ground and snow.
+    - Where a map's edge cuts through land (North Africa, Russia and Anatolia on Europe, Chukotka on
+      the Atlantic and Old World maps), the land ends in bays and headlands that change with the map
+      seed, instead of a straight cut.
     - Destroyed Europe startup setting (default off, needs Alien Biomes): from France to Warsaw and
       from the North Sea across Switzerland and Austria to Ljubljana and down Italy to about Rome,
+      the heart of Europe becomes Alien Biomes' lava, black ash, red rock and scorched red grass in
+      mixed patches, its outline different on every map seed and red on the map view; Britain,
+      Denmark, the Kiel Canal and the Carpathians stay outside, and the start area stays normal. A
+      random spawn city never lands inside the zone. Without Alien Biomes nothing changes, and the
+      game warns at the start and each player who joins.
     - Exact coastlines startup setting (default on): on Atlantic and Old World each new chunk's coast
+      channels and islets the noise cannot hold come back as rounded natural shores. The map
       preview still shows the noise coast; land made from sea takes the trees and ground cover of
       the land beside it.
     - City markers map setting (default off, changeable in a running game): the map view names every
@@ -74,6 +96,7 @@ Date: 2026-10-30
   Changes:
     - Rivers wander: they meander off their polylines, their banks stop being parallel, they widen
       toward the mouth and taper at the source, and the square turning basins became natural pools.
+    - Rivers scale down with the map: at small map scales they are a few tiles wide, too thin for
     - The start lake and the Inland lakes setting's lakes have irregular shores, and inland lakes vary
       in size.
   Compatibility:
@@ -85,3 +108,8 @@ Date: 2026-10-30
       no longer grow where vanilla land may lie, which removes about 0.3 percent of the decoratives
       in temperate regions and thins them along the edges of the temperate band, by about 7
       percent; no tile moves.
+    - Beside Alien Biomes the ground follows Earth's biomes: deep green rainforests, golden deserts,
+      pale sand and gravel across Central Asia, dry yellow steppes, cold grey Tibet, pale tundra and
+      a white Greenland. Temperate Europe keeps its ground.
+    - Beside Alien Biomes a Terra Nauvis map generates faster: Alien Biomes' land tiles share twelve
+      noise fields instead of reading one each. The patches look the same and fall in new places.

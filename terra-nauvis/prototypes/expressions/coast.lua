@@ -91,11 +91,16 @@ local function fit_body(name, file, g, fit_u, fit_v)
 end
 
 -- Whether a geography version reads its fit at warped coordinates (config.lua coast.warp).
+local function listed(ids, g)
+  for _, id in ipairs(ids) do
     if id == g.geo_id then
       return true
     end
   end
   return false
+end
+local function warps(g)
+  return listed(C.warp.geographies, g)
 end
 
   local corner = "floor(" .. s .. " / " .. num(cfg.coordinates.corner_offset_divisor) .. ")"
@@ -107,6 +112,16 @@ end
 -- the entry's prototype.
 local function version(m, g)
   local s = K.scale
+  -- A thin version (over): one lake on the older entry it names, whose chain, fit and sets it reads by
+  -- name, so a save of that entry keeps its bodies and this one adds a few hundred bytes. The lake is
+  -- water inside radius_px reference px of its centre and inf outside it, so it moves no other tile.
+  if g.over then
+    local B = g.basin
+    local bu, bv = "(" .. g.u .. " - " .. num(B.u) .. ")", "(" .. g.v .. " - " .. num(B.v) .. ")"
+    def(B.name, "if(bd < 0, " .. s .. " * bd - " .. num(C.transfer_offset) .. ", inf)",
+      {bd = "sqrt(" .. bu .. " * " .. bu .. " + " .. bv .. " * " .. bv .. ") - " .. num(B.radius_px)})
+    return def(g.entry, "min(" .. g.over .. ", " .. B.name .. ")")
+  end
   -- the integer-corner offset in tiles, floor(s / corner_offset_divisor) (config.lua)
   local corner = "floor(" .. s .. " / " .. num(cfg.coordinates.corner_offset_divisor) .. ")"
 
@@ -184,11 +199,17 @@ local function version(m, g)
     end
     local O = B.outline
     local M = O.margins[m.key]
+    local sum = noise_terms(B.octaves)
     local locals = {
       dl = dl, dr = dr, dt = dt, db = db,
       d = "min(dl, dr, dt, db)",
       au = "dl / " .. s, av = "dt / " .. s,
+      warp = num(B.warp_px) .. " * clamp(" .. sum .. ", -1, 1)",
     }
+    if listed(B.fold_geographies, g) then
+      locals.warp_sum = sum
+      locals.warp = num(B.warp_px) .. " * clamp(2 * clamp(warp_sum, -1, 1) - warp_sum, -1, 1)"
+    end
     local inside = {}
     local sides = {left = {"dl", "av"}, top = {"dt", "au"}, right = {"dr", "av"}, bottom = {"db", "au"}}
     for _, side in ipairs({"left", "top", "right", "bottom"}) do
@@ -203,7 +224,9 @@ local function version(m, g)
         end
         locals.share = table.concat(parts, " + ")
         term = term .. " - share * (" .. margin(M[side], along) .. ")"
+      end
       inside[#inside + 1] = term
+    end
     locals.b = "clamp(min(" .. table.concat(inside, ", ") .. ") + warp - " .. num(B.width_px) .. ", " ..
       num(-C.transfer_clamp_px) .. ", " .. num(C.transfer_clamp_px) .. ")"
     local o = num(C.transfer_offset)
@@ -236,6 +259,7 @@ local function version(m, g)
   if g.shore then
     local SH = cfg.shore
        gl = "max(" .. num(SH.land.min) .. ", " .. num(SH.land.per_scale) .. " * " .. s .. ")",
+       gw = (warp and num(C.warp.water_gain[g.geo_id]) .. " * " or "") ..
     text, locals = g.shore, {}
   end
   -- A version with a spawn record (spawn-cities) adds step 4, the start land guarantee, and step 7,

@@ -175,6 +175,7 @@ def tent_body(meta, idx, coef):
     return locs, bsum(rows), {"terms": n, "factors": factors, "row_groups": len(groups)}
 
 
+    from scipy import ndimage as ndi
 def lua_string_lines(text, first_prefix, last_suffix, indent="  "):
     """A Lua double-quoted literal of `text` (no quote or backslash in it) as physical lines of at
     most MAX_COLUMNS: `first_prefix` + '"' starts the first line, '"' + `last_suffix` ends the last,
@@ -749,6 +750,7 @@ def parse_region(text):
 
 
     parts = [float(x) for x in text.split(",")]
+    from scipy import ndimage as ndi
 def fit(map_key, work, nmax, stop_agreement, extra_steps, max_steps=None, through=8192, regions=None,
     """The greedy fit at native resolution, resumable (the section comment above says what the port changed).
 
@@ -1069,6 +1071,11 @@ def bandfix_cfg(cfg=None):
     return cfg, B
 
 
+def bandfix_digest(B):
+    import tnconfig
+    return tnconfig.bandfix_digest(B)
+
+
 def bandfix_file(map_key, s, version):
     return f"bandfix_{map_key}_s{int(s)}_v{int(version)}.lua"
 
@@ -1079,6 +1086,29 @@ def ref_classes(mref):
     cls = np.zeros((mref.H, mref.W), np.int8)
     cls[mref.land] = 1
     cls[mref.thin] = 2
+    return cls
+
+
+    """bool per pixel: the thin water of the ocean class within `steps` 8-connected pixels of open water along thin
+    water: straits, sounds and inlets narrower than three pixels, which the coast fit fills as land. A river drawn in
+    import numpy as np
+    from PIL import Image
+    from scipy import ndimage as ndi
+    Image.MAX_IMAGE_PIXELS = None
+    rgb = np.asarray(Image.open(mref.land_path.with_name(f"{map_key}-classes.png")).convert("RGB"))
+    ocean = (rgb[..., 0] == 20) & (rgb[..., 1] == 40) & (rgb[..., 2] == 110)
+    allowed = (cls == 2) & ocean
+
+
+def bandfix_classes(map_key, mref, B):
+    """ref_classes as the K+ tables read it: thin water that belongs to the sea counts as water, so the handler
+    opens it, and the islets the raster lost (tools/build_islets.py) count as land."""
+    import numpy as np
+    cls = ref_classes(mref)
+    p = BANDFIX_DATA / f"islets-{map_key}.json"
+    if p.exists():
+        px = np.asarray(json.loads(p.read_text(encoding="utf-8"))["pixels"], np.int64).reshape(-1, 2)
+        cls[px[:, 1], px[:, 0]] = 1
     return cls
 
 
@@ -1226,6 +1256,7 @@ def fit_band(Gp, lines, s, i, j, r0, n, W):
     return f
 
 
+    from scipy import ndimage as ndi
 def waterway_footprint(cfg, mref, map_key, s, margin_tiles):
     """bool per pixel: within (half-width + margin) tiles of any waterway, canal or dam centreline, or of a
     turning basin, at scale s, pixel by pixel conservatively (a pixel's sample points lie within half a
@@ -1542,6 +1573,7 @@ def emit_bandfix(map_key, out_dir=BANDFIX_GENERATED, manifest=True, scales=None,
     ck = FITS / map_key / spec["bodies"]["geo"]["checkpoint"]
     meta, idx, coef = load_model(ck)
     mref = eg.MapRef(map_key)
+    cls = bandfix_classes(map_key, mref, B)
     nb = [tuple(x) for x in B["neighbours"]]
     om = other_masks(cls, nb)
     Gp = np.pad(level0_grid(meta, idx, coef), ((1, 0), (1, 0)))
@@ -1556,6 +1588,7 @@ def emit_bandfix(map_key, out_dir=BANDFIX_GENERATED, manifest=True, scales=None,
     label = cfg["maps"][map_key]["display"]
     inputs = {"checkpoint": rel_ck, "checkpoint_sha256": sha256_file(ck),
               "land_sha256": sha256_file(mref.land_path), "thinwater_sha256": sha256_file(mref.thin_path),
+              "bandfix_config_sha256": bandfix_digest(B),
               "coast_detail": [C["detail_amplitude_px"], C["detail_clamp"]], "margin_px": round(margin, 6)}
     if warp_px:
         inputs["warp_reach_px"] = round(warp_px, 6)
@@ -1571,6 +1604,7 @@ def emit_bandfix(map_key, out_dir=BANDFIX_GENERATED, manifest=True, scales=None,
         P1[s]["ww_sha"] = ww_sha
         K |= P1[s]["K"]
         t[s] = time.time() - t0
+    K |= scored & (om != 0)
     Kp = dilate8(K)
     order = B["symbol_order"]
     nsym = len(order)
@@ -1591,6 +1625,9 @@ def emit_bandfix(map_key, out_dir=BANDFIX_GENERATED, manifest=True, scales=None,
                             "is outside the band",
                     "k": "a scored pixel holding a tile outside the band whose fit lies within margin_px of the "
                          "wrong side, or within correction_tiles of a tile that may be of the other class (the game "
+                         "grows water into 2 x 2 blocks), at some offered scale, and every scored pixel with a pixel "
+                         "of the other class around it, so the coast follows the reference at the handler's write "
+                         "threshold everywhere; the scale's waterway footprint masks it there",
                     "fill": "a K pixel whose band region at the save's scale holds no 2 x 2 block of tiles is "
                             "written whole; the handler decides it from the shared table",
                     "pricing": "the band rule's writes with the fit alone deciding (detail 0), "
@@ -1654,6 +1691,7 @@ def emit_bandfix_masks(map_key, out_dir=BANDFIX_GENERATED, log=print):
     import earthgeo as eg
     cfg, B = bandfix_cfg()
     mref = eg.MapRef(map_key)
+    cls = bandfix_classes(map_key, mref, B)
     order = B["symbol_order"]
     nsym = len(order)
     rows, _ = read_bandfix_table(Path(out_dir) / shared_name)
@@ -1687,6 +1725,7 @@ def emit_bandfix_masks(map_key, out_dir=BANDFIX_GENERATED, log=print):
                      "masked_kplus_pixels": int(M.sum()), "footprint_pixels": int(mask.sum()),
                      "waterway_manifest_sha256": ww_sha})
         log(f"{map_key} s{s}: {int(M.sum())} masked K+ pixels, {f.stat().st_size} B")
+    rec["inputs"]["bandfix_config_sha256"] = bandfix_digest(B)
     _write_json(mp, rec)
     return rec
 
@@ -1877,6 +1916,12 @@ def check_bandfix(map_key, scales=None):
     return fails
 
 
+    from scipy import ndimage as ndi
+    from scipy import ndimage as ndi
+    from scipy import ndimage as ndi
+    from scipy import ndimage as ndi
+    from scipy import ndimage as ndi
+    from scipy import ndimage as ndi
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)

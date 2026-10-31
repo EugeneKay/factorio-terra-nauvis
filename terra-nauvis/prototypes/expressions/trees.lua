@@ -49,8 +49,12 @@ local M = {}
 -- The great-forests hook around a tree's own probability (also each palm copy's second version, without
 -- the lift). `lift` adds the boreal lift key, for the base game's living trees only: Alien Biomes' trees
 -- already fill its taiga, and lifted they covered over half the land (draft run q-ab-after, 558 trees per
+-- chunk in the preview against 129 without). `band` scales the lift beside Alien Biomes, where these trees
+-- stand on adopted tiles that reach past the band: unscaled, it set a forest on every such tile of the taiga.
+function M.boost(own, lift, band)
   local inner = "(" .. own .. ")"
   if lift then
+    inner = "((" .. own .. ") + " .. B.lift .. (band and (" * " .. band) or "") .. ")"
   end
   return "if(" .. B.gate .. " > " .. num(cfg.hooks.threshold) .. ", min(" .. num(B.cap) .. ", " .. inner .. " * " ..
     B.key .. "), " .. own .. ")"
@@ -105,6 +109,12 @@ for _, row in ipairs(V.rocks) do
   end
   def(n.key, R.rock_off)
   def(n.body, row.probability_expression, locals)
+  -- A big rock's highland body (ridges.lua): the same text on rock_density with the lift. Rock decoratives keep
+  -- vanilla's, so ground cover stays what it was.
+  if n.high then
+    def(n.high, (string.gsub(row.probability_expression, "%f[%w_]rock_density%f[^%w_]", cfg.ridges.names.rock_density)),
+      locals)
+  end
 end
 
 -- The re-listed decoratives: one key each at -inf, all naming one body.

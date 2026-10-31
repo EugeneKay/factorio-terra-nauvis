@@ -1825,6 +1825,7 @@ def bandfix_data_findings(repo, cfg):
         if mk not in checked:
             out.append(f"config.lua lists {mk} for the band fix, which runs no flip check (bandfix.checks; Atlantic "
                        f"was never priced)")
+    digest = tnconfig.bandfix_digest(B)
     for mk, spec in tables.items():
         mp = bd / f"manifest-{mk}.json"
         if not mp.exists():
@@ -3064,6 +3065,8 @@ def fixture_controls():
         results += storage_contract_fixtures(td)
         results += append_only_fixtures(cfg, load_json(REPO / "tests" / "frozen.json"))
         results += release_input_fixtures(cfg)
+        results += bandfix_digest_fixtures(cfg)
+        results += thin_version_fixtures(cfg)
         fz = load_json(REPO / "tests" / "frozen.json")
         results += bodies_fixtures(td, cfg, fz)
         results += landing_fixtures(td, cfg, fz)
@@ -3901,10 +3904,80 @@ def unreleased_moves_fixtures(cfg, fz, ref, name, dropped, rehashed):
                 rep["changed"] == [kept_n] and rep["dropped"] == [gone_n] and rep["added"] == [new_n] and
                 rep["unchecked"] == [f"{pre}fx_m2_v1"] and nm["records"] == {gone_n: ["5" * 64], kept_n: ["6" * 64]} and
                 nf["bodies"][kept_n]["slice"] == "extras" and gone_n not in nf["bodies"], str(rep)[:120]))
+    with tempfile.TemporaryDirectory(prefix="tn-seal-") as td:
+        fx_registry = [{"id": "fx-a", "dumps": ["m1"]}, {"id": "fx-b", "dumps": ["m1"]}]
+        kept = tnfrozen.record("noise-expression", "6" * 64, "m1", "fx-a", "2026-10-30")
+        stale = {gone_n: tnfrozen.record("noise-expression", "5" * 64, "m1", "fx-a", "2026-10-30")}
+        snap = {"format": tnfrozen.SNAPSHOT_FORMAT, "bodies": stale, "sha256": tnfrozen.key_of(stale)}
+        (Path(td) / "fx-a.json").write_text(json.dumps({"slice": "fx-a", "frozen": snap}), encoding="utf-8")
+        (Path(td) / "fx-b.json").write_text(json.dumps({"slice": "fx-b"}), encoding="utf-8")
+        sealed_fz = {"bodies": {kept_n: kept}}
+        out.append(("seal: the stale snapshot fails with no waiver",
+                    bool(tnfrozen.snapshot_problems(sealed_fz, {"fx": snap})), ""))
+        ns, mans = refreeze.seal(dict(moves, geographies=[1]), sealed_fz, fx_registry, td)
+        found = tnfrozen.snapshot_problems(sealed_fz, {str(p): m["frozen"] for p, m in mans.items()})
+        out.append(("seal: the waiver empties, the snapshot follows the registry and a manifest without one stays",
+                    ns["records"] == {} and ns["geographies"] == [] and not found and
+                    [Path(p).name for p in mans] == ["fx-a.json"], found[:1]))
+        moves_ok, _ = moves_findings_on(td, ns)
+        out.append(("seal: a sealed waiver passes with a release tag", moves_ok, ""))
     return out
 
 
+def moves_findings_on(td, moves):
+    """(no finding, the findings) of `moves` as a checkout's waiver with a release tag present."""
+    p = Path(td) / "tests" / "unreleased-moves.json"
+    p.parent.mkdir(exist_ok=True)
+    p.write_text(json.dumps(moves), encoding="utf-8")
+    f, _ = moves_findings(td, ["refs/tags/v0.1.0"])
+    return not f, f
+
+
+def thin_version_fixtures(cfg):
+    """A thin geography version (config.lua `over`): it may name an older version's chain, fit and sets
+    and takes only its entry and basin as its own; the same names without `over`, or an `over` that names
+    no older entry, fail."""
+    out = []
+
+    def with_version(**fields):
+        c = copy.deepcopy(cfg)
+        vs = c["geography"][key]["versions"]
+        v = dict(copy.deepcopy(vs[-1]), entry="tn_fixture_entry_v99", geo_id=9999, **fields)
+        vs.append(v)
+        return c
+
+    def refused(c):
+        try:
+            tnconfig.geography_versions(c)
         except tnconfig.ConfigError as e:
+            return str(e)
+        return ""
+    older = cfg["geography"][key]["versions"][-1]["entry"]
+    basin = {"name": "tn_fixture_basin_v1", "u": 1, "v": 1, "radius_px": 1}
+    f = refused(with_version(over=older, basin=basin))
+    out.append(("thin version: names an older version's chain and sets", not f, f[:120]))
+    out.append(("thin version: the same names without over fail", bool(refused(with_version(basin=basin))), ""))
+    out.append(("thin version: over naming no older entry fails",
+                bool(refused(with_version(over="tn_fixture_none_v1", basin=basin))), ""))
+    out.append(("thin version: over without a basin fails", bool(refused(with_version(over=older))), ""))
+    return out
+
+
+def bandfix_digest_fixtures(cfg):
+    """A tn_geo id appended to a map's band-fix tables keeps the digest they were built under; a moved first
+    id or any other edit of the group changes it."""
+    B = cfg["bandfix"]
+    key = sorted(B["tables"])[0]
+    base = tnconfig.bandfix_digest(B)
+    appended, moved, other = copy.deepcopy(B), copy.deepcopy(B), copy.deepcopy(B)
+    appended["tables"][key]["geographies"].append(9999)
+    moved["tables"][key]["geographies"][0] = 9999
+    other["version"] = B["version"] + 1
+    return [("band fix: a tn_geo id appended keeps the tables' digest", tnconfig.bandfix_digest(appended) == base, ""),
+            ("band fix: the first tn_geo id moved changes it", tnconfig.bandfix_digest(moved) != base, ""),
+            ("band fix: another edit of the group changes it", tnconfig.bandfix_digest(other) != base, "")]
+
+
 def release_input_fixtures(cfg):
     """The landed bodies' inputs on fixture references built from the working tree: a regenerated
     file, a changed coast, spawn or coordinates constant, a re-pointed key, a city row edited, a city
@@ -3970,6 +4043,7 @@ def release_input_fixtures(cfg):
         return next(k for k, v in sorted(_as_dict(cfg.get(section)).items()) if isinstance(v, (int, float))
                     and not isinstance(v, bool))
     coast_k, coord_k = first_number("coast"), first_number("coordinates")
+    warp_ids = list(cfg["coast"]["warp"]["geographies"])
     m0 = maps[0]
     geom_k = next(k for k, v in sorted(_as_dict(cfg["maps"][m0]).items()) if isinstance(v, (int, float))
                   and not isinstance(v, bool) and k != "id")
@@ -3996,6 +4070,9 @@ def release_input_fixtures(cfg):
         f"keys.{key0} re-pointed": lambda w: set_path(w, ("keys", key0), "tn_fixture_key"),
         f"maps.{m0}.{geom_k} moved": lambda w: set_path(w, ("maps", m0, geom_k), cfg["maps"][m0][geom_k] + 1),
         "a coast constant removed": lambda w: w["cfg"]["coast"].pop(coast_k),
+        "a tn_geo id dropped from coast.warp.geographies": lambda w: set_path(w, ("coast", "warp", "geographies"),
+                                                                              warp_ids[:-1]),
+        "coast.warp.geographies reordered": lambda w: set_path(w, ("coast", "warp", "geographies"), warp_ids[::-1]),
         "a city row edited": edit_city,
         "a city added to a released table": add_city,
         "a released map table removed": lambda w: w["tables"][tables[0]].pop(tk),
@@ -4015,6 +4092,8 @@ def release_input_fixtures(cfg):
         "a new setting added": lambda w: set_path(w, ("settings", "tn_fixture_setting"),
                                                   {"name": "x", "allowed_values": ["a"]}),
         "a geography version appended": add_version,
+        "a tn_geo id appended to coast.warp.geographies": lambda w: set_path(w, ("coast", "warp", "geographies"),
+                                                                             warp_ids + [9999]),
         "a new coast constant": lambda w: set_path(w, ("coast", "tn_fixture_new"), 1),
         "a new map table": lambda w: w["tables"][tables[0]].__setitem__("tn_fixture_map", {"version": 1}),
         f"maps.{m0}.display renamed": lambda w: set_path(w, ("maps", m0, "display"), "Fixture"),
@@ -4293,14 +4372,18 @@ def row_fixtures():
 # The region layer (slice region-layer): one file builds every region formula. What a
 # consumer may read of config.lua's regions group is the interface (ARCHITECTURE.md, "Region layer"):
 # an aggregate's name, the version suffix, or a row name stem (sd, w, depth, and a hotspot's centre hu,
+# hv and plain distance pd) to name one row's output.
 REGION_FILE = "prototypes/expressions/regions.lua"
 REGION_TABLE_MODULE = tnconfig.REGION_TABLE[:-len(".lua")].replace("/", ".")
+                    "destroyed_sd", "destroyed_w", "destroyed_depth", "forest_w", "forest_sum", "tree_mult",
                     "marsh_w", "hotspot_w", "enemy_mult", "suffix"}
+REGION_ROW_INTERFACE = {"sd", "w", "depth", "hu", "hv", "pd"}
 
 
 def region_formula_findings(mod=MOD):
     """No region formula outside prototypes/expressions/regions.lua: no other mod Lua file requires the
     region table, and every read of config.lua's regions group outside it is a full dotted path to an
+    interface name (regions.names.<aggregate>, regions.names.suffix, regions.names.row.<sd|w|depth|hu|hv|pd>).
     The warp, roughness, ramp, jitter, frame and query-point names stay the layer's own, and an alias
     of the group (or of its names table) or a bracket index would hide what is read, so both fail."""
     from luaparser import astnodes

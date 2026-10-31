@@ -136,15 +136,48 @@ def(N.dry, by_map(function(X)
 end), {dry_lat = N.lat .. " + " .. num(MD.dry_lat) .. " * " .. MD.name,
        dry_lon = N.lon .. " + " .. num(MD.dry_lon) .. " * " .. MD.name})
 
+-- The tile belts (config.lua climate.tile_belts): each field's sum over the belts that reach the map, on
+-- the meandering latitude and longitude, so a belt's edge wanders as a dry belt's does, by less: at the dry
+-- belts' reach a narrow belt broke off in ovals.
+local BELT = N.belts
+local BW = C.tile_belts_wander
+local BELT_AT = {belt_lat = N.lat .. " + " .. num(BW.lat) .. " * " .. MD.name,
+                 belt_lon = N.lon .. " + " .. num(BW.lon) .. " * " .. MD.name}
+local function belt_weight(b)
+  return ramp_in("belt_lat", b.lat[1], b.lat[2], b.ramp[1]) .. " * " ..
+    ramp_in("belt_lon", b.lon[1], b.lon[2], b.ramp[2])
+end
+  local out = {}
+      out[#out + 1] = b
+    end
+  end
+  return out
+end
+    local parts = {}
+      parts[#parts + 1] = num(b[field]) .. " * " .. belt_weight(b)
+    end
+    return #parts == 0 and "0" or table.concat(parts, " + ")
+end
+for _, field in ipairs({"t", "tv", "m", "a"}) do
+end
     end
   end
   if #parts == 0 then
     return "0"
   end
+  return #parts == 1 and parts[1] or ("max(" .. table.concat(parts, ", ") .. ")")
+end), BELT_AT)
+def(BELT.wild, by_map(function(X)
+  local parts = {}
+  for _, b in ipairs(belt_list(X, "wild")) do
+    parts[#parts + 1] = belt_weight(b)
   end
   if #parts == 0 then
     return "0"
   end
+  return #parts == 1 and parts[1] or ("max(" .. table.concat(parts, ", ") .. ")")
+end), BELT_AT)
+
 -- The temperature core in Alien Biomes units, before noise and sliders.
 local CT = T.continental
 def(N.core, "clamp(" .. num(T.ref_t) .. " + " .. num(T.per_degree) .. " * (" .. num(T.ref_lat) .. " - abs(" ..
@@ -209,10 +242,27 @@ if AB then
   def(N.ab.temperature, "clamp(" .. N.core .. " + " .. noise(T.noise, "(var('control:hot:frequency') + " ..
     "var('control:cold:frequency')) / 2") .. " + " .. num(TA.shift_per_unit) .. " * (var('control:hot:size') - " ..
     "var('control:cold:size')), " .. num(TA.min) .. ", " .. num(TA.max) .. ")")
+  -- The marsh's lift is a step at the marsh cut, not a ramp up the weight: rising through the vanilla
+  -- tiles' moisture bands, the ramp drew them as a dark rim of one width round every marsh (a tide line).
+  -- It starts above Alien Biomes' mid band wherever the frayed edge passes, or its beige sand rims the pools.
+  -- The natural field stops at ab_top: Alien Biomes' wettest trees grow in a band round 0.9, so past its top
+  -- they drew a ring round every moisture peak, a circle of forest about an empty middle.
+  local function ab_moisture(extra, edge)
+    local cut = num(cfg.tiles.vanilla.marsh_cut)
+    return "clamp(max(min(" .. num(M.ab_top) .. ", " .. moisture_mean() .. " + " .. moisture_spread(false) .. extra ..
+      " + " .. num(M.ab_bias) .. " * var('control:moisture:bias')), if(" .. edge .. " > " .. cut .. ", " ..
+      num(M.marsh) .. " * max(" .. MARSH_W .. ", " .. cut .. "), 0)), 0, 1)"
   end
+  def(N.ab.moisture, ab_moisture("", MARSH_W))
+  -- Natural aux stays under ab_cap, below AB's alien palette, whatever the spread: it folds back at the
+  -- cap instead of stopping there, because a hard stop pins every high aux to one value, and on dry land
+  -- that value is dry-dirt's box alone, a flat brown plain hundreds of tiles wide. Dry temperate land
   -- lifts toward vanilla red desert, a lift that is 0 wherever the AB temperature lies outside the
   -- exclusion band, so no alien AB colour can follow it.
   local R = A.red
+  local function ab_aux(extra, over)
+    return "clamp(" .. num(A.ab_cap) .. " - abs(" .. num(A.base) .. " + " .. noise(A.noise, AFREQ) .. extra .. " - " ..
+      num(A.ab_cap) .. ") + " .. (over or "") ..
       num(R.lift) .. " * " .. N.dry .. " * clamp((" .. N.ab.temperature .. " - " .. num(R.t_lo) .. ") / " ..
       num(R.ramp) .. ", 0, 1) * clamp((" .. num(R.t_hi) .. " - " .. N.ab.temperature .. ") / " .. num(R.ramp) ..
       ", 0, 1) + " .. num(A.ab_bias) .. " * var('control:aux:bias'), 0, 1)"
@@ -225,6 +275,24 @@ if AB then
   -- the cap, so no grain reaches its alien palette.
   local G, GN = C.grain, N.grain
   local T2 = cfg.destroyed.names.temperature
+  -- The cold side reads the zone's lift and the hot side the unlifted temperature, so the zone takes no
+  -- grain: full grain there lets Alien Biomes' tan sand through as specks in the volcanic rock. A wild belt
+  -- is Alien Biomes ground at a temperate core, so it takes the grain at full weight too. A range's lapse
+  -- (ridges.lua) lowers both sides, so its grey and snowy crest frays like any cold ground, and the
+  -- temperature the tiles read; the moisture falls off the wet grasses.
+  local RN, GR = cfg.ridges.names, cfg.ridges.ground
+  def(GN.field, "max(clamp((" .. num(G.cold_t) .. " - cold) / " .. num(G.cold_span) .. ", 0, 1), clamp((hot - " ..
+    num(G.hot_t) .. ") / " .. num(G.hot_span) .. ", 0, 1), clamp(" .. BELT.wild ..
+    ", 0, 1)) * noise_layer_noise(" .. num(G.layer) .. ") * (1 + " .. num(GR.fray) .. " * " .. RN.high_tile .. ")",
+    {cold = T2 .. " - " .. RN.lapse, hot = N.ab.temperature .. " - " .. RN.lapse})
+  def(GN.temperature, "max(t - " .. RN.lapse .. ", min(t, " .. num(GR.floor) .. "))",
+    {t = "min(" .. T2 .. " + " .. num(G.temperature) .. " * " .. GN.field .. " + " .. BELT.t .. ", max(" .. T2 ..
+       ", " .. num(T.ab.max) .. "))"})
+  def(GN.veg, "if(" .. T2 .. " > " .. num(G.veg_zone_t) .. ", " .. GN.temperature .. ", min(" .. GN.temperature ..
+    " + " .. BELT.tv .. ", " .. num(G.veg_cap) .. "))")
+  def(GN.moisture, ab_moisture(" + " .. num(G.moisture) .. " * " .. GN.field .. " + " .. BELT.m .. " - " ..
+    num(GR.moisture) .. " * " .. RN.high_tile, cfg.tiles.marsh.edge))
+  def(GN.aux, ab_aux(" + " .. num(G.aux) .. " * " .. GN.field, BELT.a .. " + "))
 end
 
 data:extend(E)

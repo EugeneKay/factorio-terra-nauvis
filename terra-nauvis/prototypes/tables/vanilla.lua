@@ -9,6 +9,11 @@
 --             (AB/prototypes/disables.lua:21-51, AB/prototypes/decorative/vegetation.lua:43-54)
 --   extend    vanilla decoratives Alien Biomes restricts to its own tiles (AB vegetation.lua:15-35,
 --             AB rocks.lua:56-107), and vanilla's dead and dry trees, which AB restricts the same way
+--   dead_score  the base game's score of a dead tree around max() of the living trees dead_scores lists for it
+--             (trees.lua:4215-4263; tree_dead_desert's two local terms are left out)
+--   decor     the base game's score of the extended decoratives and of the two garballos, as M1 dumps them:
+--             Alien Biomes rewrites nine and leaves six reading a scale it has moved, so beside it the
+--             temperate band places these from these texts (config.lua trees.decor)
 return {
   version = 1,
   game = "2.1.23",
@@ -197,4 +202,116 @@ return {
     "red-desert-bush", "red-pita", "white-desert-bush",
   },
   dead_trees = {"dead-dry-hairy-tree", "dead-grey-trunk", "dead-tree-desert", "dry-hairy-tree", "dry-tree"},
+  dead_score = "0.2 * max(%s) * clamp(1 - tree_small_noise, 0, 2)",
+  dead_scores = {
+    ["dead-dry-hairy-tree"] = {"tree-05", "tree-06", "tree-06-brown", "tree-09", "tree-09-brown", "tree-09-red"},
+    ["dead-grey-trunk"] = {"tree-02", "tree-02-red", "tree-03", "tree-04"},
+    ["dead-tree-desert"] = {"tree-08", "tree-08-brown", "tree-08-red"},
+    ["dry-hairy-tree"] = {"tree-05", "tree-06", "tree-06-brown"},
+    ["dry-tree"] = {"tree-01", "tree-09", "tree-09-brown", "tree-09-red"},
+  },
+  decor = {
+    {
+      name = "brown-asterisk",
+      text = "-1.5 + rpi(0.2) + asterisk_noise - min(0, decorative_knockout) + region_box",
+      box = "min(range_select{input = moisture, from = 0, to = 0.3, slope = 0.05, min = -10, max = \z
+        1},range_select{input = aux, from = 0, to = 0.6, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 10, to = 15, slope = 0.5, min = -10, max = 1})",
+    },
+    {
+      name = "brown-asterisk-mini",
+      text = "-1.2 + rpi(0.2) + croton_noise + max(0, decorative_knockout) + region_box",
+      box = "min(range_select{input = moisture, from = 0.25, to = 0.6, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 10, to = 14, slope = 0.5, min = -10, max = 1})",
+    },
+    {
+      name = "brown-carpet-grass",
+      text = "-1 + rpi(0.4) + pita_noise - 0.5 * min(0, decorative_knockout) + region_box",
+      box = "range_select{input = moisture, from = 0.35, to = 0.8, slope = 0.1, min = -10, max = 1}",
+    },
+    {
+      name = "brown-fluff",
+      text = "-1.4 + rpi(0.7) + (garballo_noise - min(0, decorative_knockout)) + region_box",
+      box = "min(range_select{input = moisture, from = 0.4, to = 1, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 15, to = 20, slope = 0.5, min = -10, max = 1})",
+    },
+    {
+      name = "brown-fluff-dry",
+      text = "-1.5 + rpi(0.5) + (croton_noise - min(0, decorative_knockout)) + region_box",
+      box = "min(range_select{input = moisture, from = 0.1, to = 0.4, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 15, to = 20, slope = 0.5, min = -10, max = 1})",
+    },
+    {
+      name = "brown-hairy-grass",
+      text = "-1.2 + rpi(0.6) + (pita_noise - min(0, decorative_knockout)) + region_box",
+      box = "max(range_select{input = moisture, from = 0.3, to = 0.6, slope = 0.1, min = -10, max = \z
+        1},min(range_select{input = moisture, from = 0.1, to = 2, slope = 0.05, min = -10, max = \z
+        1},range_select{input = aux, from = 0.6, to = 1, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 14, to = 20, slope = 0.5, min = -10, max = 1}))",
+    },
+    {
+      name = "cracked-mud-decal",
+      text = "clamp(-1.5 + noise_layer_noise('red-desert-decal')+ min(range_select(moisture, 0.45, 0.7, 0.05, -1, \z
+        1),range_select(aux, 0, 0.7, 0.05, -1, 1)),0, 0.01)",
+    },
+    {
+      name = "dark-mud-decal",
+      text = "clamp(-1.2 + noise_layer_noise('red-desert-decal') + range_select(moisture, 0.7, 1, 0.05, -1, 1), 0, \z
+        0.02)",
+    },
+    {
+      name = "red-asterisk",
+      text = "-1.5 + rpi(0.2) + asterisk_noise - min(0, decorative_knockout) + region_box",
+      box = "min(range_select{input = moisture, from = 0.05, to = 0.55, slope = 0.05, min = -10, max = \z
+        1},range_select{input = aux, from = 0.6, to = 1, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 10, to = 15, slope = 0.5, min = -10, max = 1})",
+    },
+    {
+      name = "red-croton",
+      text = "-1.5 + rpi(0.7) + (croton_noise - min(0, decorative_knockout)) + region_box",
+      box = "min(range_select{input = moisture, from = 0.3, to = 1, slope = 0.05, min = -10, max = \z
+        1},range_select{input = aux, from = 0.6, to = 1, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 15.5, to = 20, slope = 0.5, min = -10, max = 1})",
+    },
+    {
+      name = "red-desert-bush",
+      text = "-1.75 + rpi(0.8) + (garballo_noise - min(0, decorative_knockout)) + region_box",
+      box = "min(range_select{input = moisture, from = 0.05, to = 0.3, slope = 0.1, min = -10, max = \z
+        1},range_select{input = aux, from = 0.15, to = 1, slope = 0.05, min = -10, max = 1})",
+    },
+    {
+      name = "red-pita",
+      text = "-1.9 + (rpi(0.7) + (pita_noise - min(0, decorative_knockout))) + region_box",
+      box = "clamp(min(range_select{input = moisture, from = 0.05, to = 0.3, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 14, to = 20, slope = 0.5, min = -10, max = \z
+        1}),min(range_select{input = moisture, from = 0.8, to = 0.95, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 16, to = 20, slope = 0.5, min = -10, max = \z
+        1}),range_select{input = aux, from = 0.5, to = 1, slope = 0.05, min = -10, max = 1})",
+    },
+    {
+      name = "white-desert-bush",
+      text = "-1.9 + asterisk_noise + max(0, decorative_knockout) + rpi(0.8) + region_box",
+      box = "max(min(range_select{input = moisture, from = 0, to = 0.2, slope = 0.05, min = -10, max = \z
+        1},range_select{input = aux, from = 0.1, to = 0.6, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 14, to = 20, slope = 0.5, min = -10, max = \z
+        1}),min(range_select{input = moisture, from = 0.8, to = 1, slope = 0.05, min = -10, max = \z
+        1},range_select{input = aux, from = 0.8, to = 1, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 10, to = 14, slope = 0.5, min = -10, max = 1}))",
+    },
+    {
+      name = "garballo",
+      text = "-1.7 + rpi(0.5) + (garballo_noise - min(0, decorative_knockout)) + region_box",
+      box = "max(min(range_select{input = moisture, from = 0.3, to = 0.6, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 10, to = 15, slope = 0.5, min = -10, max = \z
+        1}),min(range_select{input = moisture, from = 0.65, to = 0.95, slope = 0.05, min = -10, max = \z
+        1},range_select{input = aux, from = 0.5, to = 0.8, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 14, to = 15, slope = 0.5, min = -10, max = 1}))",
+    },
+    {
+      name = "garballo-mini-dry",
+      text = "-1.5 + rpi(0.3) + (garballo_noise - min(0, decorative_knockout)) + region_box",
+      box = "min(range_select{input = moisture, from = 0.15, to = 0.4, slope = 0.05, min = -10, max = \z
+        1},range_select{input = temperature, from = 10, to = 15, slope = 0.5, min = -10, max = 1})",
+    },
+  },
 }

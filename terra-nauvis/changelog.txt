@@ -67,10 +67,21 @@ Date: 2026-10-30
     - Destroyed Europe startup setting (default off, needs Alien Biomes): from France to Warsaw and
       from the North Sea across Switzerland and Austria to Ljubljana and down Italy to about Rome,
     - Exact coastlines startup setting (default on): on Atlantic and Old World each new chunk's coast
+      preview still shows the noise coast; land made from sea takes the trees and ground cover of
+      the land beside it.
     - City markers map setting (default off, changeable in a running game): the map view names every
       city of a Terra Nauvis world's map where it lies; switching it off removes them.
   Changes:
+    - Rivers wander: they meander off their polylines, their banks stop being parallel, they widen
+      toward the mouth and taper at the source, and the square turning basins became natural pools.
+    - The start lake and the Inland lakes setting's lakes have irregular shores, and inland lakes vary
+      in size.
   Compatibility:
     - With Alien Biomes enabled every Terra Nauvis preset is offered: the palms read the
       climate alone, never the coast. A world made from a preset without Alien Biomes does the same
       once Alien Biomes is added.
+    - Beside Alien Biomes a Terra Nauvis map generates faster around vanilla land: Alien Biomes'
+      decoratives and trees no longer search their whole tile lists on every vanilla land tile. They
+      no longer grow where vanilla land may lie, which removes about 0.3 percent of the decoratives
+      in temperate regions and thins them along the edges of the temperate band, by about 7
+      percent; no tile moves.

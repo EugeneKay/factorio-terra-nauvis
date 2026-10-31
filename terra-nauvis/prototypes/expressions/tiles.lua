@@ -6,15 +6,20 @@
 --                        keep their wetland biome
 --   tn_ab_exclude        every non-adopted Alien Biomes land tile: -inf in the temperate band outside
 --                        marshes, 0 elsewhere (only the adopted tiles mix into temperate zones)
+--   tn_ab_keep_v1        0 where a vanilla land tile may lie, 1 elsewhere: AB's long-listed decoratives and
+--                        trees multiply by it (the list hook; config.lua tiles.scan), and it reads no fine field
 --   tn_marsh_water_mud   water-mud pools on land inside marshes, outside the start clearing
 --   tn_marsh_water_shallow  water-shallow along open water inside marshes, above shallow_depth, so a
 --                        river's floor (-2.2) stays player-blocking water
 --   tn_marsh_grass       without Alien Biomes: grass-1 between the pools, +bonus on marsh land, 0 elsewhere
 -- Marshes read the region layer's marsh weight, the shared region expression, and nothing else of the
+-- layer (the static regions row checks it). These bodies read elevation and run in the Tile program only,
+-- behind the gate, but for tn_ab_keep_v1, which reads no elevation and runs in the Entity program.
 local cfg = require("prototypes.config")
 
 local V = cfg.tiles.vanilla
 local X = cfg.tiles.exclude
+local S = cfg.tiles.scan
 local MS = cfg.tiles.marsh
 local K = cfg.keys
 local MARSH_W = cfg.regions.names.marsh_w
@@ -61,6 +66,12 @@ end
 local PATCH = {patch = "clamp(" .. num(V.patch.amplitude) .. " * " .. noise(V.patch) .. ", " .. num(-V.patch.clamp) ..
   ", " .. num(V.patch.clamp) .. ")"}
 
+-- The list hook's factor: vanilla_bonus's every condition but elevation, on plain temperature, as 0 where
+-- that body may not be -inf and 1 where it surely is, so a change to one belongs in the other. The bonus
+-- reads the grain's frayed copy on a preset, and this runs in the Entity program, which keeps the plain
+-- fields, so the band's edges and the lean widen by scan.margin to cover the fray (config.lua tiles.scan).
+  num(V.lean_t) .. ") / " .. num(V.lean_span) .. " + patch + " .. num(V.fine) .. " * " .. MS.pool.name .. " - " ..
+  num(V.lean_cut - S.margin / V.lean_span) .. " > 0, 0, if(temperature >= " .. num(X.temperate_from - S.margin) ..
 
 -- The exclusion of non-adopted Alien Biomes land tiles from the temperate band.
 -- Inside a marsh the tiles open up to AB's wet ground, but not to its alien palette: a dry belt's red

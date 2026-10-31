@@ -18,6 +18,8 @@
 -- centre); it folds to constants, so the chain's constant slots accept it (the Tile program measured
 -- 9,350 for 1, 30 or 50 cities alike). Also here: each map's analytic spawn lake and starting-ore bias,
 -- both on the city's generated bearing (tools/build_spawn.py), the start land guarantee and each
+-- version's inland lakes, which the version's elevation entry composes (coast.lua). Both lake kinds
+-- read their shapes through a domain warp of their own. Every number
 -- comes from config.lua, the city tables and the generated bearings. A body that several
 -- versions name is defined once, and two versions that would build it differently fail at load.
 local cfg = require("prototypes.config")
@@ -100,6 +102,13 @@ local function noise(seed1, wavelength, cx, cy)
     " / " .. num(wavelength) .. shift .. "}"
 end
 
+local function warp(octaves, axis, cx, cy)
+  local parts = {}
+  for i, o in ipairs(octaves) do
+  end
+  return table.concat(parts, " + ")
+end
+
 -- number of the map's cities outside the zone, then that city's index of 1 to n. A preset with the zone on
 -- and the spawn city at random bakes this body as the map's city number, so the fold resolves it as it
 -- resolves a chosen city; the index folds to a constant like the fold's own pick.
@@ -172,6 +181,7 @@ end
       lake_angle = angle,
       lake_x = num(L.distance) .. " * cos(lake_angle)",
       lake_y = num(L.distance) .. " * sin(lake_angle)",
+      lake_d = "sqrt((lake_wx - lake_x) * (lake_wx - lake_x) + (lake_wy - lake_y) * (lake_wy - lake_y))",
     })
 
   -- The starting-ore bias: on a coastal start, a tilt of the start area toward the city's own land
@@ -222,14 +232,18 @@ local function spawn(map_key, v)
   -- inside start_radii start radii of the spawn.
   local I = S.inland_lakes
   local quantity = math.pi * I.radius * I.radius / I.cone_divisor   -- a cone of peak 1
+  local spots = "spot_noise{x = lake_wx, y = lake_wy, density_expression = " ..
     num(quantity * I.per_region / (I.region * I.region)) .. ", spot_quantity_expression = " .. num(quantity) ..
     ", spot_radius_expression = " .. num(I.radius) .. ", spot_favorability_expression = " .. num(1) ..
     ", seed0 = map_seed, seed1 = " .. num(I.seed1) .. ", basement_value = " .. num(0) ..
     ", maximum_spot_basement_radius = " .. num(2 * I.radius) .. ", region_size = " .. num(I.region) ..
     ", candidate_spot_count = " .. num(I.candidates) .. ", suggested_minimum_candidate_point_spacing = " ..
     num(I.spacing) .. ", hard_region_target_quantity = " .. num(1) .. "}"
+  def(sp.inland_lakes, "max(" .. num(I.gain) .. " * (" .. num(I.level) .. " + lake_size - lake_spot) + lake_shore, " ..
     num(I.coast_gain) .. " * (" .. num(I.coast_px) .. " - " .. v.geo .. "), (" .. num(I.start_radii) ..
       lake_spot = spots,
+      lake_size = num(I.size.amplitude) .. " * clamp(" .. noise(I.size.seed1, I.size.wavelength, v.cx, v.cy) ..
+        ", -1, 1)",
     })
 end
 

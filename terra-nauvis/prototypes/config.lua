@@ -139,6 +139,7 @@ local CT = {
   VT_BONUS = NOISE .. "vtile_bonus_v1",
   AB_EXCLUDE = NOISE .. "ab_exclude",
   AB_EXCLUDE_BODY = NOISE .. "ab_exclude_v1",
+  AB_KEEP_BODY = NOISE .. "ab_keep_v1",
   MARSH_MUD = NOISE .. "marsh_water_mud",
   MARSH_POOL = NOISE .. "marsh_pool_v1",
   MARSH_MUD_BODY = NOISE .. "marsh_water_mud_v1",
@@ -864,6 +865,10 @@ return {
       release = "0.1.0",
       files = {"prototypes/tables/destroyed.lua"},
     },
+    -- The list hook's body (tiles.scan), defined on every load like the other tile bodies.
+    {
+      release = "0.1.0",
+    },
   },
 
   -- Elevation composition tunables (ARCHITECTURE.md, "Elevation composition"):
@@ -916,6 +921,8 @@ return {
     -- 4 px, so every land column the box cuts ends in water before it, and never deeper than 20 px,
     -- short of the nearest land the box does not cut (Cyprus 22 px, Alaska 24 px, Ireland and Stewart
     -- Island 25 px). The pixel-centre coast check masks reference land within width_px + warp_px + 1
+    -- px of the box (mask_px), plus the side's margin where outline below gives it one; the band-fix
+    -- handler writes nothing in that same reach (scripts/bandfix.lua, edge_band_reach in earth_test.py).
     edge_band = {
       width_px = 12,
       warp_px = 8,
@@ -924,6 +931,38 @@ return {
         {seed1 = 7401, wavelength_px = 32, weight = 1},
         {seed1 = 7402, wavelength_px = 12, weight = 0.5},
         {seed1 = 7403, wavelength_px = 4, weight = 0.25},
+      },
+      -- water edge moves further in by margin px * share, where margin is the map's table for that side,
+      -- {along px, margin px} knots read piecewise linearly and 0 for a
+      -- side with no table, and share = floor + the sum of each band's share * (0.5 + 0.5 * n / (1 + |n|)),
+      -- n the band's gain times its octaves' weighted sum, each octave a basis noise in geo tiles. Two
+      -- bands, so a stretch where the low one sits at its lowest still has bays of its own; a soft limit
+      -- for the same reason, as a clamp would leave flat runs at one depth, which read as the box. The
+      -- floor and the band shares sum to 1, so the outline stays between floor and all of the margin,
+      -- moves with the map seed and never passes the table, whatever the seed: the table is the
+      -- protection. Where a table reads 0 (the sea below Cyprus, the Atlantic beside Ireland, the east
+      -- end of the Black Sea) the band is the plain 4 to 20 px strip above.
+      outline = {
+        floor = 0.2,
+        bands = {
+          {share = 0.45, gain = 1.6, octaves = {{seed1 = 7421, wavelength_px = 311, weight = 1}}},
+          {share = 0.35, gain = 2.2, octaves = {{seed1 = 7422, wavelength_px = 137, weight = 1},
+                                                {seed1 = 7423, wavelength_px = 59, weight = 0.7}}},
+        },
+        margins = {
+          europe = {
+            right = {{255, 0}, {300, 60}, {345, 100}, {640, 170}, {700, 100}, {820, 100}, {880, 150}, {1040, 170},
+                     {1085, 60}, {1125, 60}, {1300, 6}, {1330, 0}, {1365, 0}, {1400, 20}, {1440, 120}, {1704, 300}},
+            bottom = {{190, 0}, {260, 26}, {300, 18}, {360, 22}, {420, 18}, {500, 40}, {780, 80}, {900, 80},
+                      {965, 0}, {2100, 0}, {2140, 6}, {2300, 170}, {2400, 300}},
+          },
+          atlantic = {
+            right = {{735, 0}, {790, 160}, {830, 260}, {900, 110}, {970, 260}, {1010, 200}, {1060, 60}, {1125, 0}},
+          },
+          olde_world = {
+            right = {{506, 0}, {561, 160}, {601, 260}, {671, 110}, {741, 260}, {781, 200}, {831, 60}, {896, 0}},
+          },
+        },
       },
     },
   },
@@ -1023,10 +1062,16 @@ return {
   --     1/3), so the design water fraction is per_region * pi * (radius * (1 - level))^2 / region^2
   --     (0.61 percent). Kept coast_px reference pixels inside the coast fit (no lake on a shore, a
   --     small island or an isthmus) and out of start_radii start radii of the spawn.
+  --     (seed1x, seed1y) of wavelength tiles times amplitude tiles, so no lake reads as a disc; size moves
+  --     an inland lake's level by amplitude times a clamped low-frequency noise, so they are not all one
+  --     size; the level stays far enough above 0 that the shore noise cannot open water off a spot.
   spawn = {
     random_value = "random",
     hash = {small_mult = 157, high_mult = 97, high_div = 65536},
     lake = {distance = 72, bearings = 16, magnitude = 2.5, offset = 3, divisor = 8,
+            noise = {seed1 = 7201, wavelength = 12, amplitude = 4},
+            warp = {{seed1x = 7205, seed1y = 7206, wavelength = 90, amplitude = 12},
+                    {seed1x = 7207, seed1y = 7208, wavelength = 30, amplitude = 5}}},
     bias = {radius = 150, excluder = 40, widths = {50, 75, 100, 150}, seed = 7203, layouts = 150, ores = 4,
             candidates = 32, region = 450, spacing = 30, patch = {7, 14}, share = 0.5, margin = 0.005},
     land = {radius = 16, slope = 0.5},
@@ -1034,6 +1079,9 @@ return {
       seed1 = 7202, region = 1024, per_region = 8, radius = 24, level = 1 / 3, gain = 12, candidates = 32,
       spacing = 128, cone_divisor = 3,
       shore = {seed1 = 7204, wavelength = 8, amplitude = 1},
+      warp = {{seed1x = 7209, seed1y = 7210, wavelength = 48, amplitude = 12},
+              {seed1x = 7211, seed1y = 7212, wavelength = 16, amplitude = 4}},
+      size = {seed1 = 7213, wavelength = 256, amplitude = 0.2},
       coast_px = 2.5, coast_gain = 20, start_radii = 1.5, start_slope = 0.25,
     },
   },
@@ -1266,6 +1314,8 @@ return {
   destroyed = {
     pools = {europe = DE.pool_europe, atlantic = DE.pool_atlantic, olde_world = DE.pool_olde_world},
             noise = {amplitude = 20, wavelength_tiles = 24, octaves = 3, persistence = 0.6, seed1 = 7901}},
+    -- Alien Biomes' heat bands differ by a few RGB steps, so heat 1 and heat 2 read as one dark grey on the map
+    map_colors = {families = {"orange", "green", "blue", "purple"},
     switch_threshold = 0.5,
   },
 
@@ -1364,6 +1414,12 @@ return {
   --     + margin, s / 2); a dam max(dam.floor_tiles, dam.per_scale s).
   --   depth: the carve's floor, plain water in vanilla and Alien Biomes for rivers and canals,
   --     deepwater for straits; slope: elevation per tile from the carve's edge.
+  --     gentle reach and every segment costs per tile); a river's bends
+  --     take less, down to the scale's smoothing.least_tiles, so no vertex turns by more than kink_degrees
+  --     where the curve allows it (bend_tiles: the arm of the curvature estimate); smoothing: box windows in
+  --     tiles, tried smallest first from min_window_px reference px until the smoothed centreline (simplified
+  --     at fine_tolerance_tiles) obeys the bend rule, for rivers; the drawn_kinds (straits and canals, sea
+  --     passages the coast
   --     fit fills as land) keep their drawn course unsmoothed, their drawn points (a strait's waypoints
   --     and narrowest point, a canal's route vertices) held within their half-width less one tile;
   --     bend: the bend rule, no window_tiles
@@ -1378,10 +1434,38 @@ return {
     depth = {river = -2.2, strait = -6, canal = -2.2},
     slope = 4,
     dam = {floor_tiles = 1.5, per_scale = 0.5},
+    smoothing = {windows = {1, 5, 9, 13, 17, 25, 33, 49, 65, 97}, passes = 3, step_tiles = 1, min_window_px = 12,
+                 fine_tolerance_tiles = 0.5, drawn_kinds = {"strait", "canal"}, kink_degrees = 30, bend_tiles = 8,
     bend = {window_tiles = 17, limit_degrees = 90},
     basin_tiles = 30,
     vertex_grid = 16,
     start = {clear_tiles = 12, radius_tiles = 150},
+    -- and tools/build_waterways.py).
+    --   warp: one octave per row, a basis noise per axis (seed1x, seed1y) of wavelength {a, b} = a + b s tiles
+    --     and amplitude {a, b} = a + b s tiles at scale s, added to the geo tiles every set reads; passage is
+    --     the share a strait, canal or dam reads. The first two rows are the meanders, the last the banks,
+    --     short enough that the two banks of a river differ. noise_peak: basis noise's peak, for the warp's reach.
+    --   bank: B = amplitude {a, b} * (half + half * clamp(noise, -1, 1)) tiles of wavelength {a, b} tiles at
+    --     scale s (a + b s), the fine irregularity every river and passage bank adds to its half-width.
+    --   ford_edge: J = amplitude {a, b} * noise tiles of wavelength {a, b} tiles at scale s, added to a ford's
+    --   profile: a river's half-width factor from source at its inland end to mouth where it meets the coast
+    --   deloop: a river's hooks cut, tools/build_waterways.py deloop.
+    --   runs: a river's segments over max_px reference px take a vertex every step_px, off their line by
+    --     amplitude step_px times least to 1, on alternating sides (tools/build_waterways.py break_runs).
+    --   ponds: water components of the coast fit of at most max_px px within reach_px of a river's cells take
+    --     land, height at the centre and 0 margin_px beyond the component's farthest pixel.
+    natural = {
+      warp = {
+        {seed1x = 7501, seed1y = 7502, wavelength = {60, 50}, amplitude = {2, 3.8}, passage = 0},
+        {seed1x = 7503, seed1y = 7504, wavelength = {30, 12}, amplitude = {1.5, 0.9}, passage = 0.3},
+        {seed1x = 7505, seed1y = 7506, wavelength = {14, 1.5}, amplitude = {0.6, 0.2}, passage = 1},
+      },
+      noise_peak = 1.7,
+      bank = {seed1 = 7508, wavelength = {8, 1}, amplitude = {0.6, 0.15}, half = 0.5},
+      deloop = {gap_px = 8, arc_px = 30, reach_px = 400},
+      runs = {max_px = 60, step_px = 36, amplitude = 0.2, least = 0.4},
+      ponds = {max_px = 32, reach_px = 3, margin_px = 1.5, height = 20},
+    },
   },
 
   -- exact signed distances in reference pixels at a query point on the coordinate chain, displaced by
@@ -1623,6 +1707,23 @@ return {
       key = CT.AB_EXCLUDE, off = "0", body = CT.AB_EXCLUDE_BODY, body_grain = CT.AB_EXCLUDE_BODY_G,
       temperate_from = 25, temperate_below = 65, marsh_cut = 0.68,
     },
+    -- The list hook (Alien Biomes' long tile restrictions): the game walks a
+    -- restriction entry by entry for every tile of a chunk, so a vanilla land tile, on no AB list, costs a
+    -- whole walk per AB decorative and tree, 19,000 entries a tile at Frankfurt, whatever the probability
+    -- says. Beside Alien Biomes each AB-only autoplace on Nauvis with a list longer than vanilla.tiles
+    -- takes the vanilla land tiles at the front of its list (they end the walk on their first entries)
+    -- and, on its on branch, (own probability) * body. `body` is 0 where the vanilla tile body is not
+    -- -inf on land, 1 elsewhere: it is that bonus body without its elevation term, so it reads no fine
+    -- field and may run in the Entity program. `margin` widens its band and lean, in temperature units,
+    -- over climate.grain's fray: the grain stays out of the Entity program (trees and decoratives keep
+    -- the plain fields), so the body can only cover the frayed edge from outside. The fray's bound is 6
+    -- (grain.temperature 3 times noise_layer_noise's peak of 2), but full cover strips Alien Biomes' trees
+    -- along the band's edges, and a stray plant on a frayed edge reads better than a bare fringe, so 2 lets
+    -- about 0.4 percent of these onto vanilla land. `types` pairs each prototype
+    -- type with the settings group on_nauvis reads; Alien Biomes' palms keep their list (their keys already
+    -- name Earth copies).
+    scan = {body = CT.AB_KEEP_BODY, margin = 2,
+            types = {{type = "optimized-decorative", group = "decorative"}, {type = "tree", group = "entity"}}},
     marsh = {
       water_shallow = {key = CT.MARSH_SHALLOW, off = "-inf", body = CT.MARSH_SHALLOW_BODY},
       grass = {tile = "grass-1", key = CT.MARSH_GRASS, off = "0", body = CT.MARSH_GRASS_BODY, bonus = 10},
@@ -1724,6 +1825,37 @@ return {
                land_fill = "g", thin = "h", water_masked = "i", land_masked = "j"},
     symbol_order = {"none", "water", "land", "water_k", "land_k", "water_fill", "land_fill", "thin",
                     "water_masked", "land_masked"},
+  },
+
+  -- Cover for the land Exact coastlines writes (scripts/coastcover.lua). A group of
+  -- its own: the bandfix group is hashed into the K+ tables' manifests.
+  --   reach_tiles  the box the cover is read from: the written land's bounding box grown by this, inside the chunk
+  --   min_land_tiles  a box with less land widens to the whole chunk
+  --   types, entity_limit  the entities read and how many: the rate still counts every one of them
+  --   decorative_land, decorative_limit  decoratives are read from the middle rows of the box, about this much land,
+  --       and at most this many, a bound on a very dense patch
+  --   tries  draws per tile until the sample holds something the tile's ground allows
+  --   offset  a tree's position inside its tile, from each side, in tiles
+  --   edge_gap  an entity's collision box keeps this clear of the chunk's edge, the reach of a neighbour's tree
+  --   inset_tiles  every read keeps this many tiles inside the chunk's edge, past the reach of a neighbour's rock
+  --   check_collision  create_decoratives' own check
+  --   hash  the per-chunk seed (hashed from the chunk's position, so a draw does not depend on the order
+  --       chunks generate in): a multiplicative step
+  --       modulo 2^32 per coordinate, floor keeping it out of the seeds that are all one generator
+  coastcover = {
+    reach_tiles = 8,
+    min_land_tiles = 32,
+    types = {"tree", "simple-entity"},
+    entity_limit = 32,
+    decorative_land = 96,
+    decorative_limit = 160,
+    tries = 6,
+    offset = 0.1,
+    edge_gap = 0.6,
+    inset_tiles = 2,
+    check_collision = false,
+    hash = {modulus = 4294967296, mul = 1103515245, add = 12345, coord = 65536, x = 2654435761, y = 2246822519,
+            floor = 342},
   },
 
   -- scripts/markers.lua draws one text per city of the save's map, its name from the map's city table, at the

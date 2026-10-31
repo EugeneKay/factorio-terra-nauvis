@@ -5027,8 +5027,28 @@ def corridor_mask(map_key, scale):
 _EDGE_MASKS = {}
 
 
+def edge_band_reach(cfg, key, W, H):
+    """Each box side's reach in reference px per px along it (left and right per row, top and bottom per
+    column): coast.edge_band mask_px plus the side's outline margin there, rounded up, the handler's
+    side_reach in terra-nauvis/scripts/bandfix.lua. The band's water edge never lies deeper: the share
+    is at most 1 at every seed."""
+    import numpy as np
+    B = cfg["coast"]["edge_band"]
+    margins = B["outline"]["margins"].get(key) or {}
+
+    def side(name, n):
+        knots = margins.get(name)
+        t = np.zeros(n) if not knots else np.interp(np.arange(n), [k[0] for k in knots], [k[1] for k in knots])
+        return int(B["mask_px"]) + np.ceil(t).astype(int)
+    return {"left": side("left", H), "right": side("right", H), "top": side("top", W), "bottom": side("bottom", W)}
+
+
 def edge_band_mask(mref):
     """T1's edge band mask (edge-and-lakes) of a map whose newest geography version carries the soft
+    map edge, or None: the reference land pixels inside edge_band_reach of the box, where the band may
+    sink land into water (its water edge lies at most width_px + warp_px reference px plus the side's
+    margin in, and a pixel's centre tile sits at most half a pixel past its index). Water pixels stay
+    water under the band's min(), so only land is masked."""
     k = mref.key
     if k not in _EDGE_MASKS:
         cfg = tnconfig.load()
@@ -5040,6 +5060,10 @@ def edge_band_mask(mref):
             import numpy as np
             r = np.arange(mref.H)[:, None]
             c = np.arange(mref.W)[None, :]
+            R = edge_band_reach(cfg, k, mref.W, mref.H)
+            inside = ((c < R["left"][:, None]) | (mref.W - 1 - c < R["right"][:, None]) |
+                      (r < R["top"][None, :]) | (mref.H - 1 - r < R["bottom"][None, :]))
+            _EDGE_MASKS[k] = inside & mref.land.astype(bool)
     return _EDGE_MASKS[k]
 
 
@@ -16754,9 +16778,25 @@ def tf_land(cfg):
 
 
 def tf_extended(cfg, base_list):
+    """An AB tile restriction with the vanilla land tiles at its front (data-final-fixes.lua extend_restriction)."""
+    out = tf_land(cfg)
+    for t in base_list or []:
         if t not in out:
             out.append(t)
     return out
+
+
+def tf_list_hooked(cfg, ba):
+    """True when the list hook (data-final-fixes.lua list_hooks) applies to an AB autoplace: a probability, a
+    tile restriction longer than the vanilla land tiles, and none of them on it."""
+    land = tf_land(cfg)
+    lst = ba.get("tile_restriction") or []
+    return ba.get("probability_expression") not in (None, "") and len(lst) > len(land) and not set(land) & set(lst)
+
+
+def tf_list_hook_text(cfg, own):
+    """The list hook around an AB probability: the keep body's factor on the Earth branch, the own text off."""
+    return tf_restore_text(cfg, f"({own}) * {cfg['tiles']['scan']['body']}", f"({own})")
 
 
 def tf_hook_change(cfg, t, n, earth, base):
@@ -16764,6 +16804,9 @@ def tf_hook_change(cfg, t, n, earth, base):
     forests' stable hooks alone: a living tree's probability wrapped in the great-forests hook; beside
     Alien Biomes a restored vanilla tree, rock or decal rebuilt behind tn_on from vanilla.lua (restricted
     to vanilla land, the trees under the boost too), a re-listed decorative's (score) + key behind tn_on
+    with vanilla land as its restriction, an AB restriction with the vanilla land tiles at its front, and
+    the list hook on a long AB-only tree or decorative list (tf_list_hooked). Alien Biomes' palms take no
+    hook (tf_palm_trees), so any change to one fails."""
     TR = cfg["trees"]
     R = TR["restore"]
     V = tf_vanilla()
@@ -16790,6 +16833,9 @@ def tf_hook_change(cfg, t, n, earth, base):
         own = ba.get("probability_expression")
         if own in (None, ""):
             return False
+        if tf_list_hooked(cfg, ba):
+            return ea == dict(ba, probability_expression=tf_boost_text(cfg, tf_list_hook_text(cfg, tf_lua_text(own))),
+                              tile_restriction=tf_extended(cfg, ba["tile_restriction"]))
     if n in R["rocks"] and not ba:
         row = next((r for r in V["rocks"] if r["name"] == n and r["type"] == t), None)
         if row is None:
@@ -16804,6 +16850,9 @@ def tf_hook_change(cfg, t, n, earth, base):
         own = ba.get("probability_expression")
     if t == "optimized-decorative" and n in V["extend"] and ba.get("tile_restriction") is not None:
         return ea == dict(ba, tile_restriction=tf_extended(cfg, ba.get("tile_restriction")))
+    if t == "optimized-decorative" and tf_list_hooked(cfg, ba):
+        return ea == dict(ba, probability_expression=tf_list_hook_text(cfg, tf_lua_text(ba["probability_expression"])),
+                          tile_restriction=tf_extended(cfg, ba["tile_restriction"]))
     return False
 
 
@@ -16847,6 +16896,30 @@ def tf_controls():
     out["trees: the boost alone on a living tree passes"] = (tf_hook_change(cfg, "tree", "tree-01", tree1, tree0), "")
     out["trees: the boost plus another change fails"] = (
         not tf_hook_change(cfg, "tree", "tree-01", dict(tree1, max_health=1), tree0), "")
+    # the list hook: a long AB-only list, as AB's own trees and decoratives hold it
+    ab_list = [f"mineral-x-{i}" for i in range(len(tf_land(cfg)) + 1)]
+    deco0 = {"type": "optimized-decorative", "name": "ab-deco",
+             "autoplace": {"probability_expression": "p", "tile_restriction": ab_list}}
+    deco1 = {"type": "optimized-decorative", "name": "ab-deco",
+             "autoplace": {"probability_expression": tf_list_hook_text(cfg, "p"),
+                           "tile_restriction": tf_extended(cfg, ab_list)}}
+    out["trees: the list hook alone on a long AB list passes"] = (
+        tf_hook_change(cfg, "optimized-decorative", "ab-deco", deco1, deco0), "")
+    out["trees: the list hook on a short AB list fails"] = (not tf_hook_change(
+        cfg, "optimized-decorative", "ab-deco",
+        {"type": "optimized-decorative", "name": "ab-deco", "autoplace": {
+            "probability_expression": tf_list_hook_text(cfg, "p"), "tile_restriction": tf_extended(cfg, ["a"])}},
+        {"type": "optimized-decorative", "name": "ab-deco",
+         "autoplace": {"probability_expression": "p", "tile_restriction": ["a"]}}), "")
+    out["trees: a list hook that leaves vanilla land off the front fails"] = (not tf_hook_change(
+        cfg, "optimized-decorative", "ab-deco",
+        {"type": "optimized-decorative", "name": "ab-deco", "autoplace": {
+            "probability_expression": tf_list_hook_text(cfg, "p"), "tile_restriction": ab_list + tf_land(cfg)}},
+        deco0), "")
+    out["trees: a list hook without the keep factor fails"] = (not tf_hook_change(
+        cfg, "optimized-decorative", "ab-deco",
+        {"type": "optimized-decorative", "name": "ab-deco", "autoplace": {
+            "probability_expression": "p", "tile_restriction": tf_extended(cfg, ab_list)}}, deco0), "")
     out["trees: a text other than the boost fails"] = (
         not tf_hook_change(cfg, "tree", "tree-01", dict(tree0, autoplace={"control": "trees",
                                                                           "probability_expression": "1"}), tree0), "")
@@ -26629,6 +26702,8 @@ EL_EDGE_RUNS = 2                 # edge windows per map: the longest box-touchin
 EL_MIN_RUN_PX = 32               # a side's run shorter than this gets no window (an islet the box cuts)
 EL_MIN_WATER_PX = 4              # the band's water edge never closer to the box than this (px)
 EL_MAX_REACH_PX = 20             # nor deeper than this: the nearest land the box does not cut lies at 22 px
+EL_MASK_SHARE = 0.07             # T1: the edge band mask stays at most 7 percent of a map (Europe 6.3)
+EL_CITY_ROOM_PX = 60             # every spawn city keeps this much ground between it and the band's reach
 # One inland window per map with inland lakes, its centre in reference px: away from every coast and
 # box and beside the runner's default spawn (Europe: the Pannonian basin, north of Tirana at seed 1000).
 EL_LAKE_PX = {"europe": (1406, 1043)}
@@ -26668,6 +26743,10 @@ def el_offline_checks(cfg):
     """{check: (ok, detail)}: the band's numbers keep its water edge between EL_MIN_WATER_PX and
     EL_MAX_REACH_PX of the box and inside the T1 mask; per edge map the reference land the band can reach
     (components the box does not cut within width + warp px; on Europe, where T1-e gates islands, none of
+    ISLAND_MIN_PX or more, and with the outline's margins none of them inside the mask: Cyprus and Ireland
+    stay whole), the ground every spawn city keeps and the edge band mask's share of the map; and a T1
+    control on Europe: a land decision with every masked pixel sunk scores 1.0 masked and less with the
+    mask left out (G6)."""
     import numpy as np
     import earthgeo as eg
     import t1_metrics as t1
@@ -26687,6 +26766,27 @@ def el_offline_checks(cfg):
             f"{len(near)} components (depth, px) {near[:8]}; of {ISLAND_MIN_PX} px or more: {big[:4]}")
         mask = edge_band_mask(mref)
         share = float(mask.sum()) / (mref.W * mref.H) if mask is not None else None
+        if mask is not None:
+            R = t1.flat_runs(mref.land.astype(bool), 8)
+            cut_ids = set(np.unique(R["comp"][(R["rows"] == 0) | (R["rows"] == mref.H - 1) | (R["s"] == 0) |
+                                              (R["e"] == mref.W - 1)]).tolist())
+            size = np.bincount(R["comp"], weights=R["e"] - R["s"] + 1, minlength=R["n"])
+            reached = {}
+            for row, a, b, comp in zip(R["rows"].tolist(), R["s"].tolist(), R["e"].tolist(), R["comp"].tolist()):
+                if comp not in cut_ids and size[comp] >= ISLAND_MIN_PX and mask[row, a:b + 1].any():
+                    reached[comp] = int(size[comp])
+            out[f"{mk}: uncut islands inside the mask"] = (not (mk == "europe" and reached),
+                                                           f"{sorted(reached.values(), reverse=True)[:8]}")
+        reach = edge_band_reach(cfg, mk, mref.W, mref.H)
+        tight = None
+        for name, c in tnconfig.city_tables()[mk]["cities"].items():
+            u = int((c["lon"] - mref.lon_left) * mref.ppd)
+            v = int((mref.lat_top - c["lat"]) * mref.ppd)
+            room = min(u - reach["left"][v], mref.W - 1 - u - reach["right"][v], v - reach["top"][u],
+                       mref.H - 1 - v - reach["bottom"][u])
+            if tight is None or room < tight[0]:
+                tight = (int(room), name)
+        out[f"{mk}: tightest spawn city's room"] = (tight[0] >= EL_CITY_ROOM_PX, f"{tight[1]} {tight[0]} px")
         out[f"{mk}: edge band mask share"] = (mask is not None and share <= EL_MASK_SHARE,
                                              f"{None if share is None else round(share, 5)} (at most {EL_MASK_SHARE})")
     mref = eg.MapRef("europe") if "europe" in el_maps(cfg) else None
@@ -26848,6 +26948,9 @@ def el_window_tiles(ox, oy, size):
 
 def el_edge_eval(cfg, mk, s, off, ox, oy, new_water, prev_water, label):
     """One edge window: (meas, fails). Every tile beyond the box is water (G5); every tile the previous
+    version holds as water stays water; outside the band's reach (edge_band_reach) the two versions agree
+    tile for tile; and in every box-touching land column whose reference stays land through the mask, the
+    band's water reaches EL_MIN_WATER_PX of the box."""
     import numpy as np
     import earthgeo as eg
     B = el_band(cfg)
@@ -26861,6 +26964,14 @@ def el_edge_eval(cfg, mk, s, off, ox, oy, new_water, prev_water, label):
     lost = prev_water & ~new_water
     if lost.any():
         fails.append(f"{label}: {int(lost.sum())} tiles the previous version holds as water are land")
+    m_ = cfg["maps"][mk]
+    reach = edge_band_reach(cfg, mk, m_["width_px"], m_["height_px"])
+    px_c = np.clip(np.floor_divide(xs + off[0], s) + m_["wr"], 0, m_["width_px"] - 1)
+    px_r = np.clip(np.floor_divide(ys + off[1], s) + m_["hr"], 0, m_["height_px"] - 1)
+    outside = ((xs + off[0] + s * m_["wr"] >= (reach["left"][px_r] + 1) * s) &
+               (s * (m_["width_px"] - m_["wr"]) - 1 - xs - off[0] >= (reach["right"][px_r] + 1) * s) &
+               (ys + off[1] + s * m_["hr"] >= (reach["top"][px_c] + 1) * s) &
+               (s * (m_["height_px"] - m_["hr"]) - 1 - ys - off[1] >= (reach["bottom"][px_c] + 1) * s))
     moved = (new_water != prev_water) & outside
     if moved.any():
         fails.append(f"{label}: {int(moved.sum())} tiles beyond the band's mask differ from the previous version")

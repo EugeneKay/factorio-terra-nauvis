@@ -23,6 +23,9 @@
 --                                          water in the game); a version with an edge band
 --                                          (edge-and-lakes) reads a second coast inside the extent
 --                                          instead, a noise-warped band 4 to 20 reference px in
+--                                          from the box plus the side's margin table at the local
+--                                          share of a low-frequency outline, where land sinks into
+--                                          deep water
 --   e = max(e, land)                       the start land guarantee (a version with a spawn record)
 --   e = min(e, lake, inland)               the spawn lake and the version's inland lakes (the same);
 --                                          a version with a lakes field (edge-and-lakes) reads the
@@ -142,16 +145,67 @@ local function version(m, g)
   -- The extent's outermost tiles (d = 0) read the edge water from edge_min_scale up, where none of
   -- them holds a pixel centre: ring is 1 there and 0 below, so d < ring never holds at scales 1
   -- and 2.
+  local dl = g.gx .. " + " .. s .. " * " .. num(m.wr)
+  local dr = s .. " * " .. num(m.width_px - m.wr) .. " - 1 - " .. g.gx
+  local dt = g.gy .. " + " .. s .. " * " .. num(m.hr)
+  local db = s .. " * " .. num(m.height_px - m.hr) .. " - 1 - " .. g.gy
+  local d = "min(" .. dl .. ", " .. dr .. ", " .. dt .. ", " .. db .. ")"
   local ring = "min(1, floor(" .. s .. " / " .. num(C.edge_min_scale) .. "))"
   if g.edge then
     -- The soft map edge (edge-and-lakes; config.lua coast.edge_band): inside the extent a second coast
     -- at the noise-warped band, the version's own transfer of b, its reference px beyond the band's
     -- water edge, so land sinks into deep water where b < 0 and land farther in keeps its elevation
     -- (b at the clamp reads at least any land the coast reads). Every box tile is water, so the ring
+    -- is not needed. The outline moves each side's water edge in by its margin table at the local
+    -- share, so the sides read one at a time; a side with no table reads its plain distance.
     local B = C.edge_band
+    local function noise_terms(list)
+      local terms = {}
+      for _, oc in ipairs(list) do
+        terms[#terms + 1] = num(oc.weight) .. " * basis_noise{x = x, y = y, seed0 = map_seed, seed1 = " ..
+          num(oc.seed1) .. ", input_scale = " .. num(1) .. " / (" .. num(oc.wavelength_px) .. " * " .. s ..
+          "), offset_x = " .. g.cx .. ", offset_y = " .. g.cy .. "}"
+      end
+      return table.concat(terms, " + ")
     end
+    -- A margin table as an expression of along, reference px along its side: one clamped ramp per
+    -- segment that changes, their constants folded into one number, so a table's cost is those ramps.
+    local function margin(knots, along)
+      local terms, c = {}, knots[1][2]
+      for i = 2, #knots do
+        local a0, v0, a1, v1 = knots[i - 1][1], knots[i - 1][2], knots[i][1], knots[i][2]
+        if v1 ~= v0 then
+          local slope = (v1 - v0) / (a1 - a0)
+          c = c - slope * a0
+          terms[#terms + 1] = num(slope) .. " * clamp(" .. along .. ", " .. num(a0) .. ", " .. num(a1) .. ")"
+        end
+      end
+      return num(c) .. " + " .. table.concat(terms, " + ")
+    end
+    local O = B.outline
+    local M = O.margins[m.key]
     local locals = {
+      dl = dl, dr = dr, dt = dt, db = db,
+      d = "min(dl, dr, dt, db)",
+      au = "dl / " .. s, av = "dt / " .. s,
     }
+    local inside = {}
+    local sides = {left = {"dl", "av"}, top = {"dt", "au"}, right = {"dr", "av"}, bottom = {"db", "au"}}
+    for _, side in ipairs({"left", "top", "right", "bottom"}) do
+      local dist, along = sides[side][1], sides[side][2]
+      local term = dist .. " / " .. s
+      if M[side] then
+        local parts = {num(O.floor)}
+        for i, band in ipairs(O.bands) do
+          local n = "ol" .. i
+          locals[n] = num(band.gain) .. " * (" .. noise_terms(band.octaves) .. ")"
+          parts[#parts + 1] = num(band.share / 2) .. " * (1 + " .. n .. " / (1 + abs(" .. n .. ")))"
+        end
+        locals.share = table.concat(parts, " + ")
+        term = term .. " - share * (" .. margin(M[side], along) .. ")"
+      inside[#inside + 1] = term
+    locals.b = "clamp(min(" .. table.concat(inside, ", ") .. ") + warp - " .. num(B.width_px) .. ", " ..
+      num(-C.transfer_clamp_px) .. ", " .. num(C.transfer_clamp_px) .. ")"
     local o = num(C.transfer_offset)
     local band
     if g.shore then

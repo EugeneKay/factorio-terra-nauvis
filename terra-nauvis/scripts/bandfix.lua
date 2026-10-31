@@ -22,8 +22,10 @@
 --   5. the classes of the written tiles' bounding box are read once: a written tile that would stand as a
 --      strip one tile wide takes its neighbour in the box along, when that neighbour belongs to the same
 --      reference class;
+--   7. the written land takes the trees, rocks and decoratives of the land beside it (scripts/coastcover.lua).
 local cfg = require("prototypes.config")
 local guards = require("scripts.guards")
+local coastcover = require("scripts.coastcover")
 
 local TABLES = {
   europe = {
@@ -77,7 +79,11 @@ local SM = B.smooth
 local WP = SM.period_tiles
 local WP_X, WP_Y = SM.shift_tiles[1], SM.shift_tiles[2]
 -- A geography version with the soft map edge (edge = true) sinks land into deep water within
+-- coast.edge_band.mask_px reference px of the box plus the side's margin table there, where the K+ table's
+-- classes no longer hold: the handler writes nothing there (EDGE is mask_px, or 0 for a version without
+-- the edge; EDGE_SIDE holds each side with a table as its reach per reference px along it).
 local EDGE = 0
+local EDGE_SIDE = {}
 local WATER, KEEP, NONLAND, NONLAND_SET, FALLBACK = {}, {}, {}, {}, nil
 local GROUND, GROUND_STAMP = nil, nil
 
@@ -389,8 +395,30 @@ local function pixel_mask(c, r, land)
   return PM_MASK[k]
 end
 
+-- Each px along a side, its reach: mask_px plus the table's knots read piecewise linearly, rounded up, as
+-- earth_test.py's edge_band_reach. Module state rebuilt from config.lua on every load, so no save holds it.
+local function side_reach(knots, n)
+  local out, k = {}, 2
+  for a = 0, n - 1 do
+    while k < #knots and a >= knots[k][1] do
+      k = k + 1
+    end
+    local a0, v0, a1, v1 = knots[k - 1][1], knots[k - 1][2], knots[k][1], knots[k][2]
+    local t = (a - a0) / (a1 - a0)
+    t = t < 0 and 0 or t > 1 and 1 or t
+    out[a] = EDGE + math.ceil(v0 + t * (v1 - v0))
+  end
+  return out
+end
+
 -- Whether reference pixel (c, r) lies in the soft edge band of the save's geography version.
 local function in_edge(c, r)
+  if EDGE == 0 then
+    return false
+  end
+  local L, T, R, B_ = EDGE_SIDE.left, EDGE_SIDE.top, EDGE_SIDE.right, EDGE_SIDE.bottom
+  return c < (L and L[r] or EDGE) or r < (T and T[c] or EDGE)
+    or c >= MAP.width_px - (R and R[r] or EDGE) or r >= MAP.height_px - (B_ and B_[c] or EDGE)
 end
 
 -- Whether pixel (c, r) is open sea: water with no land among its 8 neighbours. A pixel outside the K+ table reads
@@ -674,6 +702,10 @@ local function write(surface)
   for q = #RECS, NW + 1, -1 do
     RECS[q] = nil
   end
+  local cover = coastcover.read(surface, X0, Y0, RECS, NW, NONLAND_SET, NONLAND)
+  if cover then
+    coastcover.place(surface, X0 / CT, Y0 / CT)
+  end
 end
 
 -- Plans the tiles one chunk needs written (steps 1 to 5) into QX, QY and WLAND, NW of them.
@@ -792,10 +824,20 @@ local function prepare(st)
   STATE, SHARED, MASKS, MAP = st, tabs.shared, masks, m
   local gv = guards.geography_of(st.geo)
   EDGE = (gv and gv.version and gv.version.edge) and cfg.coast.edge_band.mask_px or 0
+  EDGE_SIDE = {}
+  if EDGE > 0 then
+    local margins = cfg.coast.edge_band.outline.margins[st.map]
+    for side, n in pairs({left = m.height_px, right = m.height_px, top = m.width_px, bottom = m.width_px}) do
+      if margins[side] then
+        EDGE_SIDE[side] = side_reach(margins[side], n)
+      end
+    end
+  end
   LUT = reach_lut(st.scale)
   THIN = thin_lut(st.scale, LUT)
   SMOOTH, THIN_CENTRE, WOBBLE = {}, {}, wobble_table()
   tile_lists()
+  coastcover.prepare()
   return true
 end
 

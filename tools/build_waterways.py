@@ -22,10 +22,29 @@ X = s (u - 0.5 - wr) + floor(s / 2) for the pixel coordinate u of the feature ce
 col + 0.5), the coordinate chain's frame, so the tile holding a pixel centre reads the carve where the
 coast fit reads that centre.
 
+its out-and-back hooks are cut (deloop), it is smoothed by at least smoothing.min_window_px reference px,
+which also loses most of the raster's octilinear stairs, it is simplified with a tolerance that follows
+its bends (bend_tolerance), so bends stay curves and straight reaches pay for few segments, its longest
+straight segments take bends (break_runs), and each segment takes a half-width from the river's profile,
+narrow at the source and wide at the coast (river_widths). In the
+mod, waterways.lua warps the coordinates every set reads by one shared noise field and modulates the
+width by one low-frequency noise, so the banks wander and stop being parallel for a few noise
+evaluations per tile, not per segment. A turning basin is a short wide capsule on the river, not a square.
+
 Each scale's file holds four name-free sets, which prototypes/expressions/waterways.lua binds to the
+map's geo tiles through the locals X and Y (the rivers' warped tiles), XP and YP (the passages' lighter
+warp, so a strait or canal keeps the places the oracle tests), W (the width modulation), B (the fine
+bank noise) and J (the fords' rough edge), and the ponds:
+  ww      rivers, straits and basins: per (half-width, depth, frame) class max(depth, slope (d - hw)),
+          d the distance in tiles to the class's nearest segment, hw times W on a river, held at the
+          river floor; min() over the classes (the elevation the carve allows; the entry takes min() with it)
   canals  the canals, the same form (min(), canals on)
   dams    slope (hw_dam - d) over the dam polylines (max(), canals off)
   fords   the ford rectangles: score where the tile is inside one and its elevation is below 0, else
+          -inf (the water-shallow hook's on branch); they read the rivers' warped tiles, so each stays on
+          its river
+  ponds   land over the coast fit's own round ponds on a river's course (river_ponds), max() into the
+          entry; the only term here that reads plain geo tiles, the locals X and Y of the entry
 Segment distances come from one local function, seg, with its projection coefficients folded per
 segment; ford rectangles from another, box. Coefficients print as float32 %.9g, every line stays
 within 120 columns (build_geo.py's backslash-z wrapping), and the same inputs give byte-identical
@@ -34,6 +53,9 @@ banks clear the coast detail (land at every seed) where its interval has one, el
 bending such reach with its rectangle widened by the bend, else where its banks come nearest to
 clearing the detail (marked bank_margin_px).
 
+The river-safe starts live in the manifest only: the per-map starts_<map>_v1.lua files were never
+read by the mod and went stale when Old World's city table moved Prague and added Frankfurt, Aachen
+and Moscow, so the emitter no longer writes them.
 
 The manifest records per scale every feature's window, segment count, half-width, depth, shipped
 polyline and bend result, every ford (centre, tangent, half-widths, interval) and every skipped ford
@@ -660,6 +682,38 @@ def half_width(w, kind, s, width_class=None, real_km=0.0, river_class=None):
     raise ValueError(kind)
 
 
+def bank_reach(w, s):
+    """The fine bank noise's largest move of a bank, in tiles; it only ever widens."""
+    A = w["natural"]["bank"]["amplitude"]
+    return A[0] + A[1] * s
+
+
+def warp_reach(w, s, passage=False):
+    """The farthest the shared warp moves a river (or a passage) from its polyline, in tiles: the octaves'
+    amplitudes at the scale times the peak of basis noise (config.lua natural.noise_peak)."""
+    N = w["natural"]
+    return N["noise_peak"] * sum((o["amplitude"][0] + o["amplitude"][1] * s) * (o["passage"] if passage else 1)
+                                 for o in N["warp"])
+
+
+def river_widths(w, f, s, geo):
+    """A half-width per shipped segment of a river: the class half-width times the profile, source at the
+    np = _np()
+    Pf = w["natural"]["profile"]
+    P = np.asarray(f["P"], float)
+    L = np.sqrt((np.diff(P, axis=0) ** 2).sum(1))
+    cum = np.concatenate([[0.0], np.cumsum(L)])
+    land = geo.fit_land_at_geo(P[:, 0], P[:, 1], s)
+    idx = np.nonzero(land)[0]
+    coast = float(cum[idx[-1]]) if len(idx) else float(cum[-1])
+    coast = max(coast, 1.0)
+
+        t = min(a / coast, 1.0)
+        if a < taper:
+        return hw
+
+
+
 def class_width(w, river_class, s):
 
 
@@ -683,6 +737,7 @@ class MapGeo:
     _RASTERS = {}
     _FITS = {}
     _LOW = {}
+    _PONDS = {}
 
     def _fit(self):
         """(fit land, checkpoint record) and the fit's smallest value over each pixel's 3 x 3
@@ -714,6 +769,12 @@ class MapGeo:
     def fit_land(self):
         """The shipped coast fit's land at every reference pixel centre and its checkpoint's path and sha256."""
         return self._fit()[0]
+
+    def ponds(self, w, data):
+        """river_ponds of this map, once per run: they read the fit and the rivers, not the scale."""
+        if self.key not in MapGeo._PONDS:
+            MapGeo._PONDS[self.key] = river_ponds(w, self, data)
+        return MapGeo._PONDS[self.key]
 
     def bank_check(self, X, Y, s):
         """A ford's bank samples at geo tiles (X, Y): (each lies on land in the reference raster and in the
@@ -762,6 +823,31 @@ class MapGeo:
         else:
             out[inside] = land[rr[inside], cc[inside]] | thin[rr[inside], cc[inside]]
         return out
+
+
+def river_ponds(w, geo, data):
+    """The coast fit's own ponds on a river's course: (centre col, centre row, radius) in reference px of
+    every water component of the fit of at most ponds.max_px px within ponds.reach_px of a river's cells.
+    They are what the fit kept of the raster's river where it drew it two pixels wide: one tent, so a
+    perfect disc, which the warp cannot touch and which the warped river leaves standing beside it."""
+    np = _np()
+    from scipy import ndimage as ni
+    Pd = w["natural"]["ponds"]
+    land = geo.fit_land()[0]
+    near = np.zeros(land.shape, bool)
+    for r in data["rivers"]:
+        C = np.asarray(r["cells"], int)
+        near[C[:, 1], C[:, 0]] = True
+    k = int(Pd["reach_px"])
+    near = ni.binary_dilation(near, structure=np.ones((2 * k + 1, 2 * k + 1), bool))
+    lab, _ = ni.label(~land, structure=np.ones((3, 3), bool))
+    sizes = np.bincount(lab.ravel())
+    out = []
+    for i in sorted(int(v) for v in np.unique(lab[near]) if v > 0 and sizes[v] <= Pd["max_px"]):
+        rows, cols = np.nonzero(lab == i)
+        cx, cy = float(cols.mean()), float(rows.mean())
+        out.append((cx, cy, float(np.hypot(cols - cx, rows - cy).max())))
+    return out
 
 
 def scale_cut(w, data, s):
@@ -818,6 +904,45 @@ def dp_tolerances(pts, eps):
     return pts[keep]
 
 
+    bend stays a curve, which one fixed tolerance leaves a corner, and a gentle reach takes long segments,
+    which the warp hides and each of which costs per tile. R reads the turn over bend_tiles each way, held
+    over the bend so its whole length keeps the tight tolerance."""
+    np = _np()
+    from scipy import ndimage as ni
+    P = np.asarray(Sm, float)
+    k = min(int(S["bend_tiles"]), (len(P) - 1) // 2)
+    if k < 1:
+        return np.full(len(P), float(tol))
+    a, b = P[k:-k] - P[:-2 * k], P[2 * k:] - P[k:-k]
+    turn = np.abs((np.arctan2(b[:, 1], b[:, 0]) - np.arctan2(a[:, 1], a[:, 0]) + np.pi) % (2 * np.pi) - np.pi)
+    kappa = np.zeros(len(P))
+    kappa[k:-k] = turn / k
+    kappa = ni.maximum_filter1d(kappa, size=2 * k + 1)
+    return np.clip(eps, min(least, tol), tol)
+
+
+def break_runs(P, R, s, fid):
+    """A river's segments longer than max_px reference px broken into bends: interior vertices every step_px,
+    each off the segment's line by up to amplitude step_px on alternating sides, by a hash of the river,
+    segment and vertex. The raster draws some reaches dead straight (the Lena at 127E, 1,637 tiles at scale
+    6): a warp of a few dozen tiles leaves such a reach a wobbly straight line, and only the course can bend."""
+    np = _np()
+    out = [P[0]]
+    step = R["step_px"] * s
+    for i, (a, b) in enumerate(zip(P[:-1], P[1:])):
+        u = b - a
+        L = float(np.hypot(u[0], u[1]))
+        if L > R["max_px"] * s:
+            n = max(int(round(L / step)), 2)
+            N = np.array([-u[1], u[0]]) / L
+            for k in range(1, n):
+                h = hashlib.sha256(f"{fid}:{i}:{k}".encode("ascii")).digest()[0] / 255
+                side = 1 if (k + hashlib.sha256(f"{fid}:{i}".encode("ascii")).digest()[0]) % 2 else -1
+                out.append(a + u * (k / n) + N * side * R["amplitude"] * step * (R["least"] + (1 - R["least"]) * h))
+        out.append(b)
+    return np.asarray(out, float)
+
+
 def kept_simplify(Q, cells, keep, tol, tight, step):
     """Douglas-Peucker of a passage at `tol`, its kept cells held within `tight` tiles: the course
     `cells` (px cells, in order; Q is their centres in tiles) is resampled piece by piece between the
@@ -863,6 +988,27 @@ def canal_course(cells, route):
     return np.asarray(pos[:i0] + verts + pos[i1 + 1:], float)
 
 
+def deloop(cells, D):
+    """A river's cells with its out-and-back hooks cut: a cell within gap_px (Chebyshev) of a cell at least
+    arc_px and at most reach_px later on the path jumps to the last such cell. The least-cost route takes
+    such a hook where the drawn water branches (the Rhine's delta, 54 px out and back): no smoothing
+    window loses it, and it is what the bend rule put two turning basins on."""
+    np = _np()
+    C = np.asarray(cells, float)
+    gap, arc, reach = int(D["gap_px"]), int(D["arc_px"]), int(D["reach_px"])
+    keep, i, n = [], 0, len(C)
+    while i < n:
+        keep.append(i)
+        j0, j1 = i + arc, min(n, i + reach)
+        if j0 < j1:
+            hit = np.nonzero(np.abs(C[j0:j1] - C[i]).max(1) <= gap)[0]
+            if len(hit):
+                i = j0 + int(hit[-1])
+                continue
+        i += 1
+    return C[keep]
+
+
         Pf = dp_simplify(Sm, fine)
         v, _, runs_f = turn_windows(Pf, bw, lim)
 def shaped(w, feature, kind, s, geo, tol=None, hw=None):
@@ -878,6 +1024,8 @@ def shaped(w, feature, kind, s, geo, tol=None, hw=None):
         return None, P, {"violations": 0, "worst_deg": 0.0, "runs": [], "smoothed_fails": []}
     route = (feature.get("route") or {}).get("route_cells") if kind == "canal" else None
     raw = canal_course(feature["cells"], route) if route else np.asarray(feature["cells"], float)
+    if kind == "river":
+        raw = deloop(raw, w["natural"]["deloop"])
     cells = raw + 0.5
     bw, lim = w["bend"]["window_tiles"], w["bend"]["limit_degrees"]
     fine = w["smoothing"]["fine_tolerance_tiles"]
@@ -957,8 +1105,16 @@ def sharpest_centre(P, window):
     return stretch_centre(P, best[1] + 1, best[2] + 1)
 
 
+def course_tangent(P, c):
+    """The unit direction of a polyline around its vertex nearest the point c."""
     np = _np()
     P = np.asarray(P, float)
+    i = int(np.argmin(((P - np.asarray(c, float)) ** 2).sum(1)))
+    d = P[min(i + 1, len(P) - 1)] - P[max(i - 1, 0)]
+    n = float(np.hypot(d[0], d[1]))
+    return (float(d[0] / n), float(d[1] / n)) if n > 0 else (1.0, 0.0)
+
+
 def basin_cover(P, runs, basins, half):
     """Every failing stretch's vertices lie inside some basin square (T5's bend rule with basins)."""
     for a, b, _ in runs:
@@ -974,8 +1130,10 @@ def basin_cover(P, runs, basins, half):
 # interval, and only such an interval, and records it)
 NATURAL_WATER = "a bank is water in the reference or the coast fit (lake, sea or coast)"
 CLASH = "another corridor within the banks"
+POOL = "a turning basin's pool"
 
 
+def place_fords(w, geo, s, P, hw_at, others, fid, basins):
     """Fords of one river at scale s: one per every_px * s tiles of the shipped path.
     Every whole-tile position of an interval, from its middle outward, is a candidate whose banks are
     land in the reference and the coast fit (geo.bank_check) with no other corridor within them. A
@@ -990,6 +1148,13 @@ CLASH = "another corridor within the banks"
     np = _np()
     F = w["ford"]
     D = F["every_px"] * s
+    # a ford reads the river's warped tiles, so it spans the river's carve at its widest there; its banks
+    # are safe when the warp's whole reach still leaves them on land
+    wide = 1 + w["natural"]["width"]["amplitude"]
+    reach = warp_reach(w, s)
+    # a ford spans its river, not a basin's pool
+    Bs = w["natural"]["basin"]
+    pool = Bs["radius_tiles"] * wide + Bs["half_length_tiles"] + hl + 2
     L = polyline_length(P)
     n = int(L // D)
     cum = np.concatenate([[0.0], np.cumsum(np.sqrt((np.diff(P, axis=0) ** 2).sum(1)))])
@@ -1008,6 +1173,10 @@ CLASH = "another corridor within the banks"
     fords, skipped = [], []
     for k in range(n):
         lo, hi = k * D + hl + 2, (k + 1) * D - hl - 2
+        # off the interval's middle by a hash of the river and interval, so the fords stop reading as a
+        # dashed line along the river
+        spread = hashlib.sha256(f"{fid}:{k}".encode("ascii")).digest()[0] / 255 - 0.5
+        a0 = (k + 0.5 + 2 * F["jitter"] * spread) * D
         steps = [0]
         for d in range(1, int(D / 2) + 1):
             steps += [d, -d]
@@ -1019,6 +1188,10 @@ CLASH = "another corridor within the banks"
             tried += 1
             C, T, _ = point_at(P, a)
             N = np.array([-T[1], T[0]])
+            if any(math.hypot(C[0] - b[0], C[1] - b[1]) < pool for b in basins):
+                whys.add(POOL)
+                continue
+            across = hw_at(a) * wide + bank_reach(w, s) + F["margin_tiles"]
             # the reach's deviation from the tangent line over the ford's length plus two tiles each way
             # (its vertices there and the stretch's two ends)
             lo_a, hi_a = a - hl - 2, a + hl + 2
@@ -1050,6 +1223,9 @@ CLASH = "another corridor within the banks"
             if clash:
                 whys.add(CLASH)
                 continue
+            far = np.array([C + sign * (bank + reach) * N for sign in (-1, 1)] +
+                           [C + sign * (hl + reach) * T for sign in (-1, 1)])
+            safe = score > geo.detail_px and geo.bank_check(far[:, 0], far[:, 1], s)[0]
             if safe and straight:
                 found = ford(k, a, C, T, acr)
                 break
@@ -1096,6 +1272,15 @@ CLASH = "another corridor within the banks"
                       "window": None, "P": P, "bend": bend})
     half = w["basin_tiles"] / 2
     basins = []
+    hw_at = {}
+    ox, oy = geo.offset(s)
+    Pd = w["natural"]["ponds"]
+    ponds = [{"centre": [round(s * (cx + 0.5) + ox, 4), round(s * (cy + 0.5) + oy, 4)],
+              "radius": round((r + Pd["margin_px"]) * s, 4)} for cx, cy, r in geo.ponds(w, data)]
+    for f in feats:
+        if f["kind"] == "river":
+        else:
+            f["reach"] = f["hw"] + bank_reach(w, s) + warp_reach(w, s, True)
     for f in feats:
         f["basins"] = []
         if f["kind"] == "dam":
@@ -1107,6 +1292,7 @@ CLASH = "another corridor within the banks"
             f["bend"]["required"] = True
         for b in f["basins"]:
             basins.append({"feature": f["id"], "kind": f["kind"], "centre": [round(b[0], 4), round(b[1], 4)],
+                           "tangent": [round(v, 6) for v in course_tangent(f["P"], b)], "depth": f["depth"]})
     carved = [(f["P"], f["hw"]) for f in feats if f["kind"] != "dam"]
     for i, f in enumerate(feats):
         if f["kind"] != "river":
@@ -1114,6 +1300,7 @@ CLASH = "another corridor within the banks"
             continue
         others = [(o["P"], o["hw"], o["P"].min(0), o["P"].max(0)) for j, o in enumerate(feats)
                   if j != i and o["kind"] != "dam"]
+        f["fords"], f["fords_skipped"] = place_fords(w, geo, s, f["P"], hw_at[f["id"]], others, f["id"], f["basins"])
             "tolerance_tiles": tol, "rivers_carved": keep, "rivers_listed": len(data["rivers"])}
 
 
@@ -1138,9 +1325,31 @@ def min_tree(items, k=MIN_ARGS):
     return items[0]
 
 
+FRAMES = {"river": ("X", "Y"), "passage": ("XP", "YP")}
 
 
+def seg_call(a, b, frame):
+    """One segment's seg() in a frame's coordinates, or None for a zero-length segment."""
+    (x0, y0), (x1, y1) = a, b
+    ux, uy = x1 - x0, y1 - y0
+    L2 = ux * ux + uy * uy
+    if L2 < 1e-12:
+        return None
+    X, Y = FRAMES[frame]
+    return f"seg({X}, {Y}, {g9(x0)}, {g9(y0)}, {g9(ux)}, {g9(uy)}, {f32(ux / L2)}, {f32(uy / L2)})"
+
+
+def seg_calls(P, frame):
+    calls = [seg_call(a, b, frame) for a, b in zip(P[:-1], P[1:])]
+    return [c for c in calls if c]
+
+
+    """One term per (half-width, depth, frame) class: max(depth, slope * (sqrt(min of squared distances) -
     terms = []
+    for (hw, depth, frame), calls in sorted(groups.items()):
+        width = g9(hw)
+        if frame == "river":
+        terms.append(f"max({g9(depth)}, {g9(slope)} * (sqrt({min_tree(calls)}) - {width} - B))")
     return terms
 
 
@@ -1152,14 +1361,31 @@ def render_sets(cfg, built):
     half = built["half_basin"]
     ww_groups, canal_groups, dam_calls = {}, {}, []
     counts = {"river": 0, "strait": 0, "canal": 0, "dam": 0}
+    Bs = w["natural"]["basin"]
     for f in feats:
+        frame = "river" if f["kind"] == "river" else "passage"
+        calls = seg_calls(f["P"], frame)
         f["segments"] = len(calls)
         counts[f["kind"]] += len(calls)
         if f["kind"] == "dam":
             dam_calls.extend(calls)
             continue
+        if f["kind"] == "river":
+                call = seg_call(a, b, frame)
+                if call:
+            continue
+        key = (round(f["hw"], 4), f["depth"], frame)
         (canal_groups if f["kind"] == "canal" else ww_groups).setdefault(key, []).extend(calls)
+    # a turning basin is a short wide capsule along its course, in its feature's frame; a canal's turning
+    # basins belong to the canal set, carved only with canals on: in the waterway set they would open the
+    # isthmus the canal crosses with canals off
     for b in built["basins"]:
+        (cx, cy), (tx, ty) = b["centre"], b["tangent"]
+        reach = Bs["half_length_tiles"]
+        frame = "river" if b["kind"] == "river" else "passage"
+        call = seg_call((cx - tx * reach, cy - ty * reach), (cx + tx * reach, cy + ty * reach), frame)
+        key = (float(Bs["radius_tiles"]), b["depth"], frame)
+        (canal_groups if b["kind"] == "canal" else ww_groups).setdefault(key, []).append(call)
     ww = min_tree(ww_terms) if ww_terms else "inf"
     canals = min_tree(canal_terms) if canal_terms else "inf"
     if dam_calls:
@@ -1174,9 +1400,19 @@ def render_sets(cfg, built):
             boxes.append(f"box(X, Y, {g9(cx)}, {g9(cy)}, {f32(tx)}, {f32(ty)}, {g9(fd['half_length'])}, "
                          f"{g9(fd['half_width'])})")
     if boxes:
+        fords = f"if(max({min_tree(boxes)} - J, elevation) < 0, {g9(w['ford']['score'])}, -inf)"
     else:
         fords = "-inf"
+    stats = {"segments": counts, "fords": len(boxes), "basins": len(built["basins"]), "ponds": len(built["ponds"]),
              "classes": {"ww": len(ww_groups), "canals": len(canal_groups)}}
+    # one sqrt for every pond: each squared distance over its own squared radius, so the plug is land out to
+    # the radius and meets the ground below 0 past it, where the fit is land anyway
+    def off(v):
+        return f"({g9(v)})" if v < 0 else g9(v)
+
+    terms = [f"((X - {off(p['centre'][0])}) * (X - {off(p['centre'][0])}) + (Y - {off(p['centre'][1])}) * "
+             f"(Y - {off(p['centre'][1])})) / {g9(p['radius'] * p['radius'])}" for p in built["ponds"]]
+    ponds = f"{g9(w['natural']['ponds']['height'])} * (1 - sqrt({min_tree(terms)}))" if terms else "-inf"
 
 
 def lua_string_lines(text, first_prefix, last_suffix, indent="  "):
@@ -1207,6 +1443,7 @@ def render_lua(cfg, map_key, s, exprs, stats, data_rel, data_sha):
     out += ("F.box = " + BOX_FN).split("\n")
     out.append("local S = {functions = F}")
     out.append(f"S.stats = {{rivers = {seg['river']}, straits = {seg['strait']}, canals = {seg['canal']}, "
+               f"dams = {seg['dam']}, fords = {stats['fords']}, basins = {stats['basins']}, ponds = {stats['ponds']}}}")
     out.append("return S")
     for line in out:
         if len(line) > MAX_COLUMNS:
@@ -1231,6 +1468,8 @@ def poly_list(P):
 
 def feature_record(f, s, w):
     rec = {"kind": f["kind"], "id": f["id"], "name": f["name"], "hw_tiles": round(f["hw"], 4),
+           "reach_tiles": round(f["reach"], 3), "segments": f["segments"], "window_tiles": f["window"],
+           "polyline_geo": poly_list(f["P"]),
            "length_tiles": round(polyline_length(f["P"]), 3)}
     if f["kind"] != "dam":
         rec["depth"] = f["depth"]
@@ -1242,6 +1481,7 @@ def feature_record(f, s, w):
     if f["kind"] == "river":
         rec["class"] = f["class"]
         rec["width_tiles"] = class_width(w, f["class"], s)
+        rec["half_widths"] = [round(float(min(f["widths"])), 4), round(float(max(f["widths"])), 4)]
         rec["fords"] = f["fords"]
         rec["fords_skipped"] = f["fords_skipped"]
         rec["fords_expected"] = int(polyline_length(f["P"]) // (w["ford"]["every_px"] * s))
@@ -1252,6 +1492,8 @@ def feature_record(f, s, w):
     return rec
 
 
+    """Write the map's six generated files (and its manifest) and return the manifest record. The
+    river-safe starts stay in the manifest's per-scale records only: no Lua file is emitted for them.
     w = ww_cfg(cfg)
     data, dp = load_data(map_key)
     data_sha = sha256_file(dp)
@@ -1271,6 +1513,7 @@ def feature_record(f, s, w):
                 "cut": {"tolerance_tiles": built["tolerance_tiles"], "rivers_carved": built["rivers_carved"],
                         "rivers_listed": built["rivers_listed"]},
                 "features": [feature_record(f, s, w) for f in built["features"]],
+                "basins": built["basins"], "ponds": built["ponds"]}
         if mask is not None:
             land, thin = geo.load()
             srec["t1_mask"] = {"pixels": int(mask.sum()), "share": round(float(mask.sum()) / mask.size, 6),
@@ -1320,9 +1563,12 @@ def corridor_mask(cfg, geo, built):
     for f in built["features"]:
         # the centreline in pixel-centre coordinates of the raster: u = (X - offset) / s - 0.5
         P = (np.asarray(f["P"], float) - [ox, oy]) / s - 0.5
+        r = (f.get("reach", f["hw"]) + 0.5) / s
         band_into(mask, P, r)
+    w = ww_cfg(cfg)
     for b in built["basins"]:
         cx, cy = (b["centre"][0] - ox) / s - 0.5, (b["centre"][1] - oy) / s - 0.5
+        h = (built["half_basin"] + warp_reach(w, s) + 0.5) / s
         c0, c1 = max(int(math.ceil(cx - h)), 0), min(int(math.floor(cx + h)), geo.W - 1)
         r0, r1 = max(int(math.ceil(cy - h)), 0), min(int(math.floor(cy + h)), geo.H - 1)
         if c1 >= c0 and r1 >= r0:
@@ -1362,6 +1608,8 @@ def mask_from_manifest(cfg, map_key, s):
     if rec is None:
         return None
     geo = MapGeo(cfg, map_key)
+    feats = [{"P": np.asarray(f["polyline_geo"], float), "hw": f["hw_tiles"], "reach": f["reach_tiles"]}
+             for f in rec["features"]]
     half = ww_cfg(cfg)["basin_tiles"] / 2
     built = {"scale": int(s), "features": feats, "basins": rec.get("basins", []), "half_basin": half}
     return corridor_mask(cfg, geo, built)
@@ -1523,6 +1771,7 @@ def raster_water(geo, s, x0, y0, w_, h_, features, basins, half, canals_on=True,
         if f["kind"] in ("river", "strait") or (f["kind"] == "canal" and canals_on):
             water |= band_tiles(X, Y, f["P"], f["hw"])
     for b in basins:
+        water |= np.hypot(X - b["centre"][0], Y - b["centre"][1]) < half
     return water
 
 

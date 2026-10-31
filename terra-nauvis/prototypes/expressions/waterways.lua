@@ -1,6 +1,9 @@
 --
 -- Per map and scale, four named sets from the generated files (tools/build_waterways.py): the rivers,
 -- straits and turning basins (ww), the canals, the dams and the fords. Each reads only its map's geo
+-- tiles in the chain of the geography version that composes them (its `waterways` record), warped and
+-- bound here to the locals X, Y, XP, YP, W, B and J, so they live in the Tile program alone (firewall rule);
+-- that version's
 -- elevation entry (coast.lua) picks the save's scale's ww, canal and dam sets by name through the
 -- folded scale, and its preset points the ford key at the map's ford set for its scale, which the
 -- water-shallow hook in data-final-fixes.lua reads behind the gate.
@@ -35,6 +38,38 @@ local function fn(f)
     params[i] = p
   end
   return {parameters = params, expression = f.expression, local_expressions = locals}
+end
+
+-- of a version reads, so the fords stay on their rivers and the cost is a few noise evaluations per tile,
+-- not per segment. Each octave is one basis noise per axis in geo tiles, anchored like the coast's detail,
+-- so the same ground wanders the same way from every spawn. Rivers read X and Y, the whole warp; straits,
+-- canals and dams read XP and YP, each octave at its passage share, so a passage keeps the places the
+-- oracle tests. The warp fades out around the spawn, so a river stays where the river-safe starts measured
+-- it. W is the rivers' low-frequency width modulation, B the fine bank noise of rivers and passages, which
+  local N = cfg.waterways.natural
+  local s = cfg.keys.scale
+  local function noise(seed1, wavelength)
+    return "basis_noise{x = x, y = y, seed0 = map_seed, seed1 = " .. num(seed1) .. ", input_scale = 1 / (" ..
+      num(wavelength[1]) .. " + " .. num(wavelength[2]) .. " * " .. s .. "), offset_x = " .. g.cx ..
+      ", offset_y = " .. g.cy .. "}"
+  end
+  local locals = {}
+  local rx, ry, px, py = {}, {}, {}, {}
+  for i, o in ipairs(N.warp) do
+    local nx, ny = "wx" .. i, "wy" .. i
+    local amp = "(" .. num(o.amplitude[1]) .. " + " .. num(o.amplitude[2]) .. " * " .. s .. ")"
+    locals[nx] = noise(o.seed1x, o.wavelength)
+    locals[ny] = noise(o.seed1y, o.wavelength)
+    rx[i], ry[i] = amp .. " * " .. nx, amp .. " * " .. ny
+    px[i] = num(o.passage) .. " * " .. rx[i]
+    py[i] = num(o.passage) .. " * " .. ry[i]
+  end
+  local F = N.spawn_fade
+    ", 0, 1)"
+  end
+  locals.XP, locals.YP = warped(g.gx, px), warped(g.gy, py)
+  locals.W = "1 + " .. num(N.width.amplitude) .. " * clamp(" .. noise(N.width.seed1, N.width.wavelength) .. ", -1, 1)"
+  return locals
 end
 
 local E = {}
@@ -77,6 +112,8 @@ data:extend(E)
 -- composition, so no lake of an earlier step reopens a dammed isthmus, and min() makes the carves
 -- and lakes order-free. Each set is picked by name through the folded scale, so only the save's
 -- scale's sets compile, and the canals switch compiles only its selected branch (measured Tile 19,620 off
+-- and 20,161 on at scale 1). Beside the dams, the map's ponds (tools/build_waterways.py river_ponds): land
+-- over the fit's own discs on a river's course, inline text per scale, so a carve still cuts them.
 local M = {}
 
   for i = #values - 1, 1, -1 do
@@ -88,6 +125,11 @@ end
     error("a waterways composition needs the version's waterway sets")
   end
   local on = cfg.keys.canals .. " > " .. num(H.threshold)
+  local ponds = {}
+  end
+  return "min(max(" .. previous .. ", dam, ponds), carve, canal)", {
+    X = g.gx,
+    Y = g.gy,
   }
 end
 

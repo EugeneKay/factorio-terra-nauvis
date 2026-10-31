@@ -207,9 +207,24 @@ local function marsh_grass_hook()
 end
 
     local tile = data.raw.tile[name]
+-- so the map view and the new-game preview tell them apart. Map colours only; no world changes.
+local function heat_map_colors()
+  local C = cfg.destroyed.map_colors
+  for _, family in ipairs(C.families) do
+    for band, color in ipairs(C.bands) do
+      local tile = data.raw.tile["volcanic-" .. family .. "-heat-" .. band]
+      if tile then
+        tile.map_color = color
+      end
+    end
+  end
+end
+
 if AB then
   vanilla_hooks()
   exclusion_hooks()
+    heat_map_colors()
+  end
 else
   marsh_grass_hook()
 end
@@ -245,11 +260,20 @@ local function land_tiles()
   return out
 end
 
+-- Puts the vanilla land tiles at the front of an AB tile restriction (never nils it: the plant would
+-- spread onto AB's frozen and volcanic tiles). The front, because the game walks a list
+-- entry by entry for every tile and vanilla land is most of an Earth map (the list hook below).
 local function extend_restriction(autoplace)
+  local list, seen = land_tiles(), {}
+  for _, t in ipairs(list) do
+    seen[t] = true
   end
   for _, t in ipairs(autoplace.tile_restriction) do
+    if not seen[t] then
+      list[#list + 1] = t
     end
   end
+  autoplace.tile_restriction = list
 end
 
 -- The living trees: each rebuilt behind the gate with its probability and richness keys.
@@ -283,6 +307,9 @@ local function restore_rocks(R)
   return n
 end
 
+  local list, seen = land_tiles(), {}
+  for _, t in ipairs(list) do
+    seen[t] = true
   end
 local function relist_decoratives(R)
   local n = 0
@@ -363,13 +390,60 @@ local function boost_hooks()
   log(cfg.identity.title .. ": the great-forests hook on " .. #names .. " living trees")
 end
 
+-- The list hook beside Alien Biomes (config.lua tiles.scan): every AB-only
+-- decorative and tree Nauvis places, with a list longer than the vanilla land tiles and none of them on
+-- it, gets them at its front and, behind the gate, its probability times the keep body. On every world
+-- without an Earth preset the hook folds and no vanilla land tile is placed beside Alien Biomes, so the
+-- longer list changes nothing there. The keep body is 0 wherever those tiles may lie, so they add no
+-- placement: what they end is the walk. An AB-only prototype loses its placements on the adopted tiles
+-- and water-mud where vanilla may also lie (0.3 percent of the decoratives around Frankfurt).
+local function list_hooks()
+  local S = TL.scan
+  local land = land_tiles()
+  local on_land, skip, n = {}, {}, 0
+  for _, t in ipairs(land) do
+    on_land[t] = true
+  end
+  for _, c in ipairs(PALM.copies) do
+    skip[c.tree] = true
+  end
+  for _, g in ipairs(S.types) do
+    local names = {}
+    for name, proto in pairs(data.raw[g.type] or {}) do
+      local autoplace = proto.autoplace
+      if not skip[name] and autoplace and autoplace.tile_restriction and autoplace.probability_expression ~= nil and
+          #autoplace.tile_restriction > #land and on_nauvis(g.group, name, autoplace) then
+        local vanilla = false
+        for _, t in ipairs(autoplace.tile_restriction) do
+          vanilla = vanilla or on_land[t] == true
+        end
+        if not vanilla then
+          names[#names + 1] = name
+        end
+      end
+    end
+    table.sort(names)
+    for _, name in ipairs(names) do
+      local autoplace = data.raw[g.type][name].autoplace
+      local original = "(" .. tostring(autoplace.probability_expression) .. ")"
+      autoplace.probability_expression = hook(original .. " * " .. S.body, original)
+      extend_restriction(autoplace)
+      n = n + 1
+    end
+  end
+  log(cfg.identity.title .. ": the list hook on " .. n .. " Alien Biomes autoplaces")
+end
+
   for _, name in ipairs(names) do
 if AB then
   restore_vanilla()
+  list_hooks()
 end
 boost_hooks()
 
   for name in pairs(data.raw.tree or {}) do
+    table.sort(names)
+    for _, name in ipairs(names) do
 -- ore of config.lua's ridges group whose resource has an autoplace, a wrapper body holds the live
 -- probability expression (as the pack leaves it: base, Alien Biomes, the Oil Rig and the rest load
 -- before this) times the ore clearance of prototypes/expressions/ridges.lua, and every Terra Nauvis

@@ -1,6 +1,8 @@
 -- The start ore guarantee (config.lua start_ore): once, from start.on_init on an
 -- Earth or Map-type-only world, every starting ore gets a patch on the land the spawn reaches on foot
 -- when that land holds too little of it. The game generates the starting area before on_init
+-- runs, and bandfix.on_init has settled its coast, so the tiles and ore read here are
+-- final. Beside RSO they are final too:
 -- the `? rso-mod` dependency runs RSO's on_init, which places its starting ore, before this one, so a
 -- start RSO served well gets nothing. RSO's own "Ore in starting area" off stands the pass down. Runs
 -- once per world, so its cost (one tile query and one flood over the start square) never recurs.
@@ -34,9 +36,21 @@ local function reached_land(surface)
     end
   end
   local reach = {}
+  local sx, sy = 0, 0
+  if water[idx(0, 0)] then
+    -- A river can cross the spawn tile itself (London on Atlantic at scale 3): the flood starts where the player lands.
+    local p = surface.find_non_colliding_position("character", {0, 0}, C.seed_radius, 1)
+    if not p then
+      return reach
+    end
+    sx, sy = floor(p.x), floor(p.y)
+  end
+  local i0 = idx(sx, sy)
+  if not i0 or water[i0] then
     return reach
   end
   reach[i0] = true
+  local qx, qy, head, tail = {sx}, {sy}, 1, 1
   while head <= tail do
     local x, y = qx[head], qy[head]
     head = head + 1
@@ -137,6 +151,10 @@ local function place(surface, name, cx, cy, r, amount)
 end
 
 function M.ensure(surface)
+  -- on_init also runs when the mod joins a save again, and a played start area is not this pass's to add ore to.
+  if game.tick > 0 then
+    return
+  end
   local rso_start = settings.global[C.rso_start]
   if rso_start and not rso_start.value then
     return

@@ -1,6 +1,75 @@
 ---------------------------------------------------------------------------------------------------
+      worlds keep their forests.
+      Orinoco and Lena deltas fan out into shallow side channels you can walk through, on wet green
     - The mod is titled Terra Nauvis: Earth Maps, with a shorter description. The mod ID, every
       setting name and the log and chat prefix stay as they were.
+Version: 0.2.0
+Date: 2026-11-01
+  Features:
+    - New worlds hold about a hundred more ore hotspots, from a sourced list of the world's great
+      deposits: the Pilbara, Shanxi, Kalimantan, Grasberg, Olympic Dam and many more.
+    - A wide hotspot is now a district of many ore bodies across its footprint, not one blob in an
+      empty disc, and its size and richness follow the real deposit's rank.
+    - Map scales 12 and 24 join 1 to 6. At scale 24 Old World is 215,112 x 140,328 tiles and rivers
+      cap at 48 and 36 tiles wide.
+    - Grasberg, Kalimantan and South Sumatra stand wider than a regular patch at low scales, and
+      Batu Hijau and Sumatra's Rokan and Pendopo oil fields join them.
+    - Biter nests at a hotspot stand in irregular clusters with gaps, off its oil wells and, from
+      scale 6 up, mostly off its ore.
+    - The new setting Blue corrupted UK and Australia, off by default, needs Alien Biomes. It turns
+      the UK and Australia into mauve grass mixed with blue grass, purple grass and purple dirt, with
+      the violet, white and blue trees and plants that grow there.
+  Changes:
+    - Spawn lakes on new Old World and Atlantic worlds have softer shores, with fewer straight
+      sides and right-angle corners.
+    - New Old World and Atlantic worlds have sharper coasts, most of all outside Europe, in the
+      new-game preview and in play.
+    - Coasts that Exact coastlines writes on new worlds have shores and water sides, follow the
+      reference without pixel steps, and leave the spawn lake alone.
+    - Rivers on new Old World and Atlantic worlds follow their real courses further upstream, and
+      Atlantic's great rivers run unbroken to the sea at every scale.
+    - Ridges on new worlds are wandering lines of cliffs instead of two parallel walls: no boxes at
+      low scales, and mountain ranges show their cliff faces.
+    - Destroyed Europe on new worlds covers the whole heart of Europe, the spawn included, and runs
+      to the shore on every coast, Brittany and Calais among them. Its middle is cracked basalt with
+      lava pools, volcanic rock and dead trees, with patches of black and grey rock. A broad barrier
+      of black ash, red rock and scorched red grass stands where it meets ordinary land. Its trees
+      are dead, with no palms, and no blue plants grow there.
+    - Beside Alien Biomes, new worlds lift Moscow's grey plains, soften the flat ground at
+      Frankfurt, Prague and Aachen, scatter the ropes of forest, and fray the seams between snow
+      tiles.
+    - New worlds turn Russia and the far north of the world to snow and ice, with a band of grey
+      wasteland leading in. Snow pines grow there. Without Alien Biomes the same ground is a frozen
+      tile of Terra Nauvis's own.
+    - Snow and grey rock on new worlds' ranges form whole massifs at every scale.
+    - Palms on new worlds stay south of about 35.5 degrees north on warm, low ground: none in Europe,
+      on cold ground or on a range.
+    - Five hotspots moved onto their real ground on new worlds: the Kuzbass, Nord-Pas-de-Calais,
+      Hassi Messaoud, Arlit and Anshan.
+    - Worlds already made keep their terrain, ridges, zone and hotspots.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.2
+Date: 2026-10-31
+  Bugfixes:
+    - Removing or disabling Terra Nauvis in a played world and adding it back no longer rewrites
+      land near the spawn or destroys buildings there. Version 0.1.1 did this on Atlantic and Old
+      World worlds with Exact coastlines on. What it already destroyed does not come back.
+    - The same steps no longer add start ore to a played world.
+    - A start whose spawn tile lies in a river now gets the start ore guarantee. Before, such a
+      start placed no ore patch, as at London on Atlantic at map scale 3. This applies to new
+      worlds.
+---------------------------------------------------------------------------------------------------
+Version: 0.1.1
+Date: 2026-10-30
+  Bugfixes:
+    - The game no longer fails to load when an Alien Biomes tile group that Terra Nauvis adopts is
+      disabled.
+    - The start ore guarantee counts land after Exact coastlines has written it, so a river cannot
+      cut a start off from an ore it counted. This applies to new worlds.
+    - The Exact coastlines drift line no longer says a Map type world follows the setting.
+  Changes:
+    - Corrected the Atlantic preset, tooltips and README where they overclaimed.
+---------------------------------------------------------------------------------------------------
 Version: 0.1.0
 Date: 2026-10-30
   Features:
@@ -22,6 +91,8 @@ Date: 2026-10-30
       endless deep ocean. A world made from the preset keeps the scale it was created with.
     - Map type Terra Nauvis: Europe in the Terrain tab: Europe's coast and spawn on its own, with a
       one-time notice that the preset adds the rest and that a changed scale or spawn city setting
+      moves such a world's new chunks. A later version does not move it: only those settings, Canals,
+      Inland lakes and Ore hotspots do.
     - The water slider leaves a Terra Nauvis: Europe world unchanged, cliffs and land included.
     - Map-gen presets Terra Nauvis: Atlantic and Terra Nauvis: Old World, listed after Terra Nauvis:
       Europe: the Atlantic world and the Old World with their real coastlines in an endless deep
@@ -32,6 +103,7 @@ Date: 2026-10-30
       World (Random or one of 33: EarthMaps' 30 with Prague at the real city, plus Frankfurt, Aachen
       and Moscow): the map moves so the city sits at the spawn, with a lake nearby and the starting
       ore on the city's own land, as on Europe.
+    - A start gets iron, copper, coal and stone on the land it can walk to, room allowing: where the start area
       holds less than half of a normal start's amount of an ore on that land (an island or
       peninsula start, such as Stockholm or Athens), a patch of it is placed on that land when the
       world is created. With RSO the check runs on RSO's own start, unless RSO's Ore in starting
@@ -43,13 +115,18 @@ Date: 2026-10-30
       enemy-free start of the base game; the intro names the city and the world size.
     - Inland lakes startup setting, off by default: sparse random lakes across the land, kept off
       coasts and out of the start area. Off leaves the lake at the spawn city, the rivers and the
+      real lakes of the map; a world made from a preset keeps its value for life.
     - A warning at the start, and to each player who joins, when RSO is active.
     - A world that uses a Terra Nauvis map type alone gets the same start as a preset world: the
       intro names its spawn city and world size, and with RSO active it gets the RSO warning.
     - Other planets' surfaces never take the Terra Nauvis map, and adding the mod to a world made
+      without it leaves every surface of that world as it was, apart from the grey cliff art beside
+      Alien Biomes.
     - Rivers, straits and canals on every map at every scale: rivers grow with the map scale and
       carry a walkable shallow ford every 60 reference pixels; Gibraltar, Dover and the Great Belt
       are two-way straits; the Canals startup setting (default on) opens Kiel, Corinth, Suez and
+      Panama, and with it off every isthmus stays closed. At map scale 6 ships can sail every carved
+      river to the sea; from scale 3 Atlantic carves only Europe's 22.
     - Earth climate on every Terra Nauvis preset: the far north frozen, Scandinavia and Russia cold,
       temperate Europe, and hot deserts where EarthMaps paints sand (the Sahara, Arabia, Central
       Asia, the American south-west, the Kalahari, Australia and the southern Andes). With Alien
@@ -64,10 +141,14 @@ Date: 2026-10-30
       wetland grass and trees when it is installed and vanilla's lush grass between the pools
       without it.
     - The sea deepens a few tiles offshore at every map scale, with a beach strip along the coast.
+    - Great forests startup setting (default on): the great forests of Earth (9 on Europe, 14 on Old
+      World, 16 on Atlantic), from the Black Forest
       and the Scandinavian taiga to the Congo and the Amazon, hold about twice the trees of the land
       around them, while trees still follow the climate.
     - With Alien Biomes, the base game's trees, rocks, decals and plants grow again on the vanilla
       ground of Terra Nauvis worlds, beside Alien Biomes' own.
+    - Ridges startup setting, on by default: messy bands of cliffs along the map's mountain ranges
+      (9 on Europe, 13 on Old World, 16 on Atlantic), the only
       cliffs on a Terra Nauvis map. A ridge wanders round its range, runs wider where the real
       mountain is taller, breaks into runs of many lengths and frays out at its ends, with passes
       at the historic crossings, a gap at least every 400 km and no cliffs across the starting
@@ -88,6 +169,8 @@ Date: 2026-10-30
       random spawn city never lands inside the zone. Without Alien Biomes nothing changes, and the
       game warns at the start and each player who joins.
     - Exact coastlines startup setting (default on): on Atlantic and Old World each new chunk's coast
+      follows the reference on every continent alike, except beside rivers, straits and canals, in
+      the map's edge band and within 24 tiles of the spawn, so fjords, bays, the sea's narrow
       channels and islets the noise cannot hold come back as rounded natural shores. The map
       preview still shows the noise coast; land made from sea takes the trees and ground cover of
       the land beside it.
@@ -97,6 +180,7 @@ Date: 2026-10-30
     - Rivers wander: they meander off their polylines, their banks stop being parallel, they widen
       toward the mouth and taper at the source, and the square turning basins became natural pools.
     - Rivers scale down with the map: at small map scales they are a few tiles wide, too thin for
+      boats, and only the largest scale carries boats along every carved river.
     - The start lake and the Inland lakes setting's lakes have irregular shores, and inland lakes vary
       in size.
   Compatibility:

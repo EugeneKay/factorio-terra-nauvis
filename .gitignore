@@ -3,3 +3,6 @@ __pycache__/
 
 # Build output of tools/build_zip.py.
 dist/
+
+# The base game's prototypes, regenerated from the installed game by tools/make_vanilla_raw.py.
+tests/vanilla-raw.json

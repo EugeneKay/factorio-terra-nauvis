@@ -1,5 +1,6 @@
 {
  "format": "tn-unreleased-moves/1",
+ "ruling": "While no release has shipped, no saves exist, so landed records may be retired. A release tag voids this file.",
  "geographies": [],
  "records": {}
 }

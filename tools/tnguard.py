@@ -9,9 +9,14 @@ from the player's own profile, and a run that may have left its isolation stops 
                                directory when omitted)
   ws_root(), out_root(ws)      the test workspace and the runner's evidence tree in it
 
+The harness's isolation is the only protection of the player's profile: every game run goes through
 the harness with its own instance, modset and new --out, and its RESULT line reads ok, isolated=yes
 and errors=0. A run that may have left its instance stops every further game run of its command at
 once. No repo tool refuses an output path for lying in the player's profile or a mods folder:
+copying the built zip into a mods folder is allowed.
+
+The test workspace is the folder that holds the harness and the runner's evidence tree: the
+FACTORIO_WS environment variable, else DEFAULT_WS, the default workspace location of the
 development setup.
 
 It reads only paths and run records; it launches nothing and needs no game.

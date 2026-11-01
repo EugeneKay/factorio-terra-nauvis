@@ -12,6 +12,9 @@ controls for the scans (each rule must fail its own fixture; fixtures are writte
 a temporary directory outside the scanned trees and never committed). No row scans tools/ or
 tests/ for game launches,
 live-profile paths or copies into a mods folder (the workflow scan still keeps all three workflows
+off the game and the workspace): the local test harness (not part of this repository) isolates every
+game run, which is the only protection of the player's profile, and copying the built zip into that
+profile's mods folder is allowed.
 """
 import copy
 import hashlib
@@ -355,6 +358,12 @@ def expected_locale(cfg, control_keys=()):
     # the Map type entries: the newest elevation entry of each map carries localised_name
     # {"noise-expression.<entry>"}, so the [noise-expression] section names it
     for g in tnconfig.geography(cfg).values():
+    # a scale extension's entry takes those fields at the scales past its version's list
+    for x in (cfg.get("scale_extensions") or {}).values():
+        exp.setdefault("noise-expression", set()).add(x["entry"])
+    frozen = (cfg.get("tiles") or {}).get("frozen")
+    if frozen:
+        exp["tile-name"] = {frozen["tile"]}
     # control code's messages, whose keys it builds from config.lua's messages group
     msgs = cfg.get("messages") or {}
     for key in (msgs.get("keys") or {}).values():
@@ -458,6 +467,9 @@ def size_context_findings(cfg, merged, r8_text=None, approvals=None):
         m = cfg["maps"][mk]
         for v in (cfg.get("settings") or {}).get("scale", {}).get("allowed_values") or []:
             want = (ws.get(mk) or {}).get(str(v))
+            # the approved table stops at scale 6; a scale past it has only the maps' sizes, which size_texts checks
+            if want is None and int(v) not in cfg["scales"]["released"]:
+                continue
             if want != [m["width_px"] * int(v), m["height_px"] * int(v)]:
                 out.append(f"{mk} at scale {v}: config.lua's size {m['width_px'] * int(v)} x {m['height_px'] * int(v)} "
                            f"differs from approvals-data.json world_size_tiles {want} (the approved world sizes)")
@@ -1070,6 +1082,7 @@ def row_names(mod=MOD):
 
 # ------------------------------------------------------------------------------------------------ design rules
 
+NUM_IN_STRING_RE = re.compile(r"(?<![A-Za-z_\d])(\d+(?:\.\d+)?)")
 
 
 def design_findings(mod=MOD, rules_path=REPO / "tests" / "design-rules.json"):
@@ -1350,6 +1363,7 @@ def _expected_steps(kind, manifest):
         ]
     return common + [
         {"label": "the tag check", "run": ['python tools/build_zip.py --check-tag "$env:TAG"'], "env": {"TAG": TAG_ENV}},
+        {"label": "the static checks", "run": ["python tools/earth_test.py static"]},
         {"label": "the release build", "run": ["python tools/build_zip.py --release"]},
         {"label": "the publish step", "run": "publish", "env": {"TAG": TAG_ENV, "GH_TOKEN": TOKEN_ENV}},
     ]
@@ -1617,6 +1631,9 @@ def check_release(text, manifest):
             if "*.zip" not in r or "*.zip.sha256" not in r:
                 fails.append("release.yml: the release must attach the zip and its .sha256")
             order.append("publish")
+    if order != ["tag", "static", "build", "publish"]:
+        fails.append(f"release.yml: steps must be the tag check, the static rows, build_zip.py --release, then gh "
+                     f"release create (found {order})")
     return fails
 
 
@@ -1785,7 +1802,10 @@ def data_src_findings(repo=REPO):
         out += waterway_basin_findings(repo, cfg)
     elif cfg.get("waterways"):
         out.append("config.lua has a waterways group, but data-src/waterways/ is missing")
+    # the palm digest (climate-tiles): config.lua's record of tools/build_palms.py's digest is well formed
+    if ((cfg.get("tiles") or {}).get("palm") or {}).get("digest"):
         import build_palms
+        out += [f"palm digest: {x}" for x in build_palms.check(cfg)]
     out += bandfix_data_findings(repo, cfg)
     return out
 
@@ -1836,6 +1856,13 @@ def bandfix_data_findings(repo, cfg):
         if g.get("geo_id") not in (spec.get("geographies") or []):
             out.append(f"{mk}'s geography {g.get('geo_id')} is not one its band-fix tables serve "
                        f"({spec.get('geographies')}): re-emit the tables and list it")
+        for row in (B.get("generations") or {}).get(mk) or []:
+            lost = [i for i in row.get("geographies") or [] if i not in (spec.get("geographies") or [])]
+            if lost:
+                out.append(f"bandfix.generations.{mk} serves {lost}, which bandfix.tables.{mk} does not list")
+            if not int(B["version"]) < int(row.get("version", 0)):
+                out.append(f"bandfix.generations.{mk} holds version {row.get('version')}: a generation is above "
+                           f"bandfix.version {B['version']}")
         inp = M.get("inputs") or {}
         ck = repo / (inp.get("checkpoint") or "-")
         fit = load_json(repo / "data-src" / "fits" / mk / "fit.json")
@@ -1861,6 +1888,8 @@ def bandfix_data_findings(repo, cfg):
             if ww.exists() and rec.get("waterway_manifest_sha256") != sha256_file(ww):
                 out.append(f"manifest-{mk}.json scale {s} was built from another waterway manifest")
         have = sorted(int(s) for s in (M.get("scales") or {}))
+        if have != sorted(int(s) for s in cfg["scales"]["exact_coast"]):
+            out.append(f"manifest-{mk}.json holds scales {have}, not every scale Exact coastlines serves")
     return out
 
 
@@ -1892,6 +1921,8 @@ def waterway_river_findings(repo, cfg):
                 out.append(f"data-src/waterways/{key}.json cuts scale {s} to {n} rivers: a cut keeps between "
                            f"Europe's {floor} and all {len(have)}")
             t_ = c.get("tolerance_tiles")
+            offered = [int(x) for x in cfg["scales"]["values"]]
+            base = tol[offered.index(int(s))] if str(s).isdigit() and int(s) in offered else None
             if t_ is not None and base is not None and t_ < base:
                 out.append(f"data-src/waterways/{key}.json lowers scale {s}'s tolerance to {t_} below config.lua's {base}")
     return out
@@ -2116,6 +2147,9 @@ def release_tag_refs(repo=REPO):
 
 
 def reference_refs():
+    # A tag's commit can sit behind main when the release runs, and main may rightly hold more by then. --check-tag
+    # holds the tag to main's history; here a tag run compares with the earlier releases alone.
+    refs = [] if os.environ.get("GITHUB_REF_TYPE") == "tag" else list(REFERENCE_REFS)
     base = os.environ.get("GITHUB_BASE_REF") or ""
     if base and GIT_REF_RE.fullmatch(base) and ".." not in base and f"origin/{base}" not in refs:
         refs.append(f"origin/{base}")
@@ -2320,6 +2354,10 @@ def _norm_bytes(b):
                 out.append(f"{where}.{k} is on {ref} and gone here (a value a registered body is built from)")
                 continue
         return out
+    # A list of versions, or of the tn_geo ids a term applies to (coast.warp.geographies and the edge band's fold list),
+    # only grows: a new entry reaches only the new version, which is how the next geography version keeps its map's coast
+    # warp.
+    if isinstance(ref_v, list) and where.endswith((".versions", ".geographies", ".fold_geographies")):
         if not isinstance(work_v, list) or len(work_v) < len(ref_v):
             return [f"{where} lost entries {ref} holds (versions are append-only)"]
         return [f"{where}[{i + 1}] changed in place against {ref} (a landed version never changes; add the next "
@@ -2345,7 +2383,39 @@ def _release_paths(cfg, path):
     return nodes
 
 
+def bandfix_table_files(cfg):
+    """The mod-relative Exact coastlines tables of every generation a config lists. Control code reads them on
+    every chunk of a save, so a released one moves tiles as surely as a noise body."""
+    B = _as_dict(cfg.get("bandfix"))
+    scales = _as_dict(cfg.get("scales")).get("exact_coast")
+    if not isinstance(B.get("version"), int) or not isinstance(scales, list):
+        return set()
+    out = set()
+    for key in _as_dict(B.get("tables")):
+        rows = [{"version": B["version"]}] + [r for r in (_as_dict(B.get("generations")).get(key) or [])
+                                              if isinstance(r, dict)]
+        for r in rows:
+            out.add(f"scripts/generated/bandfix_{key}_v{r.get('shared', r.get('version'))}.lua")
+            out.update(f"scripts/generated/bandfix_{key}_s{s}_v{r.get('version')}.lua" for s in scales)
+    return out
+
+
+# A released file withdrawn from the tree because its licence bars distributing it. The row that named it stays landed in
+# every other respect, and the bodies it built keep their records: the gate compares them with the source mod loaded.
+WITHDRAWN_FILES = ("prototypes/generated/palms_ab_v1.lua",)
+
+
+def without_withdrawn(row):
+    """A release_registry row as the append-only check reads it: no withdrawn file, and no empty files list."""
+    files = [f for f in (row.get("files") or []) if f not in WITHDRAWN_FILES]
+    out = {k: v for k, v in row.items() if k != "files"}
+    return dict(out, files=files) if files else out
+
+
 def release_input_files(cfg):
+    """The mod-relative files a config's landed rows bind: every release_registry row's files, every
+    geography version's fits and spawn bearings, and every generation's band-fix tables."""
+    files = bandfix_table_files(cfg)
     for r in cfg.get("release_registry") or []:
         if isinstance(r, dict):
             files.update(f for f in (r.get("files") or []) if isinstance(f, str))
@@ -2394,6 +2464,7 @@ def release_input_files(cfg):
             if r.get("geography") is None and r.get("map") is None:
                 # a row of no geography (a layer's or a slice's shared bodies, from region-layer and
                 # climate-tiles several): no id names it, so the landed row must stand here unchanged
+                if without_withdrawn(r) not in [without_withdrawn(w) for w in wrows]:
                     out.append(f"config.lua release_registry row of no geography naming "
                                f"{sorted(map(str, r.get('names') or []))[:2]} is landed on {ref} and changed or "
                                f"missing here (a landed row never changes)")
@@ -2404,6 +2475,8 @@ def release_input_files(cfg):
                 out.append(f"config.lua release_registry row of map {r.get('map')!r} geography {r.get('geography')!r} "
                            f"is landed on {ref} and {state} here (a landed row never changes)")
         for f in release_input_files(rc):
+            if f in WITHDRAWN_FILES:
+                continue
             want = _as_dict(d.get("files")).get(f)
             have = _as_dict(work.get("files")).get(f)
             if want is None:
@@ -2564,17 +2637,28 @@ def bodies_findings(mod, fz, cfg):
     """(findings, bodies or None): the offline bodies of the mod folder `mod` against `fz`."""
     try:
         bodies = tnfrozen.offline_bodies(mod, cfg)
+        beside_ab = tnfrozen.offline_ab_problems(mod, fz, cfg)
     except Exception as e:  # tnlua.LuaError and anything else: fail closed
         return [f"the offline data stage did not run: {type(e).__name__}: {e} (fail closed)"], None
+    return tnfrozen.body_problems(bodies, fz, cfg) + beside_ab, bodies
+
+
+def vanilla_raw_missing():
+    import tnlua
 
 
 def row_bodies(repo=REPO):
+    missing = vanilla_raw_missing()
+    if missing:
+        return missing, "the offline data stage needs the base game's prototypes"
     repo = Path(repo)
     cfg = tnconfig.load(repo / "terra-nauvis" / "prototypes" / "config.lua")
     fz = load_json(repo / "tests" / "frozen.json")
     f, bodies = bodies_findings(repo / "terra-nauvis", fz, cfg)
     n = len((fz.get("bodies") or {}))
     return f, (f"{len(bodies or {})} Earth bodies built offline by tools/tnlua.py (settings and data stages at default "
+               f"settings), every one of the {n} registered at its record's hash and every other one exempt; "
+               f"{tnfrozen.skipped_note(cfg)}")
 
 
 # ------------------------------------------------------------------------------------------------ zip
@@ -2689,6 +2773,9 @@ def release_zip_findings(repo=REPO):
 
 
 def row_release_zip(repo=REPO):
+    missing = vanilla_raw_missing()
+    if missing:
+        return missing, "the release build needs the base game's prototypes"
     return release_zip_findings(repo)
 
 
@@ -2739,6 +2826,39 @@ def _write(root, relpath, text):
     return p
 
 
+def vanilla_raw_controls(td):
+    """The base prototypes file fails closed, and tools/make_vanilla_raw.py reduces a dump by the rule tnlua reads."""
+    import make_vanilla_raw
+    import tnlua
+    out = []
+    absent = Path(td) / "absent" / "vanilla-raw.json"
+    try:
+        tnlua.vanilla_raw(absent)
+        out.append(("vanilla-raw: an absent file raises", False, "read as a base"))
+    except tnlua.VanillaRawMissing as e:
+        out.append(("vanilla-raw: an absent file raises and names its maker",
+                    "is missing: run python tools/make_vanilla_raw.py" in str(e), str(e)))
+    empty = _write(td, "empty/vanilla-raw.json", json.dumps({"format": tnlua.VANILLA_RAW_FORMAT, "raw": {}}))
+    out.append(("vanilla-raw: a file holding no prototypes fails", bool(tnlua.vanilla_raw_problem(empty)), ""))
+    stranger = _write(td, "format/vanilla-raw.json", json.dumps({"format": "x/1", "raw": {"tile": {"a": {}}}}))
+    out.append(("vanilla-raw: a file of another format fails", bool(tnlua.vanilla_raw_problem(stranger)), ""))
+    dump = {t: {"a": {"name": "a", "type": t, "extra": 1}} for t in tnlua.VANILLA_WHOLE + tnlua.VANILLA_REDUCED}
+    dump["planet"] = {"nauvis": {"name": "nauvis", "type": "planet", "extra": 1}}
+    dump["item"] = {"a": {"name": "a", "type": "item"}}
+    red = make_vanilla_raw.reduce_dump(dump)["raw"]
+    out.append(("vanilla-raw: the reduction keeps whole types whole, trims the others and drops the rest",
+                red["noise-expression"]["a"].get("extra") == 1 and "extra" not in red["tile"]["a"] and "item" not in red,
+                ""))
+    sa = dict(dump, planet=dict(dump["planet"], vulcanus={"name": "vulcanus", "type": "planet"}))
+    try:
+        make_vanilla_raw.reduce_dump(sa)
+        out.append(("vanilla-raw: a dump with an expansion planet is refused", False, "reduced"))
+    except make_vanilla_raw.MakeError:
+        out.append(("vanilla-raw: a dump with an expansion planet is refused", True, ""))
+    return out
+
+
+    except tnlua.VanillaRawMissing as e:
 def fixture_controls():
     """Positive controls: every scan rule must fail a fixture that breaks it. Fixtures live in a fresh
     temporary directory outside the scanned trees and are never committed."""
@@ -2746,6 +2866,7 @@ def fixture_controls():
     exe = "factorio" + ".exe"
     with tempfile.TemporaryDirectory(prefix="tn-fixtures-") as td:
         td = Path(td)
+        results += vanilla_raw_controls(td / "vanilla")
         # workflow mutations
         manifest = lint_manifest()
         wf_dir = REPO / ".github" / "workflows"
@@ -2836,6 +2957,7 @@ def fixture_controls():
             return text.replace(line, line + extra, 1)
         for kind, text, line, what in (("ci", ci, static_run, "the static step"), ("ci", ci, build_run, "the build step"),
                                        ("rel", rel_wf, tag_run, "the tag check"),
+                                       ("rel", rel_wf, static_run, "the release static step"),
                                        ("rel", rel_wf, release_run, "the release build"),
                                        ("rel", rel_wf, publish_run, "the publish step"),
                                        ("latest", latest_wf, static_run, "the latest static step"),
@@ -3973,8 +4095,20 @@ def bandfix_digest_fixtures(cfg):
     appended["tables"][key]["geographies"].append(9999)
     moved["tables"][key]["geographies"][0] = 9999
     other["version"] = B["version"] + 1
+    row = copy.deepcopy(B)
+    row["generations"] = {key: [{"version": B["version"] + 1, "geographies": [9999]}]}
     return [("band fix: a tn_geo id appended keeps the tables' digest", tnconfig.bandfix_digest(appended) == base, ""),
+            ("band fix: a generation row keeps the tables' digest", tnconfig.bandfix_digest(row) == base, ""),
+            ("band fix: a generation's tn_geo reads its version, any other the group's",
+             tnconfig.bandfix_generation(row, key, 9999)[0] == B["version"] + 1 and
+             tnconfig.bandfix_generation(row, key, B["tables"][key]["geographies"][0])[0] == B["version"], ""),
+            ("band fix: every generation's tables are release inputs",
+             f"scripts/generated/bandfix_{key}_s1_v{B['version'] + 1}.lua" in release_input_files(dict(cfg, bandfix=row)) and
+             f"scripts/generated/bandfix_{key}_s1_v{B['version']}.lua" in release_input_files(cfg), ""),
             ("band fix: the first tn_geo id moved changes it", tnconfig.bandfix_digest(moved) != base, ""),
+            ("band fix: the next rule's first id passes", not tnconfig.bandfix_next_problems(cfg), ""),
+            ("band fix: a next rule that reaches a released tn_geo fails",
+             bool(tnconfig.bandfix_next_problems(dict(cfg, bandfix_next=dict(cfg["bandfix_next"], from_geo=18)))), ""),
             ("band fix: another edit of the group changes it", tnconfig.bandfix_digest(other) != base, "")]
 
 
@@ -4044,6 +4178,7 @@ def release_input_fixtures(cfg):
                     and not isinstance(v, bool))
     coast_k, coord_k = first_number("coast"), first_number("coordinates")
     warp_ids = list(cfg["coast"]["warp"]["geographies"])
+    fold_ids = list(cfg["coast"]["edge_band"]["fold_geographies"])
     m0 = maps[0]
     geom_k = next(k for k, v in sorted(_as_dict(cfg["maps"][m0]).items()) if isinstance(v, (int, float))
                   and not isinstance(v, bool) and k != "id")
@@ -4094,6 +4229,8 @@ def release_input_fixtures(cfg):
         "a geography version appended": add_version,
         "a tn_geo id appended to coast.warp.geographies": lambda w: set_path(w, ("coast", "warp", "geographies"),
                                                                              warp_ids + [9999]),
+        "a tn_geo id appended to coast.edge_band.fold_geographies": lambda w: set_path(
+            w, ("coast", "edge_band", "fold_geographies"), fold_ids + [9999]),
         "a new coast constant": lambda w: set_path(w, ("coast", "tn_fixture_new"), 1),
         "a new map table": lambda w: w["tables"][tables[0]].__setitem__("tn_fixture_map", {"version": 1}),
         f"maps.{m0}.display renamed": lambda w: set_path(w, ("maps", m0, "display"), "Fixture"),
@@ -4362,6 +4499,9 @@ def snapshot_file_fixtures(td):
 
 
 def row_fixtures():
+    missing = vanilla_raw_missing()
+    if missing:
+        return missing, "the release fixtures need the base game's prototypes"
     res = fixture_controls()
     bad = [f"{label} did not behave ({detail})" for label, ok, detail in res if not ok]
     return bad, f"{len(res)} positive controls, {len(res) - len(bad)} behaved"
@@ -4375,6 +4515,7 @@ def row_fixtures():
 # hv and plain distance pd) to name one row's output.
 REGION_FILE = "prototypes/expressions/regions.lua"
 REGION_TABLE_MODULE = tnconfig.REGION_TABLE[:-len(".lua")].replace("/", ".")
+REGION_INTERFACE = {"highland_fray", "highland_fray_tile", "highland_massif", "highland_cold",
                     "destroyed_sd", "destroyed_w", "destroyed_depth", "forest_w", "forest_sum", "tree_mult",
                     "marsh_w", "hotspot_w", "enemy_mult", "suffix"}
 REGION_ROW_INTERFACE = {"sd", "w", "depth", "hu", "hv", "pd"}
@@ -4573,6 +4714,15 @@ def hotspots_fixtures(td):
                 ""))
     f = build_hotspots.region_findings(rows, reg, cfg)
     out.append(("hotspots: the real table matches the region table", not f, f[:1]))
+    edited2 = td / "hotspots-v2-edited.lua"
+    edited2.write_text(build_hotspots.TABLE2.read_text(encoding="utf-8") + "-- hand edit" + chr(10), encoding="utf-8")
+    f = build_hotspots.table2_findings(cfg, edited2)
+    out.append(("hotspots: a hand edit of the second table fails its re-emission", bool(f), f[:1]))
+    f = build_hotspots.table2_findings(cfg)
+    out.append(("hotspots: the real second table has no finding", not f, f[:1]))
+    near = [dict(rows[0], lat=50.1, lon=8.7, radius_km=40, jitter_km=20, maps=["olde_world"])]
+    f = build_hotspots.city_findings(near, cfg, json.loads(build_hotspots.APPROVALS.read_text(encoding="utf-8")))
+    out.append(("hotspots: a row on Frankfurt fails the spawn city check", bool(f), f[:1]))
     return out
 
 

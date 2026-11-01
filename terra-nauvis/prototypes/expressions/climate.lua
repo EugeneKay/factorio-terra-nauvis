@@ -1,3 +1,4 @@
+-- The Earth climate (ARCHITECTURE.md, "Expression inventory" and "Alien Biomes").
 --
 -- Temperature, moisture and aux after EarthMaps' layout: latitude on each map's own chain (frozen in
 -- the far north, cold from about 54 N, temperate, hot toward the tropics), Eurasia's continental cold
@@ -148,6 +149,7 @@ local function belt_weight(b)
     ramp_in("belt_lon", b.lon[1], b.lon[2], b.ramp[2])
 end
   local out = {}
+  for _, b in ipairs(belts or C.tile_belts) do
       out[#out + 1] = b
     end
   end
@@ -235,6 +237,11 @@ def(N.fallback.aux, "clamp(min(" .. num(A.base) .. " + (" .. num(AF.cold_aux) ..
   num(1 - AF.cold_cap) .. " * cold) + " .. num(AF.bias) .. " * var('control:aux:bias'), 0, 1)",
   {cold = "clamp((" .. num(C.cold.t) .. " - " .. N.core .. ") / " .. num(AF.cold_span) .. ", 0, 1)"})
 
+-- The snow line (config.lua climate.north): d is degrees north of it. Worlds without Alien Biomes read it too, for the
+-- mod's frozen tile.
+local NF = C.north
+end
+
 if AB then
   -- Alien Biomes' hot and cold sliders: their size shifts the temperature as AB's own average does, their
   -- mean frequency scales the noise.
@@ -254,6 +261,29 @@ if AB then
       num(M.marsh) .. " * max(" .. MARSH_W .. ", " .. cut .. "), 0)), 0, 1)"
   end
   def(N.ab.moisture, ab_moisture("", MARSH_W))
+  -- The lifts (config.lua climate.lifts): a belt's sum, as the tile belts' are, on top of a released moisture:
+  -- under the natural top, and no field falls for it. The jitter reaches only what trees and decoratives read.
+    return by_map(function(X)
+      local parts = {}
+        if not b.maps or b.maps[X.key] then
+          parts[#parts + 1] = num(b[field]) .. " * " .. belt_weight(b)
+        end
+      end
+      return #parts == 0 and "0" or table.concat(parts, " + ")
+    end)
+  end
+  def(N.lift.m, lift_sum("m"), BELT_AT)
+  def(N.lift.bare, lift_sum("bare"), BELT_AT)
+  def(N.lift.j, lift_sum("j"), BELT_AT)
+  end
+  -- Vanilla tiles score this field too, so scan's 0 keeps their whole lift, as it keeps them from the shake.
+  local SCAN = cfg.tiles.scan.body
+  local jittered, jitter_at = lifted(N.ab.moisture, " - " .. N.lift.bare .. " * " .. SCAN)
+  local J = C.jitter
+  def(N.lift.ab, "clamp(" .. jittered .. " + " .. N.lift.j .. " * " .. SCAN ..
+    " * basis_noise{x = x, y = y, seed0 = map_seed, " ..
+    "seed1 = " .. num(J.seed1) .. ", input_scale = 1 / " .. num(J.wavelength_tiles) .. ", output_scale = 1}, 0, 1)",
+    jitter_at)
   -- Natural aux stays under ab_cap, below AB's alien palette, whatever the spread: it folds back at the
   -- cap instead of stopping there, because a hard stop pins every high aux to one value, and on dry land
   -- that value is dry-dirt's box alone, a flat brown plain hundreds of tiles wide. Dry temperate land
@@ -293,6 +323,14 @@ if AB then
   def(GN.moisture, ab_moisture(" + " .. num(G.moisture) .. " * " .. GN.field .. " + " .. BELT.m .. " - " ..
     num(GR.moisture) .. " * " .. RN.high_tile, cfg.tiles.marsh.edge))
   def(GN.aux, ab_aux(" + " .. num(G.aux) .. " * " .. GN.field, BELT.a .. " + "))
+  -- A range's lapse takes the moisture off the wet grasses, and the lift put it back: its rock and snow read as dark
+  -- grass with specks of ice, and the western Alps kept under a third of their grey.
+  def(N.lift.grain, lifted(GN.moisture, " * (1 - " .. RN.high_tile .. ")"))
+
+  -- The cold north (config.lua climate.north) and the highland's cold field (ridges.cold), which a new world's preset
+  -- names over the bodies above (climate.points). d is degrees north of the snow line. The fall lowers the core to the
+  -- line's cap and keeps the temperature's noise, so the edge frays as any climate edge does, and it reads no zone: the
+  -- zone's lift stays on top. The zone's lift also stands on the highland's cap, so no zone tile turns cold on a range.
 end
 
 data:extend(E)

@@ -25,6 +25,7 @@
 --
 -- A preset is not defined while a mod of its withheld_with list is loaded: from europe-coast to
 -- region-layer Alien Biomes' palms read elevation in the Entity program, so beside them a preset
+-- would have carried its fine field there (ARCHITECTURE.md, "Programs and the firewall"). climate-tiles
 -- ships the palm switch and empties the lists. Its fallbacks stay defined, so the map's Map type
 -- entry still works there. Withholding reached new worlds only: scripts/guards.lua warned a preset
 -- world that later loaded beside such a mod, and a save made before the switch keeps its palms on
@@ -35,6 +36,7 @@
 -- points the marsh keys at their bodies and each palm's probability and richness keys at its Earth
 -- copy (trees.lua, built from the frozen Alien Biomes table on every load, so the name is never
 -- dangling), which reads the palm constant where AB reads elevation and closes the palm leak
+-- (ARCHITECTURE.md, "Programs and the firewall"), with or without Alien Biomes, so a
 -- world that gains it later meets the switch too; with Alien Biomes it also points the 19 vanilla
 -- tile keys at the shared bonus body and the exclusion key at its body, and data-final-fixes.lua
 -- points a palm's keys at the neutral body when the installed palm differs from the table. Every
@@ -49,6 +51,7 @@
 -- From ridges each preset also bakes the ridges toggle from its setting and points the cliff properties
 -- at the ridge bodies with the map's crest and openings keys; data-final-fixes.lua adds the ore keys,
 -- whose wrappers read other mods' final ore autoplace. The water frequency slider's two vanilla readers
+-- are the first water_slider constants. A Map-type-only world sets none of them, so it keeps
 -- vanilla cliffs and ore (ARCHITECTURE.md, "Map type entries").
 --
 -- From resources-enemies each preset also bakes the hotspots toggle and, for a version with an
@@ -66,6 +69,7 @@
 --
 -- From coast-band-fix a preset also bakes the band-fix key, a name switch to tn_one, when the startup
 -- setting Exact coastlines is on and its map passed all four flip checks (config.lua bandfix.maps,
+-- design rule 9); otherwise the key is absent, which means off. No expression reads it: scripts/bandfix.lua
 -- reads it from the save's own surface, so a world keeps it for life.
 local cfg = require("prototypes.config")
 
@@ -101,6 +105,7 @@ end
 -- The climate and tile keys every Earth preset sets (climate-tiles), the same on every map and version.
 local function climate_names()
   local TL = cfg.tiles
+  local variant = AB and cfg.climate.points.ab or cfg.climate.points.fallback
   local out = {
     temperature = variant.temperature,
     moisture = variant.moisture,
@@ -123,6 +128,7 @@ local function climate_names()
   return out
 end
 
+  if AB and names[sw.preset_key] == sw.on then
 -- The tree keys every Earth preset sets (trees-forests), the same on every map: the great-forests
 -- multiplier key names the region layer's multiplier (the gate is a toggle); with Alien Biomes each
 -- restored vanilla tree's, rock's, decal's and decorative's key names its Earth body, and each palm's
@@ -147,12 +153,22 @@ local function tree_names()
   return out
 end
 
+-- The ridges: the two cliff properties point at the shared ridge bodies, which read
+-- the map's crest and openings through the keys tn_crest and tn_openings (and the ore
 -- clearance its crest band through tn_band), so ridges are the only cliffs on every Terra Nauvis
+-- preset, ridges on or off (off: 0 cliffs). config.lua's ridges.preset says which cliff, crest and openings
+-- bodies a new world takes; a save keeps the names it was made with. The highland keys name the map's band for
+-- rocks and for tile scores and its openings. The three big vanilla rocks name their high bodies, through their
+-- restored keys beside Alien Biomes and their probability keys without it; the rock key reaches Alien Biomes'
+-- rocks, and without Alien Biomes
 -- the ground key the stony tiles' hook (with it their tile keys name the lean, grain_values below).
 local function ridge_values(map_key)
+  local RN, RP = cfg.ridges.names, cfg.ridges.preset
+  local crest, openings, band = RP.crest[map_key], RP.openings[map_key], RN.band[map_key]
   if not (crest and openings and band) then
     return {}
   end
+  local out = {[K.cliff_elevation] = RP.cliff_elevation, [K.cliffiness] = RN.cliffiness, [K.crest] = crest,
   for name, n in pairs(cfg.trees.restore.rocks) do
     if n.high then
     end
@@ -165,6 +181,7 @@ local function ridge_values(map_key)
   return out
 end
 
+-- The offshore field stamp: a version's map-qualified stamp key
 -- names the map's stamp body when the hotspots setting is on and the neutral zero body when it is off
 -- (min(e, 0) leaves water unchanged), so the stamp follows the hotspots toggle.
 local function stamp_values(map_key, v)
@@ -176,6 +193,7 @@ local function stamp_values(map_key, v)
   return {[key] = on and body or cfg.neutral.zero}
 end
 
+-- Destroyed Europe: with Alien Biomes, temperature names the zone's lift (its
 -- switch, the toggle baked above, folds it to climate-tiles' first temperature when off); with the toggle
 -- on and the map's spawn city at random, a version's city number (its spawn record's) names the map's random
 -- pool, which skips the cities the zone covers. `names` is the version's table so far.
@@ -188,6 +206,14 @@ local function destroyed_values(map_key, v, names)
   local pool, sp = D.pools[map_key], v.spawn
     out[sp.city] = pool
   end
+  -- The barrier (config.lua destroyed.barrier): a new world with the zone on names the next heat and class in place
+  -- of the released ones, which every reader keeps reading by name. A world made before never holds these keys.
+  if AB and names[sw.preset_key] == sw.on then
+    -- The exclusion (config.lua destroyed.exclusion): a palm's key names the masked body, the rest read the key.
+    out[D.exclusion.key] = cfg.neutral.one
+    for _, p in ipairs(D.exclusion.palms) do
+    end
+  end
   return out
 end
 
@@ -199,11 +225,20 @@ local function grain_values(map_key)
   if AB and cfg.climate.grain.maps[map_key] then
     local C, TL = cfg.climate, cfg.tiles
     for field, key in pairs(C.grain.keys) do
+      out[key] = C.points.grain[field]
     end
+    out[C.grain.veg_key] = C.points.grain.veg
+    -- The cold north's plain temperature, which reads the zone's by name, so destroyed_values' pick stands inside it.
+    out.temperature = C.points.north
     out[TL.exclude.key] = TL.exclude.body_grain
+    local fray = TL.vanilla.next.maps[map_key]
     for _, t in ipairs(TL.vanilla.tiles) do
+      out[TL.vanilla.keys[t]] = fray and TL.vanilla.next.grain or TL.vanilla.body_grain
     end
     for _, t in ipairs(TL.vanilla.stony) do
+      out[TL.vanilla.keys[t]] = fray and TL.vanilla.next.high or TL.vanilla.body_high
+    end
+    for i, name in ipairs(TL.noise_share.fields) do
     end
   end
   if AB and cfg.tiles.vanilla.mix.maps[map_key] then
@@ -212,6 +247,7 @@ local function grain_values(map_key)
   return out
 end
 
+  if AB and names[sw.preset_key] == sw.on then
 -- left neutral (the game multiplies planet values by preset values, so a planet entry would scale the
 -- preset's). A control another mod removed is left out.
 local function controls()
@@ -243,14 +279,40 @@ local function toggle_values(map_key)
   return out
 end
 
+-- The band-fix key on a map's preset (coast-band-fix): set only when the setting is on, the map is
+-- one the setting acts on and the scale is one it serves.
 local function bandfix_names(map_key)
   local BF = cfg.bandfix
   local out = {}
+  local served = false
+  for _, s in ipairs(cfg.scales.exact_coast) do
+    served = served or s == scale
+  end
+  if BF and served and settings.startup[cfg.settings[BF.setting].name].value then
     for _, m in ipairs(BF.maps) do
       if m == map_key then
         out[BF.key] = BF.on
       end
     end
+  end
+  return out
+end
+
+-- body and its under name what it held, and the list hook's keep body names the zone's. It runs after every other
+-- step, so it wraps Destroyed Europe's temperature and palms when both are on. A world made before holds none of these.
+local function blue_values(names)
+  local B, sw = cfg.blue, cfg.toggles.blue_corrupted
+  local out = {}
+  if AB and names[sw.preset_key] == sw.on then
+    for field, c in pairs(B.climate) do
+      out[c.under] = names[field]
+      out[field] = c.body
+    end
+    for _, p in ipairs(B.palms) do
+      out[p.under] = names[p.key]
+      out[p.key] = p.body
+    end
+    out[cfg.tiles.scan.body] = B.names.keep
   end
   return out
 end
@@ -266,7 +328,20 @@ end
 -- next version and, with the zone on and the city at random, the map's random pool (destroyed_values),
 -- and from coast-band-fix the band-fix key where the setting acts on the map (bandfix_names).
 local function baked(map_key, v)
+  -- The record that serves the save's scale: the version, or its extension past a released version's list. A record's
+  -- name lists run in the order of its own scales. An older version a new world never names still reads through here
+  -- for the fallback check below: past its list it takes its last set, as its frozen entry does.
+  local function position(rec)
+    for pos, s in ipairs(rec.scales or cfg.scales.released) do
+      if s == scale then
+        return pos
+      end
+    end
+  end
+  local X = cfg.scale_extensions[map_key]
+  local rec = (X and X.geo_id == v.geo_id and not position(v)) and X or v
   local names = {
+    [K.elevation] = rec.entry,
     [K.start_mask] = v.start_mask,
     [K.land_coarse] = v.land_coarse,
     [K.map] = cfg.maps[map_key].id,
@@ -286,8 +361,10 @@ local function baked(map_key, v)
     names[K.spawn_lake] = sp.spawn_lake
     names[K.spawn_bias] = sp.spawn_bias
   end
+  local ww = rec.waterways
   if ww then
     names[K.on] = cfg.hooks.gate_on
+    names[K.fords] = ww.fords[position(rec) or #(rec.scales or cfg.scales.released)]
   end
   for k, value in pairs(toggle_values(map_key)) do
     names[k] = value
@@ -311,6 +388,11 @@ local function baked(map_key, v)
     names[k] = value
   end
   for k, value in pairs(bandfix_names(map_key)) do
+    names[k] = value
+  end
+  for k, value in pairs(blue_values(names)) do
+    names[k] = value
+  end
     names[k] = value
   end
   return names

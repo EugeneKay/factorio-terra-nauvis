@@ -5,6 +5,14 @@
  "map": "olde_world",
  "bodies": {
   "geo": {
+   "terms": 9360,
+   "factors": 3778,
+   "row_groups": 1523,
+   "checkpoint": "data-src/fits/olde_world/model-9360.npz",
+   "checkpoint_sha256": "9ced876567416c84859469ec5fe6a470f9e9b5761b3566b5b292d301580d0496",
+   "file": "terra-nauvis/prototypes/generated/geo_olde_world_v2.lua",
+   "sha256": "c278a7f628883c6a838c8beee8a7e256358c7644d16c75793c838b2828b0d103",
+   "bytes": 467957
   },
   "land_coarse": {
    "terms": 256,

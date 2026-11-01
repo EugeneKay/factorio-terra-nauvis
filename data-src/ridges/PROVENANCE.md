@@ -1,6 +1,7 @@
 # Ridge vertex heights: provenance
 
 `vertex-heights.json` gives every crest vertex of the ridge geography (the crest polylines `tools/build_ranges.py`
+reads) a height in metres, so a ridge can run wider where the real mountain is taller. The repo holds no elevation
 raster: the EarthMaps rasters carry land classes only, the fit rasters land and water, and the crest geography one
 highest point per range. So the values here are the published elevations of the peaks and passes the vertices
 name, entered by hand and rounded to the metre. A vertex that names an area rather than a summit (a plateau,

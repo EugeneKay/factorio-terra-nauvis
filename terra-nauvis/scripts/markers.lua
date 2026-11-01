@@ -1,3 +1,4 @@
+-- City markers (ARCHITECTURE.md, "Control stage"). With the runtime-global
 -- setting City markers on, the map view of an Earth world (one made from a Terra Nauvis preset, which
 -- guards.on_init records in storage.earth) shows the name of every city of the save's map where the city
 -- lies; off removes them. Each marker is a rendering object in chart mode (config.lua markers): it draws on

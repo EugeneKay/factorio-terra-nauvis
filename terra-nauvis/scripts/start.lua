@@ -1,3 +1,4 @@
+-- Start (ARCHITECTURE.md, "Control stage"): one-time work when an Earth world is
 -- created, after guards.on_init has detected it and built storage.earth.
 --
 --   - The resolved spawn city, read back with calculate_tile_properties at (0, 0): random folds in
@@ -9,10 +10,14 @@
 --     exists.
 --   - With RSO active, the RSO warning, stored through guards.record_warning, which logs it
 --     once here and sends it to each created player (game.print in on_init reaches no player;
+--     design rule 25).
+--   - The cliff "none" reset: with the cliff control's size at 0 ("none") the
 --     engine places no cliffs at all, whatever the cliff expressions say, and the starting area is
 --     generated before on_init. So on an Earth world with ridges on, a size of 0 is written back as
 --     reset_size (config.lua ridges) with a whole-table assignment, once, logged in one line: the
 --     preview and the starting chunks keep none, and every chunk generated from then on gets its
+--     ridges (a test run restored 330 of 330 cliffs; the starting area holds no ridge cell anyway, design rule 12).
+--   - The zone warning (design rule 25): with the Destroyed Europe setting on and Alien Biomes not
 --     active, the warning that the world has no zone, stored through guards.record_warning like the RSO
 --     warning. The preset baked the zone off for lack of Alien Biomes, so the save
 --     cannot tell an asked-for zone from none: this one check reads the startup setting, which on_init

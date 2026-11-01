@@ -9,6 +9,7 @@ Rows: exact discs, polygons and buffered paths in degrees, written from
 data-src/approvals/approvals-data.json (what each map adopts, hotspot centres, radii and jitter) and
 the geography research file the module reads (outlines, extents and the protected features beside the
 destroyed zone), by the rules of the tuned prototype table:
+  destroyed   the outline in data-src/approvals/destroyed-zone.json on
               every map whose extent holds it: a polygon whose vertices each move per seed by up to their
               own jitter, at the file's warp share (above 1: stronger than the shared warp), plus the
               file's keep rows (warp 0), buffered paths that hold Britain, Denmark and the Carpathian
@@ -296,6 +297,7 @@ def derive_rows(cfg, appr, r7b, zone):
         raise RegionError(f"config.lua regions.km_per_px {kpp} differs from approvals-data.json rules.km_per_px "
                           f"{appr['rules']['km_per_px']}")
     rows = []
+    # The destroyed zone on every map whose extent holds its every vertex.
     verts = zone["vertices"]
     poly = [[float(p["lat"]), float(p["lon"])] for p in verts]
     pts = [to_px(lat, lon, fr) for lat, lon in poly]
@@ -370,6 +372,7 @@ def marsh_row(cfg, m, g, maps):
     if "west_east_km" in ext and "north_south_km" in ext:
         # a box's extent centred on the article coordinate, its sides converted at km_per_px (a size in
         # tiles does not depend on latitude), walked as a bent path as wide as the box, so the marsh
+        # keeps the box's span and reads as no rectangle
         cu, cv = to_px(float(c["lat"]), float(c["lon"]), fr)
         hu, hv = ext["west_east_km"] / kpp / 2, ext["north_south_km"] / kpp / 2
         reach = hu - hv

@@ -7,6 +7,7 @@
    "type": "string-setting",
    "setting_type": "startup",
    "default_value": "6",
+   "allowed_values": ["1", "2", "3", "4", "5", "6", "12", "24"]
   },
   "spawn_city_europe": {
    "source": "terra-nauvis-spawn-city-europe: random plus 40 of EarthMaps' 41 Europe cities, default random; Luxembourg is left out (data-src/approvals/approvals-data.json cities.europe.dropdown)",
@@ -30,6 +31,7 @@
     "summit-camp", "uranienborg", "albany", "boise", "minneapolis", "el-paso", "hughes", "montgomery", "cordoba",
   },
   "spawn_city_olde_world": {
+   "source": "terra-nauvis-spawn-city-old-world: random plus all 30 EarthMaps cities (EarthMaps settings.lua:124-137), default random; none is left out on this map (data-src/approvals/approvals-data.json cities.olde_world.dropdown); frankfurt, aachen and moscow are appended, so every earlier value keeps its number",
    "type": "string-setting",
    "setting_type": "startup",
    "default_value": "random",
@@ -67,6 +69,7 @@
    "type": "string-setting",
    "setting_type": "startup",
   "inland_lakes": {
+   "source": "terra-nauvis-inland-lakes, added after the first playtest (by default no random lakes, only the lake at the chosen spawn city): startup, bool, default off",
    "type": "bool-setting",
    "setting_type": "startup",
    "default_value": false
@@ -79,6 +82,8 @@
   },
    "type": "string-setting",
    "setting_type": "startup",
+  "blue_corrupted": {
+   "source": "terra-nauvis-blue-corrupted, blue corrupted UK and Australia: startup, bool, default off, needs Alien Biomes",
    "type": "bool-setting",
    "setting_type": "startup",
    "default_value": false

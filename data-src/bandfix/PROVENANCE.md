@@ -16,7 +16,9 @@ re-emits the tables twice and compares each byte for byte with the committed fil
 
 | File | sha256 | Role |
 |---|---|---|
+| `manifest-atlantic.json` | `2074ec3be48720fd3f0e65060ab7eb0f37fbb972b7912eb95d5806ca05008b24` | emission manifest |
 | `manifest-europe.json` | `9cea1dfea318f88415be23ef594bd91ffa6aba11ec83bf8b54f460f94d0f9575` | emission manifest |
+| `manifest-olde_world.json` | `198bc08d9a60f30a59fa8581ff994ad88fd75cbb542b2cb762c8a71b98cf57ff` | emission manifest |
 | `islets-atlantic.json` | `0e73d0d8c88335b68f62c55d536e03be8225a9ddf2a124f2e9eb62bd46e10c04` | islets the raster lacks (`tools/build_islets.py`) |
 | `islets-europe.json` | `2af133292cf312976dfaa0d1c3d3f669e0eda9ae8871a7110d6945a740fd90db` | islets the raster lacks (`tools/build_islets.py`) |
 | `islets-olde_world.json` | `5838e39dbc88ebca0425e4c2f5704c178337b280865cd99e648f99fd35c979f3` | islets the raster lacks (`tools/build_islets.py`) |
@@ -33,6 +35,10 @@ group moved (`maps`, `new_deep`, `smooth`, `ground_rings`), which feed no table.
 still counts the band rule's closed band, not the blurred write rule, so it is an estimate. After a change that moves
 waterways only, `build_geo.py emit --map <map> --bandfix --masks-only` rewrites the mask tables from the
 committed K+ table, byte-identical to a full emission.
+
+`bandfix.generations` says which tables a tn_geo reads. A manifest describes its
+map's newest generation; an older generation's files stay in the mod for the saves that read them and are no longer
+emitted, and the digest leaves the generations out, so a new row needs no re-stamp of any manifest.
 
 The tables read the reference through `build_geo.py bandfix_classes`. Thin water of the
 ocean class within `bandfix.channel_px` pixels of open water along thin water counts as water, and K holds every

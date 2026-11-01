@@ -23,6 +23,7 @@ region layer's every body counts: its row names come from config.lua's stems and
 region table's row ids, composed by tools/tnconfig.py as regions.lua composes them. It finds the
 bodies statically, through the luaparser loader, because release.yml runs without the game; the
 gate's frozen row checks the dumped bodies themselves. --out-dir takes any folder, the game's own
+mods folder included: copying the built zip there is allowed, and the build record lands beside the
 zip (and the .sha256 with --release).
 """
 #!/usr/bin/env python3
@@ -58,6 +59,7 @@ refuses a tag that is not the checked-out commit or whose commit is not on origi
 ships only a commit main's history holds, never a branch commit that skipped CI.
 
 --out-dir takes any folder, the game's own mods folder included: copying the built zip there is
+allowed, and the build record lands beside the zip (and the .sha256 with --release). A zip that
 leaves the checkout lands: once it is in a mods folder, a save can be made from its bodies, so its
 registry counts as landed from then and its bodies never change again. Such a build applies the
 release's body and snapshot checks, reads the zips of this mod already in the folder (and the build
@@ -206,8 +208,10 @@ def offline_body_problems(mod_dir, cfg, frozen, registry, suites=tnfrozen.SUITES
     parse, fails closed."""
     try:
         bodies = tnfrozen.offline_bodies(mod_dir, cfg)
+        beside_ab = tnfrozen.offline_ab_problems(mod_dir, frozen, cfg)
     except Exception as e:  # tnlua.LuaError and anything else the stage raises
         return [f"the offline data stage did not run: {type(e).__name__}: {e} (fail closed)"], None
+    problems = tnfrozen.body_problems(bodies, frozen, cfg, where) + beside_ab
     try:
         snaps, _ = tnfrozen.suite_snapshots(registry, suites=suites)
         moves = active_moves()
@@ -385,6 +389,12 @@ def build(out_dir=DIST, release=False, mod_dir=MOD, frozen_path=FROZEN, landing=
     mod_id, version, cfg = mod_identity(mod_dir)
     bodies = frozen = registry = None
     if release or landing:
+        import tnlua
+        # checked first, so a checkout without the base prototypes gets this one line and not a body
+        # failure that names a vanilla tile the empty data.raw lacked
+        missing = tnlua.vanilla_raw_problem()
+        if missing:
+            raise BuildError(missing)
         try:
             frozen = json.loads(Path(frozen_path).read_text(encoding="utf-8"))
             registry = tnfrozen.runner_registry()

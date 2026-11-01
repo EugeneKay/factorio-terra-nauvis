@@ -5,6 +5,14 @@
  "map": "atlantic",
  "bodies": {
   "geo": {
+   "terms": 10400,
+   "factors": 4056,
+   "row_groups": 1353,
+   "checkpoint": "data-src/fits/atlantic/model-10400.npz",
+   "checkpoint_sha256": "ec0a149c949a03d8f259986dae3dd70215a029298a9f674bba7836ef030c50d2",
+   "file": "terra-nauvis/prototypes/generated/geo_atlantic_v2.lua",
+   "sha256": "9fd1ef74ae76f4173f1532e8c67d079c5ce9c0bf56ee37feb319abb8ca7a2b11",
+   "bytes": 507254
   },
   "land_coarse": {
    "terms": 256,

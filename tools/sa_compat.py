@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Space Age compatibility of Terra Nauvis: the sa-compat test, reusable as gate rows.
 
+The requirement: Terra Nauvis works with Space Age, and its Earth maps affect no other planet in any
 way and cause no error. Every check compares a modset with terra-nauvis against its twin without it,
 both with the four expansion mods (the harness's modset --expansion) and tools/mods/ea-sa-probe:
 

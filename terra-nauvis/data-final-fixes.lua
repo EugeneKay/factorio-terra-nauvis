@@ -1,4 +1,10 @@
 -- Everything that reads other mods' final state: entity wrappers and gated hooks on shared
+-- prototypes (ARCHITECTURE.md, "Module map" and "Stable hooks"). Waterways: the ford hook.
+-- Climate tiles: the marsh keys, and beside Alien Biomes the vanilla land tiles, the exclusion
+-- of non-adopted AB tiles from temperate bands and the palm copies, built from the installed palms. Trees
+-- and forests: beside Alien Biomes the base game's trees, rocks, decals and plants, and on every world
+-- the great-forests hook. Ridges: the Earth-gated ridge exclusion on ore probability. Resources
+-- and enemies: the ore, richness, enemy and offshore-oil wrappers around the pack's live autoplace.
 --
 -- Every gated hook is
 --   if(tn_on > threshold, <on branch>, <off value>)
@@ -98,6 +104,9 @@ local function vanilla_hooks()
   end
 end
 
+  return table.concat(out)
+end
+
 -- A tile score with the three climate fields read through the grain's copies (config.lua climate.grain)
 -- and its own noise through the shared fields.
 local function grain_scores(text)
@@ -169,6 +178,9 @@ local function with_chaos(name, text)
   return text
 end
 
+-- Blue corrupted UK and Australia's palette takes its max the same way (config.lua blue).
+local function with_blue(name, text)
+  for _, t in ipairs(cfg.blue.tiles) do
     if t.tile == name then
       return "max(" .. text .. ", " .. t.body .. ")"
     end
@@ -200,30 +212,172 @@ local function exclusion_hooks()
     excluded[name] = true
     local autoplace = data.raw.tile[name].autoplace
     local original = "(" .. tostring(autoplace.probability_expression) .. ")"
+    autoplace.probability_expression = hook(with_blue(name, with_chaos(name, grain_scores(original) .. " + " .. X.key)),
+      original)
   end
   log(cfg.identity.title .. ": temperate exclusion on " .. #names .. " Alien Biomes tiles")
   grain_hooks(excluded, #names)
   vegetation_hooks()
 end
 
+-- The palm switch (trees.lua): Earth presets name the Earth copies of the palms, built here because
+-- Alien Biomes' data-final-fixes, which runs first, is the last to touch a tree. The installed palms are held to
+-- config.lua's digest (tools/build_palms.py writes the same text): a palm that differs or lost its autoplace
+-- (Alien Biomes' disable-vegetation setting, a newer release) makes every copy the neutral body and points both keys at
+-- it on every Earth preset, so it grows nowhere on new Earth worlds instead of reading a dangling name, and the log
+-- says why; the gate's dump facts fail on it too. AB's prototypes stay untouched, so every other world compiles exactly
+-- AB's program. Any other tree that reads elevation is logged loudly: the M2 isolation walk (t15b) then fails on it.
 local PALM = TL.palm
 
+local function sorted_keys(t)
+  local keys = {}
+  for k in pairs(t or {}) do
+    keys[#keys + 1] = k
   end
-  end
-  end
-    end
-  end
-  for _, c in ipairs(PALM.copies) do
-    end
-  end
+  table.sort(keys)
+  return keys
 end
 
+local function palm_value(v)
+  return type(v) == "number" and string.format(PALM.digest.number, v) or tostring(v)
+end
+
+-- The digest's canonical text: tools/build_palms.py canonical writes the same lines.
+local function palm_text(src)
+  local lines = {}
+  local function locals(t)
+    for _, k in ipairs(sorted_keys(t)) do
+      lines[#lines + 1] = "l " .. k .. " " .. palm_value(t[k])
+    end
   end
+  for _, tree in ipairs(sorted_keys(src.trees)) do
+    local rec = src.trees[tree]
+    lines[#lines + 1] = "tree " .. tree
+    lines[#lines + 1] = "p " .. palm_value(rec.probability_expression)
+    lines[#lines + 1] = "r " .. palm_value(rec.richness_expression)
+    locals(rec.local_expressions)
   end
+  for _, name in ipairs(sorted_keys(src.functions)) do
+    local f = src.functions[name]
+    lines[#lines + 1] = "f " .. name .. " " .. table.concat(f.parameters, ",")
+    lines[#lines + 1] = "e " .. palm_value(f.expression)
+    locals(f.local_expressions)
   end
+  return table.concat(lines, "\n")
+end
+
+local function fnv(text, base)
+  local h = base
+  for i = 1, #text do
+    h = bit32.bxor(h, string.byte(text, i))
+    h = (h * PALM.digest.prime_low + bit32.lshift(h, PALM.digest.prime_shift)) % PALM.digest.word
+  end
+  return h
+end
+
+local function palm_digest(src)
+  local text = palm_text(src)
+  local out = {}
+  for i, base in ipairs(PALM.digest.bases) do
+    out[i] = string.format(PALM.digest.hex, fnv(text, base))
+  end
+  return table.concat(out)
+end
+
+-- A text's names, quoted strings left out, as tools/build_palms.py idents reads them.
+local function idents(text)
+  local out = {}
+  if type(text) == "string" then
+    local bare = string.gsub(string.gsub(text, "'[^']*'", " "), '"[^"]*"', " ")
+    for name in string.gmatch(bare, "[%a_][%w_:]*") do
+      out[name] = true
+    end
+  end
+  return out
+end
+
+-- The installed palms into src, with one walk per palm for the functions its texts call; or nil and why not.
+local function palm_trees(src)
+  local jobs = {}
+  for _, c in ipairs(PALM.copies) do
+    local proto = (data.raw.tree or {})[c.tree]
+    local ap = proto and proto.autoplace
+    if not (ap and ap.probability_expression ~= nil and ap.richness_expression ~= nil) then
+      return nil, c.tree .. " has no whole autoplace"
+    end
+    if not src.trees[c.tree] then
+      local locals = ap.local_expressions or {}
+      src.trees[c.tree] = {probability_expression = ap.probability_expression,
+                           richness_expression = ap.richness_expression, local_expressions = locals}
+      local texts = {ap.probability_expression, ap.richness_expression}
+      for _, v in pairs(locals) do
+        texts[#texts + 1] = v
+      end
+      jobs[#jobs + 1] = {where = c.tree, known = locals, texts = texts}
+    end
+  end
+  return jobs
+end
+
+-- A called function into src, with a walk of its own texts; or why it cannot be carried.
+local function palm_function(src, jobs, name, f)
+  if f.local_functions then
+    return "the noise function " .. name .. " has local functions"
+  end
+  src.functions[name] = {parameters = f.parameters or {}, expression = f.expression,
+                         local_expressions = f.local_expressions}
+  local known, texts = {}, {f.expression}
+  for _, p in ipairs(f.parameters or {}) do
+    known[p] = true
+  end
+  for k, v in pairs(f.local_expressions or {}) do
+    known[k] = true
+    texts[#texts + 1] = v
+  end
+  jobs[#jobs + 1] = {where = name, known = known, texts = texts}
+  return nil
+end
+
+-- One text's names: a function goes into src, a named expression cannot be carried.
+local function palm_names(src, jobs, job, text, reads)
+  for name in pairs(idents(text)) do
+    if not job.known[name] and not reads[name] then
+      local f = (data.raw["noise-function"] or {})[name]
+      local why = nil
+      if f and not src.functions[name] then
+        why = palm_function(src, jobs, name, f)
+      elseif not f and (data.raw["noise-expression"] or {})[name] then
+        why = job.where .. " reads the named expression " .. name
+      end
+      if why then
+        return why
+      end
     end
   end
   return nil
+end
+
+-- The installed palms and every noise function their texts call, or nil and why not.
+local function palm_source()
+  local src = {trees = {}, functions = {}}
+  local jobs, why = palm_trees(src)
+  if not jobs then
+    return nil, why
+  end
+  local reads = {}
+  for _, name in ipairs(PALM.digest.reads) do
+    reads[name] = true
+  end
+  while #jobs > 0 do
+    local job = table.remove(jobs)
+    for _, text in ipairs(job.texts) do
+      why = palm_names(src, jobs, job, text, reads)
+      if why then
+        return nil, why
+      end
+    end
+  end
+  return src
 end
 
 local function reads_elevation(autoplace)
@@ -244,13 +398,36 @@ local function reads_elevation(autoplace)
 end
 
 local function palm_check()
+  local TREES = require("prototypes.expressions.trees")
+  local src, why
+  if AB then
+    src, why = palm_source()
+    if src and palm_digest(src) ~= PALM.digest.value then
+      src, why = nil, "they differ from Alien Biomes " .. PALM.digest.version .. " by digest"
+    end
+    if not src then
+      local presets = data.raw["map-gen-presets"] and data.raw["map-gen-presets"]["default"] or {}
+      for _, c in ipairs(PALM.copies) do
+        for _, key in ipairs(cfg.preset_order) do
+          local p = presets[cfg.presets[key].name]
+          local names = p and p.basic_settings and p.basic_settings.property_expression_names
+          if names then
+            names[c.key] = PALM.neutral
+          end
         end
       end
+      log(cfg.identity.title .. ": ERROR the palms cannot be copied (" .. why .. "); Earth presets name the neutral " ..
+        "body")
     end
+  end
+  data:extend(TREES.palm_bodies(src))
+  if not AB then
+    return
   end
   local copied = {}
   for _, c in ipairs(PALM.copies) do
     copied[c.tree] = true
+  end
   local trees = {}
   for name in pairs(data.raw.tree or {}) do
     trees[#trees + 1] = name
@@ -291,6 +468,7 @@ local function ground_hooks()
   end
 end
 
+-- Destroyed Europe: with the zone on, the volcanic heat bands take the ramp of cfg.destroyed.map_colors,
 -- so the map view and the new-game preview tell them apart. Map colours only; no world changes.
 local function heat_map_colors()
   local C = cfg.destroyed.map_colors
@@ -304,16 +482,34 @@ local function heat_map_colors()
   end
 end
 
+-- Blue corrupted UK and Australia: Alien Biomes' colours are near black on the map view (config.lua blue). Map colours
+-- only; no world changes.
+local function blue_map_colors()
+  for _, t in ipairs(cfg.blue.tiles) do
+    local tile = data.raw.tile[t.tile]
+    if tile then
+      tile.map_color = t.map
+    end
+  end
+end
+
+palm_check()
 if AB then
   vanilla_hooks()
   exclusion_hooks()
     heat_map_colors()
   end
+    blue_map_colors()
+  end
 else
   marsh_grass_hook()
   ground_hooks()
+  local F = TL.frozen
+  data.raw.tile[F.tile].autoplace = {probability_expression = hook(F.key, F.off)}
+  register(F.tile)
 end
 
+-- Trees and forests. Beside Alien Biomes, the base game's living trees, rocks, decals and plants come
 -- back on Earth presets: AB nils their
 -- autoplace or takes them off Nauvis, so each is rebuilt from prototypes/tables/vanilla.lua behind the gate
 -- tn_on with its key (trees.lua), restricted to the vanilla land tiles so AB's land keeps AB's own, and
@@ -373,7 +569,10 @@ local function restore_trees(R)
   local n = 0
   local band = tree_band()
   local tiles = land_tiles()
+  -- Alien Biomes' include settings can drop an adopted tile, and a tile_restriction naming a missing tile stops the
+  -- game loading on every world.
   for _, t in ipairs(TL.ab_adopted) do
+    if t ~= TL.marsh.water_mud.tile and data.raw.tile[t] then
       tiles[#tiles + 1] = t
     end
   end
@@ -516,6 +715,7 @@ end
 
 -- Whether Nauvis places a prototype: its autoplace names a control Nauvis lists, or Nauvis's autoplace settings
 -- list it. Another planet's trees (Space Age's Vulcanus lichen trees and Gleba plants) keep their prototypes
+-- untouched, so no other planet compiles a hook (a compatibility check found an earlier hook moving their
 -- programs and placements, so other planets are never touched).
 local function on_nauvis(kind, name, autoplace)
   local mgs = ((data.raw.planet or {}).nauvis or {}).map_gen_settings or {}
@@ -526,6 +726,7 @@ end
 
 -- The great-forests hook on every living tree Nauvis places (the base game's dead and dry trees
 -- excepted). Alien Biomes' palms are left out too: their prototypes stay AB's (ARCHITECTURE.md, "Stable hooks"),
+-- since the palm copies and their digest read them raw, and on Earth presets their probability
 -- keys name the copies' second versions, which carry the boost.
 local function boost_hooks()
   local skip = {}
@@ -633,17 +834,28 @@ if AB then
 end
 boost_hooks()
 
+-- Destroyed Europe, the exclusion (prototypes/zone_exclusion.lua): last, so each hook wraps a tree's and a
+-- plant's final text, and the dead trees' copies take no hook of their own.
+if AB then
+  require("prototypes.zone_exclusion").apply(cfg.destroyed.exclusion, on_nauvis)
+  require("prototypes.zone_exclusion").apply(cfg.blue.exclusion, on_nauvis)
+end
   for name in pairs(data.raw.tree or {}) do
+
     table.sort(names)
     for _, name in ipairs(names) do
       local own = "(" .. tostring(autoplace.probability_expression) .. ")"
+-- Ridges: the Earth-gated ridge exclusion on ore probability. For each Earth
 -- ore of config.lua's ridges group whose resource has an autoplace, a wrapper body holds the live
 -- probability expression (as the pack leaves it: base, Alien Biomes, the Oil Rig and the rest load
 -- before this) times the ore clearance of prototypes/expressions/ridges.lua, and every Terra Nauvis
 -- preset points the ore's probability key at it. Only those presets read the wrappers, so a default
 -- world compiles none of them, and no resource prototype changes: no cliff_removal_probability edit,
 -- which would change default worlds. resources-enemies moves the keys to its own wrappers under
+-- the next version, leaving these defined (design rule 21).
 --
+-- Resources and enemies: hotspots, the richness ramp, the enemy layer and offshore oil around the
+-- pack's live autoplace (ARCHITECTURE.md, "Stable hooks"; versioning rule 3: these wrap the live
 -- expressions on purpose, so bobenemies' cap and the Oil Rig's patch set keep acting, and Earth
 -- freezes its own terms). Each wrapper is a folded if() on the hotspots toggle, so hotspots off
 -- compiles the live expression alone (a folded condition compiles only its selected branch):
@@ -697,6 +909,7 @@ local function point_presets(keys)
   end
 end
 
+-- Ridges: the probability wrappers with the ridge clearance.
 local function ridge_wrappers()
   local E, keys = {}, {}
   for _, o in ipairs(cfg.ridges.ores) do
@@ -768,6 +981,10 @@ local function enemy_wrapper(W, keys)
   if NE[layer] and type(live) == "string" then
     W[#W + 1] = wrapper(cfg.enemies.wrapper, live, ebp, "if(" .. on .. ", max(live_value, " .. layer ..
       "), live_value)")
+    -- New worlds: inside the second table's layer the layer stands alone (expressions/enemies.lua).
+    local H2 = cfg.hotspots_v2
+    W[#W + 1] = wrapper(H2.nests.wrapper, live, ebp, "if(" .. on .. ", if(" .. H2.enemy_layer ..
+      " > " .. num(H2.nests.outside) .. ", " .. H2.enemy_layer .. ", live_value), live_value)")
   end
 end
 

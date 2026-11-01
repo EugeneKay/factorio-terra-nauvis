@@ -1,3 +1,4 @@
+-- The region layer (ARCHITECTURE.md, "Region layer").
 --
 -- Every row of prototypes/tables/regions.lua becomes three named expressions, in reference pixels of
 -- the region frame (config.lua regions.frame):
@@ -27,6 +28,7 @@
 -- read the frame's reference pixels, so a seed's soft edges are one field in geography, the same on
 -- every map, at every scale and for every spawn city. The octaves are built one by one because
 -- 2.1.23's multioctave_noise offsets do not shift its input as basis_noise's do (measured in this
+-- layer); the weights are multioctave_noise's own (the coarsest 1, each finer persistence times the
 -- last, over their root sum of squares). The per-save map number picks the map's chain, offsets and
 -- rows, so each choice folds to one map's (an if() on a folded number, never a per-tile
 -- condition). The layer reads only x, y, map_seed and per-save constants through the chain, so it is
@@ -38,6 +40,9 @@
 -- consumer reads these names, and the static regions row fails any region formula outside this file.
 local cfg = require("prototypes.config")
 local T = require("prototypes.tables.regions")
+local T2 = require("prototypes.tables.hotspots_v2")
+local TC = require("prototypes.tables.zone_outline")
+local TB = require("prototypes.tables.zone_blue")
 
 local R = cfg.regions
 local N = R.names
@@ -331,6 +336,8 @@ local function marsh_gain(r)
   return by_map(function(M) return num(G.maps[M.key] and gain or MH.rough_gain) end)
 end
 
+-- A row's signed distance, weight and depth (and a hotspot's jittered centre).
+local function row_bodies(r, bare)
   local nm = row_names(r)
   local qu, qv = query(r.warp)
   local text, L
@@ -369,10 +376,22 @@ end
     -- a hotspot's disc stays exact: its footprint is a hard limit on its ore (config.lua hotspots.size), so
     -- its signed distance takes no roughness, and the ore inside shapes the outline
     def(nm.sd, r.layer == "hotspot" and text or ("(" .. text .. ") + " .. N.rough), L)
+    if not bare then
+      def(nm.w, weight(nm.sd))
+    end
   end
   def(nm.depth, nm.sd .. " * " .. K.scale)
+  return nm
+end
+
 local ROWS = {}
 for _, r in ipairs(T.rows) do
+  ROWS[#ROWS + 1] = {row = r, names = row_bodies(r)}
+end
+-- The rows only the second hotspot table holds: their bodies, less the weight no aggregate of theirs reads, since
+-- this layer's aggregates are released bodies and take no row. prototypes/expressions/hotspots_v2.lua reads them.
+for _, r in ipairs(T2.rows) do
+  row_bodies(r, true)
 end
 
   local out = {}
@@ -409,13 +428,154 @@ end))
 def(N.destroyed_w, weight(N.destroyed_sd))
 def(N.destroyed_depth, N.destroyed_sd .. " * " .. K.scale)
 
+-- The outline a world made after the first release reads (config.lua destroyed.outline): seeded_polygon's formulas,
+-- with land edges and sea edges in two bodies, so the barrier can measure from the land edges alone. The presence
+-- stops at the isles line and the keep rows; the depth ignores the isles line, which lies on water, and is squeezed
+-- by the whole outline, so a sea edge that lands on an island still frays. A vertex's locals repeat per body, and
+  local Q = cfg.destroyed.outline
+  local n = #verts
+
+  local function vertex(L, i)
+    local v, s = verts[i], tostring(i)
+    local u, w = to_px(v.lat, v.lon)
+    local reach = v.jitter_km / R.km_per_px / math.sqrt(2)
     local step = i * JT.vertex_step
+    L["au" .. s] = jittered(u, (JT.mult_x + step) % 1, v.phase, reach)
+    L["av" .. s] = jittered(w, (JT.mult_y + step) % 1, v.phase, reach)
+  end
+
+  local function edge(L, i)
+    local j = i % n + 1
+    vertex(L, i)
+    vertex(L, j)
+    local s, e = tostring(i), tostring(j)
+    L["ex" .. s] = "au" .. e .. " - au" .. s
+    L["ey" .. s] = "av" .. e .. " - av" .. s
+    L["du" .. s] = qu .. " - au" .. s
+    L["dv" .. s] = qv .. " - av" .. s
+    return s, e
+  end
+
+  local function nearest(name, land)
+    local L, d2s = {}, {}
+    for i, v in ipairs(verts) do
+      if (v.land == true) == land then
+        local s = edge(L, i)
+        local ex, ey = "ex" .. s, "ey" .. s
+        L["t" .. s] = "clamp((du" .. s .. " * " .. ex .. " + dv" .. s .. " * " .. ey .. ") / (" .. ex .. " * " .. ex ..
+          " + " .. ey .. " * " .. ey .. "), 0, 1)"
+        L["qx" .. s] = "du" .. s .. " - t" .. s .. " * " .. ex
+        L["qy" .. s] = "dv" .. s .. " - t" .. s .. " * " .. ey
+        d2s[#d2s + 1] = "qx" .. s .. " * qx" .. s .. " + qy" .. s .. " * qy" .. s
+      end
+    end
+    def(name, joined("min", d2s, nil), L)
+  end
+  nearest(O.land, true)
+  nearest(O.sea, false)
+
+  local L, cross = {}, {}
+  for i = 1, n do
+    local s, e = edge(L, i)
+    L["sl" .. s] = "if(abs(ey" .. s .. ") < " .. num(JT.flat_px) .. ", 0, ex" .. s .. " / ey" .. s .. ")"
+    cross[#cross + 1] = "((" .. qv .. " < av" .. s .. ") != (" .. qv .. " < av" .. e .. ")) * (" .. qu .. " < au" ..
+      s .. " + dv" .. s .. " * sl" .. s .. ")"
+  end
+  def(O.inside, "(" .. table.concat(cross, " + ") .. ") % 2", L)
+
+  local sign = "(2 * " .. O.inside .. " - 1)"
+  def(O.sd, sign .. " * sqrt(min(" .. O.land .. ", " .. O.sea .. ")) + " .. N.rough)
+
       local u, v = to_px(ll[1], ll[2])
       pts[i] = {u, v}
     end
+  end
+
+  local depth = {sign .. " * sqrt(" .. O.land .. ") + " .. N.rough, num(Q.squeeze) .. " * " .. O.sd}
+    local keep = "-" .. N.row.sd .. id .. SUF
+    present[#present + 1] = keep
+    depth[#depth + 1] = keep
+  end
+  def(O.present, joined("min", present))
+  def(O.depth, joined("min", depth))
+end
+
+  local big = num(cfg.blue.outline.inside_px)
+
+  local function holds(shape, M)
+    for _, key in ipairs(shape.maps) do
+      if key == M.key then
+        return true
+      end
+    end
+    return false
+  end
+
+  local function crossings(pts, qu, qv)
+    local L, cross = {}, {}
+    local n = #pts
+    for i, a in ipairs(pts) do
+      local b, s = pts[i % n + 1], tostring(i)
+      if b[2] ~= a[2] then
+        L["dv" .. s] = minus(qv, a[2])
+        cross[#cross + 1] = "((" .. qv .. " < " .. num(a[2]) .. ") != (" .. qv .. " < " .. num(b[2]) .. ")) * (" ..
+          qu .. " < " .. num(a[1]) .. " + dv" .. s .. " * " .. num((b[1] - a[1]) / (b[2] - a[2])) .. ")"
+      end
+    end
+    return "(" .. table.concat(cross, " + ") .. ") % 2", L
+  end
+
+  local function pixels(shape)
+    local pts = {}
+    for i, ll in ipairs(shape) do
       local u, v = to_px(ll[1], ll[2])
       pts[i] = {u, v}
     end
+    return pts
+  end
+
+  local function sea_shape(name, shape)
+    local text, L = crossings(pixels(shape), QU, QV)
+    def(name, text, L)
+  end
+  def(O.sea, by_map(function(M)
+    local parts = {}
+      parts[#parts + 1] = O.britain
+    end
+      parts[#parts + 1] = O.australia
+    end
+    return joined("max", parts, "0")
+  end))
+
+  local pts = {}
+  for i, v in ipairs(U.vertices) do
+    local a, b = to_px(v.lat, v.lon)
+    pts[i] = {a, b, land = v.land}
+  end
+  local qu, qv = query(U.warp)
+  local text, inside = crossings(pts, qu, qv)
+  def(O.ulster, text, inside)
+  local L, d2s = {}, {}
+  local n = #pts
+  for i, a in ipairs(pts) do
+    if a.land then
+      local b, s = pts[i % n + 1], tostring(i)
+      local ex, ey = b[1] - a[1], b[2] - a[2]
+      L["du" .. s] = minus(qu, a[1])
+      L["dv" .. s] = minus(qv, a[2])
+      L["t" .. s] = "clamp((du" .. s .. " * " .. num(ex) .. " + dv" .. s .. " * " .. num(ey) .. ") * " ..
+        num(1 / (ex * ex + ey * ey)) .. ", 0, 1)"
+      L["qx" .. s] = "du" .. s .. " - t" .. s .. " * " .. num(ex)
+      L["qy" .. s] = "dv" .. s .. " - t" .. s .. " * " .. num(ey)
+      d2s[#d2s + 1] = "qx" .. s .. " * qx" .. s .. " + qy" .. s .. " * qy" .. s
+    end
+  end
+  def(O.land, joined("min", d2s, nil), L)
+  -- A sea shape reads as far inside or far outside at once, and only the border has a depth to speak of.
+  def(O.depth, "max((2 * " .. O.ulster .. " - 1) * sqrt(" .. O.land .. ") + " .. N.rough .. ", " .. big .. " * (2 * " ..
+    O.sea .. " - 1))")
+end
+
 -- Great forests.
 local function boosted(x)
   if x.row.boost == 1 then
@@ -439,9 +599,13 @@ def(N.marsh_w, by_map(function(M) return joined("max", each(on_map(M, "marsh"), 
 end))
 -- The highland's noise (ridges.lua), in reference pixels, all of it noise this layer already computes: the fray
 -- rocks read, the one tile scores read, and the massif factor, which breaks a long even crest.
+local HF, GM, CF = cfg.ridges.high, cfg.ridges.ground.massif, cfg.ridges.cold
 def(N.highland_fray, num(HF.fray_warp) .. " * " .. N.wx)
 def(N.highland_fray_tile, num(HF.fray_warp) .. " * " .. N.wx .. " + " .. num(HF.fray_rough) .. " * " .. N.rough ..
   " + " .. num(HF.fray_massif) .. " * " .. N.marsh_rough)
+def(N.highland_cold, num(CF.fray_warp) .. " * " .. N.wx .. " + " .. num(CF.massif) .. " * " .. N.wy .. " + " ..
+  num(CF.fray_marsh) .. " * " .. N.marsh_rough .. " + " .. num(CF.fray_rough) .. " * min(1, " .. K.scale .. " / " ..
+  num(CF.fit_scale) .. ") * " .. N.rough)
 def(N.highland_massif, "clamp(1 + " .. num(GM.gain) .. " * " .. N.wy .. ", " .. num(GM.low) .. ", " .. num(GM.high) ..
   ")")
 

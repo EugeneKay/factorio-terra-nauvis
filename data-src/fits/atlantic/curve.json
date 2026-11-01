@@ -13,6 +13,50 @@
   "newton": 4,
   "maxit": 150,
   "nmin": 64,
+  "tol": 0.002,
+  "region_weights": [
+   [
+    -170.0,
+    -30.0,
+    -60.0,
+    80.0,
+    2.0
+   ],
+   [
+    -11.0,
+    16.0,
+    49.0,
+    61.0,
+    6.0
+   ],
+   [
+    -84.0,
+    -76.0,
+    -7.0,
+    2.0,
+    16.0
+   ],
+   [
+    -83.0,
+    -70.0,
+    19.0,
+    29.0,
+    8.0
+   ],
+   [
+    -6.0,
+    -3.5,
+    53.5,
+    55.0,
+    16.0
+   ]
+  ],
+  "thrift": true,
+  "start_from": {
+   "checkpoint": "model-9500.npz",
+   "sha256": "727fccd7c3a0d3832fd6e2c0fc7ba1adf011cc8424df2d6a260f57fdbf82db1b",
+   "terms": 9500
+  }
  },
  "reference": [
   6524,
@@ -23,6 +67,7 @@
   "thin": "547c262029ffbf8000e16f62bf5428368a9922233940fecd77664cfb5c395dfc"
  },
  "bar": 0.991,
+ "note": "agreement, p99 and max from t1_metrics over every reference pixel centre, thin water excluded; sample_agreement is the fit's own count over the same pixels; tile_estimate is the fit's complexity model (TILE_COST), never a measurement; stage base: the folder's earlier fit through the start checkpoint (base_params), stage region: the region-weighted growth from it (params)",
  "points": [
   {
    "terms_target": 64,
@@ -98,6 +143,8 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "81c13ba22b6421b8918c4129d9493ca537249a49af4e4f0b53dfaa06e6993323",
+   "stage": "base"
   },
   {
    "terms_target": 80,
@@ -127,6 +174,8 @@
     "row_groups": 13
    },
    "tile_estimate": 9426,
+   "checkpoint_sha256": "0490a9f20740e5322c8a77d41c918ffd3d6865f27df967532ca75d017e5ee7a1",
+   "stage": "base"
   },
   {
    "terms_target": 100,
@@ -161,6 +210,8 @@
     "row_groups": 17
    },
    "tile_estimate": 9603,
+   "checkpoint_sha256": "6c0586aa2d2b394c3676ef7d56bdea7959ffc0821bb9d0f4a0b33a05b0d2f849",
+   "stage": "base"
   },
   {
    "terms_target": 125,
@@ -195,6 +246,8 @@
     "row_groups": 26
    },
    "tile_estimate": 9900,
+   "checkpoint_sha256": "c3558e02af8607566187288c4fcb66585124d863704838595d91b098a0b02d5e",
+   "stage": "base"
   },
   {
    "terms_target": 128,
@@ -275,6 +328,8 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "514b75a30b90a22d5a206bc35420e39e73b3d9349a357cca10b39e018009ab49",
+   "stage": "base"
   },
   {
    "terms_target": 156,
@@ -314,6 +369,8 @@
     "row_groups": 41
    },
    "tile_estimate": 10340,
+   "checkpoint_sha256": "b25be732b08de006fd61fd0564a61c66061f0cb7ce367b1e4d1dc652e6979f96",
+   "stage": "base"
   },
   {
    "terms_target": 195,
@@ -353,6 +410,8 @@
     "row_groups": 54
    },
    "tile_estimate": 10782,
+   "checkpoint_sha256": "24fca32b12090109dbc350a14acef6697ce9170a37e4a6c780329a4b6606d38e",
+   "stage": "base"
   },
   {
    "terms_target": 244,
@@ -397,6 +456,8 @@
     "row_groups": 72
    },
    "tile_estimate": 11369,
+   "checkpoint_sha256": "c7c40fd79fe65981b36aa2ededbbc635471dfce315ea10f2d8423da282c87e7f",
+   "stage": "base"
   },
   {
    "terms_target": 256,
@@ -487,6 +548,8 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "a793e2c60335f0b55a05641426be0f105a1c8feff09d346f4719da9c2ce6de90",
+   "stage": "base"
   },
   {
    "terms_target": 305,
@@ -531,6 +594,8 @@
     "row_groups": 88
    },
    "tile_estimate": 11980,
+   "checkpoint_sha256": "ee390d12bcd2afeebb1f03231eb0f06d5f65c8eab4b1394609f5c330e2031d8a",
+   "stage": "base"
   },
   {
    "terms_target": 381,
@@ -575,6 +640,8 @@
     "row_groups": 108
    },
    "tile_estimate": 12742,
+   "checkpoint_sha256": "4c67c0cdd1a653e4061b543b9f0e6bfe8a487861a5184075fa86f8fbe8c09dbb",
+   "stage": "base"
   },
   {
    "terms_target": 477,
@@ -624,6 +691,8 @@
     "row_groups": 137
    },
    "tile_estimate": 13774,
+   "checkpoint_sha256": "e8664704eb5262948c31324ad55fad2be734af87d9ddfe85fd33f75ffadbde6b",
+   "stage": "base"
   },
   {
    "terms_target": 512,
@@ -719,6 +788,8 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "688f9f4e5181272fe5affe2e72b6bba27842214245fa8685b46fbada61c449b9",
+   "stage": "base"
   },
   {
    "terms_target": 596,
@@ -768,6 +839,8 @@
     "row_groups": 164
    },
    "tile_estimate": 14887,
+   "checkpoint_sha256": "0f3b52d2557a169d15d72c5a889ea24dcd80a5a6785191666fdff08d8b83501d",
+   "stage": "base"
   },
   {
    "terms_target": 745,
@@ -822,6 +895,8 @@
     "row_groups": 196
    },
    "tile_estimate": 16244,
+   "checkpoint_sha256": "cabf1d911ec9a1f77194145475c55a687ded6d67f5637550bd9d38a7e2e3d47f",
+   "stage": "base"
   },
   {
    "terms_target": 931,
@@ -876,6 +951,8 @@
     "row_groups": 248
    },
    "tile_estimate": 18164,
+   "checkpoint_sha256": "2ddb4d7b18f9c3bb7bbca57c3940ff51d9aa802a4e36d186f5e1321a6513ee23",
+   "stage": "base"
   },
   {
    "terms_target": 1024,
@@ -976,6 +1053,8 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "30d578ee5bd57a6a06251d5b481ca8c924df24f10be3ea8582d36b43859f9447",
+   "stage": "base"
   },
   {
    "terms_target": 1164,
@@ -1035,6 +1114,8 @@
     "row_groups": 308
    },
    "tile_estimate": 20473,
+   "checkpoint_sha256": "3844aa893f4a8f1938d3b9432021522384b69d3135682e584b97d8e6d7d694a9",
+   "stage": "base"
   },
   {
    "terms_target": 1455,
@@ -1094,6 +1175,8 @@
     "row_groups": 374
    },
    "tile_estimate": 23186,
+   "checkpoint_sha256": "7bcbc29803db2e2bcfa6dfea81f7e3e7d7a4d72a564e79ce8704b5ce4a0ac066",
+   "stage": "base"
   },
   {
    "terms_target": 1819,
@@ -1158,6 +1241,8 @@
     "row_groups": 441
    },
    "tile_estimate": 26291,
+   "checkpoint_sha256": "373c1685ce7e6ef790ef5cc3745503688a33a06688c380f8cf3d575fcb51d405",
+   "stage": "base"
   },
   {
    "terms_target": 2048,
@@ -1268,6 +1353,8 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "db380d2197f43193b454a4f7d5c0c026e6bb2a3edd167f60590167380cc01ced",
+   "stage": "base"
   },
   {
    "terms_target": 2274,
@@ -1332,6 +1419,8 @@
     "row_groups": 533
    },
    "tile_estimate": 30326,
+   "checkpoint_sha256": "e5a78746ae274d6bf26491e2a203be36fbe8d51bade2300a738cad412aaa1461",
+   "stage": "base"
   },
   {
    "terms_target": 2842,
@@ -1442,6 +1531,8 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "bf26e7e4a4475f7739617f905cf7f9c8fa9652df655bb19db96d132ccd49e483",
+   "stage": "base"
   },
   {
    "terms_target": 3553,
@@ -1552,6 +1643,8 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "89e2d670ae71722fefbaed9061f4675fc236878638227a7086362df2e1d8deb3",
+   "stage": "base"
   },
   {
    "terms_target": 4096,
@@ -1662,6 +1755,8 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "3435b0d5ebaa54b94c20d13995ca5f28149826382f5ca2a28b635c22cacf94f0",
+   "stage": "base"
   },
   {
    "terms_target": 4441,
@@ -1777,6 +1872,8 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "0eb5220041c1f62ea2002782f811aa6be3688e895c8bb215f6d7d2ac7e78fdfa",
+   "stage": "base"
   },
   {
    "terms_target": 5551,
@@ -1892,6 +1989,8 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "2df041c92d65b74923540024157c265bebfa1d250756dbf0028d77bec3e8a82c",
+   "stage": "base"
   },
   {
    "terms_target": 6939,
@@ -2007,6 +2106,8 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "16cec7ec19154fd9cca2cb7a520998a52b68ce1e483f94c61eb94cf8e2c36e61",
+   "stage": "base"
   },
   {
    "terms_target": 8192,
@@ -2122,6 +2223,8 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "16ff377914c5f1fa5f4834d794a20f8d88145f66692efb702ff5984cd63fcd4b",
+   "stage": "base"
   },
   {
    "terms_target": 8674,
@@ -2237,87 +2340,65 @@
     "evaluated_px": 101933656,
     "peak_memory_mb": 1772.3
    },
+   "checkpoint_sha256": "9ff17ccafb972b0d1e6c40d00dc193d8797f32dd21634c6d3c7b13f7f2280fe9",
+   "stage": "base"
   },
   {
+   "terms_target": 9600,
+   "terms": 9600,
+   "checkpoint": "model-9600.npz",
    "power_of_two": false,
+   "sample_agreement": 0.9917410791191479,
    "cg_ls": 0,
+   "cg_hinge": 9,
+   "hinge_J": 20494178.931000933,
+   "fit_seconds": 87.6,
+   "peak_memory_mb": 3831.3,
    "describe": {
     "levels": {
      "2": {
       "terms": 3,
-      "rows": 13
-     },
-     "1024": {
-      "terms": 74,
-      "cols": 16,
-      "rows": 7
-     }
-    },
-      "rows": 13
-     },
-     "1024": {
-      "terms": 74,
-      "cols": 16,
-      "rows": 7
-     }
-    },
-      "rows": 13
-     },
-     "1024": {
-      "terms": 74,
-      "cols": 16,
-      "rows": 7
-     }
-    },
-      "rows": 13
-     },
-     "1024": {
-      "terms": 74,
-      "cols": 16,
-      "rows": 7
-     }
-    },
-      "rows": 13
-     },
-     "1024": {
-      "terms": 74,
-      "cols": 16,
-      "rows": 7
-     }
-    },
-   "describe": {
-    "levels": {
-     "1": {
-     },
-     "2": {
+      "cols": 2,
+      "rows": 3
      },
      "4": {
-      "cols": 465,
-      "rows": 13
-     },
-     "1024": {
-      "terms": 74,
-      "cols": 16,
-      "rows": 7
-     }
-    },
+      "terms": 140,
+      "cols": 116,
+      "rows": 103
      },
      "8": {
+      "terms": 2015,
+      "cols": 769,
+      "rows": 429
      },
      "16": {
+      "terms": 3700,
+      "cols": 810,
+      "rows": 364
      },
      "32": {
+      "terms": 2250,
+      "cols": 465,
+      "rows": 195
      },
      "64": {
+      "terms": 908,
+      "cols": 232,
       "rows": 100
      },
      "128": {
+      "terms": 323,
+      "cols": 105,
       "rows": 49
      },
      "256": {
+      "terms": 137,
+      "cols": 51,
       "rows": 26
      },
      "512": {
+      "terms": 50,
+      "cols": 29,
       "rows": 13
      },
      "1024": {
@@ -2326,49 +2407,69 @@
       "rows": 7
      }
     },
+    "factors": 3884,
+    "row_groups": 1289
    },
-     "1": {
-     },
-     },
-     },
-     },
-      "rows": 13
-     },
-     "1024": {
-      "terms": 74,
-      "cols": 16,
-      "rows": 7
-     }
-    },
-   },
+   "tile_estimate": 81528,
+   "checkpoint_sha256": "ce2d0b186109ade6740efb3348d316cb720c0e53d7c83d2c72e3b354535937de",
+   "stage": "region"
   },
   {
+   "terms_target": 9700,
+   "terms": 9700,
+   "checkpoint": "model-9700.npz",
    "power_of_two": false,
+   "sample_agreement": 0.9917720306235264,
    "cg_ls": 0,
+   "cg_hinge": 6,
+   "hinge_J": 20227485.751659036,
+   "fit_seconds": 72.9,
+   "peak_memory_mb": 3831.3,
    "describe": {
     "levels": {
-     "1": {
-     },
      "2": {
+      "terms": 6,
+      "cols": 5,
+      "rows": 5
      },
      "4": {
+      "terms": 146,
+      "cols": 120,
+      "rows": 107
      },
      "8": {
+      "terms": 2087,
+      "cols": 773,
+      "rows": 429
      },
      "16": {
+      "terms": 3719,
+      "cols": 811,
+      "rows": 364
      },
      "32": {
+      "terms": 2250,
+      "cols": 465,
+      "rows": 195
      },
      "64": {
+      "terms": 908,
+      "cols": 232,
       "rows": 100
      },
      "128": {
+      "terms": 323,
+      "cols": 105,
       "rows": 49
      },
      "256": {
+      "terms": 137,
+      "cols": 51,
       "rows": 26
      },
      "512": {
+      "terms": 50,
+      "cols": 29,
       "rows": 13
      },
      "1024": {
@@ -2377,31 +2478,578 @@
       "rows": 7
      }
     },
+    "factors": 3902,
+    "row_groups": 1295
    },
+   "tile_estimate": 82144,
+   "checkpoint_sha256": "91241edb4812b14dabdea66894e485a034c95952380dff9bd9937e525b441daa",
+   "stage": "region"
+  },
+  {
+   "terms_target": 9800,
+   "terms": 9800,
+   "checkpoint": "model-9800.npz",
+   "power_of_two": false,
+   "sample_agreement": 0.9917981358384712,
+   "cg_ls": 0,
+   "cg_hinge": 5,
+   "hinge_J": 20015114.80620815,
+   "fit_seconds": 98.5,
+   "peak_memory_mb": 3831.4,
+   "describe": {
+    "levels": {
+     "2": {
+      "terms": 8,
+      "cols": 7,
+      "rows": 6
+     },
+     "4": {
+      "terms": 154,
+      "cols": 124,
+      "rows": 110
+     },
+     "8": {
+      "terms": 2159,
+      "cols": 776,
+      "rows": 431
+     },
+     "16": {
+      "terms": 3736,
+      "cols": 811,
+      "rows": 364
+     },
+     "32": {
+      "terms": 2251,
+      "cols": 465,
+      "rows": 195
+     },
+     "64": {
+      "terms": 908,
+      "cols": 232,
+      "rows": 100
+     },
+     "128": {
+      "terms": 323,
+      "cols": 105,
+      "rows": 49
+     },
+     "256": {
+      "terms": 137,
+      "cols": 51,
+      "rows": 26
+     },
+     "512": {
+      "terms": 50,
+      "cols": 29,
+      "rows": 13
+     },
+     "1024": {
+      "terms": 74,
+      "cols": 16,
+      "rows": 7
+     }
+    },
+    "factors": 3917,
+    "row_groups": 1301
+   },
+   "tile_estimate": 82760,
+   "checkpoint_sha256": "ca5d9c5594f8ad4b4a824ac0dfa8d71cb7f5f97e7fcfb870c678c9b9a6f12cb8",
+   "stage": "region"
+  },
+  {
+   "terms_target": 9900,
+   "terms": 9900,
+   "checkpoint": "model-9900.npz",
+   "power_of_two": false,
+   "sample_agreement": 0.9918309513003242,
+   "cg_ls": 0,
+   "cg_hinge": 7,
+   "hinge_J": 19782140.851794407,
+   "fit_seconds": 97.6,
+   "peak_memory_mb": 3831.4,
+   "describe": {
+    "levels": {
+     "2": {
+      "terms": 10,
+      "cols": 9,
+      "rows": 8
+     },
+     "4": {
+      "terms": 167,
+      "cols": 131,
+      "rows": 115
+     },
+     "8": {
+      "terms": 2220,
+      "cols": 779,
+      "rows": 432
+     },
+     "16": {
+      "terms": 3760,
+      "cols": 811,
+      "rows": 364
+     },
+     "32": {
+      "terms": 2251,
+      "cols": 465,
+      "rows": 195
+     },
+     "64": {
+      "terms": 908,
+      "cols": 232,
+      "rows": 100
+     },
+     "128": {
+      "terms": 323,
+      "cols": 105,
+      "rows": 49
+     },
+     "256": {
+      "terms": 137,
+      "cols": 51,
+      "rows": 26
+     },
+     "512": {
+      "terms": 50,
+      "cols": 29,
+      "rows": 13
+     },
+     "1024": {
+      "terms": 74,
+      "cols": 16,
+      "rows": 7
+     }
+    },
+    "factors": 3937,
+    "row_groups": 1309
+   },
+   "tile_estimate": 83413,
+   "checkpoint_sha256": "d943a9d4360459dd3b81dd6120ae503119ead69a8f4c082e72e900c00c38b11a",
+   "stage": "region"
+  },
+  {
+   "terms_target": 10000,
+   "terms": 10000,
+   "checkpoint": "model-10000.npz",
+   "power_of_two": false,
+   "sample_agreement": 0.991855457435962,
+   "cg_ls": 0,
+   "cg_hinge": 5,
+   "hinge_J": 19623980.336569868,
+   "fit_seconds": 77.4,
+   "peak_memory_mb": 3831.4,
+   "describe": {
+    "levels": {
+     "2": {
+      "terms": 10,
+      "cols": 9,
+      "rows": 8
+     },
+     "4": {
+      "terms": 178,
+      "cols": 139,
+      "rows": 117
+     },
+     "8": {
+      "terms": 2292,
+      "cols": 779,
+      "rows": 432
+     },
+     "16": {
+      "terms": 3777,
+      "cols": 811,
+      "rows": 364
+     },
+     "32": {
+      "terms": 2251,
+      "cols": 465,
+      "rows": 195
+     },
+     "64": {
+      "terms": 908,
+      "cols": 232,
+      "rows": 100
+     },
+     "128": {
+      "terms": 323,
+      "cols": 105,
+      "rows": 49
+     },
+     "256": {
+      "terms": 137,
+      "cols": 51,
+      "rows": 26
+     },
+     "512": {
+      "terms": 50,
+      "cols": 29,
+      "rows": 13
+     },
+     "1024": {
+      "terms": 74,
+      "cols": 16,
+      "rows": 7
+     }
+    },
+    "factors": 3947,
+    "row_groups": 1311
+   },
+   "tile_estimate": 83954,
+   "checkpoint_sha256": "33f6f3df260adbb5bad65e60eec2157335519c47dd1d5846251e66f5f210c232",
+   "stage": "region"
+  },
+  {
+   "terms_target": 10100,
+   "terms": 10100,
+   "checkpoint": "model-10100.npz",
+   "power_of_two": false,
+   "sample_agreement": 0.9918782860098729,
+   "cg_ls": 0,
+   "cg_hinge": 5,
+   "hinge_J": 19463589.721259765,
+   "fit_seconds": 42.9,
+   "peak_memory_mb": 3834.2,
+   "describe": {
+    "levels": {
+     "1": {
+      "terms": 1,
+      "cols": 1,
+      "rows": 1
+     },
+     "2": {
+      "terms": 15,
+      "cols": 14,
+      "rows": 12
+     },
+     "4": {
+      "terms": 195,
+      "cols": 147,
+      "rows": 121
+     },
+     "8": {
+      "terms": 2360,
+      "cols": 783,
+      "rows": 432
+     },
+     "16": {
+      "terms": 3786,
+      "cols": 811,
+      "rows": 364
+     },
+     "32": {
+      "terms": 2251,
+      "cols": 465,
+      "rows": 195
+     },
+     "64": {
+      "terms": 908,
+      "cols": 232,
+      "rows": 100
+     },
+     "128": {
+      "terms": 323,
+      "cols": 105,
+      "rows": 49
+     },
+     "256": {
+      "terms": 137,
+      "cols": 51,
+      "rows": 26
+     },
+     "512": {
+      "terms": 50,
+      "cols": 29,
+      "rows": 13
+     },
+     "1024": {
+      "terms": 74,
+      "cols": 16,
+      "rows": 7
+     }
+    },
+    "factors": 3974,
+    "row_groups": 1320
+   },
+   "tile_estimate": 84628,
+   "checkpoint_sha256": "52bb19fd560f7148497146c4da81165533b4d03b0340dfb3e0020ebd7393c9af",
+   "stage": "region"
+  },
+  {
+   "terms_target": 10200,
+   "terms": 10200,
+   "checkpoint": "model-10200.npz",
+   "power_of_two": false,
+   "sample_agreement": 0.9918931584284586,
+   "cg_ls": 0,
+   "cg_hinge": 3,
+   "hinge_J": 19360954.463582754,
+   "fit_seconds": 41.9,
+   "peak_memory_mb": 3834.2,
+   "describe": {
+    "levels": {
+     "1": {
+      "terms": 2,
+      "cols": 2,
+      "rows": 1
+     },
+     "2": {
+      "terms": 19,
+      "cols": 18,
+      "rows": 16
+     },
+     "4": {
+      "terms": 210,
+      "cols": 155,
+      "rows": 127
+     },
+     "8": {
+      "terms": 2419,
+      "cols": 786,
+      "rows": 432
+     },
+     "16": {
+      "terms": 3807,
+      "cols": 811,
+      "rows": 364
+     },
+     "32": {
+      "terms": 2251,
+      "cols": 465,
+      "rows": 195
+     },
+     "64": {
+      "terms": 908,
+      "cols": 232,
+      "rows": 100
+     },
+     "128": {
+      "terms": 323,
+      "cols": 105,
+      "rows": 49
+     },
+     "256": {
+      "terms": 137,
+      "cols": 51,
+      "rows": 26
+     },
+     "512": {
+      "terms": 50,
+      "cols": 29,
+      "rows": 13
+     },
+     "1024": {
+      "terms": 74,
+      "cols": 16,
+      "rows": 7
+     }
+    },
+    "factors": 4000,
+    "row_groups": 1330
+   },
+   "tile_estimate": 85320,
+   "checkpoint_sha256": "bf017dfd74f8ffe6614e3f262c0169d3757376d2233a26ca80f845c08b3e90d9",
+   "stage": "region"
+  },
+  {
+   "terms_target": 10300,
+   "terms": 10300,
+   "checkpoint": "model-10300.npz",
+   "power_of_two": false,
+   "sample_agreement": 0.9919161439672094,
+   "cg_ls": 0,
+   "cg_hinge": 4,
+   "hinge_J": 19218365.36924826,
+   "fit_seconds": 35.9,
+   "peak_memory_mb": 3835.2,
+   "describe": {
+    "levels": {
+     "1": {
+      "terms": 2,
+      "cols": 2,
+      "rows": 1
+     },
+     "2": {
+      "terms": 23,
+      "cols": 21,
+      "rows": 20
+     },
+     "4": {
+      "terms": 232,
+      "cols": 167,
+      "rows": 133
+     },
+     "8": {
+      "terms": 2483,
+      "cols": 790,
+      "rows": 432
+     },
+     "16": {
+      "terms": 3817,
+      "cols": 811,
+      "rows": 364
+     },
+     "32": {
+      "terms": 2251,
+      "cols": 465,
+      "rows": 195
+     },
+     "64": {
+      "terms": 908,
+      "cols": 232,
+      "rows": 100
+     },
+     "128": {
+      "terms": 323,
+      "cols": 105,
+      "rows": 49
+     },
+     "256": {
+      "terms": 137,
+      "cols": 51,
+      "rows": 26
+     },
+     "512": {
+      "terms": 50,
+      "cols": 29,
+      "rows": 13
+     },
+     "1024": {
+      "terms": 74,
+      "cols": 16,
+      "rows": 7
+     }
+    },
+    "factors": 4029,
+    "row_groups": 1340
+   },
+   "tile_estimate": 86012,
+   "checkpoint_sha256": "ac691558d5b91f46c74b552b57d0ae042f0290346450d275130905b740aee28d",
+   "stage": "region"
+  },
+  {
+   "terms_target": 10400,
+   "terms": 10400,
+   "checkpoint": "model-10400.npz",
+   "power_of_two": false,
+   "sample_agreement": 0.9919308103694426,
+   "cg_ls": 0,
+   "cg_hinge": 3,
+   "hinge_J": 19116720.743664168,
+   "fit_seconds": 36.8,
+   "peak_memory_mb": 3835.2,
+   "describe": {
+    "levels": {
+     "1": {
+      "terms": 3,
+      "cols": 2,
+      "rows": 2
+     },
+     "2": {
+      "terms": 28,
+      "cols": 26,
+      "rows": 25
+     },
+     "4": {
+      "terms": 247,
+      "cols": 173,
+      "rows": 139
+     },
+     "8": {
+      "terms": 2546,
+      "cols": 793,
+      "rows": 433
+     },
+     "16": {
+      "terms": 3833,
+      "cols": 811,
+      "rows": 364
+     },
+     "32": {
+      "terms": 2251,
+      "cols": 465,
+      "rows": 195
+     },
+     "64": {
+      "terms": 908,
+      "cols": 232,
+      "rows": 100
+     },
+     "128": {
+      "terms": 323,
+      "cols": 105,
+      "rows": 49
+     },
+     "256": {
+      "terms": 137,
+      "cols": 51,
+      "rows": 26
+     },
+     "512": {
+      "terms": 50,
+      "cols": 29,
+      "rows": 13
+     },
+     "1024": {
+      "terms": 74,
+      "cols": 16,
+      "rows": 7
+     }
+    },
+    "factors": 4056,
+    "row_groups": 1353
+   },
+   "tile_estimate": 86759,
    "t1": {
+    "agreement": 0.991931,
+    "land_iou": 0.973082,
+    "coast_p99_px": 5.1478,
     "coast_max_px": 54.37370688117557,
     "connectivity": 4,
     "islands": {
      "1": {
       "islands": 1617,
+      "present": 539,
+      "separate": 138,
+      "merged": 401,
+      "missing": 1078
      },
      "2-4": {
       "islands": 1213,
+      "present": 305,
+      "separate": 46,
+      "merged": 259,
+      "missing": 908
      },
      "5-16": {
       "islands": 1094,
+      "present": 199,
+      "separate": 27,
+      "merged": 172,
+      "missing": 895
      },
      "17-64": {
       "islands": 716,
+      "present": 127,
+      "separate": 18,
+      "merged": 109,
+      "missing": 589
      },
      "65+": {
       "islands": 697,
+      "present": 413,
+      "separate": 166,
       "merged": 247,
+      "missing": 284
      }
     },
     "evaluated_px": 101933656,
+    "peak_memory_mb": 1382.7
    },
+   "checkpoint_sha256": "ec0a149c949a03d8f259986dae3dd70215a029298a9f674bba7836ef030c50d2",
+   "stage": "region"
   }
+ ],
+ "base_params": {
   "family": "mr",
   "mode": "onesided",
   "step": 1,
@@ -2415,6 +3063,8 @@
   "nmin": 64,
   "tol": 0.002
  },
+ "base_inputs_sha256": {
   "land": "150af4cb1634045dc62ad07c5e9c46081733a6e6476bfedb91c5ec08a38518f4",
   "thin": "547c262029ffbf8000e16f62bf5428368a9922233940fecd77664cfb5c395dfc"
+ }
 }

@@ -1,3 +1,4 @@
+-- Cover for the land Exact coastlines writes (scripts/bandfix.lua step 7; config.lua coastcover).
 -- The game generates trees, rocks and decoratives before the handler runs, so land the
 -- handler writes over generated water stays bare. This module gives it the cover of the land beside it:
 --   read, before the tiles are written: the box around the written land, inside the chunk and clear of its edge

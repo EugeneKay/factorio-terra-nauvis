@@ -348,6 +348,16 @@ local function blue_values(names)
   return out
 end
 
+-- The second tables' re-points, which every new world bakes: the second hotspot table's bodies and the second region
+-- table's forest and marsh aggregates, each under the first table's name.
+  local out = {}
+    for k, value in pairs(points) do
+      out[k] = value
+    end
+  end
+  return out
+end
+
 -- The property_expression_names one geography version's preset bakes under the current startup
 -- settings (tools/tnconfig.py baked_names mirrors it). A version with a spawn record also bakes the
 -- distance redirect (vanilla's starting ore and enemy-free start follow the spawn through it),
@@ -424,6 +434,8 @@ local function baked(map_key, v)
   for k, value in pairs(blue_values(names)) do
     names[k] = value
   end
+  -- The second hotspot table and the second region table: every new world reads them through the first tables'
+  -- names.
     names[k] = value
   end
   return names

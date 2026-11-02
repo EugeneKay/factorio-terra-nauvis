@@ -152,6 +152,9 @@ local CT = {
   CL_M_AB_G3 = NOISE .. "moisture_ab_v7",
   CL_M_AB_N2 = NOISE .. "moisture_ab_v8",
   CL_A_AB_G3 = NOISE .. "aux_ab_v4",
+  CL_RAGGED = NOISE .. "band_ragged_v1",
+  CL_BELT_M2 = NOISE .. "tile_belt_m_v2",
+  CL_LIFT_M2 = NOISE .. "lift_m_v2",
   TM_1 = NOISE .. "tile_mix_1_v1",
   TM_2 = NOISE .. "tile_mix_2_v1",
   TM_3 = NOISE .. "tile_mix_3_v1",
@@ -360,6 +363,14 @@ local RDN = {
   EU_COLD = NOISE .. "highland_cold_europe_v1",
   AT_COLD = NOISE .. "highland_cold_atlantic_v1",
   OW_COLD = NOISE .. "highland_cold_olde_world_v1",
+  -- 0.3.0: the cold field's next versions (the desert snow line) and the rim's cap (ridges.cold)
+  RD_COLD_F2 = NOISE .. "highland_cold_v2",
+  RD_COLD_GATED2 = NOISE .. "highland_cold_gated_v2",
+  RD_COLD_HIGH2 = NOISE .. "highland_cold_high_v2",
+  RD_COLD_CAP2 = NOISE .. "highland_cold_cap_v2",
+  EU_COLD2 = NOISE .. "highland_cold_europe_v2",
+  AT_COLD2 = NOISE .. "highland_cold_atlantic_v2",
+  OW_COLD2 = NOISE .. "highland_cold_olde_world_v2",
   EU_BAND = NOISE .. "band_europe" .. RD_V,
   AT_BAND = NOISE .. "band_atlantic" .. RD_V,
   OW_BAND = NOISE .. "band_olde_world" .. RD_V,
@@ -738,6 +749,19 @@ local DE = {
   out_isles = NOISE .. "destroyed_outline_isles_v1",
   out_present = NOISE .. "destroyed_outline_present_v1",
   out_depth = NOISE .. "destroyed_outline_depth_v1",
+  -- 0.3.0's next outline (prototypes/tables/zone_outline_v2.lua), its cuts, and the next zone and class
+  out_land2 = NOISE .. "destroyed_outline_land_v2",
+  out_sea2 = NOISE .. "destroyed_outline_sea_v2",
+  out_inside2 = NOISE .. "destroyed_outline_inside_v2",
+  out_sd2 = NOISE .. "destroyed_outline_sd_v2",
+  out_present2 = NOISE .. "destroyed_outline_present_v2",
+  out_depth2 = NOISE .. "destroyed_outline_depth_v2",
+  out_nordic = NOISE .. "destroyed_outline_nordic_v1",
+  out_iberia = NOISE .. "destroyed_outline_iberia_v1",
+  zone3 = NOISE .. "destroyed_zone_v3",
+  heat3 = NOISE .. "destroyed_heat_v3",
+  class3 = NOISE .. "destroyed_class_v3",
+  gap = NOISE .. "destroyed_gap_v1",
   temperature = NOISE .. "temperature_ab_v2",
   pool_europe = NOISE .. "city_pool_europe_v1",
   pool_atlantic = NOISE .. "city_pool_atlantic_v1",
@@ -1242,6 +1266,9 @@ return {
   preset_keys = {"elevation", "starting_resources_lake_mask", K_LAND_COARSE, K_MAP, K_SCALE, K_GEO,
                  -- the barrier's re-points (destroyed.barrier): a preset with the zone on names their next versions
                  DE.heat, DE.chaos_class, DE.clear,
+                 -- 0.3.0: the barrier's zone and the outline's presence and depth, which presets point at their next
+                 -- versions (destroyed.barrier.next, destroyed.outline.next)
+                 DE.zone2, DE.out_present, DE.out_depth,
                  REN.HS_IRON, REN.HS_COPPER, REN.HS_COAL, REN.HS_STONE, REN.HS_URANIUM, REN.HS_OIL, REN.ORE_GAP,
                  REN.ENEMY_LAYER,
                  -- 0.3.0: the trees' hook gate off hotspot ore (resources.ore_trees), and its shares, which presets
@@ -1250,6 +1277,8 @@ return {
                  "water_level", "segmentation_multiplier", "nauvis_segmentation_multiplier",
                  "distance", EU_CITY, K_SPAWN_LAKE, K_SPAWN_BIAS, K_ON, K_FORDS, K_CANALS,
                  "temperature", "moisture", "aux", CT.MARSH_MUD, CT.MARSH_SHALLOW, CT.MARSH_GRASS,
+                 -- 0.3.0: the spread's frequency sliders at the biome size (climate.size)
+                 "control:moisture:frequency", "control:aux:frequency",
                  CT.VT_GRASS_1, CT.VT_GRASS_2, CT.VT_GRASS_3, CT.VT_GRASS_4, CT.VT_DRY_DIRT, CT.VT_DIRT_1,
                  CT.VT_DIRT_2, CT.VT_DIRT_3,
                  CT.VT_DIRT_4, CT.VT_DIRT_5, CT.VT_DIRT_6, CT.VT_DIRT_7, CT.VT_SAND_1, CT.VT_SAND_2, CT.VT_SAND_3,
@@ -1388,6 +1417,7 @@ return {
       release = "0.3.0",
       names = {CT.CL_N_D2, CT.CL_N_DROP2, CT.CL_N_LEAD2, CT.CL_N_BELT2, CT.CL_N_CLEAR, CT.CL_N_CLEAR_W, CT.CL_T_AB_N2,
                CT.CL_T_AB_G3,
+               CT.CL_T_AB_GV3, CT.CL_GRAIN3, CT.CL_M_AB_G3, CT.CL_M_AB_N2, CT.CL_A_AB_G3, CT.FROZEN_BODY2, CT.CL_RAGGED,
                TFN.PALM_A_P4, TFN.PALM_B_P4, TFN.PALM_ALLOW2, TFN.PALM_MED, TFN.PALM_SHORE, DE.palm_a2, DE.palm_b2,
                TFN.PALM_B_P5, DE.dead2, TFN.ZP_KEY, TFN.NB_KEY, TFN.NB_OPEN, TFN.NB_TILE, TFN.NB_OUT,
                TF_ROCKS["big-sand-rock"].cold, TF_ROCKS["big-sand-rock"].cold_high, TF_ROCKS["medium-sand-rock"].cold,
@@ -1399,6 +1429,14 @@ return {
     {
       release = "0.3.0",
       names = {CT.MARSH_FRAY, CT.MARSH_MUD_BODY2},
+    },
+    -- The Chaos zone's next outline, zone and class (0.3.0; destroyed.outline.next, destroyed.barrier.next). They exist
+    -- with Alien Biomes only, as the barrier's bodies do; a preset with the zone on names them over the released ones.
+    {
+      release = "0.3.0",
+      names = {DE.out_land2, DE.out_sea2, DE.out_inside2, DE.out_sd2, DE.out_present2, DE.out_depth2, DE.out_nordic,
+               DE.out_iberia, DE.zone3, DE.heat3, DE.class3, DE.gap},
+      files = {"prototypes/tables/zone_outline_v2.lua"},
     },
     -- The second hotspot table's bodies: under files its table, which releases the row names regions.lua composes
     -- from it, as the region table does. No geography: a preset names them over the first table's (rule 15).
@@ -2108,9 +2146,22 @@ return {
     -- cool ranges match. The grain's noise is 6 to 48 tiles at every scale, and past fit_scale a field's slope per tile
     -- falls, so its fray would widen with the scale: the fray takes min(1, fit_scale / scale) and keeps its width in
     -- tiles.
+    -- The grey rim (0.3.0: the grey round every range was far too wide, and Italy's Apennines and southern
+    -- Scandinavia read grey): inside the snow the cap falls as before (top_t at field 0, snow_t at snow_at, so 0 at the
+    -- snow edge, field snow_at * top_t / (top_t - snow_t)), but outside it the cap reaches top_t only band times the
+    -- ragged factor (climate.ragged) short of that edge and stops binding past it, so the grey ground (Alien Biomes'
+    -- T 0 to 30) is a rim of band in field units on average, breaking where the factor is 0 and up to its max times
+    -- wider, instead of the whole reach. band_min keeps the division finite. The tile moisture is held in grey dirt's
+    -- band only where the cap is under top_t, fully from grey_t, and in proportion to the factor under grey_w, so the
+    -- snow's frayed edge meets the ground beside it where the rim breaks (and inside the snow the cap falls up to steep
+    -- times faster there, so that fray thins too); under -snow_deep (deep snow) always
+    -- (climate.lua). A piece's snow line rises dry_rise_m times the dry weight at the piece (climate.dry_belts): the
+    -- Atlas and the Zagros, short of a desert line, had snow islands in a grey sea.
     cold = {fit_scale = 6, fit_power = 0.15, snow_m = 5200, snow_lat = 25, snow_per_degree = 105, snow_min_m = 1200,
             grey_m = 1300, grey_top = 0.3, grey_reach = 0.7, snow_at = 0.66, top_t = 30, snow_t = -8, floor_t = -24,
             fray_warp = 0.012, fray_marsh = 0.12, fray_rough = 0.03, massif = 0.045, high_at = 0.6, off = 1000,
+            cap_grain = 0.35, start_fall = 2.2, band = 0.08, band_min = 0.002, grey_t = 20, dry_rise_m = 1500,
+            grey_w = 0.3, snow_deep = 3, steep = 5},
     rocks = {gain = 1, gain_ab = 0.4, clear_tiles = 36, fade_tiles = 24, short_px = 40,
              clear_kinds = {pass = true},
              ab_prefixes = {"huge-rock-", "big-rock-", "sand-big-rock-"},
@@ -2122,6 +2173,9 @@ return {
       cold = {field = RDN.RD_COLD_F, gated = RDN.RD_COLD_GATED, reach = RDN.RD_COLD_REACH, high = RDN.RD_COLD_HIGH,
               cap = RDN.RD_COLD_CAP,
               map = {europe = RDN.EU_COLD, atlantic = RDN.AT_COLD, olde_world = RDN.OW_COLD}},
+      -- 0.3.0 (the cold north's second line reads these): the dry pieces' risen snow line and the ragged rim's cap
+      cold2 = {field = RDN.RD_COLD_F2, gated = RDN.RD_COLD_GATED2, high = RDN.RD_COLD_HIGH2, cap = RDN.RD_COLD_CAP2,
+               map = {europe = RDN.EU_COLD2, atlantic = RDN.AT_COLD2, olde_world = RDN.OW_COLD2}},
       rock_density = RDN.RD_ROCK_DENSITY,
       cliffiness = RDN.RD_CLIFFINESS,
       clear = RDN.RD_CLEAR,
@@ -2617,9 +2671,22 @@ return {
     --          one width, and no noise value clears the penalty at core 0. Every class edge takes the grain, and
     --          sand against dirt is a cut off zero as well: noise is 0 on its lattice, so a contour at or near 0 ran
     --          20 to 30 tiles dead straight, along an axis or a diagonal
+    -- next (0.3.0): a preset with the zone on names the next zone, heat and class over the
+    -- released ones, and every reader follows by name.
+    --   zone   the next outline's depth (destroyed.outline.next), cut by the edge noise as before and frayed at tile
+    --          level (next.fray). The reach reads it as it is, so the wasteland's edge frays as before
+    --   heat, class   read it shifted by the gap, the depth plus clamp(mid + amp * gap noise, low, top), and the heat
+    --          stops at the reach. The barrier between the wasteland's edge and the heat ground, and the heart past it,
+    --          narrow to nothing where the shift is high and run wider where it is low, along the edge: no band of one
+    --          width (no perfect bands). A shift keeps every noise that frays the barrier's inner edge whole, where a
+    --          stretch of the depth shrank them and the edge followed the outline's smooth contour. The class
+    --          takes heat ground from next.ground_at, so heat 1 to 3 cover most of the zone past the barrier, and a
+    --          rock palette of black ash, black sand and red dirt alone: no grey dirt and no red sand
     barrier = {
       names = {zone = DE.zone2, heat = DE.heat2, class = DE.class2, edge = DE.edge, blob = DE.blob, flow = DE.flow,
                lava = DE.lava, kind = DE.kind2, macro = DE.macro2, reach = DE.reach, open = DE.open, thin = DE.thin,
+               dead = DE.dead, dead_noise = DE.dead_noise, dead2 = DE.dead2, zone3 = DE.zone3, heat3 = DE.heat3,
+               class3 = DE.class3, gap = DE.gap},
       fray_px = 24, feather_in = 20, feather_px = 20, feather_kind = 25, feather_grain = 14, lift_px = 40,
       barrier_px = 68, barrier_mac = 20, ramp_px = 30, penalty = 3,
       lava_at = 0.75, ground_at = 0.06, ground_fine = 0.12, ground_grain = 0.18, t_at = 135, gain = 12, gain_hot = 25,
@@ -2632,6 +2699,16 @@ return {
       -- pools, and what rock stays there is black and grey, rarely red.
       heart_px = 110, heart_mac = 20, heart_ramp = 60, heart_gain = 0.6, heart_black = 0.9,
       grey_at = 0.45, grey_out = 0.6, grey_mac = 1, grey_kind = 0.35, grey_grain = 0.3, t_grain = 4,
+      next = {ground_at = -0.35,
+              -- gap: a shift in reference pixels, clamp(mid + amp * noise, low, top); at top the heat ground starts at
+              -- the wasteland's frayed edge (the barrier breaks), at low the barrier runs low pixels wider
+              gap = {wavelength_px = 36, octaves = 3, persistence = 0.55, seed1 = 7908, mid = 40, amp = 110,
+                     low = -40, top = 140},
+              -- The zone's depth frays in reference pixels (px: size and wavelength) and in tiles (tiles, at most cap
+              -- reference pixels): where the edge noise saturates, the heat ground in a gap would start on the
+              -- outline's own smooth contour, a long straight run at scale 12.
+              fray = {px = {size = 4, wavelength = 3, octaves = 3, persistence = 0.6, seed1 = 7916},
+                      tiles = {size = 6, cap = 1.5, wavelength = 9, octaves = 2, persistence = 0.5, seed1 = 7910}}},
       -- The spawn sits inside the zone now: the first tiles stay below heat 3, which slows a player on foot, and the
       -- cap lifts with distance so no ring shows. It only ever lowers the heat, so the start is cooler, never cleared.
       -- Volcanic rock stands ten times as thick as ordinary rock, so inside the zone it and the dead trees thin out to
@@ -2657,6 +2734,9 @@ return {
               -- A Great forest in the zone is a dead forest (dead2, which a new world's preset names in dead's place):
               -- with the forests on, the dead trees rise to forest.peak times the forest weight times gain, clamped to
               -- 1, in clumps of the same noise from floor up, and thin near the spawn as the rest do.
+              -- peak and floor 0.25 and 0.15 (less dense than at first): about 0.08 trees a tile at the
+              -- forests' middle, two and a half times the plain zone's
+              forest = {peak = 0.25, gain = 2, floor = 0.15}},
     },
     -- The outline a world made after the first release reads (prototypes/tables/zone_outline.lua). The barrier stands
     -- between the zone and ordinary land, so its depth counts land edges alone and the zone runs to the shore on every
@@ -2666,6 +2746,19 @@ return {
       names = {land = DE.out_land, sea = DE.out_sea, inside = DE.out_inside, sd = DE.out_sd, isles = DE.out_isles,
                present = DE.out_present, depth = DE.out_depth},
       squeeze = 6,
+      -- 0.3.0's next outline (prototypes/tables/zone_outline_v2.lua): the same bodies under their next names, the
+      -- released isles line, and the cuts by id. A sea cut reads cut_px inside and -cut_px outside.
+      next = {land = DE.out_land2, sea = DE.out_sea2, inside = DE.out_inside2, sd = DE.out_sd2, isles = DE.out_isles,
+              present = DE.out_present2, depth = DE.out_depth2,
+              cuts = {nordic = DE.out_nordic, iberia = DE.out_iberia}},
+      cut_px = 1000,
+      -- A land cut's edge in the presence frays at tile level by about size tiles (at most cap reference pixels): the
+      -- shared roughness alone is a smooth curve there, which the tile grid turns into straight runs.
+      cut_fray = {size = 6, cap = 1.5, wavelength = 9, octaves = 2, persistence = 0.5, seed1 = 7909},
+      -- The next outline's own contour in the presence, where the feather lets the wasteland reach it: px in reference
+      -- pixels (size and wavelength), tiles in tiles, at most cap reference pixels.
+      edge_fray = {px = {size = 4, wavelength = 3, octaves = 3, persistence = 0.6, seed1 = 7914},
+                   tiles = {size = 6, cap = 1.5, wavelength = 9, octaves = 2, persistence = 0.5, seed1 = 7915}},
     },
     -- What a zone keeps out (prototypes/zone_exclusion.lua). Data, so another zone can state its own: a tree or plant
     -- that can stand on `tiles` goes where `open` is 0, unless `plants` keeps it; `key` holds 0 on its prototype and
@@ -2706,6 +2799,11 @@ return {
     map_colors = {families = {"orange", "green", "blue", "purple"},
                   bands = {{r = 52, g = 38, b = 38}, {r = 86, g = 36, b = 32}, {r = 168, g = 40, b = 22},
                            {r = 226, g = 62, b = 24}}},
+    -- A range in the zone (climate.lua, the cold north's second grain temperature): the highland's cap pulled the
+    -- zone's lift under Alien Biomes' volcanic band, so the Alps north of Italy drew as brown and beige wasteland.
+    -- Inside the lift the temperature stays at least this (heat 1, cracked basalt), so a range in the zone is Chaos
+    -- ground.
+    range_heat = 106,
     switch_threshold = 0.5,
   },
 
@@ -3236,6 +3334,23 @@ return {
     tile_belts = {
       {id = "hot", lat = {-36, 36}, lon = {-180, 180}, ramp = {4, 1}, a = -0.16},
       {id = "sahara_arabia", lat = {15, 35.5}, lon = {-20, 62}, ramp = {3, 4}, a = -0.03},
+      -- maghreb (0.3.0): the Tell coast from Morocco to Tunisia is Mediterranean ground, which the Atlas's grey covered
+      -- until its snow line rose in the dry belt (ridges.cold.dry_rise_m); without it the Sahara ran to the sea.
+      {id = "maghreb", since = "0.3.0", lat = {33, 37.4}, lon = {-10, 11.5}, ramp = {1.2, 2}, m = 0.3},
+      -- namib (0.3.0: the true deserts read as desert): the coast from Namibe to the Orange is the driest
+      -- ground in Africa, but the southern Africa dry belt fades out toward its sea edge; this takes the grass off it.
+      {id = "namib", since = "0.3.0", lat = {-29, -16}, lon = {11, 16.5}, ramp = {1.5, 1.5}, m = -0.35},
+      -- The sanity pass (0.3.0: nothing out of place): the dry belts' boxes reach rainforest and humid ground,
+      -- where the spread's lows drew desert or tan dry dirt: the Pacific coast from San Francisco to Puget Sound,
+      -- Chile's Valdivian south, Japan and Korea north of the japan belt, and Madagascar's rainforest east.
+      {id = "pacific_nw", since = "0.3.0", lat = {37.5, 50}, lon = {-126, -121.2}, ramp = {2, 1.2}, m = 0.35},
+      {id = "valdivia", since = "0.3.0", lat = {-56, -37.5}, lon = {-76.5, -72}, ramp = {2, 1.2}, m = 0.4},
+      {id = "east_asia_wet", since = "0.3.0", lat = {30, 46}, lon = {124, 146}, ramp = {2, 2}, m = 0.18},
+      {id = "madagascar_east", since = "0.3.0", lat = {-25.5, -12}, lon = {47.4, 51}, ramp = {1, 1}, m = 0.3},
+      -- The Sahara belt's meander reaches 38 N and more, so Greece, Crete and Sicily read as Saharan sand (Sicily was
+      -- spared only while Etna's cap held it temperate): the Mediterranean's northern shores take the moisture of a dry
+      -- scrub, dirt and grass, not dunes.
+      {id = "mediterranean", since = "0.3.0", lat = {33.5, 41.5}, lon = {-10, 36}, ramp = {1.5, 3}, m = 0.4},
       {id = "sahel", lat = {9, 18}, lon = {-18, 42}, ramp = {3, 4}, m = 0.5},
       {id = "congo", lat = {-12, 8}, lon = {6, 34}, ramp = {2, 3}, tv = -40, m = 0.2},
       {id = "guinea", lat = {3, 10}, lon = {-15, 10}, ramp = {2, 3}, tv = -40, m = 0.2},
@@ -3273,6 +3388,34 @@ return {
       {id = "australia", lat = {-31, -18}, lon = {118, 142}, ramp = {3, 4}, a = 0.2},
     },
     tile_belts_wander = {lat = 1.5, lon = 2},
+    -- The biome size (0.3.0: larger biomes, so that each climate reads as one region): every new world's preset
+    -- sets the spread's
+    -- frequency controls, which climate.lua multiplies into each noise's input scale, to 1 / factor, so each
+    -- wavelength above is factor times longer: the Moisture and Terrain type scale sliders (the properties under
+    -- keys) and, beside Alien Biomes, its hot and cold frequency (the controls under ab_controls), which the
+    -- temperature spread averages. No body changes: a world made before keeps its own values.
+    size = {factor = 1.5, keys = {"control:moisture:frequency", "control:aux:frequency"},
+            ab_controls = {"hot", "cold"}},
+    -- The desert edge (0.3.0: the dry belts read as a lot of wasteland and not a lot of desert): the dry dirt
+    -- between a
+    -- desert's sand and the grass round it ran about 600 tiles wide at scale 12 along the Sahel, an even brown ribbon.
+    -- Where the dry weight passes dry_from (fully dry_from + 1 / dry_gain on: the belts' outer ramps, Sicily and
+    -- Andalusia, keep their scrub of dirt and grass), the 0.3.0 tile moisture is pulled away from mid, the middle of
+    -- Alien Biomes' dirt band (0.4 to 0.6), by min(max, gain / max(floor, ragged factor)), so the dirt narrows by about
+    -- gain, breaks where the factor is 0 and widens where it is high; the wet side rises no further than top, into the
+    -- grass.
+    -- bottom: the dry side falls no further than this, inside the sand's box, where sand still outscores Alien Biomes'
+    -- water-mud (at moisture 0 the sand's fit is 0 and water-mud specks covered 3 percent of the Sahara).
+    desert_edge = {dry_from = 0.2, dry_gain = 6, gain = 3.5, max = 30, floor = 0.05, mid = 0.5, top = 0.66,
+                   bottom = 0.1},
+    -- The ragged factor (0.3.0: no perfect bands): the width of the grey rim at a range's snow
+    -- (ridges.cold.band), of the cold north's lead (north2) and of the desert edge's dirt (desert_edge) times
+    -- clamp(mean + amplitude * noise, 0, max), one named noise of octaves from wavelength_tiles up (about 0.7 sd; in
+    -- tiles, so the outline is ragged at player zoom at every scale), so a band varies along its length, is missing
+    -- where the factor is 0 (about a fifth of it) and runs up to max times its mean width elsewhere (rarely: a factor
+    -- held at a low max sat flat over wide patches and drew a band of one width there).
+    ragged = {name = CT.CL_RAGGED, wavelength_tiles = 12, octaves = 6, persistence = 0.7, seed1 = 7621, mean = 1,
+              amplitude = 1.6, max = 3},
     -- The lifts: tile_belts' boxes for what shipped after the first release, whose own table is an input of
     -- registered bodies. A lift adds to the moisture both a tree and a tile reads, under the natural top.
     -- russian_plain (Moscow read as a weak start): the spread's dry lows sat in Alien
@@ -3290,6 +3433,10 @@ return {
     -- A longer shake is no cure: at 32 tiles it draws its own contours as worms of forest.
     lifts = {
       {id = "russian_plain", lat = {49, 62}, lon = {24, 60}, ramp = {3, 5}, m = 0.22, bare = 0.22},
+      -- nordic (0.3.0: southern Norway, Sweden and Finland should read green and lush): south of the
+      -- snow line the ground is Alien Biomes' cold T 0 to 30, where the spread's lows below moisture 0.6 are its grey
+      -- dirt and sand; lifted, those lows reach the cold grasses and the grey keeps to the deepest of them.
+      {id = "nordic", since = "0.3.0", lat = {54, 65}, lon = {0, 33}, ramp = {2, 4}, m = 0.3},
       {id = "boreal", lat = {50, 74}, lon = {22, 180}, ramp = {4, 8}, j = 0.04},
       -- central_europe (the four start cities by eye): the spread's lows drew flat tan dirt across a third of
       -- Frankfurt's window and grey patches round Prague, in land that reads green; a smaller lift keeps
@@ -3341,6 +3488,11 @@ return {
     north2 = {
       front = {{-180, 58}, {-170, 61}, {-150, 62}, {-130, 61}, {-110, 58}, {-95, 55.5}, {-80, 53}, {-65, 52}, {-55, 51},
       meander = 1, south_per_degree = 8,
+      -- The lead (0.3.0: the grey band south of the line covered southern Scandinavia, the Baltic,
+      -- Russia at 55 to 60 N, Siberia and Canada): the ground whose temperature is under lead_t times the ragged factor
+      -- (climate.ragged), over lead_t_ramp, a rim on the snow's edge that breaks and widens along it, instead of
+      -- north's even 5 degrees south of the line and everything north of it.
+      lead_t = 4, lead_t_ramp = 1, ragged = true,
       clear = {inner_tiles = 96, outer_tiles = 224, t = 8, warp = 0.3, wave_tiles = 40, octaves = 3, persistence = 0.5,
                seed1 = 7609, m = 0.48, m_span = 4, m_fray = 3.2},
       names = {d = CT.CL_N_D2, drop = CT.CL_N_DROP2, lead = CT.CL_N_LEAD2, belt = CT.CL_N_BELT2,

@@ -799,6 +799,11 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
         variant = cl["points"]["ab" if ab else "fallback"]
         for prop in ("temperature", "moisture", "aux"):
             pen[prop] = variant[prop]
+        # 0.3.0: the spread's frequency sliders at the biome size (presets.lua climate_names)
+        size = cl.get("size")
+        if size:
+            for k in size["keys"]:
+                pen[k] = 1 / size["factor"]
         # the palm keys with AB loaded or not
         for c in tl["palm"]["copies"]:
             pen[c["key"]] = c["body"]

@@ -116,6 +116,10 @@ local function climate_names()
     [TL.marsh.water_mud.key] = TL.marsh.water_mud.body2,
     [TL.marsh.water_shallow.key] = TL.marsh.water_shallow.body,
   }
+  -- the biome size (config.lua climate.size): the spread's frequency sliders at 1 / factor
+  for _, key in ipairs(cfg.climate.size.keys) do
+    out[key] = 1 / cfg.climate.size.factor
+  end
   -- The palm keys with Alien Biomes loaded or not: a world made without it that gains it later
   -- places its palms from the copies too, never from the fine field.
   for _, c in ipairs(TL.palm.copies) do
@@ -218,6 +222,13 @@ local function destroyed_values(map_key, v, names)
   -- The barrier (config.lua destroyed.barrier): a new world with the zone on names the next heat and class in place
   -- of the released ones, which every reader keeps reading by name. A world made before never holds these keys.
   if AB and names[sw.preset_key] == sw.on then
+    -- 0.3.0: the next heat and class, and the next zone and outline over the released ones (destroyed.barrier.next,
+    -- destroyed.outline.next), which reach and the rest read by name
+    out[D.names.heat] = D.barrier.names.heat3
+    out[D.chaos.names.class] = D.barrier.names.class3
+    out[D.barrier.names.zone] = D.barrier.names.zone3
+    out[D.outline.names.present] = D.outline.next.present
+    out[D.outline.names.depth] = D.outline.next.depth
     -- Great forests in the zone stand as dead forests: the dead trees' copies read the first body by name.
     out[D.barrier.names.dead] = D.barrier.names.dead2
     -- The exclusion (config.lua destroyed.exclusion): a palm's key names the masked body, the rest read the key.
@@ -268,6 +279,12 @@ local function controls()
   for _, name in ipairs(cfg.resources.controls) do
     if data.raw["autoplace-control"] and data.raw["autoplace-control"][name] then
       out[name] = {frequency = cfg.resources.preset_frequency, size = 1, richness = 1}
+    end
+  end
+  -- the biome size: Alien Biomes' hot and cold frequency, which its temperature spread averages (climate.size)
+  for _, name in ipairs(cfg.climate.size.ab_controls) do
+    if AB and data.raw["autoplace-control"] and data.raw["autoplace-control"][name] then
+      out[name] = {frequency = 1 / cfg.climate.size.factor, size = 1, richness = 1}
     end
   end
   return out

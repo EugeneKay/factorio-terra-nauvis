@@ -222,10 +222,13 @@ end
   B[f] = S .. " * " .. num(c) .. " + " .. table.concat(terms, " + ")
   -- the piece's mean cosine, and its one reach for the Entity program: halfway between its mean vertex and its
   -- highest
+  local rows, cols = 0, 0
   for _, v in ipairs(list) do
     rows = rows + (piece.axis == "x" and v[2] or v[1])
+    cols = cols + (piece.axis == "x" and v[1] or v[2])
   end
   H[#H + 1] = {p = p, q = q, f = f, mid = mid, span = span, cos = 2 * span / arc, arc = arc, top = top,
+               row = rows / #list, col = cols / #list,
                reach_text = S .. " * " .. num(c2) .. " + " .. table.concat(W, " + ")}
   return "(abs(" .. q .. " - " .. f .. ") < " .. num(half) .. ") * (abs(" .. p .. " - " .. S .. " * " .. num(mid) ..
     ") < " .. S .. " * " .. num(span) .. " + " .. num(RD.ore_clear_tiles) .. ")"
@@ -354,8 +357,31 @@ end
   -- The cold field (config.lua ridges.cold): one field per piece, on the pieces the rocks read, so the rocks' reach
   -- covers every cold tile and the palm mask can stand on it.
   local CO, m = RD.cold, cfg.maps[key]
+  -- The second version (0.3.0) raises a piece's snow line by dry_rise_m times the largest dry belt weight at its mean
+  -- vertex, as climate.lua's dry weight reads the belts.
+  local function cold_terms(rise)
+    local out = {}
+    for k, h in ipairs(Bd.pieces) do
+        local plat = m.lat_top_edge - (h.row + 1 / 2) / PPD
+        local lat = math.abs(plat)
+        local line = math.max(CO.snow_min_m, CO.snow_m - CO.snow_per_degree * math.max(0, lat - CO.snow_lat))
+        if rise then
+          local plon = m.lon_left_edge + (h.col + 1 / 2) / PPD
+          local dry = 0
+          for _, b in ipairs(cfg.climate.dry_belts) do
+            local wl = math.max(0, math.min(1, math.min(plat - b.lat[1], b.lat[2] - plat) / b.ramp[1]))
+            local wo = math.max(0, math.min(1, math.min(plon - b.lon[1], b.lon[2] - plon) / b.ramp[2]))
+            dry = math.max(dry, wl * wo)
+          end
+          line = line + CO.dry_rise_m * dry
+        end
+        if h.top >= line - CO.grey_m then
+          local s = tostring(k)
+          local snowy = h.top >= line
+        end
       end
     end
+    return out
   end
   local P, ds = {}, {}
   for i, c in ipairs(O.named) do
@@ -768,8 +794,10 @@ def(N.ground, num(RD.ground.lean) .. " * " .. N.high_tile)
 -- The cold field and its temperature cap (config.lua ridges.cold): the map's field folded on the per-save map number,
 -- with the region layer's outline.
 local CO = RD.cold
+local function cold_fold(NC)
   local text
   for _, key in ipairs(cfg.map_order) do
+    local body = NC.map[key]
     if body then
       text = text and ("if(" .. K.map .. " == " .. num(cfg.maps[key].id) .. ", " .. body .. ", " .. text .. ")") or body
     end
@@ -777,6 +805,24 @@ local CO = RD.cold
   return text
 end
 def(N.cold.reach, S .. " * max(1, (" .. num(CO.fit_scale) .. " / " .. S .. ") ^ " .. num(CO.fit_power) .. ")")
+for _, NC in ipairs({N.cold, N.cold2}) do
+  def(NC.field, cold_fold(NC) .. " + " .. cfg.regions.names.highland_cold)
+  def(NC.high, "if(" .. on .. ", clamp(" .. NC.field .. " / " .. num(CO.high_at) .. ", 0, 1) * " .. N.gate .. ", 0)")
+  -- The start disc takes the field down from inside, so the outline's noise acts on its edge: an offset on the cap drew
+  -- a razor arc round the spawn, which at scale 1 cuts through a range.
+  def(NC.gated, NC.field .. " - " .. num(CO.start_fall) .. " * (1 - " .. N.gate .. ")")
+end
+def(N.cold.cap, "if(" .. on .. ", max(" .. num(CO.floor_t) .. ", " .. num(CO.top_t) .. " - " ..
+  num((CO.top_t - CO.snow_t) / CO.snow_at) .. " * " .. N.cold.gated .. "), " .. num(CO.off) .. ")")
+-- The second cap (0.3.0): inside the snow edge (field fs) it falls as the first, up to steep times faster where the
+-- ragged factor is under grey_w, so the snow's frayed edge thins where the rim breaks; outside, it rises to top_t
+-- across the grey rim, band times the factor in field units, and on past it, where it no longer binds (ridges.cold).
+local FS = CO.snow_at * CO.top_t / (CO.top_t - CO.snow_t)
+local RAG = cfg.climate.ragged.name
+def(N.cold2.cap, "if(" .. on .. ", max(" .. num(CO.floor_t) .. ", (" .. num(FS) .. " - g) * if(g > " .. num(FS) ..
+  ", " .. num((CO.top_t - CO.snow_t) / CO.snow_at) .. " * (1 + " .. num(CO.steep) .. " * (1 - min(1, " .. RAG ..
+  " / " .. num(CO.grey_w) .. "))), " .. num(CO.top_t) .. " / max(" .. num(CO.band_min) .. ", " .. num(CO.band) ..
+  " * " .. RAG .. "))), " .. num(CO.off) .. ")", {g = N.cold2.gated})
 def(K.ground, num(0))
 -- The grain's bodies read the tile reach, and a save from before the highlands names those bodies but not this
 -- key: its prototype leaves such a save no rise, so its ground stays.

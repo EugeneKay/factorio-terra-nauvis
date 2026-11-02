@@ -1164,6 +1164,7 @@ end
 -- distance read as the reference map has it past ref_scale, and a solid hotspot ore lifted to the regular ore's
 -- richness round it. Up to ref_scale the regular branch folds to the first wrapper's text.
 local RV = RS.richness_v2
+local ORE_CURVES = require("prototypes.ore_curves")
   local S = cfg.keys.scale
   local function f(d)
     return "max((" .. num(RV.rich_offset) .. " + " .. d .. ") / " .. num(RV.rich_span) .. ", 1)"
@@ -1180,9 +1181,20 @@ local RV = RS.richness_v2
   local own = ramped and ("live_value * " .. RS.ramp.name) or "live_value"
   local base = "if(" .. far .. ", live_value * " .. f("rv_d") .. " / " .. f("distance") ..
     (ramped and (" * " .. ramp("rv_d")) or "") .. ", " .. own .. ")"
+  if RV.vanilla then
+  end
   local hot = hs.r
+  local V3 = cfg.hotspots_v2.v3
+    -- the third table (hotspots_v2.v3): per_tile times vanilla's mean regular ore per tile here, times the body's
+    -- height (held to peak_cap of a body_tiles cone's mean, where bodies crowd) over that mean, times the richness
+    -- slider
+    local h = HROW[o.resource]
+  elseif not FLUID[o.resource] then
     hot = hs.r .. " * max(1, " .. num(RV.lift) .. " * " .. F("rv_d") .. " / (" .. F("distance") .. ") ^ " ..
       num(RV.cube_root) .. ")"
+  end
+  if string.find(base .. " " .. hot, "rv_d", 1, true) then
+    w.local_expressions.rv_d = "if(" .. far .. ", distance * " .. num(RV.ref_scale) .. " / " .. S .. ", distance)"
   end
   w.local_expressions.rv_base = base
   W[#W + 1] = w
@@ -1214,6 +1226,8 @@ end
   -- the cone's least slope, the first table's bound (config.lua hotspots.size note)
   local rq = HROW[o.resource].rq
   local slope = cfg.hotspots.spot.cone_factor / (math.pi * rq * rq * rq)
+  local v3 = cfg.hotspots_v2.v3
+  local value = "clamp(" .. body .. " - " .. num(edge_trim * slope) .. " * " ..
                value .. " * " .. clear .. " * " .. keep .. "), " .. o.p_v1 .. ")"}
 end
 
@@ -1261,7 +1275,9 @@ local function enemy_wrapper(W, keys)
     local SC = cfg.enemies.scatter
     local solid = {}
     for _, resource in ipairs(RS.ramped) do
+      solid[#solid + 1] = H2.v3.bodies[resource]
     end
+    solid[#solid + 1] = H2.v3.bodies["uranium-ore"]
     local function draw(x, y, seed)
       return "random_penalty{x = " .. x .. ", y = " .. y .. ", source = 1, amplitude = 1, seed = " .. num(seed) .. "}"
     end
@@ -1318,6 +1334,10 @@ local function natural_patches(W, keys)
     if type(text) == "string" and string.find(text, NP.vanilla_fn, 1, true) then
       W[#W + 1] = {type = "noise-expression", name = b.name, expression = (string.gsub(text, NP.vanilla_fn, NP.fn))}
       keys[b.live] = b.name
+      -- 0.3.0: vanilla's function with the footprint gap (resources.natural.fn2); a world made earlier keeps b.name
+      if b.name2 then
+        keys[b.live] = b.name2
+      end
     end
   end
 end

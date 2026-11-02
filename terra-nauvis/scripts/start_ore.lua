@@ -166,6 +166,8 @@ function M.ensure(surface)
     if prototypes.entity[ore.resource] and (c.size or 1) > 0 then
       local target = ore.reference * (c.richness or 1)
       local have = reached_amount(surface, reach, ore.resource)
+      if have < (ore.trigger or C.trigger) * target then
+        local amount = floor(ore.top_up and (ore.top_up * target - have) or C.fill * target)
         local r = max(C.min_radius, floor(C.outline.grow * sqrt(amount / ore.density / pi) + HALF))
         local cx, cy
         while true do

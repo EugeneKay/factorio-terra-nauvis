@@ -56,6 +56,9 @@
 --
 -- From resources-enemies each preset also bakes the hotspots toggle and, for a version with an
 -- offshore stamp, its map's stamp key (the stamp body with hotspots on, the neutral zero body off;
+-- also a Map type fallback, since the version's entry reads it), and sets the six base resources'
+-- frequency (0.75 before 0.3.0, 1 from 0.3.0); data-final-fixes.lua points the ore, richness, enemy and
+-- offshore-oil keys at its wrappers.
 --
 -- From edge-and-lakes each preset also bakes the inland lakes toggle (default off; toggle_values), which
 -- a version with a lakes field reads its inland lakes through, and the toggle's key is that version's
@@ -257,12 +260,14 @@ local function grain_values(map_key)
 end
 
   if AB and names[sw.preset_key] == sw.on then
+-- The six base resources at preset_frequency in the preset (from 0.3.0 vanilla's 1, before it 0.75), planet entries
 -- left neutral (the game multiplies planet values by preset values, so a planet entry would scale the
 -- preset's). A control another mod removed is left out.
 local function controls()
   local out = {}
   for _, name in ipairs(cfg.resources.controls) do
     if data.raw["autoplace-control"] and data.raw["autoplace-control"][name] then
+      out[name] = {frequency = cfg.resources.preset_frequency, size = 1, richness = 1}
     end
   end
   return out

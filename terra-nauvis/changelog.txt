@@ -13,6 +13,10 @@ Date: 2026-11-01
       straight line.
     - Biter bases on new worlds stand scattered instead of in even rows, with about 60 percent of
       the spawners. Nests keep off hotspot ore.
+    - Ordinary ore patches on new worlds are vanilla's own again, in size, shape and richness for
+      their distance from the spawn, and keep out of ore hotspots. Presets set the ore sliders to 1.
+    - An ore hotspot on new worlds holds three to six times a large ordinary patch at its distance,
+    - A start with less than nine tenths of vanilla's average coal gets topped up to that average.
     - Trees thin out on hotspot ore, and hotspot field outlines wander. Batu Hijau's copper keeps
       off Lombok.
     - With Exact coastlines, coasts at scales 1 and 2 on new Old World and Atlantic worlds follow a

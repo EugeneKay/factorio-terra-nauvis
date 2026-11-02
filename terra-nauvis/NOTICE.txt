@@ -5,6 +5,10 @@ Copyright (C) 2026 Jake Mismas
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU
 General Public License version 3 as published by the Free Software Foundation. It comes with no
+warranty. See LICENSE beside this file. This covers the whole mod, with two limits: data derived
+from the sources under "Third-party data" also stays under its source's licence, and the items
+under "Not covered by the GPL" are not offered under it. SOURCE-OFFER.txt says how to get the
+complete source.
 
 Modified work
 -------------
@@ -27,6 +31,9 @@ OpenStreetMap: the Suez, Kiel and Corinth canal routes and two points at the Str
 data (c) OpenStreetMap contributors, available under the Open Database License
 (https://www.openstreetmap.org/copyright). Changed: simplified and snapped to the map grid.
 
+Wikipedia: place coordinates, lengths, heights, areas, water depths and some deposit figures were
+read from Wikipedia articles. The source cites them by URL or by name in
+data-src/hotspots/deposits-research.md and .json, data-src/approvals/approvals-data.json and
 
 Ore hotspots: places and sizes are facts, cited per row in the source's data-src/hotspots/deposits-research.md. Its
 country tables quote the USGS Mineral Commodity Summaries 2026 data release, a United States government

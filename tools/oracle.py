@@ -530,6 +530,7 @@ def cmd_plan(a):
 # "brief" so the climate tools never write their own answers. Every other expectation of an added
 # row stays null until its layer ships.
 
+BRIEF = "project requirement D9"
 BRIEF_QUOTE = ("North Africa is hot and desert by default; Russia, Norway, Sweden and Finland are cold; "
                "the coldest biomes are far north")
 # Brief-sourced climate places: band names the climate layer maps to Earth temperature:

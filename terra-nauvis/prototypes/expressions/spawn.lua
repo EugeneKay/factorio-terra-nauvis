@@ -107,9 +107,16 @@ local function noise(seed1, wavelength, cx, cy)
 end
 
 -- One axis of a lake's domain warp (as the rivers' natural course has): amplitude times
+-- one basis noise per octave row of config.lua, so a lake's shore wanders off the circle its distance draws. A row
+-- with max_scale moves the shore only up to that scale.
 local function warp(octaves, axis, cx, cy)
   local parts = {}
   for i, o in ipairs(octaves) do
+    local amp = num(o.amplitude)
+    if o.max_scale then
+      amp = "if(" .. K.scale .. " <= " .. num(o.max_scale) .. ", " .. amp .. ", 0)"
+    end
+    parts[i] = amp .. " * " .. noise(o["seed1" .. axis], o.wavelength, cx, cy)
   end
   return table.concat(parts, " + ")
 end
@@ -187,6 +194,15 @@ end
   end)
 
   -- The spawn lake: centre `distance` tiles out on the bearing; water where d + n is under
+  -- offset * divisor. A geography in config.lua's lake_next, else in its lake_shape, takes that table's noise and
+  -- warp rows in place of lake's; the other versions keep lake's rows, so released bodies keep their text.
+  local LS, shaped = nil, false
+  for _, rows in ipairs({S.lake_next or {}, S.lake_shape or {}}) do
+    for _, id in ipairs(rows.geographies or {}) do
+      if not shaped and id == v.geo_id then
+        LS, shaped = rows, true
+      end
+    end
   end
   local lake_n = num(L.noise.amplitude) .. " * " .. noise(L.noise.seed1, L.noise.wavelength)
   local lake_wx, lake_wy = "x + " .. warp(L.warp, "x"), "y + " .. warp(L.warp, "y")

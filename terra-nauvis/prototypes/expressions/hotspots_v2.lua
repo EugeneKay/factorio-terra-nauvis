@@ -289,6 +289,40 @@ end
 
 
 for _, h in ipairs(HC.resources) do
+-- Trees off the table's solid ore (config.lua resources.ore_trees): the hook key's off value, and the share of a
+-- tree's probability left near the ore, 1 with hotspots off.
+local OT = RS.ore_trees
+local solid = {}
+for _, resource in ipairs(RS.ramped) do
+  solid[#solid + 1] = H2.bodies[resource]
+end
+solid[#solid + 1] = H2.bodies["uranium-ore"]
+def(OT.key, "0")
+local function open(name, margin, floor)
+  def(name, "if(" .. K.hotspots .. " > " .. num(cfg.ridges.switch_threshold) .. ", clamp(-max(" ..
+    table.concat(solid, ", ") .. ") / " .. num(margin) .. ", " .. num(floor) .. ", 1), 1)")
+end
+open(OT.open, OT.margin, OT.floor)
+open(OT.plants.open, OT.plants.margin, OT.plants.floor)
+
+-- The shares' next versions: each solid body less the wobble its ore's probability takes, in its cone's least slope
+-- (data-final-fixes.lua probability_v3), so the shares follow the ore that stands.
+  end
+end
+  def(name, "if(" .. K.hotspots .. " > " .. num(cfg.ridges.switch_threshold) .. ", clamp(-max(" ..
+end
+open_v2(OT.open_v2, OT.margin, OT.floor)
+open_v2(OT.plants.open_v2, OT.plants.margin, OT.plants.floor)
+
+-- The wobble that moves a solid hotspot ore's outline inward (config.lua resources.richness_v2.edge).
+local ED = RS.richness_v2.edge
+local function wave(wavelength, seed1)
+  return "basis_noise{x = x, y = y, seed0 = map_seed, seed1 = " .. num(seed1) .. ", input_scale = 1 / " ..
+    num(wavelength) .. "}"
+end
+def(ED.wobble, "clamp(" .. num(ED.mid) .. " + " .. num(ED.amp) .. " * (" .. wave(ED.long, ED.seed1) .. " + " ..
+  num(ED.half) .. " * " .. wave(ED.short, ED.seed1 + 1) .. "), 0, 1)")
+
 -- Regular ore keeps out of every footprint of the table, as the first gap body does for the first table's.
 local NP = RS.natural
   end

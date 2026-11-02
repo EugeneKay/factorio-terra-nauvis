@@ -110,6 +110,7 @@ local function climate_names()
     temperature = variant.temperature,
     moisture = variant.moisture,
     aux = variant.aux,
+    [TL.marsh.water_mud.key] = TL.marsh.water_mud.body2,
     [TL.marsh.water_shallow.key] = TL.marsh.water_shallow.body,
   }
   -- The palm keys with Alien Biomes loaded or not: a world made without it that gains it later
@@ -143,12 +144,16 @@ local function tree_names()
       out[n.r] = R.richness
     end
     for _, n in pairs(R.rocks) do
+      out[n.key] = n.body
     end
     for _, key in pairs(R.decoratives) do
       out[key] = R.deco_body
     end
     for _, p in ipairs(TR.palm) do
+      out[p.key] = p.next3 or p.next2
     end
+    out[cfg.blue.no_blue.key] = cfg.neutral.one
+    out[cfg.blue.plants2.key] = cfg.neutral.one
   end
   return out
 end
@@ -171,6 +176,7 @@ local function ridge_values(map_key)
   local out = {[K.cliff_elevation] = RP.cliff_elevation, [K.cliffiness] = RN.cliffiness, [K.crest] = crest,
   for name, n in pairs(cfg.trees.restore.rocks) do
     if n.high then
+      out[AB and n.key or ("entity:" .. name .. ":probability")] = n.high
     end
   end
   if AB then
@@ -209,9 +215,12 @@ local function destroyed_values(map_key, v, names)
   -- The barrier (config.lua destroyed.barrier): a new world with the zone on names the next heat and class in place
   -- of the released ones, which every reader keeps reading by name. A world made before never holds these keys.
   if AB and names[sw.preset_key] == sw.on then
+    -- Great forests in the zone stand as dead forests: the dead trees' copies read the first body by name.
+    out[D.barrier.names.dead] = D.barrier.names.dead2
     -- The exclusion (config.lua destroyed.exclusion): a palm's key names the masked body, the rest read the key.
     out[D.exclusion.key] = cfg.neutral.one
     for _, p in ipairs(D.exclusion.palms) do
+      out[p.key] = p.next.body
     end
   end
   return out

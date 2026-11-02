@@ -175,6 +175,7 @@ if AB then
   def(X.key, "0")
   for _, p in ipairs(X.palms) do
     def(p.body, p.inner .. " * " .. BN.open)
+    def(p.next.body, p.next.inner .. " * " .. BN.open)
   end
   local G2 = B.dead
   def(BN.dead_noise, "multioctave_noise{x = x, y = y, seed0 = map_seed, seed1 = " .. num(G2.seed1) .. ", octaves = " ..
@@ -183,7 +184,13 @@ if AB then
   def(BN.dead, "if(" .. BN.reach .. " > 0, if(" .. BN.lava .. " < " .. num(B.lava_at) .. ", " .. num(G2.peak) ..
     " * " .. BN.thin .. " * clamp((" .. BN.dead_noise .. " - " .. num(G2.cut) .. ") / " .. num(G2.span) ..
     ", 0, 1), 0), 0)")
+  -- The dead Great forests (config.lua destroyed.barrier.dead.forest), behind the great-forests gate.
+  local GF, TB = G2.forest, cfg.trees.boost
+  def(BN.dead2, "if(" .. BN.reach .. " > 0, if(" .. BN.lava .. " < " .. num(B.lava_at) .. ", max(" .. num(G2.peak) ..
     " * " .. BN.thin .. " * clamp((" .. BN.dead_noise .. " - " .. num(G2.cut) .. ") / " .. num(G2.span) ..
+    ", 0, 1), if(" .. TB.gate .. " > " .. num(cfg.hooks.threshold) .. ", " .. num(GF.peak) .. " * " .. BN.thin ..
+    " * clamp(" .. num(GF.gain) .. " * " .. cfg.regions.names.forest_w .. ", 0, 1) * clamp(" .. num(GF.floor) ..
+    " + " .. BN.dead_noise .. ", 0, 1), 0)), 0), 0)")
 end
 
 data:extend(E)

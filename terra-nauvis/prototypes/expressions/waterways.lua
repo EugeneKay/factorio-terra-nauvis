@@ -19,6 +19,7 @@ local cfg = require("prototypes.config")
 -- policy", rule 11). Each list runs in the order of the scale list of the record that names it.
 local FILES = {
   europe = {
+    {
       require("prototypes.generated.waterways_europe_s1_v1"),
       require("prototypes.generated.waterways_europe_s2_v1"),
       require("prototypes.generated.waterways_europe_s3_v1"),
@@ -88,6 +89,63 @@ end
 -- canals and dams read XP and YP, each octave at its passage share, so a passage keeps the places the
 -- oracle tests. The warp fades out around the spawn, so a river stays where the river-safe starts measured
 -- it. W is the rivers' low-frequency width modulation, B the fine bank noise of rivers and passages, which
+-- only ever widens, so no floor moves (the river set of a geography low_bank lists takes low_bank's rows up to
+-- its max_scale), J the rough edge of a ford, which would read as a bar across its river without it. T, the
+-- rivers' source taper (a generated set of the sources), reads X and Y. Every local reads constants and x, y alone.
+-- Whether geography version g is in a fine row's list, at a scale the row serves (min_scale, max_scale, above).
+local function fine_row(row, g, scale, above)
+  if not row then
+    return false
+  end
+  local listed = false
+  for _, id in ipairs(row.geographies) do
+    listed = listed or id == g.geo_id
+  end
+  return listed and scale >= (row.min_scale or scale) and scale > (above or 0) and scale <= (row.max_scale or scale)
+end
+
+-- The fine meander (config.lua natural.warp_fine): rivers only, octaves fixed in tiles, so a bank bends between the
+-- coarse octaves' bends. Named on as the warp rows' locals, so the warp bodies carry them.
+  local WF = N.warp_fine
+  if not fine_row(WF, g, scale) then
+    return
+  end
+  for i, o in ipairs(WF.octaves) do
+    local k = #N.warp + i
+    local nx, ny = "wx" .. k, "wy" .. k
+    locals[nx] = noise(o.seed1x, {o.wavelength_tiles, 0})
+    locals[ny] = noise(o.seed1y, {o.wavelength_tiles, 0})
+  end
+end
+
+-- The fine bank (config.lua natural.bank_fine): octaves fixed in tiles that only widen B. A scale the row does not
+-- serve, and a version not listed, keep the bank as it was.
+  local BF = N.bank_fine
+    return ""
+  end
+  local out = ""
+  for _, o in ipairs(BF.octaves) do
+    out = out .. " + " .. num(o.amplitude_tiles) .. " * (" .. half .. " + " .. half .. " * clamp(" ..
+      noise(o.seed1, {o.wavelength_tiles, 0}) .. ", -1, 1))"
+  end
+  return out
+end
+
+-- The rough ford end past ford_edge.hold_above (config.lua natural.ford_fine): a ford's ends cross rivers 24 to 48
+-- tiles wide there, and J alone left them near-straight lines across the water.
+local function fine_ford(N, g, scale, noise)
+  local FF = N.ford_fine
+  if not fine_row(FF, g, scale, N.ford_edge.hold_above) then
+    return ""
+  end
+  local out = ""
+  for _, o in ipairs(FF.octaves) do
+    out = out .. " + " .. num(o.amplitude_tiles) .. " * " .. noise(o.seed1, {o.wavelength_tiles, 0})
+  end
+  return out
+end
+
+local function natural_locals(g, mouth, scale, kind)
   local N = cfg.waterways.natural
   local s = cfg.keys.scale
   local function noise(seed1, wavelength)
@@ -118,6 +176,22 @@ end
   end
   locals.XP, locals.YP = warped(g.gx, px), warped(g.gy, py)
   locals.W = "1 + " .. num(N.width.amplitude) .. " * clamp(" .. noise(N.width.seed1, N.width.wavelength) .. ", -1, 1)"
+  local bank = N.bank
+  local LB = N.low_bank
+  if LB and kind == "ww" and scale <= LB.max_scale then
+    for _, id in ipairs(LB.geographies) do
+      if id == g.geo_id then
+        bank = LB
+      end
+    end
+  end
+  local half = num(bank.half)
+  local bn = noise(bank.seed1, bank.wavelength)
+  if bank.gain then
+    bn = num(bank.gain) .. " * " .. bn
+  end
+  locals.B = "(" .. num(bank.amplitude[1]) .. " + " .. num(bank.amplitude[2]) .. " * " .. s .. ") * (" .. half ..
+    " + " .. half .. " * clamp(" .. bn .. ", -1, 1))"
   local FE = N.ford_edge
   if scale > FE.hold_above then
     local h = FE.hold_above
@@ -170,6 +244,7 @@ local function emit_sets(key, g, rec)
       end
       local function set(kind, expression, functions)
         local name = sets[kind][pos]
+        local locals = natural_locals(g, (kind == "ww" or kind == "fords") and mouth, s, kind)
         if warp then
           for part, body in pairs(warp) do
             kept[part] = body

@@ -8,6 +8,7 @@ full history, so the runner holds origin/main) and fails closed when it cannot r
 returns a list of failure messages (empty means pass) and a short detail line.
 
 Rows: lint, info_json, locale, dashes, registration, storage, names, design_rules, workflow_scan,
+data_src, frozen_static, append_only, fallbacks, zip, plus fixture positive
 controls for the scans (each rule must fail its own fixture; fixtures are written at run time into
 a temporary directory outside the scanned trees and never committed). No row scans tools/ or
 tests/ for game launches,
@@ -166,6 +167,10 @@ def lint_manifest(lint_dir=LINT):
 # ------------------------------------------------------------------------------------------------ lint
 
 def find_luacheck(manifest):
+    """The linter binary: TN_LUACHECK, then PATH, then a local copy in a <name>-<version> folder (as
+    fetch_linter.py --dest writes one) under FACTORIO_WS or under any folder that holds the checkout.
+    run_luacheck refuses a binary whose sha256 is not the manifest's, so a copy found this way still has
+    to be the recorded release."""
     cands = []
     env = os.environ.get("TN_LUACHECK")
     if env:
@@ -174,6 +179,10 @@ def find_luacheck(manifest):
         w = shutil.which(name)
         if w:
             cands.append(Path(w))
+    want = manifest["linter"]
+    rel = Path("downloads") / f"{want['name']}-{want['version']}" / Path(want["source"]).name
+    roots = ([Path(os.environ["FACTORIO_WS"])] if os.environ.get("FACTORIO_WS") else []) + list(REPO.parents)
+    cands += [r / rel for r in roots]
     for c in cands:
         if c.is_file():
             return c
@@ -3410,6 +3419,12 @@ def next_version(cfg, map_key=None):
     if ww:
         v["waterways"] = ww_new
         out["waterways"]["sets"][key] = ww_new
+    # its mouth and warp bodies read the chain as well (tnconfig.waterway_names)
+    extra_new = set()
+    for field in ("mouths", "warp"):
+        if last.get(field):
+            v[field] = [bump(n) for n in last[field]]
+            extra_new |= set(v[field])
     # a shore body (climate-tiles) reads the version's fit, detail and box, so it is the version's own too
     shore_new = {bump(last["shore"])} if last.get("shore") else set()
     if shore_new:
@@ -3417,6 +3432,8 @@ def next_version(cfg, map_key=None):
     vs.append(v)
     out["release_registry"].append({"release": out["release_registry"][-1]["release"], "map": key, "geography": gid,
                                     "names": sorted(set(new.values()) | {mask["name"]} | set(spawn_new.values()) |
+                                                    {n for names in ww_new.values() for n in names} | shore_new |
+                                                    extra_new),
                                     "files": []})
     out["preset_keys"] = list(out["preset_keys"]) + [new["cx"], new["cy"]]
     out["firewall"][key] = list(out["firewall"][key]) + [n for n in tnconfig.fine_names(v)
@@ -4851,6 +4868,7 @@ def extras_fixtures(td, cfg):
 ROWS = [
     ("lint", row_lint), ("info_json", row_info), ("locale", row_locale), ("dashes", row_dashes),
     ("registration", row_registration), ("storage", row_storage), ("names", row_names),
+    ("design_rules", row_design), ("workflow_scan", row_workflow),
     ("data_src", row_data_src), ("frozen_static", row_frozen), ("bodies", row_bodies), ("append_only", row_append_only),
     ("fallbacks", row_fallbacks), ("zip", row_zip), ("regions", row_regions), ("ranges", row_ranges), ("hotspots", row_hotspots),
     ("release_zip", row_release_zip), ("tools_scan", row_tools_scan),

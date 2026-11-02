@@ -11,3 +11,7 @@ either way change nothing a player can see.
 `tools/build_ranges.py` checks one value per vertex and that no vertex tops its range's `highest_elevation_m` by
 more than 1 m, copies them into `prototypes/tables/ranges.lua`, and records this file's sha256 in the table's
 header.
+
+## ranges-v2.json (0.3.0, the second ranges table)
+
+

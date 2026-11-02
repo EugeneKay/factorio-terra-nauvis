@@ -52,8 +52,22 @@
 --            plain fields
 local cfg = require("prototypes.config")
 local T = require("prototypes.tables.ranges")
+-- the second table (0.3.0): ranges the released table lacks, read only by the next bodies (the union below)
+local T2R = require("prototypes.tables.ranges_v2")
 
 local RD = cfg.ridges
+-- both tables' ranges, the first table's first: the union bodies read them in this order
+local function union_ranges()
+  local all, second = {}, {}
+  for _, tab in ipairs({T.ranges, T2R.ranges}) do
+    for _, r in ipairs(tab) do
+      all[#all + 1] = r
+      second[r] = tab == T2R.ranges or nil
+    end
+  end
+  return all, second
+end
+local UR, second = union_ranges()
 local N = RD.names
 local K = cfg.keys
 local SW = cfg.toggles.ridges
@@ -176,6 +190,7 @@ local function reach_px(height)
 end
 
 -- One band term (and its locals) for a piece; P and Q name the scaled axis and cross coordinates.
+local function band_term(pts, run, piece, k, B, H, heights, opts)
   local vs, tops = {}, {}
   for j = piece.first, piece.last do
     if j == piece.first then
@@ -229,6 +244,7 @@ end
   end
   H[#H + 1] = {p = p, q = q, f = f, mid = mid, span = span, cos = 2 * span / arc, arc = arc, top = top,
                row = rows / #list, col = cols / #list,
+               reach = reach_px((sum / #list + top) / 2), opts = opts,
                reach_text = S .. " * " .. num(c2) .. " + " .. table.concat(W, " + ")}
   return "(abs(" .. q .. " - " .. f .. ") < " .. num(half) .. ") * (abs(" .. p .. " - " .. S .. " * " .. num(mid) ..
     ") < " .. S .. " * " .. num(span) .. " + " .. num(RD.ore_clear_tiles) .. ")"
@@ -294,10 +310,12 @@ end
 
 -- The crest band of one range on a map: its kept segments in runs of consecutive ones, each cut
 -- into monotone pieces.
+local function add_band(Bd, pts, segs, heights, opts)
   local run = {}
   local function flush()
     if #run > 0 then
       for _, piece in ipairs(band_pieces(pts, run)) do
+        Bd.terms[#Bd.terms + 1] = band_term(pts, run, piece, #Bd.terms + 1, Bd.L, Bd.pieces, heights, opts)
       end
     end
     run = {}
@@ -323,6 +341,7 @@ end
 -- own pieces through the same locals, so in the Entity program the crest functions and the distance along
 -- each piece cost nothing more: per piece the band is the largest reach less the wandering distance across
 -- it, cut off past the piece's ends. Only the passes' squared distances cost per pass.
+local function highland(key, Bd, O, NM)
   local HG = RD.high
   local L = {wu = N.wander_u[key] .. " * " .. S .. " + " .. num(RD.centre_tiles),
              wv = N.wander_v[key] .. " * " .. S .. " + " .. num(RD.centre_tiles)}
@@ -359,9 +378,22 @@ end
   local CO, m = RD.cold, cfg.maps[key]
   -- The second version (0.3.0) raises a piece's snow line by dry_rise_m times the largest dry belt weight at its mean
   -- vertex, as climate.lua's dry weight reads the belts.
+  -- The union's second-table pieces (ridges.union.cold): only a piece whose top clears its snow line counts (a grey
+  -- verdict is a flat plateau that slow noise lifts into snow, with straight edges and wide grey), and outside the
+  -- snow edge its field falls k = reach / ref_px times faster, so its rim is as narrow as a ref_px piece's; past its
+  -- ends the distance is the distance across plus taper times the distance past the end, so the snow ends in a V;
+  -- the edge rows (tiles) and fray times
+  -- the ragged factor (12 to 384 tiles) frays the snow edge, which a long straight crest and the slow region noise
+  -- left smooth for hundreds of tiles. Their terms go in C2 as locals. A row with cold = false (the Ethiopian
+  -- Highlands: no snow in Africa) adds none.
+  local UC = cfg.ridges.union.cold
+  local FS2 = CO.snow_at * CO.top_t / (CO.top_t - CO.snow_t)
+  local C2 = {}
   local function cold_terms(rise)
     local out = {}
     for k, h in ipairs(Bd.pieces) do
+      local o = h.opts or {}
+      if h.arc >= RD.rocks.short_px and not o.nocold then
         local plat = m.lat_top_edge - (h.row + 1 / 2) / PPD
         local lat = math.abs(plat)
         local line = math.max(CO.snow_min_m, CO.snow_m - CO.snow_per_degree * math.max(0, lat - CO.snow_lat))
@@ -378,10 +410,34 @@ end
         if h.top >= line - CO.grey_m then
           local s = tostring(k)
           local snowy = h.top >= line
+          local dist = "sqrt(a" .. s .. " * a" .. s .. " + e" .. s .. " * e" .. s .. ")"
+          if o.second then
+            -- a second-table piece ends in a V past its ends: a round or pointed cap of a reach several hundred tiles
+            -- across meets the view at right angles to the crest, a straight edge at player zoom; a V's sides are
+            -- diagonals
+            dist = "(a" .. s .. " + " .. num(UC.taper) .. " * e" .. s .. ")"
+          end
+          local term = "1 - " .. dist .. " / (" .. num(h.reach * (snowy and 1 or CO.grey_reach)) .. " * " ..
+            N.cold.reach .. ")"
+          if not o.second then
+            out[#out + 1] = snowy and term or ("min(" .. num(CO.grey_top) .. ", " .. term .. ")")
+          elseif snowy then
+            C2["c" .. s] = term .. " + fr"
+            out[#out + 1] = "min(c" .. s .. ", " .. num(FS2) .. " + " .. num(math.max(1, h.reach / UC.ref_px)) ..
+              " * (c" .. s .. " - " .. num(FS2) .. "))"
+          end
         end
       end
     end
     return out
+  end
+  if NM.cold then
+    def(NM.cold, joined("max", cold_terms(false), "-inf"), T2)
+  end
+  if NM.cold2 then
+    local cterms = cold_terms(true)
+    end
+    def(NM.cold2, joined("max", cterms, "-inf"), L2)
   end
   local P, ds = {}, {}
   for i, c in ipairs(O.named) do
@@ -393,12 +449,18 @@ end
   local R = RD.rocks
   local inner, outer = R.clear_tiles ^ 2, (R.clear_tiles + R.fade_tiles) ^ 2
   if #ds == 0 then
+    def(NM.passes, "1")
   else
+    def(NM.passes, "clamp((" .. joined("min", ds, "inf") .. ") * " .. scale2 .. " / " .. num(outer - inner) ..
       " - " .. num(inner / (outer - inner)) .. ", 0, 1)", P)
   end
 end
 
   local centre = " + " .. num(RD.centre_tiles)
+  local O2 = {u = N.wander_u[key], v = N.wander_v[key], fixed_u = g.u, fixed_v = g.v, L = {}, terms = {}, keeps = {},
+              named = {}}
+  local Bd2 = {L = {bu = g.u .. " * " .. S .. centre, bv = g.v .. " * " .. S .. centre}, terms = {}, pieces = {}}
+  for _, r in ipairs(UR) do
     local segs = r.segments[key]
     if segs then
       local pts, wide = {}, {}
@@ -413,8 +475,19 @@ end
           banded[#banded + 1] = i
         end
       end
+      add_band(Bd2, pts, banded, r.heights, second[r] and {second = true, nocold = r.cold == false} or nil)
       for _, o in ipairs(r.openings) do
         if on_map(o.maps, key) then
+          add_opening(O2, m, pts, o, wide)
+        end
+      end
+    end
+  end
+  local UN = cfg.ridges.union.names
+  highland(key, Bd2, O2, {high = UN.high_map[key], high_tile = UN.high_tile_map[key], cold2 = N.cold2.map[key],
+                          passes = UN.passes[key]})
+end
+
 local function map_bodies(key)
   -- the chain every map-wide layer reads (config.lua layer_chain_geo): a later geography version keeps
   -- its frame, so these registered bodies never move with one

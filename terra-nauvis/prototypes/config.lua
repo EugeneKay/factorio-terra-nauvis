@@ -186,6 +186,19 @@ local CT = {
   TM2_11 = NOISE .. "tile_mix_11_v2",
   TM2_12 = NOISE .. "tile_mix_12_v2",
   TM_FRAY = NOISE .. "tile_mix_fray_v1",
+  TM3_1 = NOISE .. "tile_mix_1_v3",
+  TM3_2 = NOISE .. "tile_mix_2_v3",
+  TM3_3 = NOISE .. "tile_mix_3_v3",
+  TM3_4 = NOISE .. "tile_mix_4_v3",
+  TM3_5 = NOISE .. "tile_mix_5_v3",
+  TM3_6 = NOISE .. "tile_mix_6_v3",
+  TM3_7 = NOISE .. "tile_mix_7_v3",
+  TM3_8 = NOISE .. "tile_mix_8_v3",
+  TM3_9 = NOISE .. "tile_mix_9_v3",
+  TM3_10 = NOISE .. "tile_mix_10_v3",
+  TM3_11 = NOISE .. "tile_mix_11_v3",
+  TM3_12 = NOISE .. "tile_mix_12_v3",
+  TM_FRAY2 = NOISE .. "tile_mix_fray_v2",
   K_TILE_T = NOISE .. "tile_temperature",
   K_TILE_TV = NOISE .. "tile_temperature_veg",
   K_TILE_M = NOISE .. "tile_moisture",
@@ -434,6 +447,37 @@ local RDN = {
   EU_PASSES2 = NOISE .. "passes_europe_v2",
   AT_PASSES2 = NOISE .. "passes_atlantic_v2",
   OW_PASSES2 = NOISE .. "passes_olde_world_v2",
+  -- 0.3.0, second round: the union's line field, keep, run and crest band (both tables take cliffs)
+  EU_CREST3 = NOISE .. "crest_europe_v3",
+  AT_CREST3 = NOISE .. "crest_atlantic_v3",
+  OW_CREST3 = NOISE .. "crest_olde_world_v3",
+  EU_OPENINGS3 = NOISE .. "openings_europe_v3",
+  AT_OPENINGS3 = NOISE .. "openings_atlantic_v3",
+  OW_OPENINGS3 = NOISE .. "openings_olde_world_v3",
+  EU_LINE_DEPTH2 = NOISE .. "line_depth_europe_v2",
+  AT_LINE_DEPTH2 = NOISE .. "line_depth_atlantic_v2",
+  OW_LINE_DEPTH2 = NOISE .. "line_depth_olde_world_v2",
+  EU_LINE_SIDE2 = NOISE .. "line_side_europe_v2",
+  AT_LINE_SIDE2 = NOISE .. "line_side_atlantic_v2",
+  OW_LINE_SIDE2 = NOISE .. "line_side_olde_world_v2",
+  EU_LINE_NEAR2 = NOISE .. "line_near_europe_v2",
+  AT_LINE_NEAR2 = NOISE .. "line_near_atlantic_v2",
+  OW_LINE_NEAR2 = NOISE .. "line_near_olde_world_v2",
+  EU_LINE_REACH2 = NOISE .. "line_reach_europe_v2",
+  AT_LINE_REACH2 = NOISE .. "line_reach_atlantic_v2",
+  OW_LINE_REACH2 = NOISE .. "line_reach_olde_world_v2",
+  EU_LINE_ALONG2 = NOISE .. "line_along_europe_v2",
+  AT_LINE_ALONG2 = NOISE .. "line_along_atlantic_v2",
+  OW_LINE_ALONG2 = NOISE .. "line_along_olde_world_v2",
+  EU_KEEP2 = NOISE .. "ridge_keep_europe_v2",
+  AT_KEEP2 = NOISE .. "ridge_keep_atlantic_v2",
+  OW_KEEP2 = NOISE .. "ridge_keep_olde_world_v2",
+  EU_RUN2 = NOISE .. "ridge_run_europe_v2",
+  AT_RUN2 = NOISE .. "ridge_run_atlantic_v2",
+  OW_RUN2 = NOISE .. "ridge_run_olde_world_v2",
+  EU_BAND2 = NOISE .. "band_europe_v2",
+  AT_BAND2 = NOISE .. "band_atlantic_v2",
+  OW_BAND2 = NOISE .. "band_olde_world_v2",
 }
 
 -- Resources and enemies (ARCHITECTURE.md, "Expression inventory").
@@ -602,6 +646,8 @@ local OAS = {
   OW_CITY_CX = NOISE .. "city_cx_olde_world_v1",
   OW_CITY_CY = NOISE .. "city_cy_olde_world_v1",
   OW7_GEO_FILE = "prototypes/generated/geo_olde_world_v2.lua",
+  -- The lean fit (data-src/fits/olde_world PROVENANCE, stage lean): the coast fit past scale 6 (coast.split).
+  OW8_LEAN_FILE = "prototypes/generated/geo_olde_world_v3.lua",
   OW7_SPAWN_FILE = "prototypes/generated/spawn_olde_world_v2.lua",
   OW7_WW_FILES = {"prototypes/generated/waterways_olde_world_s1_v2.lua",
                    "prototypes/generated/waterways_olde_world_s2_v2.lua",
@@ -624,6 +670,9 @@ local OAS = {
   -- 0.3.0: Old World's and Atlantic's version 8, the composition of version 7 under names of their own.
   OW8_ENTRY = NOISE .. "elevation_olde_world_v8",
   OW8_GEO = NOISE .. "geo_olde_world_v8",
+  -- The two fits OW8_GEO picks between by the folded scale (coast.geo_split).
+  OW8_GEO_FINE = NOISE .. "geo_fine_olde_world_v1",
+  OW8_GEO_LEAN = NOISE .. "geo_lean_olde_world_v1",
   OW8_LAND_COARSE = NOISE .. "land_coarse_olde_world_v8",
   OW8_DETAIL = NOISE .. "detail_olde_world_v8",
   OW8_FAR = NOISE .. "far_olde_world_v8",
@@ -1512,6 +1561,8 @@ return {
                CT.CL_T_AB_GV3, CT.CL_GRAIN3, CT.CL_M_AB_G3, CT.CL_M_AB_N2, CT.CL_A_AB_G3, CT.FROZEN_BODY2, CT.CL_RAGGED,
                CT.CL_BELT_M2, CT.CL_BELT_EDGE2, CT.CL_LIFT_M2, RDN.RD_COLD_F2, RDN.RD_COLD_GATED2, RDN.RD_COLD_HIGH2,
                RDN.RD_COLD_CAP2,
+               RDN.EU_COLD2, RDN.AT_COLD2, RDN.OW_COLD2, CT.TM_FRAY2, CT.TM3_1, CT.TM3_2, CT.TM3_3, CT.TM3_4, CT.TM3_5,
+               CT.TM3_6, CT.TM3_7, CT.TM3_8, CT.TM3_9, CT.TM3_10, CT.TM3_11, CT.TM3_12,
                TFN.PALM_A_P4, TFN.PALM_B_P4, TFN.PALM_ALLOW2, TFN.PALM_MED, TFN.PALM_SHORE, DE.palm_a2, DE.palm_b2,
                TFN.PALM_B_P5, DE.dead2, TFN.ZP_KEY, TFN.NB_KEY, TFN.NB_OPEN, TFN.NB_TILE, TFN.NB_OUT,
                TF_ROCKS["big-sand-rock"].cold, TF_ROCKS["big-sand-rock"].cold_high, TF_ROCKS["medium-sand-rock"].cold,
@@ -1638,6 +1689,13 @@ return {
     {
       release = "0.3.0",
       names = {RDN.EU_HIGH2, RDN.AT_HIGH2, RDN.OW_HIGH2, RDN.EU_HIGH_TILE2, RDN.AT_HIGH_TILE2, RDN.OW_HIGH_TILE2,
+               RDN.EU_PASSES2, RDN.AT_PASSES2, RDN.OW_PASSES2,
+               RDN.EU_CREST3, RDN.AT_CREST3, RDN.OW_CREST3, RDN.EU_OPENINGS3, RDN.AT_OPENINGS3, RDN.OW_OPENINGS3,
+               RDN.EU_LINE_DEPTH2, RDN.AT_LINE_DEPTH2, RDN.OW_LINE_DEPTH2, RDN.EU_LINE_SIDE2, RDN.AT_LINE_SIDE2,
+               RDN.OW_LINE_SIDE2, RDN.EU_LINE_NEAR2, RDN.AT_LINE_NEAR2, RDN.OW_LINE_NEAR2, RDN.EU_LINE_REACH2,
+               RDN.AT_LINE_REACH2, RDN.OW_LINE_REACH2, RDN.EU_LINE_ALONG2, RDN.AT_LINE_ALONG2, RDN.OW_LINE_ALONG2,
+               RDN.EU_KEEP2, RDN.AT_KEEP2, RDN.OW_KEEP2, RDN.EU_RUN2, RDN.AT_RUN2, RDN.OW_RUN2, RDN.EU_BAND2,
+               RDN.AT_BAND2, RDN.OW_BAND2},
       files = {"prototypes/tables/ranges_v2.lua"},
     },
     -- The hotspot, ramp, sea and enemy bodies and the wrappers of the pack's live autoplace:
@@ -1695,6 +1753,8 @@ return {
       map = "olde_world",
       geography = 21,
       names = {
+               OAS.OW8_GX, OAS.OW8_GY, OAS.OW8_U, OAS.OW8_V, OAS.OW8_GEO, OAS.OW8_GEO_FINE, OAS.OW8_GEO_LEAN,
+               OAS.OW8_LAND_COARSE, OAS.OW8_DETAIL,
                OAS.OW8_FAR, OAS.OW8_ENTRY, OAS.OW8_CX, OAS.OW8_CY, OAS.OW8_LAKES, OAS.OW8_SHORE, OAS.OW8_SPAWN_LAKE,
                OAS.OW8_SPAWN_BIAS, OAS.OW_WW7[1], OAS.OW_WW7[2], OAS.OW_WW7[3], OAS.OW_WW7[4], OAS.OW_WW7[5],
                OAS.OW_WW7[6], OAS.OW_WW7[7], OAS.OW_WW7[8], OAS.OW_CANALS7[1], OAS.OW_CANALS7[2], OAS.OW_CANALS7[3],
@@ -1711,6 +1771,8 @@ return {
                OAS.OW_WARP2[24], OAS.OW_WARP2[25], OAS.OW_WARP2[26], OAS.OW_WARP2[27], OAS.OW_WARP2[28],
                OAS.OW_WARP2[29], OAS.OW_WARP2[30], OAS.OW_WARP2[31], OAS.OW_WARP2[32]},
       files = {
+               OAS.OW7_GEO_FILE, OAS.OW8_LEAN_FILE, OW_LAND_COARSE_FILE, OAS.OW7_SPAWN_FILE,
+               "prototypes/tables/hotspots.lua",
                OAS.OW7_WW_FILES[1], OAS.OW7_WW_FILES[2], OAS.OW7_WW_FILES[3], OAS.OW7_WW_FILES[4],
                OAS.OW7_WW_FILES[5], OAS.OW7_WW_FILES[6], OAS.OW7_WW_FILES[7], OAS.OW7_WW_FILES[8]},
     },
@@ -1720,6 +1782,7 @@ return {
       map = "atlantic",
       geography = 22,
       names = {
+               OAS.AT8_GX, OAS.AT8_GY, OAS.AT8_U, OAS.AT8_V, OAS.AT8_GEO, OAS.AT8_LAND_COARSE, OAS.AT8_DETAIL,
                OAS.AT8_FAR, OAS.AT8_ENTRY, OAS.AT8_CX, OAS.AT8_CY, OAS.AT8_LAKES, OAS.AT8_SHORE, OAS.AT8_SPAWN_LAKE,
                OAS.AT8_SPAWN_BIAS, OAS.AT_WW7[1], OAS.AT_WW7[2], OAS.AT_WW7[3], OAS.AT_WW7[4], OAS.AT_WW7[5],
                OAS.AT_WW7[6], OAS.AT_WW7[7], OAS.AT_WW7[8], OAS.AT_CANALS7[1], OAS.AT_CANALS7[2], OAS.AT_CANALS7[3],
@@ -1736,6 +1799,7 @@ return {
                OAS.AT_WARP2[24], OAS.AT_WARP2[25], OAS.AT_WARP2[26], OAS.AT_WARP2[27], OAS.AT_WARP2[28],
                OAS.AT_WARP2[29], OAS.AT_WARP2[30], OAS.AT_WARP2[31], OAS.AT_WARP2[32]},
       files = {
+               OAS.AT7_GEO_FILE, AT_LAND_COARSE_FILE, OAS.AT7_SPAWN_FILE, "prototypes/tables/hotspots.lua",
                OAS.AT7_WW_FILES[1], OAS.AT7_WW_FILES[2], OAS.AT7_WW_FILES[3], OAS.AT7_WW_FILES[4],
                OAS.AT7_WW_FILES[5], OAS.AT7_WW_FILES[6], OAS.AT7_WW_FILES[7], OAS.AT7_WW_FILES[8]},
     },
@@ -1816,6 +1880,13 @@ return {
   --     the ring tile is never the tile that holds a pixel centre, so the pixel-centre coast check is
   --     unchanged; at scales 1 and 2 it would be, and there the reference pixel keeps its class.
   coast = {
+    -- split: the geography versions listed (by geo_id) read their fine fit (the version's fits.geo) up to max_scale
+    -- and a lean fit, a refit of the same reference to a smaller Tile budget (data-src/fits PROVENANCE, stage lean),
+    -- past it, each under a name of its own; the version's geo body picks one by the folded scale. Scales up to
+    -- max_scale keep the fine fit, which the band fix's tables were built from.
+    split = {max_scale = 6, versions = {
+      [21] = {fine = OAS.OW8_GEO_FINE, lean = OAS.OW8_GEO_LEAN, lean_file = OAS.OW8_LEAN_FILE},
+    }},
     transfer_offset = 0.1,
     transfer_clamp_px = 16,
     detail_amplitude_px = 0.45,
@@ -2077,6 +2148,12 @@ return {
       -- (1,159 water specks of 1 to 4 tiles in a 3,072 tile window at Frankfurt, Old World 12). Only a version whose
       -- spawn record sets lake_floor reads it, so the bodies of earlier versions stay byte-identical.
       floor = 0.5,
+      -- The same versions warp with warp_floor and hold the fine shore noise at or above shore_min: at warp's
+      -- amplitudes the warp's slope passed 1 and folded cones into L shapes with straight
+      -- sides (Atlantic 12, 137,-212), and folds and the shore noise's dips cut 1 to 10 tile pools off the shores.
+      warp_floor = {{seed1x = 7209, seed1y = 7210, wavelength = 48, amplitude = 8},
+                    {seed1x = 7211, seed1y = 7212, wavelength = 16, amplitude = 1}},
+      shore_min = -0.5,
     },
   },
 
@@ -2216,13 +2293,47 @@ return {
     -- value here takes no tn_geo.
     preset = {
       cliff_elevation = RDN.RD_CLIFF_ELEVATION2,
+      -- 0.3.0: the union of both range tables (ridges.union): its chopped line field, crest band, highland
+      crest = {europe = RDN.EU_CREST3, atlantic = RDN.AT_CREST3, olde_world = RDN.OW_CREST3},
+      openings = {europe = RDN.EU_OPENINGS3, atlantic = RDN.AT_OPENINGS3, olde_world = RDN.OW_OPENINGS3},
+      band = {europe = RDN.EU_BAND2, atlantic = RDN.AT_BAND2, olde_world = RDN.OW_BAND2},
       high = {europe = RDN.EU_HIGH2, atlantic = RDN.AT_HIGH2, olde_world = RDN.OW_HIGH2},
       passes = {europe = RDN.EU_PASSES2, atlantic = RDN.AT_PASSES2, olde_world = RDN.OW_PASSES2},
       high_tile = {europe = RDN.EU_HIGH_TILE2, atlantic = RDN.AT_HIGH_TILE2, olde_world = RDN.OW_HIGH_TILE2},
     },
+    -- The union (0.3.0): ridges.lua's next line field, keep, run, crest band, highland,
+    -- tile reach and passes over both range tables, ranges.lua (released, 16 ranges) and ranges_v2.lua
+    -- (data-src/ridges/ranges-v2.json, the ranges it lacked), which a preset names (preset above); the cold field's
+    -- second version (names.cold2, 0.3.0) reads the union's pieces too. cold: a second-table piece enters the cold
+    -- field only when its top clears its snow line, and outside the snow edge its field falls reach / ref_px times
+    -- faster (ridges.lua highland), so its grey rim is as narrow as a ref_px piece's; past its ends its distance is
+    -- the distance across plus taper times the distance past the end, so the snow ends in a V with diagonal sides,
+    -- and fray times the ragged factor plus the edge rows (field units, wavelengths in tiles) fray its edge, which the
+    -- slow region noise left smooth for hundreds of tiles.
     union = {
       cold = {ref_px = 15, fray = 0.05, taper = 1,
+      -- field: the union's line field (ridges.lua line_bodies): each chop row is a gap where sin(2 pi / tiles * axis +
+      -- phase * slow noise + jitter) passes level, axis the map's x or y in tiles and jitter fast noise in tiles; the x
+      -- row cuts every east-west run and the y row every north-south one, so no cliff holds one row of the 4-tile
+      -- lattice for long (under 50 tiles at scales 12 and 24), and the jitter spaces the gaps unevenly.
+      -- line: its bodies.
+      field = {chop = {{axis = "x", tiles = 28, level = 0.75, phase = 3, run = 2,
+                        jitter = {seed1 = 7525, wavelength = 15, amplitude = 2.5}},
+                       {axis = "y", tiles = 28, level = 0.75, phase = 3, run = 1,
+                        jitter = {seed1 = 7526, wavelength = 15, amplitude = 2.5}}}},
+      line = {
+        crest = {europe = RDN.EU_CREST3, atlantic = RDN.AT_CREST3, olde_world = RDN.OW_CREST3},
+        openings = {europe = RDN.EU_OPENINGS3, atlantic = RDN.AT_OPENINGS3, olde_world = RDN.OW_OPENINGS3},
+        depth = {europe = RDN.EU_LINE_DEPTH2, atlantic = RDN.AT_LINE_DEPTH2, olde_world = RDN.OW_LINE_DEPTH2},
+        side = {europe = RDN.EU_LINE_SIDE2, atlantic = RDN.AT_LINE_SIDE2, olde_world = RDN.OW_LINE_SIDE2},
+        near = {europe = RDN.EU_LINE_NEAR2, atlantic = RDN.AT_LINE_NEAR2, olde_world = RDN.OW_LINE_NEAR2},
+        reach = {europe = RDN.EU_LINE_REACH2, atlantic = RDN.AT_LINE_REACH2, olde_world = RDN.OW_LINE_REACH2},
+        along = {europe = RDN.EU_LINE_ALONG2, atlantic = RDN.AT_LINE_ALONG2, olde_world = RDN.OW_LINE_ALONG2},
+      },
       names = {
+        keep = {europe = RDN.EU_KEEP2, atlantic = RDN.AT_KEEP2, olde_world = RDN.OW_KEEP2},
+        run = {europe = RDN.EU_RUN2, atlantic = RDN.AT_RUN2, olde_world = RDN.OW_RUN2},
+        band = {europe = RDN.EU_BAND2, atlantic = RDN.AT_BAND2, olde_world = RDN.OW_BAND2},
         high_map = {europe = RDN.EU_HIGH2, atlantic = RDN.AT_HIGH2, olde_world = RDN.OW_HIGH2},
         high_tile_map = {europe = RDN.EU_HIGH_TILE2, atlantic = RDN.AT_HIGH_TILE2, olde_world = RDN.OW_HIGH_TILE2},
         passes = {europe = RDN.EU_PASSES2, atlantic = RDN.AT_PASSES2, olde_world = RDN.OW_PASSES2},
@@ -2836,6 +2947,10 @@ return {
       heart_px = 110, heart_mac = 20, heart_ramp = 60, heart_gain = 0.6, heart_black = 0.9,
       grey_at = 0.45, grey_out = 0.6, grey_mac = 1, grey_kind = 0.35, grey_grain = 0.3, t_grain = 4,
       next = {ground_at = -0.35,
+              -- ground: the fine and grain shares of the heat ground's edge against the rock (0.3.0, to the bar
+              -- of no straight runs over about 6 tiles). At the released 0.12 and 0.18 the lava blob's 60-tile contour
+              -- drew that edge, a line running straight for 70 tiles east of the Rhine at scale 12.
+              ground = {fine = 0.35, grain = 0.45},
               -- gap: a shift in reference pixels, clamp(mid + amp * noise, low, top); at top the heat ground starts at
               -- the wasteland's frayed edge (the barrier breaks), at low the barrier runs low pixels wider
               gap = {wavelength_px = 36, octaves = 3, persistence = 0.55, seed1 = 7908, mid = 40, amp = 110,
@@ -2845,6 +2960,12 @@ return {
               -- outline's own smooth contour, a long straight run at scale 12.
               fray = {px = {size = 4, wavelength = 3, octaves = 3, persistence = 0.6, seed1 = 7916},
                       tiles = {size = 6, cap = 1.5, wavelength = 9, octaves = 2, persistence = 0.5, seed1 = 7910}}},
+      -- rock3: the next class's rock, which takes the light grey and the red sand out of the zone.
+      -- Black sand drew as flat light grey and red dirt as red sand. Where either stood, the tile is heat ground (the
+      -- cracked basalt) where core plus the macro, fine and grain shares passes heat_at and the
+      -- lift holds, else black ash: past the barrier most of it turns to basalt with ragged black ash left in it, and
+      -- in the barrier basalt patches break up the black ash, so no red field turns into one flat colour.
+      rock3 = {heat_at = 0.75, mac = 0.5, fine = 0.25, grain = 0.25},
       -- The spawn sits inside the zone now: the first tiles stay below heat 3, which slows a player on foot, and the
       -- cap lifts with distance so no ring shows. It only ever lowers the heat, so the start is cooler, never cleared.
       -- Volcanic rock stands ten times as thick as ordinary rock, so inside the zone it and the dead trees thin out to
@@ -3461,6 +3582,12 @@ return {
              -- rust colour no real grassland has); veg_zone_t is the natural ceiling, over which only
              -- Destroyed Europe's heat lies, and which keeps the zone's tiles as they were.
              veg_prefix = "vegetation-", veg_key = CT.K_TILE_TV, veg_cap = 79.5, veg_zone_t = 99,
+             -- 0.3.0 (the bar: no straight runs over about 6 tiles): the zone takes no grain, so its heat bands met
+             -- on the contours of the heat's 24-tile noise and ran straight for 20 to 39 tiles (Prague, Frankfurt).
+             -- The cold north's second tile temperature adds zone_fray times noise_layer_noise inside the zone's lift,
+             -- never past the lift's rim or cap (near the spawn its cooler cap), so no ground outside the volcanic band
+             -- shows through and no heat 3 lands by the start.
+             zone_fray = 5,
              -- Alien Biomes deals its ice tiles half of all frozen ground by one noise's sign, and their grey
              -- blue covered more of the Arctic than snow did: each gives up this much score, so ice
              -- keeps to the noise's lows.
@@ -3843,6 +3970,17 @@ return {
               weights = {0.25, -0.25, 0.875, -1, 1, 0.375, -0.375, 0.75, -0.75, -0.5, 0.5, -0.875},
               fields = {CT.TM2_1, CT.TM2_2, CT.TM2_3, CT.TM2_4, CT.TM2_5, CT.TM2_6, CT.TM2_7, CT.TM2_8, CT.TM2_9,
                         CT.TM2_10, CT.TM2_11, CT.TM2_12}},
+      -- The fray on all ground (0.3.0, to the bar of no straight runs over about 6 tiles on natural edges).
+      -- Two tiles of one box meet on a contour of their pairs' difference wherever the ground is not cold:
+      -- Alien Biomes' yellow
+      -- grasses and tan dirts (Bamako, Rio), and through the vanilla mix the vanilla grasses (New York), whose seams
+      -- ran straight along the axes for 15 to 40 tiles. fray2's fields add the fray at `warm` on every ground and at
+      -- fray's amount on the cold, so a preset naming them keeps the snow's seams as they were.
+      -- fine: noise_layer_noise's share in fray2: at fray's 0.25 the seams bent only on fray's own 16 tiles and still
+      -- ran straight for 20 tiles at Bamako.
+      fray2 = {body = CT.TM_FRAY2, warm = 0.8, fine = 1,
+               fields = {CT.TM3_1, CT.TM3_2, CT.TM3_3, CT.TM3_4, CT.TM3_5, CT.TM3_6, CT.TM3_7, CT.TM3_8, CT.TM3_9,
+                         CT.TM3_10, CT.TM3_11, CT.TM3_12}},
     },
     -- The list hook (Alien Biomes' long tile restrictions): the game walks a
     -- restriction entry by entry for every tile of a chunk, so a vanilla land tile, on no AB list, costs a

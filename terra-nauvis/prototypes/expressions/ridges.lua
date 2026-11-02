@@ -456,6 +456,10 @@ local function highland(key, Bd, O, NM)
   end
 end
 
+-- The union (0.3.0): both tables' ranges in the next keep, run, crest band, highland
+-- reach, tile reach and passes, and in the cold field's second version, which only 0.3.0 reads; line_bodies below
+-- builds the union's line field (crest and openings) with the chop (ridges.union.field), which keeps every straight
+local function union_bodies(key, m, g, waves)
   local centre = " + " .. num(RD.centre_tiles)
   local O2 = {u = N.wander_u[key], v = N.wander_v[key], fixed_u = g.u, fixed_v = g.v, L = {}, terms = {}, keeps = {},
               named = {}}
@@ -484,6 +488,10 @@ end
     end
   end
   local UN = cfg.ridges.union.names
+  def(UN.keep[key], joined("max", O2.keeps, "0"), O2.L)
+  def(UN.run[key], "max(0, (" .. num(RD.run_base) .. " + " .. waves(RD.run) .. ") * (1 - " .. UN.keep[key] .. ") + " ..
+    UN.keep[key] .. ")")
+  def(UN.band[key], #Bd2.terms == 0 and "0" or joined("max", Bd2.terms, "0"), #Bd2.terms > 0 and Bd2.L or nil)
   highland(key, Bd2, O2, {high = UN.high_map[key], high_tile = UN.high_tile_map[key], cold2 = N.cold2.map[key],
                           passes = UN.passes[key]})
 end
@@ -558,6 +566,7 @@ local function map_bodies(key)
   else
     def(N.band[key], joined("max", Bd.terms, "0"), Bd.L)
   end
+  union_bodies(key, m, g, waves)
 end
 
 for _, key in ipairs(cfg.map_order) do
@@ -675,6 +684,7 @@ local function walk_hands(pcs, use, flips)
   end
 end
 
+local function line_bodies(key, ranges, LNN, RUN, KP, OPT)
   local g
   for _, v in ipairs({cfg.frames[key]}) do
     if v.geo_id == cfg.layer_chain_geo[key] then
@@ -755,6 +765,7 @@ end
       num(per) .. " * clamp(" .. P .. ", " .. S .. " * " .. num(list[1][1]) .. ", " .. S .. " * " ..
       num(list[#list][1]) .. ")"
     walked = walked + arc
+    deps[#deps + 1] = "(" .. num(c2) .. " + " .. table.concat(r, " + ") .. ") * " .. RUN .. " - d" .. id
     if k == 1 then
       L.m1 = "d1"
       L.s1 = "if(a1 > 0, d1, -d1)"
@@ -767,6 +778,7 @@ end
       L["t" .. id] = "if(d" .. id .. " < m" .. q .. ", w" .. id .. ", t" .. q .. ")"
     end
   end
+  for _, r in ipairs(ranges) do
     local segs = r.segments[key]
     if segs then
       local pts, wide = {}, {}
@@ -794,6 +806,7 @@ end
   local reach = "(" .. num(LN.base_tiles) .. " + " .. num(LN.gain) .. " * " .. fit .. " * clamp(" .. width .. ", 0, " ..
     num(LN.width_max_tiles) .. "))"
   def(LNN.reach[key], reach)
+  local R = LNN.reach[key]
   local bends = {}
   for _, w in ipairs(LN.waves) do
     bends[#bends + 1] = num(w.amplitude) .. " * sin(" .. num(2 * math.pi / w.tiles) .. " * walk + " .. num(LN.phase) ..
@@ -816,6 +829,15 @@ end
     num(RD.gaps.collar_gain) .. " * " .. KP .. ")"
   O.terms[#O.terms + 1] = "(abs(" .. wave(LN.fine[1]) .. ") > " .. num(LN.snip) .. " + " .. num(RD.gaps.collar_gain) ..
     " * " .. KP .. ")"
+  for _, CH in ipairs(OPT and OPT.chop or {}) do
+    -- the union (ridges.union.field.chop): short gaps every tiles along one axis of the map, the phase pushed about by
+    -- slow noise; a row along x cuts every east-west run, one along y every north-south run, so no cliff holds one
+    -- row of the 4-tile lattice for long, past a crest's ends and round a pass's collar as well
+    -- the jitter, fast noise in the phase, spaces the gaps unevenly, so a line does not read as dashed
+    O.terms[#O.terms + 1] = "(sin(" .. num(2 * math.pi / CH.tiles) .. " * " .. CH.axis .. " + " .. num(CH.phase) ..
+      " * " .. wave(RD.run[CH.run]) .. " + " .. num(CH.jitter.amplitude) .. " * " .. wave(CH.jitter) .. ") > " ..
+      num(CH.level) .. ")"
+  end
   -- past the lines' reach every hand change draws a contour: nothing stands there
   O.terms[#O.terms + 1] = "(" .. LNN.near[key] .. " > " .. num(LN.mask) .. " * " .. R .. ")"
   -- a side line stands on one hand at a time, on a wide stretch, and never round a slot
@@ -826,6 +848,10 @@ end
 end
 
 for _, key in ipairs(cfg.map_order) do
+    line_bodies(key, T.ranges, LN.names, N.run[key], N.keep[key])
+    -- the union's line field (0.3.0): both tables' ranges, its own keep and run (union_bodies) and the chop
+    local U = cfg.ridges.union
+    line_bodies(key, UR, U.line, U.names.run[key], U.names.keep[key], U.field)
   end
 end
 

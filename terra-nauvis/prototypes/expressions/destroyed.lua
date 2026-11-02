@@ -174,12 +174,26 @@ if AB then
   def(BN.thin, "max(" .. BN.open .. ", clamp((" .. D.start.distance .. " - " .. num(B.start.rock_tiles) .. ") / " ..
     num(B.start.rock_span) .. ", " .. num(B.start.rock_floor) .. ", 1))")
 
+  local blackish = BN.kind .. " + " .. num(B.black_fine) .. " * " .. N.fine .. " + " ..
     num(B.black_grain) ..
     " * grain < " .. num(B.black_below) .. " + " .. num(B.black_in) .. " * core + " .. num(B.heart_black) ..
+    " * heart + " .. num(B.black_mac) .. " * (1 - heart) * " .. BN.macro
+  local black = "if(" .. blackish .. ", if(sandy > 0, " .. L[T.black_sand] .. ", " .. L[T.black_dirt] .. "), "
   local rock2 = "if(" .. BN.macro .. " * " .. num(B.grey_mac) .. " + " .. num(B.grey_kind) .. " * " .. BN.kind ..
     " + " .. num(B.grey_grain) .. " * grain > " .. num(B.grey_at) .. " + " .. num(B.grey_out) .. " * (1 - core), " ..
     L[T.grey_dirt] .. ", " .. black .. "if(sandy > 0, " .. L[T.red_sand] .. ", " .. L[T.red_dirt] .. ")))"
+  -- The next class's rock (destroyed.barrier.rock3): black ash, and where black sand or red dirt stood, heat ground or
+  -- black ash by depth and noise. No grey dirt, red sand, black sand or red dirt.
+  local R3 = B.rock3
+  local heated = "if(min(" .. lifted .. ", core + " .. num(R3.mac) .. " * " .. BN.macro .. " + " .. num(R3.fine) ..
+    " * " .. N.fine .. " + " .. num(R3.grain) .. " * grain - " .. num(R3.heat_at) .. ") > 0, 0, " .. L[T.black_dirt] ..
+    ")"
+  local rock3 = "if(" .. blackish .. ", if(sandy > 0, " .. heated .. ", " .. L[T.black_dirt] .. "), " .. heated .. ")"
   -- Heat ground needs the lift: without it class 0 is ordinary ground, in specks inside the wasteland.
+  local function class_body(name, depth, ground_at, palette, ground)
+    ground = ground or {fine = B.ground_fine, grain = B.ground_grain}
+    def(name, "if(" .. BN.reach .. " <= 0, 0, if(min(" .. lifted .. ", " .. BN.lava .. " + " .. num(ground.fine) ..
+    " * " .. N.fine .. " + " .. num(ground.grain) .. " * grain - " .. num(B.penalty) .. " * (1 - core) + " ..
     num(B.heart_gain) .. " * heart - " .. num(ground_at) .. ") > 0, 0, if(grassy < " .. num(B.grass_cut) .. ", " ..
     L[T.grass] .. ", " ..
     palette .. ")))", {
@@ -196,6 +210,7 @@ if AB then
     })
   end
   class_body(BN.class, BN.zone .. " / " .. K.scale, B.ground_at, rock2)
+  class_body(BN.class3, shifted, B.next.ground_at, rock3, B.next.ground)
 
     def(t.body, "if(" .. K.destroyed .. " > " .. num(D.switch_threshold) .. ", if(elevation > 0, if(" ..
       C.names.class .. " == " .. num(t.class) .. ", " .. num(C.score) .. ", -inf), -inf), -inf)")

@@ -90,6 +90,7 @@ python tools/build_geo.py emit --map atlantic
 ```
 
 `fit.json` names the checkpoint of each body; the tool writes
+`terra-nauvis/prototypes/generated/geo_atlantic_v2.lua` (from `model-10400.npz`) and
 `terra-nauvis/prototypes/generated/land_coarse_atlantic_v1.lua` (from `model-256.npz`) and
 records terms, factors, row groups, input and output sha256 in `manifest.json`.
 

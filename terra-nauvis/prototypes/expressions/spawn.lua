@@ -121,6 +121,16 @@ local function warp(octaves, axis, cx, cy)
   return table.concat(parts, " + ")
 end
 
+-- The inland lakes' shore noise and warp rows: a version whose spawn record sets lake_floor holds the shore noise at or
+-- above shore_min and warps with warp_floor (config.lua spawn.inland_lakes); the others keep their released text.
+local function lake_shape(I, sp, v)
+  local shore = num(I.shore.amplitude) .. " * " .. noise(I.shore.seed1, I.shore.wavelength, v.cx, v.cy)
+  if not sp.lake_floor then
+    return shore, I.warp
+  end
+  return "max(" .. num(I.shore_min) .. ", " .. shore .. ")", I.warp_floor
+end
+
 -- Destroyed Europe's random pool: the city fold's hash modulo the
 -- number of the map's cities outside the zone, then that city's index of 1 to n. A preset with the zone on
 -- and the spawn city at random bakes this body as the map's city number, so the fold resolves it as it
@@ -281,12 +291,16 @@ local function spawn(map_key, v)
     num(I.spacing) .. ", hard_region_target_quantity = " .. num(1) .. "}"
   -- lake_floor: off every spot the term holds at least the floor (config.lua spawn.inland_lakes.floor)
   local floor = sp.lake_floor and (", if(lake_spot > 0, -inf, " .. num(I.floor) .. ")") or ""
+  local shore, lake_warp = lake_shape(I, sp, v)
   def(sp.inland_lakes, "max(" .. num(I.gain) .. " * (" .. num(I.level) .. " + lake_size - lake_spot) + lake_shore, " ..
     num(I.coast_gain) .. " * (" .. num(I.coast_px) .. " - " .. v.geo .. "), (" .. num(I.start_radii) ..
     " * starting_area_radius - " .. dist .. ") * " .. num(I.start_slope) .. floor .. ")", {
       lake_spot = spots,
+      lake_shore = shore,
       lake_size = num(I.size.amplitude) .. " * clamp(" .. noise(I.size.seed1, I.size.wavelength, v.cx, v.cy) ..
         ", -1, 1)",
+      lake_wx = v.gx .. " + " .. warp(lake_warp, "x", v.cx, v.cy),
+      lake_wy = v.gy .. " + " .. warp(lake_warp, "y", v.cx, v.cy),
     })
 end
 

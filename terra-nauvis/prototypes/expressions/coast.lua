@@ -55,6 +55,7 @@ local FILES = {
   ["prototypes/generated/geo_atlantic_v2.lua"] = require("prototypes.generated.geo_atlantic_v2"),
   ["prototypes/generated/land_coarse_atlantic_v1.lua"] = require("prototypes.generated.land_coarse_atlantic_v1"),
   ["prototypes/generated/geo_olde_world_v2.lua"] = require("prototypes.generated.geo_olde_world_v2"),
+  ["prototypes/generated/geo_olde_world_v3.lua"] = require("prototypes.generated.geo_olde_world_v3"),
   ["prototypes/generated/land_coarse_olde_world_v1.lua"] = require("prototypes.generated.land_coarse_olde_world_v1"),
 }
 
@@ -122,6 +123,21 @@ local function tile_octaves(parts, g, axis, s)
     end
     parts[#parts + 1] = "if(" .. s .. " >= " .. num(o.min_scale) .. ", " .. term .. ", 0)"
   end
+end
+
+-- A warped version's coast fit. A version listed in coast.split (for the coast fit's cost) reads its fine fit
+-- up to the split's max_scale and its lean fit, a refit to a smaller Tile budget, past it, each under a name of its
+-- own. The scale is a folded constant, so the program compiles only the fit its scale picks; scales 1 to 6, where the
+-- band fix's tables were built from the fine fit, keep it exactly.
+local function warped_fits(g, s, wu, wv)
+  local split = C.split and C.split.versions[g.geo_id]
+  if not split then
+    fit_body(g.geo, g.fits.geo, g, wu, wv)
+    return
+  end
+  fit_body(split.fine, g.fits.geo, g, wu, wv)
+  fit_body(split.lean, split.lean_file, g, wu, wv)
+  def(g.geo, "if(" .. s .. " > " .. num(C.split.max_scale) .. ", " .. split.lean .. ", " .. split.fine .. ")")
 end
 
 -- The shore body's land term. The shore fray (config.lua shore.fray): near the coast the land gain wanders by a noise

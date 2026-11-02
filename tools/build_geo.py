@@ -74,6 +74,10 @@ def fit_spec(map_key):
     return spec
 
 
+def spec_bodies(spec):
+    """The bodies a fit.json emits: geo and land_coarse, plus geo_lean where the map has a lean fit (the coast fit
+
+
 # ------------------------------------------------------------------------------------------------ model
 
 def load_model(path):
@@ -243,6 +247,7 @@ def emit(map_key, out_dir=GENERATED, manifest=True):
     out_dir.mkdir(parents=True, exist_ok=True)
     rec = {"format": "tn-geo-manifest/1", "tool": "tools/build_geo.py", "emitter_version": EMITTER_VERSION,
            "map": map_key, "bodies": {}}
+    for body in spec_bodies(spec):
         name, text, r = emit_body(map_key, body, spec)
         p = out_dir / name
         with open(p, "w", encoding="utf-8", newline="\n") as f:
@@ -267,6 +272,7 @@ def check(map_key):
             d = Path(td) / f"run{n}"
             emit(map_key, d, manifest=False)
             runs.append(d)
+        for body in spec_bodies(spec):
             name = spec["bodies"][body]["file"]
             committed = GENERATED / name
             a, b = (runs[0] / name).read_bytes(), (runs[1] / name).read_bytes()

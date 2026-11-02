@@ -492,6 +492,7 @@ local function map_bodies(key)
   -- the chain every map-wide layer reads (config.lua layer_chain_geo): a later geography version keeps
   -- its frame, so these registered bodies never move with one
   local g
+  for _, v in ipairs({cfg.frames[key]}) do
     if v.geo_id == cfg.layer_chain_geo[key] then
       g = v
     end
@@ -675,6 +676,7 @@ local function walk_hands(pcs, use, flips)
 end
 
   local g
+  for _, v in ipairs({cfg.frames[key]}) do
     if v.geo_id == cfg.layer_chain_geo[key] then
       g = v
     end

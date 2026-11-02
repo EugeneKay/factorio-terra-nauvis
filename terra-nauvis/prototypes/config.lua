@@ -32,6 +32,7 @@ local K_SPAWN_BIAS = NOISE .. "spawn_bias"
 -- chain carries the map's radii and extent and reads the city offset through the map's own
 -- map-qualified per-save names, so a Map type pick alone (which sets only elevation) still renders the
 -- map, and no map-dependent value reaches the entry through tn_map or a shared key. Each map keeps one
+-- geography version (issue #1; 0.3.0 dropped the versions before each map's newest).
 -- The generated files (tools/build_geo.py): name-free data that a geography version's fit bodies
 -- bind to its own chain, so a later version binds the same files instead of emitting new ones.
 local EU_GEO_FILE = "prototypes/generated/geo_europe_v1.lua"
@@ -513,6 +514,7 @@ local REN = {
 -- into deep water across a noise-warped band just inside the extent (coast.edge_band), so a coast the
 -- box cuts reads as a wavy coastline, and a
 -- map's inland lakes compose only when the per-save switch tn_inland_lakes names tn_one. Europe's
+-- version 6 carried these names; its frame (config.lua frames) keeps the chain names.
 -- edge-and-lakes' names (one table: the 200-local limit)
 local ELN = {
   K_INLAND_LAKES = NOISE .. "inland_lakes",
@@ -522,6 +524,7 @@ local ELN = {
   EU6_V = NOISE .. "v_europe_v6",
   EU6_CX = NOISE .. "cx_europe_v6",
   EU6_CY = NOISE .. "cy_europe_v6",
+  -- Europe's scale 12 and 24 waterway files, which version 7 binds with the scale 1 to 6 files.
   EUX_WW_FILES = {"prototypes/generated/waterways_europe_s12_v1.lua",
                   "prototypes/generated/waterways_europe_s24_v1.lua"},
   -- 0.3.0: Europe's version 7, the composition of version 6 and its scale extension under names of its own, at
@@ -574,6 +577,9 @@ local ELN = {
 }
 -- The Old World and Atlantic spawn city: each map's spawn-city
 -- setting moves the spawn through the city fold, with the spawn lake, start mask version 2 and the
+-- inland lakes behind the inland lakes switch, and the soft map edge, as Europe's version 6 did:
+-- Atlantic's and Old World's version 6, whose frames keep the chain names, and the files and names the 0.3.0
+-- versions share with them. One table: the 200-local limit.
 local OAS = {
   AT6_GX = NOISE .. "gx_atlantic_v6",
   AT6_GY = NOISE .. "gy_atlantic_v6",
@@ -901,6 +907,7 @@ return {
   -- takes no tn_geo: nothing but the elevation name and the ford set differs, and no save of the version holds these
   -- scales. geo_id names the version it extends; waterway_files its slot in
   -- waterways.lua FILES.
+  scale_extensions = {},
 
   -- Mod settings. Values are short ASCII tokens, so labels can change without invalidating stored
   -- values. Each new setting goes here and into tests/design-rules.json.
@@ -1079,6 +1086,9 @@ return {
   -- One version per map: nothing had shipped and no saves existed, so every superseded version was
   -- retired (issue #1). After the first release
   -- a map's versions only grow again: a later version takes names of its own and an older one stays
+  -- defined, unchanged, for the worlds that name it (design rule 21). 0.3.0 collapsed them again to one per map
+  -- (no world existed on any earlier version): tests/collapsed.json names every version,
+  -- row, record and file that left, and each dropped version's chain stays as its map's frame (frames below).
   --
   -- geo_id is the version's geography release, the number its preset bakes as tn_geo. tn_geo is
   -- one id space across every map: each geography release of any map takes the next unused
@@ -1260,6 +1270,33 @@ return {
   -- own.
   layer_chain_geo = {europe = 14, atlantic = 17, olde_world = 18},
 
+  -- The frames (0.3.0: one geography version per map, since no world existed on an earlier
+  -- version): the coordinate chain of each layer_chain_geo release, kept when its version was dropped, because every
+  -- map-wide layer body reads it by name. A frame is that chain alone: its geo tiles and reference pixels on the
+  -- city offset names cx and cy, which no preset bakes, so they are frozen Map type fallbacks valued as the map's
+  -- city fold (city_offset), the offset the 0.3.0 version's own names carry too. coast.lua defines the chain,
+  -- presets.lua the two fallbacks.
+  frames = {
+    europe = {
+      geo_id = 14, gx = ELN.EU6_GX, gy = ELN.EU6_GY, u = ELN.EU6_U, v = ELN.EU6_V, cx = ELN.EU6_CX, cy = ELN.EU6_CY,
+      city_offset = {EU_CITY_CX, EU_CITY_CY},
+      fallbacks = {{name = ELN.EU6_CX, map_qualified = true, frozen = true},
+                   {name = ELN.EU6_CY, map_qualified = true, frozen = true}},
+    },
+    atlantic = {
+      geo_id = 17, gx = OAS.AT6_GX, gy = OAS.AT6_GY, u = OAS.AT6_U, v = OAS.AT6_V, cx = OAS.AT6_CX, cy = OAS.AT6_CY,
+      city_offset = {OAS.AT_CITY_CX, OAS.AT_CITY_CY},
+      fallbacks = {{name = OAS.AT6_CX, map_qualified = true, frozen = true},
+                   {name = OAS.AT6_CY, map_qualified = true, frozen = true}},
+    },
+    olde_world = {
+      geo_id = 18, gx = OAS.OW6_GX, gy = OAS.OW6_GY, u = OAS.OW6_U, v = OAS.OW6_V, cx = OAS.OW6_CX, cy = OAS.OW6_CY,
+      city_offset = {OAS.OW_CITY_CX, OAS.OW_CITY_CY},
+      fallbacks = {{name = OAS.OW6_CX, map_qualified = true, frozen = true},
+                   {name = OAS.OW6_CY, map_qualified = true, frozen = true}},
+    },
+  },
+
   -- The water slider (inert on Earth presets). Vanilla 2.1.23 reads control:water:* in exactly
   -- three named expressions (core/prototypes/noise-programs.lua): water_level (10 * log2 of the
   -- size), segmentation_multiplier (the frequency) and nauvis_segmentation_multiplier (1.5 times
@@ -1364,10 +1401,46 @@ return {
     -- each map's entry and the terms only it reads; the ford sets reach Tile only, through the
     -- water-shallow hook
     europe = {
+      REN.EU_FIELDS, START_LAND, ELN.EU7_ENTRY, ELN.EU7_GEO, ELN.EU7_DETAIL, ELN.EU7_FAR, ELN.EU7_LAKES,
+      ELN.EU7_SHORE, ELN.EU_WW5[1], ELN.EU_WW5[2], ELN.EU_WW5[3], ELN.EU_WW5[4], ELN.EU_WW5[5], ELN.EU_WW5[6],
+      ELN.EU_WW5[7], ELN.EU_WW5[8], ELN.EU_CANALS5[1], ELN.EU_CANALS5[2], ELN.EU_CANALS5[3], ELN.EU_CANALS5[4],
+      ELN.EU_CANALS5[5], ELN.EU_CANALS5[6], ELN.EU_CANALS5[7], ELN.EU_CANALS5[8], ELN.EU_DAMS5[1], ELN.EU_DAMS5[2],
+      ELN.EU_DAMS5[3], ELN.EU_DAMS5[4], ELN.EU_DAMS5[5], ELN.EU_DAMS5[6], ELN.EU_DAMS5[7], ELN.EU_DAMS5[8],
+      ELN.EU_FORDS5[1], ELN.EU_FORDS5[2], ELN.EU_FORDS5[3], ELN.EU_FORDS5[4], ELN.EU_FORDS5[5], ELN.EU_FORDS5[6],
+      ELN.EU_FORDS5[7], ELN.EU_FORDS5[8], ELN.EU7_WARP[1], ELN.EU7_WARP[2], ELN.EU7_WARP[3], ELN.EU7_WARP[4],
+      ELN.EU7_WARP[5], ELN.EU7_WARP[6], ELN.EU7_WARP[7], ELN.EU7_WARP[8], ELN.EU7_WARP[9], ELN.EU7_WARP[10],
+      ELN.EU7_WARP[11], ELN.EU7_WARP[12], ELN.EU7_WARP[13], ELN.EU7_WARP[14], ELN.EU7_WARP[15], ELN.EU7_WARP[16],
+      ELN.EU7_WARP[17], ELN.EU7_WARP[18], ELN.EU7_WARP[19], ELN.EU7_WARP[20], ELN.EU7_WARP[21], ELN.EU7_WARP[22],
+      ELN.EU7_WARP[23], ELN.EU7_WARP[24], ELN.EU7_WARP[25], ELN.EU7_WARP[26], ELN.EU7_WARP[27], ELN.EU7_WARP[28],
+      ELN.EU7_WARP[29], ELN.EU7_WARP[30], ELN.EU7_WARP[31], ELN.EU7_WARP[32],
     },
     atlantic = {
+      OAS.AT8_SHORE, OAS.AT_WW7[1], OAS.AT_WW7[2], OAS.AT_WW7[3], OAS.AT_WW7[4], OAS.AT_WW7[5], OAS.AT_WW7[6],
+      OAS.AT_WW7[7], OAS.AT_WW7[8], OAS.AT_CANALS7[1], OAS.AT_CANALS7[2], OAS.AT_CANALS7[3], OAS.AT_CANALS7[4],
+      OAS.AT_CANALS7[5], OAS.AT_CANALS7[6], OAS.AT_CANALS7[7], OAS.AT_CANALS7[8], OAS.AT_DAMS7[1], OAS.AT_DAMS7[2],
+      OAS.AT_DAMS7[3], OAS.AT_DAMS7[4], OAS.AT_DAMS7[5], OAS.AT_DAMS7[6], OAS.AT_DAMS7[7], OAS.AT_DAMS7[8],
+      OAS.AT_FORDS7[1], OAS.AT_FORDS7[2], OAS.AT_FORDS7[3], OAS.AT_FORDS7[4], OAS.AT_FORDS7[5], OAS.AT_FORDS7[6],
+      OAS.AT_FORDS7[7], OAS.AT_FORDS7[8], OAS.AT_MOUTH2[1], OAS.AT_MOUTH2[2], OAS.AT_MOUTH2[3], OAS.AT_MOUTH2[4],
+      OAS.AT_MOUTH2[5], OAS.AT_MOUTH2[6], OAS.AT_MOUTH2[7], OAS.AT_MOUTH2[8], OAS.AT_WARP2[1], OAS.AT_WARP2[2],
+      OAS.AT_WARP2[3], OAS.AT_WARP2[4], OAS.AT_WARP2[5], OAS.AT_WARP2[6], OAS.AT_WARP2[7], OAS.AT_WARP2[8],
+      OAS.AT_WARP2[9], OAS.AT_WARP2[10], OAS.AT_WARP2[11], OAS.AT_WARP2[12], OAS.AT_WARP2[13], OAS.AT_WARP2[14],
+      OAS.AT_WARP2[15], OAS.AT_WARP2[16], OAS.AT_WARP2[17], OAS.AT_WARP2[18], OAS.AT_WARP2[19], OAS.AT_WARP2[20],
+      OAS.AT_WARP2[21], OAS.AT_WARP2[22], OAS.AT_WARP2[23], OAS.AT_WARP2[24], OAS.AT_WARP2[25], OAS.AT_WARP2[26],
+      OAS.AT_WARP2[27], OAS.AT_WARP2[28], OAS.AT_WARP2[29], OAS.AT_WARP2[30], OAS.AT_WARP2[31], OAS.AT_WARP2[32],
     },
     olde_world = {
+      OAS.OW8_SHORE, OAS.OW_WW7[1], OAS.OW_WW7[2], OAS.OW_WW7[3], OAS.OW_WW7[4], OAS.OW_WW7[5], OAS.OW_WW7[6],
+      OAS.OW_WW7[7], OAS.OW_WW7[8], OAS.OW_CANALS7[1], OAS.OW_CANALS7[2], OAS.OW_CANALS7[3], OAS.OW_CANALS7[4],
+      OAS.OW_CANALS7[5], OAS.OW_CANALS7[6], OAS.OW_CANALS7[7], OAS.OW_CANALS7[8], OAS.OW_DAMS7[1], OAS.OW_DAMS7[2],
+      OAS.OW_DAMS7[3], OAS.OW_DAMS7[4], OAS.OW_DAMS7[5], OAS.OW_DAMS7[6], OAS.OW_DAMS7[7], OAS.OW_DAMS7[8],
+      OAS.OW_FORDS7[1], OAS.OW_FORDS7[2], OAS.OW_FORDS7[3], OAS.OW_FORDS7[4], OAS.OW_FORDS7[5], OAS.OW_FORDS7[6],
+      OAS.OW_FORDS7[7], OAS.OW_FORDS7[8], OAS.OW_MOUTH2[1], OAS.OW_MOUTH2[2], OAS.OW_MOUTH2[3], OAS.OW_MOUTH2[4],
+      OAS.OW_MOUTH2[5], OAS.OW_MOUTH2[6], OAS.OW_MOUTH2[7], OAS.OW_MOUTH2[8], OAS.OW_WARP2[1], OAS.OW_WARP2[2],
+      OAS.OW_WARP2[3], OAS.OW_WARP2[4], OAS.OW_WARP2[5], OAS.OW_WARP2[6], OAS.OW_WARP2[7], OAS.OW_WARP2[8],
+      OAS.OW_WARP2[9], OAS.OW_WARP2[10], OAS.OW_WARP2[11], OAS.OW_WARP2[12], OAS.OW_WARP2[13], OAS.OW_WARP2[14],
+      OAS.OW_WARP2[15], OAS.OW_WARP2[16], OAS.OW_WARP2[17], OAS.OW_WARP2[18], OAS.OW_WARP2[19], OAS.OW_WARP2[20],
+      OAS.OW_WARP2[21], OAS.OW_WARP2[22], OAS.OW_WARP2[23], OAS.OW_WARP2[24], OAS.OW_WARP2[25], OAS.OW_WARP2[26],
+      OAS.OW_WARP2[27], OAS.OW_WARP2[28], OAS.OW_WARP2[29], OAS.OW_WARP2[30], OAS.OW_WARP2[31], OAS.OW_WARP2[32],
     },
   },
 
@@ -1586,20 +1659,35 @@ return {
                REN.ORE_PATCH_STONE, REN.ORE_PATCH_URANIUM, REN.ORE_PATCH_OIL, REN.ORE_PATCH_OFFSHORE},
       files = {"prototypes/tables/hotspots.lua"},
     },
+    -- Each map's version 6 (0.1.0), dropped in 0.3.0 (one geography version per map) but for its frame (config.lua
+    -- frames), the chain every map-wide layer reads, and the shared bodies the 0.3.0 versions still name: the
+    -- offshore stamp, the start mask, the city fold, the start land guarantee, distance and the hook gate's keys.
+    -- tests/collapsed.json names what each row lost.
     {
       release = "0.1.0",
       map = "europe",
       geography = 14,
+      names = {ELN.EU6_GX, ELN.EU6_GY, ELN.EU6_U, ELN.EU6_V, ELN.EU6_CX, ELN.EU6_CY,
+               REN.EU_FIELDS, START_MASK2, EU_CITY_INDEX, EU_CITY_CX, EU_CITY_CY, START_LAND, DISTANCE, K_ON, K_FORDS,
+               ONE, ZERO},
+      files = {EU_GEO_FILE, EU_LAND_COARSE_FILE, EU_SPAWN_FILE, "prototypes/tables/hotspots.lua", EU_WW_FILES[1],
+               EU_WW_FILES[2], EU_WW_FILES[3], EU_WW_FILES[4], EU_WW_FILES[5], EU_WW_FILES[6]},
     },
     {
       release = "0.1.0",
       map = "atlantic",
       geography = 17,
+      names = {OAS.AT6_GX, OAS.AT6_GY, OAS.AT6_U, OAS.AT6_V, OAS.AT6_CX, OAS.AT6_CY,
+               REN.AT_FIELDS, OAS.AT_CITY_INDEX, OAS.AT_CITY_CX, OAS.AT_CITY_CY},
+      files = {AT_LAND_COARSE_FILE, "prototypes/tables/hotspots.lua"},
     },
     {
       release = "0.1.0",
       map = "olde_world",
       geography = 18,
+      names = {OAS.OW6_GX, OAS.OW6_GY, OAS.OW6_U, OAS.OW6_V, OAS.OW6_CX, OAS.OW6_CY,
+               REN.OW_FIELDS, OAS.OW_CITY_INDEX, OAS.OW_CITY_CX, OAS.OW_CITY_CY},
+      files = {OW_LAND_COARSE_FILE, "prototypes/tables/hotspots.lua"},
     },
     -- 0.3.0: Old World's version 8, version 7's composition under names of its own.
     {

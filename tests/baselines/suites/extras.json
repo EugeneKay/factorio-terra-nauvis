@@ -55,6 +55,13 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_aux_ab_v4": {
+    "type": "noise-expression",
+    "sha256": "4e4e3e770e6cfa82f01b67ffea5d0ab8efd8ce8cf6e36440e230a5626eec7512",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_aux_fb_v1": {
     "type": "noise-expression",
     "sha256": "243773cfb9ffa03d2c6541f5219597c629bf538804099ba4a20b96df385b61e8",
@@ -69,6 +76,10 @@
     "slice": "ridges",
     "registered": "2026-10-30"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_band_europe_v1": {
     "type": "noise-expression",
     "sha256": "10358325caf5a10ff92e59fa5d24946d1cbda33ccd0c0ecb818e3b9fa6c2f12e",
@@ -76,12 +87,27 @@
     "slice": "ridges",
     "registered": "2026-10-30"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_band_olde_world_v1": {
     "type": "noise-expression",
     "sha256": "6346e03ee5b19e0ddf992c650e4e17d1c55d97e133b0a4cf05ace95074c6e1a7",
     "dump": "m1",
     "slice": "ridges",
     "registered": "2026-10-30"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+   "tn_band_ragged_v1": {
+    "type": "noise-expression",
+    "sha256": "d4294e25e2af52d999df7ef444c47603bbb7e3a400c6e3d3eb083b0b3e033f0a",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_blue": {
     "type": "noise-expression",
@@ -650,6 +676,13 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_climate_grain_v3": {
+    "type": "noise-expression",
+    "sha256": "fe2cf730596b07c19f7b8dc48c3a951d028740b83f1a01471987ea5e8c52651f",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_climate_meander_v1": {
     "type": "noise-expression",
     "sha256": "61a0f3978c581507082a68db61f2873bd3f7addc8a855095925eef5452c89f80",
@@ -671,6 +704,10 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_crest_europe_v2": {
     "type": "noise-expression",
     "sha256": "8d7d3de8e13a18b52b44e66b5feadb0426fa3632988765f2fe08d26f339bb0df",
@@ -678,12 +715,20 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_crest_olde_world_v2": {
     "type": "noise-expression",
     "sha256": "b53cc415c7c35657ad385e1a94afd0b588a793d3179c485de2cb17b1b30ba609",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_cx_atlantic_v6": {
     "type": "noise-expression",
@@ -769,81 +814,98 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_dams_atlantic_s12_v7": {
     "type": "noise-expression",
     "sha256": "33b331f36d732f3940015264dbb9adef552c5487eb5c8de8bd56946d27555cb8",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_dams_atlantic_s1_v7": {
     "type": "noise-expression",
     "sha256": "c4f497d44a1bb23217699b508754eb720d05029a0f4abe4b934b65ec645a0ab7",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_dams_atlantic_s24_v7": {
     "type": "noise-expression",
     "sha256": "8e6eeb4c0d12455f5bdf424c6b57c4737835c925501609fa7f4d9b5d1716cfae",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_dams_atlantic_s2_v7": {
     "type": "noise-expression",
     "sha256": "586269d5d0e49e29661d1658f270e3a8e380d16041b6b48e9b08c94ffe17ac4d",
     "dump": "m1",
     "slice": "extras",
+    "registered": "2026-11-01"
    },
+   "tn_dams_atlantic_s3_v7": {
     "type": "noise-expression",
     "sha256": "24038a6c34b2ca03eb3bab57f12035ca12fed8a0408b1b5a976d5e1516a3044f",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_dams_atlantic_s4_v7": {
     "type": "noise-expression",
     "sha256": "7dd7ff336ea9ea07b3d0867f26a0613cab7c2d53a23f9c1daba61db2b1a298b3",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_dams_atlantic_s5_v7": {
     "type": "noise-expression",
     "sha256": "bdb10411f8ec9c5629ab48fc9f61360b815fbe502998fd63bd474c2c7032cca1",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_dams_atlantic_s6_v7": {
     "type": "noise-expression",
     "sha256": "ea739e56812484bd91d3afd087c14a764e792272c20d4d0ea26b99330e626911",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_dams_europe_s12_v5": {
     "type": "noise-expression",
     "sha256": "948d7e39bf4bd49e724bb0506f9caffb441cefe6cfc07ffaaa5b16ca39a13145",
     "dump": "m1",
     "slice": "extras",
+    "registered": "2026-11-01"
    },
+   "tn_dams_europe_s1_v5": {
     "type": "noise-expression",
     "sha256": "aa479e6df24e1664ce7e206832a693fae15c72b9a69b24cb433594ccb51f9008",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_dams_europe_s24_v5": {
     "type": "noise-expression",
     "sha256": "a75e22b18e2bc8cdc6154d31cbebab5aaf4e67787e836a49aacbced08f9a30bd",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_dams_europe_s2_v5": {
     "type": "noise-expression",
     "sha256": "886f52eb3841ea23556cbef1b80bd63f84e64c8b50e3d3800cf6364d6995cce1",
     "dump": "m1",
     "slice": "extras",
+    "registered": "2026-11-01"
    },
+   "tn_dams_europe_s3_v5": {
     "type": "noise-expression",
     "sha256": "e64f8653f889462ff792c20c5f63a054f06d0f6eeda8c8e8af67a8c71e17c0cd",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_dams_europe_s4_v5": {
     "type": "noise-expression",
     "sha256": "4cdaae1e9c5a4dad89aea76163a3069fa89ee6aa729b05d189e8ab685f29e7b7",
     "dump": "m1",
@@ -927,6 +989,13 @@
     "slice": "region-layer",
     "registered": "2026-10-28"
    },
+   "tn_depth_appalachian_v1": {
+    "type": "noise-expression",
+    "sha256": "f0b7bc96a1852ece63f577ea995abead4e9496ee32881f25103fdb27472c324a",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_depth_ardennes_v1": {
     "type": "noise-expression",
     "sha256": "ba1846259b933f7c40643e1b90bf041d7fa082592ff12a5e3679b7cfc7abd81d",
@@ -961,6 +1030,13 @@
     "dump": "m1",
     "slice": "region-layer",
     "registered": "2026-10-28"
+   },
+   "tn_depth_borneo_v1": {
+    "type": "noise-expression",
+    "sha256": "53070d9944c546bb55d060b1f828a1a493a53b37f01e526fd0810f7910682f8d",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_depth_camargue_v1": {
     "type": "noise-expression",
@@ -1459,6 +1535,13 @@
     "slice": "region-layer",
     "registered": "2026-10-28"
    },
+   "tn_depth_inner_niger_delta_v1": {
+    "type": "noise-expression",
+    "sha256": "32b9d5405594f53cfaa9f013aab0bf6e8882ca33a229bad34973243e78e14d64",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_depth_iron_anshan_2_v1": {
     "type": "noise-expression",
     "sha256": "1aa2ebeba497171d88ffc3fa5cd78b96412df16934c49e61f213bac3f6810055",
@@ -1711,12 +1794,26 @@
     "slice": "region-layer",
     "registered": "2026-10-28"
    },
+   "tn_depth_mekong_delta_v1": {
+    "type": "noise-expression",
+    "sha256": "7bc38a2b1195e07c549e440a20355e061b692ed859e02a729007d82e40adcd6a",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_depth_mesopotamian_v1": {
     "type": "noise-expression",
     "sha256": "6192a84bd502fae9cea4168aedbfccecd5166a5f320bb256e33f48a22a0a7985",
     "dump": "m1",
     "slice": "region-layer",
     "registered": "2026-10-28"
+   },
+   "tn_depth_new_guinea_v1": {
+    "type": "noise-expression",
+    "sha256": "3e99c9b7a949bf978cba9abae7b41bdcdc865a5dffb593ce2e192dd9a2f3b5ec",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_depth_offshore_angola_block_17_v1": {
     "type": "noise-expression",
@@ -2054,6 +2151,13 @@
     "slice": "region-layer",
     "registered": "2026-10-28"
    },
+   "tn_depth_pacific_northwest_v1": {
+    "type": "noise-expression",
+    "sha256": "3bdadf98a9af5c692e0038c470e4e5d5cf5a20c365f981f07136eb4a127dba6f",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_depth_pantanal_v1": {
     "type": "noise-expression",
     "sha256": "bb745ac60d656310049fb27e51882fb09373a3b37dfc51e70c80ad603d19c058",
@@ -2221,6 +2325,20 @@
     "dump": "m1",
     "slice": "region-layer",
     "registered": "2026-10-28"
+   },
+   "tn_depth_sumatra_v1": {
+    "type": "noise-expression",
+    "sha256": "870769849787693e647aaf46db31fb426fc0e4734507610195d7d0c28dcba67f",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+   "tn_depth_sundarbans_v1": {
+    "type": "noise-expression",
+    "sha256": "84057b162a43601c131c3580218cae8a5948656de9287396633e467aa180e32c",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_depth_tuchola_v1": {
     "type": "noise-expression",
@@ -2411,6 +2529,13 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+   "tn_depth_valdivian_v1": {
+    "type": "noise-expression",
+    "sha256": "5c4ce3f6c836eb47edfbd944f5b723bdc765123c18a505903ffa7bda0e04ebc7",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_depth_vasyugan_v1": {
     "type": "noise-expression",
     "sha256": "44d51cdab5cfac0e3cdc810bdbe16747a5c3cd6154d29c150abd87cb6c8bee9a",
@@ -2460,6 +2585,10 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_destroyed_clear": {
     "type": "noise-expression",
     "sha256": "92ca84ec053a674e57325bedfc99819a94109b597d8b5902b1cb18363d5e641d",
@@ -2480,6 +2609,13 @@
     "dump": "m2",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+   "tn_destroyed_dead_v2": {
+    "type": "noise-expression",
+    "sha256": "142a87aa4a98a43cb0032ef351cc4b03ab7bfb6ac8f340a61c0edb0b903aad16",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_destroyed_depth_v1": {
     "type": "noise-expression",
@@ -2509,6 +2645,13 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_destroyed_gap_v1": {
+    "type": "noise-expression",
+    "sha256": "603ff683bc9f08cf69ca412b3d9c36fea3bd1be96348f598f9dee42694f400d8",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_destroyed_heat_v1": {
     "type": "noise-expression",
     "sha256": "e7fdc4df897694f8af2513032481e0a037bbfd3cb1da72b40eb93941859d685a",
@@ -2522,6 +2665,13 @@
     "dump": "m2",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+   "tn_destroyed_heat_v3": {
+    "type": "noise-expression",
+    "sha256": "b1cb3a2d68c12bd8f57f00d6a05310f2c5bd389b586afd90b945aafbfe1bb4a4",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_destroyed_kind_v1": {
     "type": "noise-expression",
@@ -2572,12 +2722,33 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_destroyed_outline_depth_v2": {
+    "type": "noise-expression",
+    "sha256": "3ef918986d9eda514df425d74cf2c9647ab84f449be644b0e41ed7c08283fd76",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+   "tn_destroyed_outline_iberia_v1": {
+    "type": "noise-expression",
+    "sha256": "e0c7239dc31e08319402c3b9c50cc802b8b4b9c93bac01b973a19701d7232585",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_destroyed_outline_inside_v1": {
     "type": "noise-expression",
     "sha256": "572021e04e75280d0bb3deb9a0fc18f57ef6426dfd7ec13eb2b1c4895bbe24f5",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+   "tn_destroyed_outline_inside_v2": {
+    "type": "noise-expression",
+    "sha256": "1ae04cef7d7c3a7ac3f1d1e6bda344d4b9edab37d84e430fb86b16f323204c01",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_destroyed_outline_isles_v1": {
     "type": "noise-expression",
@@ -2593,12 +2764,33 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_destroyed_outline_land_v2": {
+    "type": "noise-expression",
+    "sha256": "bd05c05d5de6d0b9bffd65287871a94ed00b41c269b0fea9989b6f726d856552",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+   "tn_destroyed_outline_nordic_v1": {
+    "type": "noise-expression",
+    "sha256": "ba26d4034d31d83edaf62674e483c1c8cbb2a4946dd6c3fb6dde9b6823d8a589",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_destroyed_outline_present_v1": {
     "type": "noise-expression",
     "sha256": "3d66ac6a5110bd4a72ae293eccf2c114151fd5e790a950dee36ab10a55d5c669",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+   "tn_destroyed_outline_present_v2": {
+    "type": "noise-expression",
+    "sha256": "518d90bbdbfceecf0d66b5dca6357f7fca365128839eebb7c7242227be8a47f2",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_destroyed_outline_sd_v1": {
     "type": "noise-expression",
@@ -2607,12 +2799,26 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_destroyed_outline_sd_v2": {
+    "type": "noise-expression",
+    "sha256": "83b71429e99d017c5db2ee5e4a8d3cc0ea5a20a2b46699697a4deaac0a9f9a56",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_destroyed_outline_sea_v1": {
     "type": "noise-expression",
     "sha256": "f15d5553d13c1c948a92885e50f7e32310216f75519b90dce31c7549cd9abace",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+   "tn_destroyed_outline_sea_v2": {
+    "type": "noise-expression",
+    "sha256": "7925ba76783d0b68792d34f7f38010b795c3799ea2fa8b70ca0699caec67e081",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_destroyed_palm_a_v1": {
     "type": "noise-expression",
@@ -2683,6 +2889,13 @@
     "dump": "m2",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+   "tn_destroyed_zone_v3": {
+    "type": "noise-expression",
+    "sha256": "951e401f543e457edfb29831fa93553ada86c3ec588b4ae38cf66a0c6fc9c0b0",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_detail_atlantic_v8": {
     "type": "noise-expression",
@@ -2775,6 +2988,14 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_enemy_v3": {
+    "type": "noise-expression",
+    "sha256": "cec31f138a28b68d8056896502224950e8c3b014e8ab74c6eea27fa1fb3e537e",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+   "tn_far_atlantic_v8": {
     "type": "noise-expression",
     "sha256": "df4ea0d6a85270b48fde060cb9cd2712b5706b1998825badd4f438b53721323b",
     "dump": "m1",
@@ -2822,6 +3043,10 @@
     "dump": "m1",
     "slice": "waterways",
     "registered": "2026-10-28"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_fords_atlantic_s1_v7": {
     "type": "noise-expression",
@@ -2928,6 +3153,10 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_fords_olde_world_s1_v7": {
     "type": "noise-expression",
     "sha256": "e80cb78f5d7e443125757807fd5c9d36c8cd7b465df2a46ca6838e4bc8b98585",
@@ -2984,12 +3213,26 @@
     "slice": "region-layer",
     "registered": "2026-10-28"
    },
+   "tn_forest_sum_v2": {
+    "type": "noise-expression",
+    "sha256": "3953dba349134539c367503e43ccde3713957dee1a80729c09ee5a065af473ea",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_forest_w_v1": {
     "type": "noise-expression",
     "sha256": "60d419776c49a577b9868e9ec014f9a3b71a9446bd614ab491e99be6826270ea",
     "dump": "m1",
     "slice": "region-layer",
     "registered": "2026-10-28"
+   },
+   "tn_forest_w_v2": {
+    "type": "noise-expression",
+    "sha256": "5385b2717864b2954a3747057863e6c96035712ca04873c458cfdb28488a85b3",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_forests_on": {
     "type": "noise-expression",
@@ -3012,12 +3255,35 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_frozen_ground_v2": {
+    "type": "noise-expression",
+    "sha256": "ce5a25231642c15b8df4040430f0decc88c29486253f15edb9ab8ba3c9028583",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_geo_europe_v7": {
     "type": "noise-expression",
     "sha256": "a04e33ea2090d6b14438d0396b66db8f10df733fdbb988623e06b5f12be241ae",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ground_lean": {
     "type": "noise-expression",
@@ -3117,12 +3383,20 @@
     "slice": "extras",
     "registered": "2026-10-30"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_highland_cold_atlantic_v1": {
     "type": "noise-expression",
     "sha256": "c6e415c5fee8d00b523b4526298331fab0d15a3bc609be95a287cf1aa055598f",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_highland_cold_cap_v1": {
     "type": "noise-expression",
@@ -3131,12 +3405,23 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_highland_cold_cap_v2": {
+    "type": "noise-expression",
+    "sha256": "0c0c8c6ec4ab73f1950346b2622b57c3870107db1fe20e2dbeee0b0ae7cf1236",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_highland_cold_europe_v1": {
     "type": "noise-expression",
     "sha256": "14206d4837aa3b495df221c66c872b725334f36f02a1608260bfd90308701aa9",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_highland_cold_fray_v1": {
     "type": "noise-expression",
@@ -3152,6 +3437,13 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_highland_cold_gated_v2": {
+    "type": "noise-expression",
+    "sha256": "0d00d174384c1ae906a50e4dc6268db49dd448f291eca32b1d1e7f8667e4e740",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_highland_cold_high_v1": {
     "type": "noise-expression",
     "sha256": "8efa414b8f25c5089c20999894d8a0a2eee7ae2889c5c5149f3661e41aaa7f80",
@@ -3159,12 +3451,23 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_highland_cold_high_v2": {
+    "type": "noise-expression",
+    "sha256": "46d384ce37a4cff76f657760084682f62541ba48e8958eca84823385e012a8e4",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_highland_cold_olde_world_v1": {
     "type": "noise-expression",
     "sha256": "60f3c5cefce7cf99fad6b2739381b6452b66358fd0de3f79a113e963cc7929ef",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_highland_cold_reach_v1": {
     "type": "noise-expression",
@@ -3179,6 +3482,17 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+   "tn_highland_cold_v2": {
+    "type": "noise-expression",
+    "sha256": "3da7e28fe43b0f14ed05919db74e8c30cdbab40598ac3703a04a2cf520f83225",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_highland_fray_tile_v1": {
     "type": "noise-expression",
@@ -3222,6 +3536,10 @@
     "slice": "extras",
     "registered": "2026-10-30"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_highland_rise_tile_v1": {
     "type": "noise-expression",
     "sha256": "847e9ced4a708bf184c5a805b1270d4e7f0cc102ffb1f92cd3ed5ae429c5fff0",
@@ -3249,6 +3567,18 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-30"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_highland_tile_v1": {
     "type": "noise-expression",
@@ -3299,6 +3629,10 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_hs_coal_r_v1": {
     "type": "noise-expression",
     "sha256": "1f9abdbd84e5cbd03c0c92ffdcef7224c5b5504b9f73d0dbe68e4c9d5e9cd498",
@@ -3319,6 +3653,10 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_hs_copper_ore_bars_v2": {
     "type": "noise-expression",
@@ -3341,6 +3679,10 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_hs_copper_ore_r_v1": {
     "type": "noise-expression",
     "sha256": "214c9e385c382c4d5e70ce8d38fe77776a62f840fea599e9663b156b8d0db837",
@@ -3361,6 +3703,10 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_hs_crude_oil_bars_v2": {
     "type": "noise-expression",
@@ -3425,6 +3771,10 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_hs_iron_ore_r_v1": {
     "type": "noise-expression",
     "sha256": "6e529823d8f396ed6625d64470e538f231c471e6ee595d70fda5cc879dea6ab9",
@@ -3445,6 +3795,10 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_hs_lobe_v2": {
     "type": "noise-expression",
@@ -3495,6 +3849,10 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_hs_stone_r_v1": {
     "type": "noise-expression",
     "sha256": "67833be53c1bf5c21757ddb56c7b62ad4ca032acf73c95c72e45a9d5610dfc0b",
@@ -3515,6 +3873,10 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_hs_uranium_ore_bars_v2": {
     "type": "noise-expression",
@@ -3537,6 +3899,10 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_hs_uranium_ore_r_v1": {
     "type": "noise-expression",
     "sha256": "fa2601346ce443db7256b73ea0d845466e829126f0b87e6c5abf378ebd7f31d5",
@@ -3557,6 +3923,10 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_hu_coal_bowen_v1": {
     "type": "noise-expression",
@@ -6148,6 +6518,18 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_land_coarse_atlantic_v8": {
     "type": "noise-expression",
     "sha256": "928301135396f9d5db0ef2bbbbf40778b3fd0867f1c17121df41b7399e985fc8",
@@ -6197,12 +6579,23 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+   "tn_lift_m_v2": {
+    "type": "noise-expression",
+    "sha256": "5fd3ce4ddb5288bef8f2bfa103960f64ad8ef97c2a475ef601a1d51967a83cf2",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_line_along_atlantic_v1": {
     "type": "noise-expression",
     "sha256": "1db056006f2a9594b6e135dca6094394b79f23ee5d9eb290551d724c935057d5",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_line_along_europe_v1": {
     "type": "noise-expression",
@@ -6211,12 +6604,20 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_line_along_olde_world_v1": {
     "type": "noise-expression",
     "sha256": "1ed6fc3f34699b4c287c410a667119e0034e902fa0ea3ab4472faca1a69c78f6",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_line_depth_atlantic_v1": {
     "type": "noise-expression",
@@ -6225,12 +6626,20 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_line_depth_europe_v1": {
     "type": "noise-expression",
     "sha256": "4e1573b2706f0a57c7cdc672ef5f14d3ba0adf3caaf3742ff30609fe4ec57b4f",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_line_depth_olde_world_v1": {
     "type": "noise-expression",
@@ -6239,12 +6648,20 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_line_near_atlantic_v1": {
     "type": "noise-expression",
     "sha256": "b15d53d8d8903427521cacdf3766e173db4b28ae4429abe9fb201d7e3a3f767d",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_line_near_europe_v1": {
     "type": "noise-expression",
@@ -6253,12 +6670,20 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_line_near_olde_world_v1": {
     "type": "noise-expression",
     "sha256": "256271263fe89fe022e9017c7874648c1504e959e9234fe852b4c90d4bb27a1d",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_line_reach_atlantic_v1": {
     "type": "noise-expression",
@@ -6267,12 +6692,20 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_line_reach_europe_v1": {
     "type": "noise-expression",
     "sha256": "bd228ef604aa2502c6425f9bab904f77542303f3733f66e79a084f55721cbb32",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_line_reach_olde_world_v1": {
     "type": "noise-expression",
@@ -6281,12 +6714,20 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_line_side_atlantic_v1": {
     "type": "noise-expression",
     "sha256": "8ef3e082dccc95aaeb8e17fa7e1509bca59c44422b7e29dca2a47af8b607b451",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_line_side_europe_v1": {
     "type": "noise-expression",
@@ -6295,12 +6736,20 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_line_side_olde_world_v1": {
     "type": "noise-expression",
     "sha256": "0f4e2fc64ea2a0964599e613c8d19c21be03e12adea35dd836867325924a728c",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_lon_v1": {
     "type": "noise-expression",
@@ -6343,6 +6792,13 @@
     "dump": "m1",
     "slice": "region-layer",
     "registered": "2026-10-28"
+   },
+   "tn_marsh_w_v2": {
+    "type": "noise-expression",
+    "sha256": "0ba1070e509fbb15443856d21c1f30774e777f4fd7f097e1570bb62e4f5d3d75",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_marsh_water_mud": {
     "type": "noise-expression",
@@ -6420,6 +6876,20 @@
     "dump": "m2",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+   "tn_moisture_ab_v7": {
+    "type": "noise-expression",
+    "sha256": "8e46682d204832f6b7a3da00328d6e45b1e39d85a1b8437fa8f009460fcdc52c",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+   "tn_moisture_ab_v8": {
+    "type": "noise-expression",
+    "sha256": "37c8af58183c9bc8d8c9a3e2f54edc5a70b305aa04f39c44669590415dae1aab",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_moisture_fb_v1": {
     "type": "noise-expression",
@@ -6603,6 +7073,13 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_north_d_v2": {
+    "type": "noise-expression",
+    "sha256": "b794ae56b2ed7aef16bc99f7e3c052f274da98600219dab6facf70fa1e98b4f7",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_north_drop_v1": {
     "type": "noise-expression",
     "sha256": "28b9bb9ffc89d18d156a0b3c221c2785be0170b516a02ee6534fb66130ace149",
@@ -6610,12 +7087,26 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_north_drop_v2": {
+    "type": "noise-expression",
+    "sha256": "dad8d3d9fcbd444013d1f3d88845348d9e4844f3b737a08cd9744c6da7d5fe05",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_north_lead_v1": {
     "type": "noise-expression",
     "sha256": "d2f13bc21fc9603ca4b1379708560315706cd418293ca95757066df517147169",
     "dump": "m2",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+   "tn_north_lead_v2": {
+    "type": "noise-expression",
+    "sha256": "dd041c28b0a9e3983e19ad37bda00575380b4f45a3331aa6ea7a36db04e2fbe5",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_offshore_p_v1": {
     "type": "noise-expression",
@@ -6654,12 +7145,20 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_openings_europe_v2": {
     "type": "noise-expression",
     "sha256": "c5c7c27b4840a0906074a06f62283ffa74bc2297d84b951dac358f503904131f",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_openings_olde_world_v2": {
     "type": "noise-expression",
@@ -6668,12 +7167,19 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ore_all_patches_v1": {
     "type": "noise-function",
     "sha256": "5ff55017255febb4ed81a4040bb9e2b4eeb9ab897539b91b77c3c06ca668cb8f",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-30"
+   },
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ore_coal_p_v1": {
     "type": "noise-expression",
@@ -6689,6 +7195,10 @@
     "slice": "resources-enemies",
     "registered": "2026-10-29"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ore_coal_patches_v1": {
     "type": "noise-expression",
     "sha256": "f950ee02c541b0596eabb71517f4f8379e7585126fc00adc3f46ce145c5e2755",
@@ -6696,12 +7206,20 @@
     "slice": "extras",
     "registered": "2026-10-30"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ore_coal_r_v1": {
     "type": "noise-expression",
     "sha256": "3e2b9fa7db145eca001638227c30d425eb51adbe8df06c6d1b9aff06dfb425b2",
     "dump": "m1",
     "slice": "resources-enemies",
     "registered": "2026-10-29"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ore_copper_ore_p_v1": {
     "type": "noise-expression",
@@ -6717,6 +7235,10 @@
     "slice": "resources-enemies",
     "registered": "2026-10-29"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ore_copper_ore_patches_v1": {
     "type": "noise-expression",
     "sha256": "f9b20738d65c871eb7905f0b0d02964be25a4afa408791f4ff34ef6e549f68fc",
@@ -6724,12 +7246,20 @@
     "slice": "extras",
     "registered": "2026-10-30"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ore_copper_ore_r_v1": {
     "type": "noise-expression",
     "sha256": "9924cbf2497a039442254b05cf1035d3f08b1dfad4b4acdeb0e5a294c56a43cf",
     "dump": "m1",
     "slice": "resources-enemies",
     "registered": "2026-10-29"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ore_crude_oil_p_v1": {
     "type": "noise-expression",
@@ -6752,12 +7282,20 @@
     "slice": "extras",
     "registered": "2026-10-30"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ore_crude_oil_r_v1": {
     "type": "noise-expression",
     "sha256": "3dd9157918e2dd25d47300be9fcf0632323c5c18366fcaf959192c4f41ff37a3",
     "dump": "m1",
     "slice": "resources-enemies",
     "registered": "2026-10-29"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ore_gap_v1": {
     "type": "noise-expression",
@@ -6787,12 +7325,20 @@
     "slice": "resources-enemies",
     "registered": "2026-10-29"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ore_iron_ore_patches_v1": {
     "type": "noise-expression",
     "sha256": "febfcd656fca65d797b77e0ea232e2faf24eb5c1ced56d3f9e9fdcfa8675fe49",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-30"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ore_iron_ore_r_v1": {
     "type": "noise-expression",
@@ -6801,12 +7347,43 @@
     "slice": "resources-enemies",
     "registered": "2026-10-29"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ore_offshore_oil_patches_v1": {
     "type": "noise-expression",
     "sha256": "89cfc3803c8653f1aeae7c853b900b09a99186f7c69ad2abbf20e4aab7cdb39f",
     "dump": "m3",
     "slice": "extras",
     "registered": "2026-10-30"
+   },
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ore_open_plants_v1": {
     "type": "noise-expression",
@@ -6815,12 +7392,44 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ore_open_v1": {
     "type": "noise-expression",
     "sha256": "a21ee4426dc09f3b30ce57c6df449d13d4872554b948b51849a824cc8928b735",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ore_ramp_v1": {
     "type": "noise-expression",
@@ -6843,6 +7452,10 @@
     "slice": "resources-enemies",
     "registered": "2026-10-29"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ore_stone_patches_v1": {
     "type": "noise-expression",
     "sha256": "8a626723fc90e53772059b7f38428f99c3cb93476e79f5c2f5bfc7693d57fe3c",
@@ -6850,12 +7463,20 @@
     "slice": "extras",
     "registered": "2026-10-30"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ore_stone_r_v1": {
     "type": "noise-expression",
     "sha256": "bbcd384a9506b1b7afc91c7cdc67cb3286f30fdeb376bf9937b51c0d3dc17b87",
     "dump": "m1",
     "slice": "resources-enemies",
     "registered": "2026-10-29"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ore_trees": {
     "type": "noise-expression",
@@ -6878,6 +7499,10 @@
     "slice": "resources-enemies",
     "registered": "2026-10-29"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ore_uranium_ore_patches_v1": {
     "type": "noise-expression",
     "sha256": "ab4893fc107001518878cafc37d2940b25450965ff853e5fb73dedf636f70c91",
@@ -6885,12 +7510,20 @@
     "slice": "extras",
     "registered": "2026-10-30"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ore_uranium_ore_r_v1": {
     "type": "noise-expression",
     "sha256": "f333bf254a09292133675359cfd79691b5ddf38d1ac464fb33616f385f922fa2",
     "dump": "m1",
     "slice": "resources-enemies",
     "registered": "2026-10-29"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ore_wobble_v1": {
     "type": "noise-expression",
@@ -7010,6 +7643,18 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_pd_coal_bowen_v1": {
     "type": "noise-expression",
@@ -8467,12 +9112,20 @@
     "slice": "extras",
     "registered": "2026-10-30"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ridge_keep_europe_v1": {
     "type": "noise-expression",
     "sha256": "1ea5f123696b6bd3339653f6c6c310a4a3552f6747e7c3e496ab4d158a4ed8b2",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-30"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ridge_keep_olde_world_v1": {
     "type": "noise-expression",
@@ -8481,12 +9134,20 @@
     "slice": "extras",
     "registered": "2026-10-30"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ridge_run_atlantic_v1": {
     "type": "noise-expression",
     "sha256": "b3a541bb5a25260dfd2406ef3def74fb0d51747c89e34c8f941a613dcca6c9cf",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-30"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ridge_run_europe_v1": {
     "type": "noise-expression",
@@ -8495,12 +9156,20 @@
     "slice": "extras",
     "registered": "2026-10-30"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ridge_run_olde_world_v1": {
     "type": "noise-expression",
     "sha256": "557a7bedc5c8b3f80d03ea90855a34c1e6c3eabe339ae4123110ec79cb18bfd7",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-30"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ridge_u_atlantic_v1": {
     "type": "noise-expression",
@@ -8565,6 +9234,13 @@
     "slice": "region-layer",
     "registered": "2026-10-28"
    },
+   "tn_sd_appalachian_v1": {
+    "type": "noise-expression",
+    "sha256": "ca55c2e3d1a9f16d14c7fa6a277d049a1e0356641874b6bed7d0cffc1369923f",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_sd_ardennes_v1": {
     "type": "noise-expression",
     "sha256": "dd495d7576d33d7e1bd68927954717ce3bb2abad1f57a429766092609b1f7cce",
@@ -8599,6 +9275,13 @@
     "dump": "m1",
     "slice": "region-layer",
     "registered": "2026-10-28"
+   },
+   "tn_sd_borneo_v1": {
+    "type": "noise-expression",
+    "sha256": "3a9e4fac8d7e029ffaa25aecb960a3c36f7977b0c0872e32033ef917b6127f77",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_sd_camargue_v1": {
     "type": "noise-expression",
@@ -9097,6 +9780,13 @@
     "slice": "region-layer",
     "registered": "2026-10-28"
    },
+   "tn_sd_inner_niger_delta_v1": {
+    "type": "noise-expression",
+    "sha256": "75a07b84b1069ecb8e369f1e853d7202287b14fbc87144ff6a5884937c7116a0",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_sd_iron_anshan_2_v1": {
     "type": "noise-expression",
     "sha256": "aeb5bb779d4c95536aaa05c9aa91b71ceb6c4cf531b4b1137d1f18e6fd96b05b",
@@ -9349,12 +10039,26 @@
     "slice": "region-layer",
     "registered": "2026-10-28"
    },
+   "tn_sd_mekong_delta_v1": {
+    "type": "noise-expression",
+    "sha256": "3cf543f6c74ea2b50fb1cce536993a0a1f84d30ab4abe9825dcf2940d1c0ca61",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_sd_mesopotamian_v1": {
     "type": "noise-expression",
     "sha256": "1c10c371320686fbb05d05eab5910d2ce47526b8484df92514cb9a39429e9181",
     "dump": "m1",
     "slice": "region-layer",
     "registered": "2026-10-30"
+   },
+   "tn_sd_new_guinea_v1": {
+    "type": "noise-expression",
+    "sha256": "f8501503020bf67b850d87314fc49d1a4cbc8ddbd5fd33baf86fd5faf5b64c46",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_sd_offshore_angola_block_17_v1": {
     "type": "noise-expression",
@@ -9692,6 +10396,13 @@
     "slice": "region-layer",
     "registered": "2026-10-30"
    },
+   "tn_sd_pacific_northwest_v1": {
+    "type": "noise-expression",
+    "sha256": "26846e8d2084afecf00ad7483c19cdf6f8f1f70ad7043b0681bc04598352321c",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_sd_pantanal_v1": {
     "type": "noise-expression",
     "sha256": "b82fd1e22094e14b66e3b3f958c58879afeb3efb8d4cee9681f538f18a62c3e5",
@@ -9859,6 +10570,20 @@
     "dump": "m1",
     "slice": "region-layer",
     "registered": "2026-10-30"
+   },
+   "tn_sd_sumatra_v1": {
+    "type": "noise-expression",
+    "sha256": "4cb96e7c10df2ab92964a7d6a2037c25dd40a7b7724499ca5831fc115aa6c037",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+   "tn_sd_sundarbans_v1": {
+    "type": "noise-expression",
+    "sha256": "825368e306aeedfe3040d3d28721fee5c0f7ed4a2de919a5435e413afd0630c9",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_sd_tuchola_v1": {
     "type": "noise-expression",
@@ -10049,6 +10774,13 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+   "tn_sd_valdivian_v1": {
+    "type": "noise-expression",
+    "sha256": "9ed90736899466a2faa57756eff82efd7ad161fdfb3ab5ad066551f838250bb7",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_sd_vasyugan_v1": {
     "type": "noise-expression",
     "sha256": "20bd450809017dd856804018dcc53b74c739d9e2e2a6c16f88fac26ba25868dd",
@@ -10210,6 +10942,10 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_temperature_fb_v1": {
     "type": "noise-expression",
     "sha256": "5ea2ab9aac16d59900ef6ac3d5d81931a8072d796b4ce4f84711f29f315e4614",
@@ -10238,6 +10974,13 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_temperature_veg_v3": {
+    "type": "noise-expression",
+    "sha256": "ca1bc4a39bad04c917a6b5d92ba410b287d146a5b7e5d7bdfe7fb07d50d1c87a",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_tile_aux": {
     "type": "noise-expression",
     "sha256": "1234aba2391552d1b558f95240511c52e8afd9040c124e1ae0fb3bdff0e1abe2",
@@ -10252,12 +10995,26 @@
     "slice": "extras",
     "registered": "2026-10-30"
    },
+   "tn_tile_belt_edge_v1": {
+    "type": "noise-expression",
+    "sha256": "d06a9a56f70c7e20c2a26268b8d0d1eeab18f5609e82695c777bfe61ec2fb131",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_tile_belt_m_v1": {
     "type": "noise-expression",
     "sha256": "9d395feeb1091df9f2b72123982735689f3e690994a371c33a3851002ad97bb8",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-10-30"
+   },
+   "tn_tile_belt_m_v2": {
+    "type": "noise-expression",
+    "sha256": "5714d98025cd07676e651c2b954de08cbf93492a200fadca943be98cc2dc6bb9",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_tile_belt_t_v1": {
     "type": "noise-expression",
@@ -10294,6 +11051,10 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_tile_mix_11_v1": {
     "type": "noise-expression",
     "sha256": "4548024198c4bc6643c5a170e06cebbc7361bba1243c52f02e91a24b89478b08",
@@ -10307,6 +11068,10 @@
     "dump": "m2",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_tile_mix_12_v1": {
     "type": "noise-expression",
@@ -10322,6 +11087,10 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_tile_mix_1_v1": {
     "type": "noise-expression",
     "sha256": "b94cab0c39fe2ca13420a10be572afea9d88492b8b78bd5f7fcb42fcad453293",
@@ -10335,6 +11104,10 @@
     "dump": "m2",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_tile_mix_2_v1": {
     "type": "noise-expression",
@@ -10350,6 +11123,10 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_tile_mix_3_v1": {
     "type": "noise-expression",
     "sha256": "f6f2e01a1c9c87ac360b81bfa84833f4158660441fb867c5304b29bcc84683eb",
@@ -10363,6 +11140,10 @@
     "dump": "m2",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_tile_mix_4_v1": {
     "type": "noise-expression",
@@ -10378,6 +11159,10 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_tile_mix_5_v1": {
     "type": "noise-expression",
     "sha256": "a98c8d64d4307ca1305087285de87aaac1b8199055e1e365436ab109d52a5c1b",
@@ -10391,6 +11176,10 @@
     "dump": "m2",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_tile_mix_6_v1": {
     "type": "noise-expression",
@@ -10406,6 +11195,10 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_tile_mix_7_v1": {
     "type": "noise-expression",
     "sha256": "8410bb14cac40a3a86c28983466806469e37c8c8f5a3588069a96bd4ea441f87",
@@ -10419,6 +11212,10 @@
     "dump": "m2",
     "slice": "extras",
     "registered": "2026-10-31"
+   },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_tile_mix_8_v1": {
     "type": "noise-expression",
@@ -10434,6 +11231,10 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_tile_mix_9_v1": {
     "type": "noise-expression",
     "sha256": "749ed2b97f68b9e5776e93b66a0272f64525ed0e41a0411bc94eb37323a51019",
@@ -10448,12 +11249,20 @@
     "slice": "extras",
     "registered": "2026-10-31"
    },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_tile_mix_fray_v1": {
     "type": "noise-expression",
     "sha256": "72e4831a94b7705c8c2f59ae76e3fc8c0c2b28e9f356e14e599efd55162ff0c4",
     "dump": "m2",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_tile_moisture": {
     "type": "noise-expression",
@@ -11400,6 +12209,13 @@
     "slice": "region-layer",
     "registered": "2026-10-28"
    },
+   "tn_w_appalachian_v1": {
+    "type": "noise-expression",
+    "sha256": "868035af9893d02761a69c933be8f37fcbf0502aa32166d34f462dac4f71fdbd",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_w_ardennes_v1": {
     "type": "noise-expression",
     "sha256": "d02065569c993aadcb13b58f83546776b3f1b2fd9671d2e5805e218cbc1b3904",
@@ -11434,6 +12250,13 @@
     "dump": "m1",
     "slice": "region-layer",
     "registered": "2026-10-28"
+   },
+   "tn_w_borneo_v1": {
+    "type": "noise-expression",
+    "sha256": "7c8aa9a20c163126541f48fead23811b7e3376f7aa7df078fa3ba035ecd94c0f",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_w_camargue_v1": {
     "type": "noise-expression",
@@ -11638,6 +12461,13 @@
     "slice": "region-layer",
     "registered": "2026-10-28"
    },
+   "tn_w_inner_niger_delta_v1": {
+    "type": "noise-expression",
+    "sha256": "7dcd060ce247f63b3254e27846bc74bec93b4a04129c63d4058261d1fc2676df",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_w_iron_anshan_v1": {
     "type": "noise-expression",
     "sha256": "eff86562c951a7f3211ee425476bd2f2adb1e667714b00b08252453abdda7066",
@@ -11757,12 +12587,26 @@
     "slice": "region-layer",
     "registered": "2026-10-28"
    },
+   "tn_w_mekong_delta_v1": {
+    "type": "noise-expression",
+    "sha256": "a300388bbf7d4768823dc13a09812e5d25fb46b7fdee80517aa1fd18d03f9c92",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_w_mesopotamian_v1": {
     "type": "noise-expression",
     "sha256": "46db6dba481607652d82e220c15f49fb8947896a908290101b8ee388e3c22be6",
     "dump": "m1",
     "slice": "region-layer",
     "registered": "2026-10-30"
+   },
+   "tn_w_new_guinea_v1": {
+    "type": "noise-expression",
+    "sha256": "caffaac119ba3cfcaf9a3277bd492c9358a1b08d7aefcff90ff6cc3b6400c164",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_w_offshore_angola_block_17_v1": {
     "type": "noise-expression",
@@ -11981,6 +12825,13 @@
     "slice": "region-layer",
     "registered": "2026-10-30"
    },
+   "tn_w_pacific_northwest_v1": {
+    "type": "noise-expression",
+    "sha256": "d12f77e3ba6909537d0c027d9df6b0459eb8ea55ff8c98bf087cd0acbb586d6f",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_w_pantanal_v1": {
     "type": "noise-expression",
     "sha256": "34e554e367b8cc946f869e5061ac0d2c14469fb437fc87946bbe3021f63bcb7b",
@@ -12065,6 +12916,20 @@
     "slice": "region-layer",
     "registered": "2026-10-30"
    },
+   "tn_w_sumatra_v1": {
+    "type": "noise-expression",
+    "sha256": "7fab6eb570ad37237027ee231742851e8850eb10c7ca23e764bad9a6148b93a7",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
+   "tn_w_sundarbans_v1": {
+    "type": "noise-expression",
+    "sha256": "a3cc4405090334c1f9804119430d93b3ca404bca57f433a5fbbdc79c1af17273",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_w_tuchola_v1": {
     "type": "noise-expression",
     "sha256": "bd1f4a949fc90764018ae7044636f7845cbc6d485e5cb3ef23db1480d4341d5d",
@@ -12128,6 +12993,13 @@
     "slice": "region-layer",
     "registered": "2026-10-28"
    },
+   "tn_w_valdivian_v1": {
+    "type": "noise-expression",
+    "sha256": "341bd8396958f8e039e5d9806d173da070aeb11f2f68d0560429f36ba1b6ee99",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_w_vasyugan_v1": {
     "type": "noise-expression",
     "sha256": "90025e4612a99a8878bf05185fee7e646e5dd394c2e4332dfa3c9a6ca3b93dbc",
@@ -12155,6 +13027,10 @@
     "dump": "m1",
     "slice": "region-layer",
     "registered": "2026-10-28"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_warp_x_atlantic_s1_v2": {
     "type": "noise-expression",
@@ -12191,6 +13067,7 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_warp_x_atlantic_s5_v2": {
     "type": "noise-expression",
     "sha256": "ed51cae225f075093783586bee4af9788ebd0c15ffe2b90e62bc6d35517ee840",
     "dump": "m1",
@@ -12259,6 +13136,10 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_warp_x_olde_world_s1_v2": {
     "type": "noise-expression",
@@ -12477,6 +13358,10 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_warp_y_atlantic_s1_v2": {
     "type": "noise-expression",
     "sha256": "269e16630ec6e40ee29decd524219f6ff88004ccc0b3c5c45403061c8e7d9be8",
@@ -12581,6 +13466,10 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_warp_y_olde_world_s1_v2": {
     "type": "noise-expression",
@@ -12799,6 +13688,10 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
+   },
    "tn_ww_atlantic_s1_v7": {
     "type": "noise-expression",
     "sha256": "59c9251b981a538f230c1f99834ddd1112b73715f701447d2f3e608e00a0b29b",
@@ -12903,6 +13796,10 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-02"
    },
    "tn_ww_olde_world_s1_v7": {
     "type": "noise-expression",

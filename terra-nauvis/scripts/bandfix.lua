@@ -53,6 +53,9 @@ local coastcover = require("scripts.coastcover")
 
 -- One require per generated table (the registration scan reads literal module names): per map and table
 -- version its K+ table and its mask table for every offered scale. A save reads the version of its own tn_geo
+-- (generation below), so a released table stays what the saves made with it read. Atlantic's and Old World's first
+-- generation served only their dropped versions 6 (0.3.0: one geography version per map), so a save of one finds no
+-- table and its handler stays off (M.state).
 local TABLES = {
   europe = {
     [1] = {

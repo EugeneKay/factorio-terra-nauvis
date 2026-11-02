@@ -91,7 +91,11 @@ end
 
 local MAPS = {}
 for _, key in ipairs(cfg.map_order) do
+  -- the frame of the geography release config.lua's layer_chain_geo names for the map (config.lua frames), the
+  -- chain the layer was registered against; every later version keeps that frame (the same city offset under names
+  -- of its own), so its preset worlds read the same values here through the frozen offset fallbacks
   local g
+  for _, v in ipairs({cfg.frames[key]}) do
     if v.geo_id == cfg.layer_chain_geo[key] then
       g = v
     end

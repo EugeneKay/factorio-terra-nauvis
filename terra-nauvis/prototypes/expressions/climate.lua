@@ -47,11 +47,14 @@ local function def(name, expression, locals)
   E[#E + 1] = {type = "noise-expression", name = name, expression = expression, local_expressions = locals}
 end
 
+-- The maps with a geography, in order, with their extents in degrees, and the frame of the geography release
+-- config.lua's layer_chain_geo names for each (config.lua frames), the chain every map-wide layer reads. Every later
 -- version keeps that frame (the same city offset under names of its own), so its preset worlds read
 -- the same values here through the frozen offset fallbacks.
 local MAPS = {}
 for _, key in ipairs(cfg.map_order) do
   local g
+  for _, v in ipairs({cfg.frames[key]}) do
     if v.geo_id == cfg.layer_chain_geo[key] then
       g = v
     end

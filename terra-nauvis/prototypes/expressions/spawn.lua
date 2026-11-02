@@ -279,8 +279,11 @@ local function spawn(map_key, v)
     ", maximum_spot_basement_radius = " .. num(2 * I.radius) .. ", region_size = " .. num(I.region) ..
     ", candidate_spot_count = " .. num(I.candidates) .. ", suggested_minimum_candidate_point_spacing = " ..
     num(I.spacing) .. ", hard_region_target_quantity = " .. num(1) .. "}"
+  -- lake_floor: off every spot the term holds at least the floor (config.lua spawn.inland_lakes.floor)
+  local floor = sp.lake_floor and (", if(lake_spot > 0, -inf, " .. num(I.floor) .. ")") or ""
   def(sp.inland_lakes, "max(" .. num(I.gain) .. " * (" .. num(I.level) .. " + lake_size - lake_spot) + lake_shore, " ..
     num(I.coast_gain) .. " * (" .. num(I.coast_px) .. " - " .. v.geo .. "), (" .. num(I.start_radii) ..
+    " * starting_area_radius - " .. dist .. ") * " .. num(I.start_slope) .. floor .. ")", {
       lake_spot = spots,
       lake_size = num(I.size.amplitude) .. " * clamp(" .. noise(I.size.seed1, I.size.wavelength, v.cx, v.cy) ..
         ", -1, 1)",

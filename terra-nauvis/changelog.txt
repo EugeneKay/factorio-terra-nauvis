@@ -37,6 +37,19 @@ Date: 2026-11-01
       inside the blue zone on new worlds.
     - Marsh pools on new worlds fray along their edges, so their shores run straight for shorter
       stretches.
+    - Inland lakes leave no tiny water specks of one to a few tiles on the open land between them.
+    - With Destroyed Europe or Blue corrupted on beside Alien Biomes, the zone's own ground absorbs
+      pollution like grass and the zone's dead trees absorb like living trees, so pollution no longer
+      spreads further there. Saves made before take it too.
+    - With Destroyed Europe on beside Alien Biomes, biter and worm creep and the light brown mud
+      decals and dry plants inside the zone take a dark ember red; with Blue corrupted on, a
+      blue-purple. Creep of new nests on the zones' ground takes it on saves made before too.
+    - With Destroyed Europe on beside Alien Biomes, the zone's heat bands and sands walk at full
+      speed and slow vehicles no more than sand does. With Space Age, tree farms can plant on the
+      zones' ground. Saves made before take both.
+    - The tooltips of the optional layers give each one's map generation cost at Old World scale 12.
+    - With Space Age and Alien Biomes, tree farms can plant on the base game's grass, dirt, sand and
+      desert ground that Earth maps put back beside Alien Biomes.
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.0
 Date: 2026-11-01

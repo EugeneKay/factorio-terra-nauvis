@@ -375,6 +375,9 @@ FINE_ROLES = ("entry", "geo", "detail", "far")
 SPAWN_FIELDS = ("city_setting", "city", "city_index", "spawn_lake", "spawn_bias", "inland_lakes", "start_land",
                 "distance", "bearings")
 SPAWN_NAMES = ("city", "city_index", "spawn_lake", "spawn_bias", "inland_lakes", "start_land", "distance")
+# lake_floor (optional, true only): the version's inland lakes hold the floor off every spot (config.lua
+# spawn.inland_lakes.floor), so the shore noise leaves no water specks; a version without it keeps its body.
+SPAWN_OPTIONAL = ("lake_floor",)
 # The spawn names that read the version's own chain: each version that has them takes its own (never
 # shared with or re-pointed from another version); the other spawn bodies read no chain and may
 # serve several versions, as a start mask version does.
@@ -458,6 +461,11 @@ def own_names(version):
 
 
 def _spawn_record(sp, where, cfg):
+    if not isinstance(sp, dict) or set(sp) - set(SPAWN_OPTIONAL) != set(SPAWN_FIELDS):
+        raise ConfigError(f"config.lua {where}.spawn must hold exactly {sorted(SPAWN_FIELDS)}, and optionally "
+                          f"{sorted(SPAWN_OPTIONAL)}")
+    if "lake_floor" in sp and sp["lake_floor"] is not True:
+        raise ConfigError(f"config.lua {where}.spawn.lake_floor must be true or absent")
     for n in SPAWN_NAMES:
         if not isinstance(sp[n], str) or not sp[n]:
             raise ConfigError(f"config.lua {where}.spawn.{n} must be a noise name")

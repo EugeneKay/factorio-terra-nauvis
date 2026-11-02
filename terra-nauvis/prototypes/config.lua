@@ -1066,6 +1066,7 @@ return {
           spawn = {
             city_setting = "spawn_city_europe", city = EU_CITY, city_index = EU_CITY_INDEX,
             spawn_lake = ELN.EU7_SPAWN_LAKE, spawn_bias = ELN.EU7_SPAWN_BIAS, inland_lakes = ELN.EU7_LAKES,
+            lake_floor = true, start_land = START_LAND, distance = DISTANCE, bearings = EU_SPAWN_FILE,
           },
           waterways = OAS_SETS.europe_v7,
           scales = SCALE_LISTS.offered,
@@ -1102,6 +1103,7 @@ return {
           spawn = {
             city_setting = "spawn_city_atlantic", city = OAS.AT_CITY, city_index = OAS.AT_CITY_INDEX,
             spawn_lake = OAS.AT8_SPAWN_LAKE, spawn_bias = OAS.AT8_SPAWN_BIAS, inland_lakes = OAS.AT8_LAKES,
+            lake_floor = true, start_land = START_LAND, distance = DISTANCE, bearings = OAS.AT7_SPAWN_FILE,
           },
           waterways = OAS_SETS.atlantic_v8,
           scales = SCALE_LISTS.offered,
@@ -1127,6 +1129,7 @@ return {
           },
           spawn = {
             city_setting = "spawn_city_atlantic", city = OAS.AT_CITY, city_index = OAS.AT_CITY_INDEX,
+            lake_floor = true, start_land = START_LAND, distance = DISTANCE, bearings = OAS.AT7_SPAWN_FILE,
           },
           waterways = OAS_SETS.atlantic_v8,
           scales = SCALE_LISTS.offered,
@@ -1164,6 +1167,7 @@ return {
           spawn = {
             city_setting = "spawn_city_olde_world", city = OAS.OW_CITY, city_index = OAS.OW_CITY_INDEX,
             spawn_lake = OAS.OW8_SPAWN_LAKE, spawn_bias = OAS.OW8_SPAWN_BIAS, inland_lakes = OAS.OW8_LAKES,
+            lake_floor = true, start_land = START_LAND, distance = DISTANCE, bearings = OAS.OW7_SPAWN_FILE,
           },
           waterways = OAS_SETS.olde_world_v8,
           scales = SCALE_LISTS.offered,
@@ -1189,6 +1193,7 @@ return {
           },
           spawn = {
             city_setting = "spawn_city_olde_world", city = OAS.OW_CITY, city_index = OAS.OW_CITY_INDEX,
+            lake_floor = true, start_land = START_LAND, distance = DISTANCE, bearings = OAS.OW7_SPAWN_FILE,
           },
           scales = SCALE_LISTS.offered,
           waterway_files = 2,
@@ -1885,6 +1890,10 @@ return {
               {seed1x = 7211, seed1y = 7212, wavelength = 16, amplitude = 4}},
       size = {seed1 = 7213, wavelength = 256, amplitude = 0.2},
       coast_px = 2.5, coast_gain = 20, start_radii = 1.5, start_slope = 0.25,
+      -- floor: away from every spot the term holds at least this, so the shore noise cannot dip single tiles below 0
+      -- (1,159 water specks of 1 to 4 tiles in a 3,072 tile window at Frankfurt, Old World 12). Only a version whose
+      -- spawn record sets lake_floor reads it, so the bodies of earlier versions stay byte-identical.
+      floor = 0.5,
     },
   },
 
@@ -3709,6 +3718,42 @@ return {
     color = {r = 1, g = 0.9, b = 0.45, a = 1},
     alignment = "center",
     vertical_alignment = "middle",
+  },
+
+  -- The zones' ground and look (prototypes/zone_look.lua), beside Alien Biomes with each zone's startup setting on.
+  -- shared: zone tiles that also lie outside the zones, so they keep their own values and take no zone creep (a census
+  -- of whole Old World and Atlantic previews at scale 1: grey dirt 6 lies 77 to 87 percent outside the
+  -- zone, every other Destroyed Europe tile 0 to 17 pixels, and the Blue tiles nowhere, by blue.no_blue).
+  --   ground    pollution absorption per second on the zone's own ground (grass-1's), its walking speed and the cap
+  --             on its vehicle friction (grass is 1.6; Alien Biomes' heat bands run 2 to 16 and slow the walk to 0.7);
+  --             the zone's dead tree copies absorb as a living base tree does (tree-01's)
+  --   plant     Space Age's tree farm plant, whose plot list gains the zones' ground and, beside Alien Biomes, the
+  --             vanilla land tiles (tiles.vanilla.tiles, Space Age's own list), which Alien Biomes' list drops
+  --   creep     the decals spawners and worms drop round them, in spawn_types' spawn lists; each zone takes a tinted
+  --             copy of each, kept to the zone's own ground by collision layers (layers.zone on every zone's ground,
+  --             layers.off .. id on every other tile)
+  --   zones     per zone its setting, the config section whose exclusion holds its tiles, key, open and dead tree
+  --             copies, a tint (a multiply: Destroyed Europe ember red, Blue blue-purple) and the light brown and
+  --             dirt-coloured decoratives it recolours inside the zone, picked by their sprites' mean colour (hue 15 to
+  --             50 degrees) and a census of boxes in each zone at Old World 12, less those the zone's exclusion keeps
+  --             out already (Destroyed Europe drops white and garballo plants, Blue cracked mud). Destroyed Europe
+  --             keeps its dark red-brown grass and crotons: on black ground they read as the ember it asks for
+  zone_look = {
+    shared = {"mineral-grey-dirt-6"},
+    ground = {absorption = 7.5e-6, tree_absorption = 0.001, walking_speed = 1, friction_cap = 2},
+    plant = {name = "tree-plant"},
+    creep = {"enemy-decal", "enemy-decal-transparent", "worms-decal", "shroom-decal", "lichen-decal", "light-mud-decal",
+             "dark-mud-decal"},
+    spawn_types = {"unit-spawner", "turret"},
+    layers = {zone = NOISE .. "zone_ground", off = NOISE .. "off_zone_"},
+    color = {channels = {"r", "g", "b", "a"}, max = 255},
+    zones = {
+      {id = "chaos", setting = "destroyed_europe", section = "destroyed", tint = {r = 0.46, g = 0.19, b = 0.15},
+       decoratives = {"cracked-mud-decal", "red-desert-bush", "brown-asterisk", "brown-asterisk-mini"}},
+      {id = "blue", setting = "blue_corrupted", section = "blue", tint = {r = 0.5, g = 0.42, b = 0.95},
+       decoratives = {"red-desert-bush", "white-desert-bush", "brown-asterisk", "brown-asterisk-mini",
+                      "garballo-mini-dry", "brown-hairy-grass", "brown-carpet-grass", "red-croton"}},
+    },
   },
 
   -- The size context of the scale labels, the scale tooltip and the preset descriptions. World sizes are maps'

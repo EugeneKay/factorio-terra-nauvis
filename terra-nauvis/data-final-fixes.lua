@@ -1336,3 +1336,6 @@ if #W > 0 then
   data:extend(W)
 end
 point_presets(keys)
+
+-- The zones' ground and look (prototypes/zone_look.lua): last, so its copies take every hook's final text.
+require("prototypes.zone_look").apply()

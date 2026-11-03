@@ -17,6 +17,7 @@
 -- to the footprint without it, so the wider field is not one solid biter base (as Indonesia's would be).
 local cfg = require("prototypes.config")
 local V = require("prototypes.hotspot_rows_v2")
+local H3 = cfg.hotspots_v3
 
 local HC = cfg.hotspots
 local H2 = cfg.hotspots_v2
@@ -336,6 +337,7 @@ local function v3_spot(h, rows, i, T, index, part)
 end
 
 -- A resource's third version: its quantity body, then its body.
+local function v3_bodies(h, name, part)
   local T = {hs_pc = PER_CANDIDATE}
   T.hs_tight = "if(" .. S .. " > " .. num(SP.fine_scale) .. ", -inf, " .. num(blob_reach(h) + SP.min_room) .. ")"
   local Q = {hs_pc = PER_CANDIDATE, hs_tight = T.hs_tight}
@@ -361,6 +363,7 @@ end
   end
   T.hs_fr = "min(1, max(" .. table.concat(fr, ", ") .. "))"
   T.hs_w, T.hs_p = Q.hs_w, Q.hs_p
+  part = part or V3.parts[h.resource]
   def(part.qty, by_map(function(M) return map_qty(rows_of(M.key, h.resource), index) end), Q)
   local branch = {}
   for i, M in ipairs(MAPS) do
@@ -413,7 +416,9 @@ open(OT.plants.open, OT.plants.margin, OT.plants.floor)
 -- The shares' next versions: each solid body less the wobble its ore's probability takes, in its cone's least slope
 -- (data-final-fixes.lua probability_v3), so the shares follow the ore that stands.
 -- 0.3.0's presets read the solid ores' third version (H2.v3), so the shares follow its bodies.
+local function trimmed_of(h, bodies)
   local slope = SP.cone_factor / (math.pi * h.rq * h.rq * h.rq)
+  local v3 = (bodies or V3.bodies)[h.resource]
   if not v3 then
     return H2.bodies[h.resource] .. " - " .. num(RS.richness_v2.edge.trim * slope) .. " * " ..
       RS.richness_v2.edge.wobble
@@ -421,9 +426,19 @@ open(OT.plants.open, OT.plants.margin, OT.plants.floor)
   -- a far field's bodies are narrower (ore_curves.lua height_scale): the trim follows them, as probability_v3's does
   return v3 .. " - " .. num(V3.trim * slope) .. " * " .. RS.richness_v2.edge.wobble .. " * " .. OC.height_scale(h)
 end
+local function trimmed_list(bodies)
+  local list = {}
+  for _, h in ipairs(HC.resources) do
+    if H2.bodies[h.resource] and not h.fluid then
+      list[#list + 1] = trimmed_of(h, bodies)
+    end
   end
+  return list
 end
+local trimmed = trimmed_list()
+local function open_v2(name, margin, floor, list)
   def(name, "if(" .. K.hotspots .. " > " .. num(cfg.ridges.switch_threshold) .. ", clamp(-max(" ..
+    table.concat(list or trimmed, ", ") .. ") / " .. num(margin) .. ", " .. num(floor) .. ", 1), 1)")
 end
 open_v2(OT.open_v2, OT.margin, OT.floor)
 open_v2(OT.plants.open_v2, OT.plants.margin, OT.plants.floor)
@@ -439,7 +454,21 @@ def(ED.wobble, "clamp(" .. num(ED.mid) .. " + " .. num(ED.amp) .. " * (" .. wave
 
 -- Regular ore keeps out of every footprint of the table, as the first gap body does for the first table's.
 local NP = RS.natural
+local function gap_body(name)
+  local GL, GI = {}, {}
+  for j, r in ipairs(V.rows) do
+    GI[r.id] = "g" .. j
+    GL["g" .. j] = PD .. r.id .. SUFFIX .. " * " .. S .. " - " .. footprint(r)
   end
+  def(name, "if(" .. K.hotspots .. " > " .. num(cfg.ridges.switch_threshold) .. ", " .. by_map(function(M)
+    local parts = {}
+    for _, r in ipairs(rows_of(M.key, nil)) do
+      parts[#parts + 1] = GI[r.id]
+    end
+    return #parts == 0 and num(NP.no_gap) or #parts == 1 and parts[1] or ("min(" .. table.concat(parts, ", ") .. ")")
+  end) .. ", " .. num(NP.no_gap) .. ")", GL)
+end
+gap_body(H2.gap)
 
 -- Regional scarcity (config.lua resources.scarcity). A resource's province weight: 1 within reach_px of any of its
 -- footprints on the map (scaled), falling to 0 over a width that varies from a hard edge to about wide.px, the edge
@@ -498,5 +527,57 @@ for _, res in ipairs({"iron-ore", "copper-ore", "coal", "stone", "uranium-ore", 
   -- a bar of 1 (off, or a region touching the near disc) keeps the region whatever the draw
   def(N.keep, "max(bar >= 1, draw < bar)", KL)
 end
+
+-- The factor of a row's ore per tile (hotspots_v3 rich): pairs of {factor, largest scale it applies at, 0 for every
+-- scale}, multiplied.
+local function rich_factor(pairs3)
+  local factor = {}
+  for _, f in ipairs(pairs3) do
+    local at = "(1 + " .. num(f[1] - 1) .. " * (" .. S .. " <= " .. num(f[2]) .. "))"
+    factor[#factor + 1] = f[2] > 0 and at or num(f[1])
+  end
+  return table.concat(factor, " * ")
+end
+
+-- A resource's per-tile body: 1, plus each factored row's factor less 1 inside its footprint.
+local function rich_body(h)
+  local terms = {"1"}
+  for _, r in ipairs(rows_of(nil, h.resource)) do
+    local pairs3 = V.rich and V.rich[r.id]
+    if pairs3 then
+      terms[#terms + 1] = "(" .. rich_factor(pairs3) .. " - 1) * (" .. DEPTH .. r.id .. SUFFIX .. " > " ..
+        num(r.radius_px) .. " * " .. S .. " - " .. footprint(r) .. ")"
+    end
+  end
+  return table.concat(terms, " + ")
+end
+
+-- The third hotspot table's bodies (config.lua hotspots_v3, 0.3.1): the same method on the rows of
+-- prototypes/hotspot_rows_v3.lua, under new names. V and its index are rebound to those rows; nothing above reads
+-- them after this point.
+local function third_table()
+  V = require("prototypes.hotspot_rows_v3")
+  for id in pairs(BY_ID) do
+    BY_ID[id] = nil
+  end
+  for _, r in ipairs(V.rows) do
+    BY_ID[r.id] = r
+  end
+  for _, h in ipairs(HC.resources) do
+    local name = H3.bodies[h.resource]
+    if name then
+      v3_bodies(h, name, H3.parts[h.resource])
+      -- ore per tile raised on a factored row's footprint, 1 elsewhere (data-final-fixes.lua richness reads it)
+      if H3.rich_body[h.resource] then
+        def(H3.rich_body[h.resource], rich_body(h))
+      end
+    end
+  end
+  gap_body(H3.gap)
+  local trimmed3 = trimmed_list(H3.bodies)
+  open_v2(OT.open_v3, OT.margin, OT.floor, trimmed3)
+  open_v2(OT.plants.open_v3, OT.plants.margin, OT.plants.floor, trimmed3)
+end
+third_table()
 
 data:extend(E)

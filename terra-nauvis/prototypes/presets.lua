@@ -362,6 +362,7 @@ end
 -- The second tables' re-points, which every new world bakes: the second hotspot table's bodies and the second region
 -- table's forest and marsh aggregates, each under the first table's name.
   local out = {}
+  for _, points in ipairs({cfg.hotspots_v2.points, cfg.regions_v2.points, cfg.hotspots_v3.points}) do
     for k, value in pairs(points) do
       out[k] = value
     end

@@ -162,6 +162,7 @@ local CT = {
   CL_N_RIM_KEEP = NOISE .. "north_rim_keep_v1",
   CL_N_D3 = NOISE .. "north_d_v3",
   CL_N_DROP3 = NOISE .. "north_drop_v3",
+  CL_N_DROP4 = NOISE .. "north_drop_v4",
   CL_N_LEAD3 = NOISE .. "north_lead_v3",
   CL_N_BELT3 = NOISE .. "north_belt_v3",
   CL_T_AB_N3 = NOISE .. "temperature_ab_v8",
@@ -706,6 +707,14 @@ local OAS = {
   OW_FIT_FRAY1 = NOISE .. "geo_fray_fit_olde_world_v1",
   OW_LAND_FRAY1 = NOISE .. "overlay_land_fray_olde_world_v1",
   OW_WATER_FRAY1 = NOISE .. "overlay_water_fray_olde_world_v1",
+  -- 0.3.2: the version 9 river and ford sets at scales 12 and 24, built from waterways.next's files (the Samara Bend
+  -- rounded); its other scales and kinds read version 8's sets.
+  OW_WW8 = {NOISE .. "ww_olde_world_s12_v8", NOISE .. "ww_olde_world_s24_v8"},
+  OW_FORDS8 = {NOISE .. "fords_olde_world_s12_v8", NOISE .. "fords_olde_world_s24_v8"},
+  -- the version 9 river warp at scale 12 round the Samara Bend (waterways.next calm): x then y
+  OW_WARP3 = {NOISE .. "warp_x_olde_world_s12_v3", NOISE .. "warp_y_olde_world_s12_v3"},
+  OW9_WW_FILES = {"prototypes/generated/waterways_olde_world_s12_v3.lua",
+                  "prototypes/generated/waterways_olde_world_s24_v3.lua"},
   -- 0.3.2: Old World's geo body past scale 6 over OW9_GEO (coast.overlay): its land and water layers drawn from the
   -- reference raster, combined with it by max and min, each layer bound to version 8's warped chain.
   OW10_GEO = NOISE .. "geo_olde_world_v10",
@@ -821,6 +830,14 @@ local OAS = {
 local OAS_SETS = {
   atlantic_v8 = {ww = OAS.AT_WW7, canals = OAS.AT_CANALS7, dams = OAS.AT_DAMS7, fords = OAS.AT_FORDS7},
   olde_world_v8 = {ww = OAS.OW_WW7, canals = OAS.OW_CANALS7, dams = OAS.OW_DAMS7, fords = OAS.OW_FORDS7},
+  -- 0.3.2: Old World's version 9 (a Map type version): version 8's sets, the rivers and fords past scale 6 of their own
+  olde_world_v9 = {
+    ww = {OAS.OW_WW7[1], OAS.OW_WW7[2], OAS.OW_WW7[3], OAS.OW_WW7[4], OAS.OW_WW7[5], OAS.OW_WW7[6], OAS.OW_WW8[1],
+          OAS.OW_WW8[2]},
+    canals = OAS.OW_CANALS7, dams = OAS.OW_DAMS7,
+    fords = {OAS.OW_FORDS7[1], OAS.OW_FORDS7[2], OAS.OW_FORDS7[3], OAS.OW_FORDS7[4], OAS.OW_FORDS7[5],
+             OAS.OW_FORDS7[6], OAS.OW_FORDS8[1], OAS.OW_FORDS8[2]},
+  },
   europe_v7 = {ww = ELN.EU_WW5, canals = ELN.EU_CANALS5, dams = ELN.EU_DAMS5, fords = ELN.EU_FORDS5},
 }
 -- Destroyed Europe (ARCHITECTURE.md, "Expression inventory"). The toggle key tn_destroyed
@@ -897,6 +914,14 @@ local DE = {
   dev_wobble_a = NOISE .. "destroyed_dev_wobble_a_v1",
   dev_wobble_b = NOISE .. "destroyed_dev_wobble_b_v1",
   dev_fray = NOISE .. "destroyed_dev_fray_v1",
+  -- 0.3.2's next devastation field (destroyed.dev.next): the position with a finer fray, the width at a jogged point
+  dev2 = NOISE .. "destroyed_dev_v2",
+  dev_width2 = NOISE .. "destroyed_dev_width_v2",
+  dev_jog_x = NOISE .. "destroyed_dev_jog_x_v1",
+  dev_jog_y = NOISE .. "destroyed_dev_jog_y_v1",
+  dev_fray2 = NOISE .. "destroyed_dev_fray_v2",
+  class5 = NOISE .. "destroyed_class_v5",
+  chaos_grey2 = NOISE .. "chaos_grey_rock_v1",
   -- 0.3.1's Moscow zone (config.lua moscow): its outline, the Moscow position, the picklist's key and the Europe key
   mz_land = NOISE .. "moscow_outline_land_v1",
   mz_sea = NOISE .. "moscow_outline_sea_v1",
@@ -905,6 +930,7 @@ local DE = {
   mz_present = NOISE .. "moscow_outline_present_v1",
   mz_depth = NOISE .. "moscow_outline_depth_v1",
   mz_dev = NOISE .. "moscow_dev_v1",
+  mz_dev2 = NOISE .. "moscow_dev_v2",
   mz_key = NOISE .. "moscow",
   eu_key = NOISE .. "destroyed_europe",
   temperature = NOISE .. "temperature_ab_v2",
@@ -1436,6 +1462,7 @@ return {
             spawn_lake = OAS.OW8_SPAWN_LAKE, spawn_bias = OAS.OW8_SPAWN_BIAS, inland_lakes = OAS.OW9_LAKES,
             lake_floor = true, start_land = START_LAND, distance = DISTANCE, bearings = OAS.OW7_SPAWN_FILE,
           },
+          waterways = OAS_SETS.olde_world_v9,
           scales = SCALE_LISTS.offered,
           waterway_files = 2,
           mouths = OAS.OW_MOUTH2,
@@ -1649,6 +1676,8 @@ return {
       OAS.OW10_GEO, OAS.OW10_LAND, OAS.OW10_WATER,
       OAS.OW8_LAKES,
       -- 0.3.2: the Map type version 9's own bodies (geography 24)
+      OAS.OW9_ENTRY, OAS.OW9_SHORE, OAS.OW9_LAKES, OAS.OW_GEO_FRAY1, OAS.OW_WW8[1], OAS.OW_WW8[2], OAS.OW_FORDS8[1],
+      OAS.OW_FORDS8[2], OAS.OW_WARP3[1], OAS.OW_WARP3[2], OAS.OW_FIT_FRAY1, OAS.OW_LAND_FRAY1, OAS.OW_WATER_FRAY1,
       OAS.OW8_SHORE, OAS.OW_WW7[1], OAS.OW_WW7[2], OAS.OW_WW7[3], OAS.OW_WW7[4], OAS.OW_WW7[5], OAS.OW_WW7[6],
       OAS.OW_WW7[7], OAS.OW_WW7[8], OAS.OW_CANALS7[1], OAS.OW_CANALS7[2], OAS.OW_CANALS7[3], OAS.OW_CANALS7[4],
       OAS.OW_CANALS7[5], OAS.OW_CANALS7[6], OAS.OW_CANALS7[7], OAS.OW_CANALS7[8], OAS.OW_DAMS7[1], OAS.OW_DAMS7[2],
@@ -1778,6 +1807,13 @@ return {
       names = {DE.dev, DE.dev_ragged, DE.dev_width, DE.heat4, DE.class4, DE.reach2, DE.open2, DE.out_present3,
                DE.out_depth3, DE.chaos_dry, DE.dev_wobble_a, DE.dev_wobble_b,
                DE.dev_fray},
+    },
+    -- The next devastation field (0.3.2; destroyed.dev.next): Alien Biomes only, named over dev, width and class by a
+    -- preset with the zone on, which also names the cold north's zone drop (climate.north3) over its drop.
+    {
+      release = "0.3.2",
+      names = {DE.dev2, DE.dev_width2, DE.dev_jog_x, DE.dev_jog_y, DE.dev_fray2, DE.mz_dev2, DE.class5, DE.chaos_grey2,
+               CT.CL_N_DROP4},
     },
     -- The second hotspot table's bodies: under files its table, which releases the row names regions.lua composes
     -- from it, as the region table does. No geography: a preset names them over the first table's (rule 15).
@@ -2006,6 +2042,10 @@ return {
       release = "0.3.2",
       map = "olde_world",
       geography = 24,
+      names = {OAS.OW9_ENTRY, OAS.OW9_SHORE, OAS.OW9_LAKES, OAS.OW_GEO_FRAY1, OAS.OW_WW8[1], OAS.OW_WW8[2],
+               OAS.OW_FORDS8[1], OAS.OW_FORDS8[2], OAS.OW_WARP3[1], OAS.OW_WARP3[2], OAS.OW_FIT_FRAY1,
+               OAS.OW_LAND_FRAY1, OAS.OW_WATER_FRAY1},
+      files = {OAS.OW9_WW_FILES[1], OAS.OW9_WW_FILES[2]},
     },
     -- 0.3.2: Old World's geo body over the next one (coast.overlay) and its two layers, which a new world's preset
     -- names over version 8's past scale 6.
@@ -3570,6 +3610,43 @@ return {
       open_tiles = 2,
       pyrenees = {strip_px = 30, snow_at = 0.6, snow_px = 20, south = 0.3, gate_px = 25, gate_per_px = 10},
       -- the dry dirt: class 7 of the red palette's class body, with the same score
+      -- 0.3.2: the next class's grey rock (dev.next.class), whose score folds to -inf on every world made before
+      tiles = {{tile = "mineral-brown-dirt-1", class = 7, body = DE.chaos_dry},
+               {tile = "mineral-grey-dirt-2", class = 8, body = DE.chaos_grey2}},
+      -- 0.3.2: a new world with the zone on names these over dev and width (presets.lua destroyed_values), and every
+      -- cut reads them by name. The width noise runs from under a tenth of width_px to more than twice it within a
+      -- few hundred tiles, so where it changes fastest the black ash and heat cuts followed its smooth contour, a line
+      -- running straight for 100 tiles and more, which the tile fray (a few tiles) could not bend.
+      --   jog    the width reads its noise at a point moved by jog_x and jog_y, basis noises in tiles, so its contour
+      --          frays by about their size however fast the width changes
+      --   fray   a finer tile fray the position adds, basis noises in tiles, so the cuts that follow the position's
+      --          own contour (dry dirt first) bend within every few dozen tiles. Its two coarse octaves stay small
+      --          beside the bands' width and its finest two small beside a tile's step of the field, so the class
+      --          sequence bends without leaving islands of one class in the next; each zone's presence takes it too
+      --          (over the scale, in reference pixels), so the zone's own outer edge frays as its cuts do; inside the
+      --          Pyrenees' snow yield it ramps in over snow_ramp_tiles from the zone's edge, which stays on the snow's
+      --          own edge, and the yield's gate line frays by the outline's edge fray and this fray
+      next = {
+        names = {dev = DE.dev2, width = DE.dev_width2, jog_x = DE.dev_jog_x, jog_y = DE.dev_jog_y,
+        --   class  the next class: heat ground, black ash, then grey rock (grey, a class of the red palette) out to the
+        --          zone's edge, with no scorched red grass or dry dirt. Where the grey band would be under thin tiles
+        --          of the position wide, the black ash runs to the edge instead, so the band breaks off rather than
+        --          thinning to a bright line one to three tiles wide. The black ash also reaches out over the grey band
+        --          by its share of the break noise (reference pixels) over at, in full span over it, so the band
+        --          narrows and breaks off along part of every edge; the noise is coarse beside the band, so its ash cut
+        --          never folds back into islands. grey is the grey rock's class in tiles above (Alien Biomes' grey
+        --          dirt 2, which reads as rock and stones beside the black ash)
+        class = {thin = 16, grey = 8,
+                 brk = {wavelength_px = 90, octaves = 2, persistence = 0.5, seed1 = 7937, at = 0.4, span = 0.5}},
+        jog = {{tiles = 7.3, amp = 1, seed1 = 7926}, {tiles = 15.7, amp = 2, seed1 = 7927},
+               {tiles = 31.1, amp = 4, seed1 = 7928}, {tiles = 63.7, amp = 6, seed1 = 7933},
+               {tiles = 127.3, amp = 12, seed1 = 7934}},
+        fray = {{tiles = 4.7, amp = 1.5, seed1 = 7929}, {tiles = 9.1, amp = 3, seed1 = 7930},
+                {tiles = 17.3, amp = 8, seed1 = 7931}, {tiles = 34.9, amp = 10, seed1 = 7932},
+                {tiles = 69.7, amp = 4, seed1 = 7935}, {tiles = 139.1, amp = 8, seed1 = 7936}},
+        jog_shift = 40000,
+        snow_ramp_tiles = 48,
+      },
     },
   },
 
@@ -3599,6 +3676,10 @@ return {
     outline = {names = {land = DE.mz_land, sea = DE.mz_sea, inside = DE.mz_inside, sd = DE.mz_sd,
                         present = DE.mz_present, depth = DE.mz_depth}},
     dev = DE.mz_dev, start_px = 6, ragged_share = 0.6,
+    -- 0.3.2: the next Moscow position, read by the next devastation field (destroyed.dev.next): its presence takes
+    -- the field's next fray over the scale, since the outline's own contour, a smooth curve, drew the zone's edge
+    -- wherever the field reached it
+    next = {dev = DE.mz_dev2},
     corrupt = {depth = BC.mz_corrupt, union = BC.out_depth3, big_px = 4000, fray = 14,
                gap = {name = BC.mz_gap, wavelength_px = 30, octaves = 2, persistence = 0.5, seed1 = 7924, mid = 3,
                       amp = 9, low = 0, top = 12}},
@@ -3847,6 +3928,20 @@ return {
   waterways = {
     version = 1,
     versions = {atlantic = 2, olde_world = 2},
+    -- next (0.3.2): a map's files past its released ones at some scales, emitted as `version` for `scales` beside them
+    -- (tools/build_waterways.py, manifest-<map>-next.json), with `round` applied: each listed river's course inside
+    -- box_px (reference px: first column, first row, last column, last row) and one vertex beyond each end corner-cut
+    -- `passes` times, so a tight bend the simplification left as a few long segments meeting at sharp vertices reads as
+    -- one curve, then simplified at simplify_tiles. The Volga's Samara Bend (48.5 to 50.4 E, 53.0 to 54.4 N, Tolyatti
+    -- to Syzran) at scales 12 and 24. calm: at its scale the next river and ford sets read the rivers' warp under
+    -- names of their own (warp, x then y), whose fine meander (natural.warp_fine) fades to 0 within inner_tiles of
+    -- centre_px (reference px) and is whole past outer_tiles: there the meander octaves, 34 tiles at 230 and 13 at 95,
+    -- bent the bend's two reaches by different amounts into a hook with near-right corners. Every tile past
+    -- outer_tiles reads the warp it read before, so no other river moves.
+    next = {olde_world = {version = 3, scales = {12, 24}, round = {
+      {river = "volga", box_px = {3040, 1245, 3126, 1308}, passes = 4, simplify_tiles = 0.5},
+    }, calm = {scale = 12, centre_px = {3112, 1295}, inner_tiles = 160, outer_tiles = 320, warp = OAS.OW_WARP3}}},
+    sets = {europe = OAS_SETS.europe_v7, atlantic = OAS_SETS.atlantic_v8, olde_world = OAS_SETS.olde_world_v9},
     floor_tiles = 7, river_floor_tiles = 3, two_way_tiles = 11, margin_tiles = 0.25,
     river_k = {major = 3, minor = 2},
     river_cap_tiles = {major = 48, minor = 36},
@@ -4414,6 +4509,10 @@ return {
       valdai = {lon = {29.5, 38}, lat = {54.5, 62}, ramp = 1.5, floor = 0.86, amp = 0.03, aux = 0.55,
                 wave_tiles = 320, warp_deg = 0.4, seed1 = 7621, seed1_warp = 7622,
                 names = {moisture = CT.CL_M_AB_V, aux = CT.CL_A_AB_V}},
+      -- zone_drop (0.3.2): the drop with none inside a Chaos zone's heat ground (the zone's lift over the natural
+      -- ceiling), which a preset with the zone on names over drop: High snow's drop of 12 to 15 degrees took the heat
+      -- ground's rim under Alien Biomes' volcanic floor and drew its yellow and orange grasses there
+      zone_drop = CT.CL_N_DROP4,
       names = {d = CT.CL_N_D3, drop = CT.CL_N_DROP3, lead = CT.CL_N_LEAD3, belt = CT.CL_N_BELT3,
                temperature = CT.CL_T_AB_N3, moisture = CT.CL_M_AB_N3, clear = CT.CL_N_CLEAR,
                clear_warp = CT.CL_N_CLEAR_W,

@@ -634,9 +634,14 @@ if AB then
     else
       def(NN.moisture, K2 .. " - " .. GREY .. " * max(0, " .. K2 .. " - " .. num(F.lead_top) .. ")", kept_at)
     end
+    return drop
   end
   cold_north(NF)
   cold_north(NF2, true)
+  local drop3 = cold_north(NF3, true)
+  -- 0.3.2 (config.lua climate.north3.zone_drop): no drop where the zone's lift stands over the natural ceiling, so a
+  -- Chaos zone's heat ground keeps Alien Biomes' volcanic band under High snow; it does not read the drop's name
+  def(NF3.zone_drop, "if(" .. T2 .. " > " .. num(T.ab.max) .. ", 0, " .. drop3 .. ")")
   -- 0.3.1: the Valdai floor on the properties Alien Biomes' tiles and trees read (config.lua climate.north3.valdai),
   -- over the released bodies it reads by name: where the box weight is 0 they are the released bodies exactly.
   local VD = NF3.valdai

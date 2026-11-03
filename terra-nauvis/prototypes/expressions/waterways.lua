@@ -58,6 +58,15 @@ local FILES = {
   },
 }
 
+-- The next files (config.lua waterways.next, 0.3.2), by map, in the order of its next scales: a Map type version's
+-- sets past its base's.
+local NEXT_FILES = {
+  olde_world = {
+    require("prototypes.generated.waterways_olde_world_s12_v3"),
+    require("prototypes.generated.waterways_olde_world_s24_v3"),
+  },
+}
+
 local H = cfg.hooks
 
 local function files_of(key, g)
@@ -338,10 +347,95 @@ for _, key in ipairs(cfg.map_order) do
   end
 end
 
+-- The calm warp (config.lua waterways.next calm): the base's river warp bodies X and Y at the calm scale with their
+-- fine meander faded to 0 within inner_tiles of centre_px, under the calm's names. Returns {X = name, Y = name}.
+local function calm_warp(g, nx, s, mouth)
+  local C = nx.calm
+  local full = natural_locals(g, mouth, s)
+  if not full.fadef then
+    error("waterways.next calm needs the fine meander's own fade at scale " .. s)
+  end
+  local own = {fadef = full.fadef}
+  for name, body in pairs(full) do
+    if name:match("^m[xy]%d") or name:match("^w[xy]%d") then
+      own[name] = body
+    end
+  end
+  own.M, own.fade = full.M, full.fade
+  -- the distance to centre_px in tiles through the version's chain, whose pixel centres lie at integer u and v
+  local du, dv = "(" .. g.u .. " - " .. num(C.centre_px[1]) .. ")", "(" .. g.v .. " - " .. num(C.centre_px[2]) .. ")"
+  own.fadef = "(" .. full.fadef .. ") * clamp((" .. cfg.keys.scale .. " * sqrt(" .. du .. " * " .. du .. " + " .. dv ..
+    " * " .. dv .. ") - " .. num(C.inner_tiles) .. ") / " .. num(C.outer_tiles - C.inner_tiles) .. ", 0, 1)"
+  local out = {}
+  for i, part in ipairs({"X", "Y"}) do
+    local body = {}
+    for k, val in pairs(own) do
+      body[k] = val
+    end
+    E[#E + 1] = {type = "noise-expression", name = C.warp[i], expression = full[part], local_expressions = body}
+    out[part] = C.warp[i]
+  end
+  return out
+end
+
+-- A Map type version's own river and ford sets (config.lua waterways.next): at each next scale, every kind whose set
+-- name differs from its base version's is built from the next file, bound to the base's chain and warp bodies the way
+-- emit_sets binds the base's own, and at the calm scale to the calm warp.
+local function emit_next(key, g, v)
+  local nx = cfg.waterways.next and cfg.waterways.next[key]
+  for i, s in ipairs(nx and nx.scales or {}) do
+    local pos
+    for p, x in ipairs(scales_of(g)) do
+      if x == s then
+        pos = p
+      end
+    end
+    local gen = NEXT_FILES[key][i]
+    if not (pos and gen) then
+      error("waterways.lua has no next file for " .. key .. " at scale " .. s)
+    end
+    local warp = {}
+    for k, part in ipairs(WARP_PARTS) do
+      warp[part] = g.warp[(pos - 1) * #WARP_PARTS + k]
+    end
+    local mouth = g.mouths and g.mouths[pos]
+    if nx.calm and nx.calm.scale == s then
+      for part, name in pairs(calm_warp(g, nx, s, mouth)) do
+        warp[part] = name
+      end
+    end
+    for _, kf in ipairs({{"ww", "seg"}, {"fords", "box"}}) do
+      local kind, f = kf[1], kf[2]
+      local name = v.waterways[kind][pos]
+      if name ~= g.waterways[kind][pos] then
+        local full = natural_locals(g, mouth, s, kind)
+        local kept = {W = full.W, B = full.B, J = full.J, Jr = kind == "fords" and full.Jr or nil}
+        for part, body in pairs(warp) do
+          kept[part] = body
+        end
+        if kind == "ww" then
+          kept.T = gen.taper
+        end
+        E[#E + 1] = {type = "noise-expression", name = name, expression = gen[kind], local_expressions = kept,
+                     local_functions = {[f] = fn(gen.functions[f])}}
+      end
+    end
+  end
 end
 
 for _, key in ipairs(cfg.map_order) do
   local versions = (cfg.geography[key] or {}).versions or {}
+  for _, v in ipairs(versions) do
+    if v.map_type_of and v.waterways then
+      for _, g in ipairs(versions) do
+        if g.geo_id == v.map_type_of.geo_id and not g.map_type_of then
+          emit_next(key, g, v)
+        end
+      end
+    end
+  end
+end
+
 -- The hook gate and the ford key hold their off values; Earth presets set the gate and point the key at
 -- the map's ford set (ARCHITECTURE.md, "Stable hooks"). The canals switch's neutral bodies.
 E[#E + 1] = {type = "noise-expression", name = cfg.keys.on, expression = num(H.gate_off)}

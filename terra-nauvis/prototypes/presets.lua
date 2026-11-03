@@ -274,6 +274,13 @@ local function destroyed_values(map_key, v, names)
     out[D.chaos.names.class] = D.dev.names.class
     out[D.barrier.names.reach] = D.dev.names.reach
     out[D.barrier.names.open] = D.dev.names.open
+    -- 0.3.2: the next position and width (destroyed.dev.next), which every cut reads by name
+    out[D.dev.names.dev] = D.dev.next.names.dev
+    out[D.dev.names.width] = D.dev.next.names.width
+    -- 0.3.2: the next class (grey rock in place of scorched red grass and dry dirt), and the cold north's drop with
+    -- none in the heat ground (climate.north3.zone_drop), which neither reads the name it replaces
+    out[D.chaos.names.class] = D.dev.next.names.class
+    out[cfg.climate.north3.names.drop] = cfg.climate.north3.zone_drop
     out[D.barrier.names.zone] = D.barrier.names.zone3
     out[D.outline.names.present] = D.outline.next.present
     out[D.outline.names.depth] = D.outline.next.depth
@@ -553,8 +560,14 @@ local function geo_next_values(v)
 end
 
 -- A Map type version of the preset's version (config.lua geography, map_type_of): past its above_scale the preset
+-- names its entry for elevation, so a preset world and a Map-type-only world read one entry, and its ford set for the
+-- save's scale under the ford key. Not part of baked(): the version's own fallbacks stay its base's.
 local function map_type_values(map_key, v)
   for _, o in ipairs(cfg.geography[map_key].versions) do
+      local out = {[K.elevation] = o.entry}
+        end
+      end
+      return out
     end
   end
   return {}

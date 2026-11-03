@@ -1181,14 +1181,23 @@ local ORE_CURVES = require("prototypes.ore_curves")
   local own = ramped and ("live_value * " .. RS.ramp.name) or "live_value"
   local base = "if(" .. far .. ", live_value * " .. f("rv_d") .. " / " .. f("distance") ..
     (ramped and (" * " .. ramp("rv_d")) or "") .. ", " .. own .. ")"
+  local flat
   if RV.vanilla then
+    -- regular ore's richness factor at the flattened distance (resources.natural.flat): 1 out to the knee
+    base = "live_value * rv_flat"
+    flat = f(ORE_CURVES.flat_distance()) .. " / " .. f("distance")
   end
   local hot = hs.r
+  local fh
   local V3 = cfg.hotspots_v2.v3
     -- the third table (hotspots_v2.v3): per_tile times vanilla's mean regular ore per tile here, times the body's
     -- height (held to peak_cap of a body_tiles cone's mean, where bodies crowd) over that mean, times the richness
     -- slider
     local h = HROW[o.resource]
+    -- a far field's smaller bodies (ore_curves.lua body_scale) stand f ^ 0.5 as high: the mean height reads that
+    hot = num(V3.rich_fit * V3.per_tile / ORE_CURVES.body_height(h)) .. " / rv_fh * " .. ORE_CURVES.per_tile(h) ..
+      num(V3.peak_cap * ORE_CURVES.body_height(h)) .. " * rv_fh)"
+    fh = ORE_CURVES.height_scale(h)
   elseif not FLUID[o.resource] then
     hot = hs.r .. " * max(1, " .. num(RV.lift) .. " * " .. F("rv_d") .. " / (" .. F("distance") .. ") ^ " ..
       num(RV.cube_root) .. ")"
@@ -1197,6 +1206,12 @@ local ORE_CURVES = require("prototypes.ore_curves")
     w.local_expressions.rv_d = "if(" .. far .. ", distance * " .. num(RV.ref_scale) .. " / " .. S .. ", distance)"
   end
   w.local_expressions.rv_base = base
+  if flat then
+    w.local_expressions.rv_flat = flat
+  end
+  if fh then
+    w.local_expressions.rv_fh = fh
+  end
   W[#W + 1] = w
 end
 
@@ -1228,7 +1243,9 @@ end
   local rq = HROW[o.resource].rq
   local slope = cfg.hotspots.spot.cone_factor / (math.pi * rq * rq * rq)
   local v3 = cfg.hotspots_v2.v3
+  -- a far field's bodies (ore_curves.lua body_scale) are f ^ 0.5 as wide: the wobble's trim follows them
   local value = "clamp(" .. body .. " - " .. num(edge_trim * slope) .. " * " ..
+    RV.edge.wobble .. fscale .. ", 0, 1)"
                value .. " * " .. clear .. " * " .. keep .. "), " .. o.p_v1 .. ")"}
 end
 
@@ -1337,6 +1354,13 @@ local function natural_patches(W, keys)
       keys[b.live] = b.name
       -- 0.3.0: vanilla's function with the footprint gap (resources.natural.fn2); a world made earlier keeps b.name
       if b.name2 then
+        -- and the keep of regional scarcity (resources.scarcity); offshore oil keeps every patch
+        local keep = b.scarcity and RS.scarcity.names[b.scarcity].keep or cfg.neutral.one
+        local scarcity_on = b.scarcity and ("(" .. cfg.keys.scarcity .. " > " .. RS.scarcity.levels.off .. ")") or
+          cfg.neutral.zero
+        W[#W + 1] = {type = "noise-expression", name = b.name2,
+                     expression = (string.gsub(text, NP.vanilla_fn .. "{", NP.fn2 .. "{" .. NP.keep_param .. " = " ..
+                       keep .. ", " .. NP.on_param .. " = " .. scarcity_on .. ", "))}
         keys[b.live] = b.name2
       end
     end

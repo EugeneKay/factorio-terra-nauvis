@@ -403,6 +403,38 @@ L2.regular_spot_quantity_expression = "clear * (" .. L2.regular_spot_quantity_ex
 for _, sw in ipairs(NP.fn2_swaps) do
   L2.regular_patches = swap(L2.regular_patches, sw.old, sw.new)
 end
+-- the far flattening (resources.natural.flat): spot quantities stay vanilla's at the real distance, so the region
+-- targets and every spot's place stay too; the spots' output takes vanilla's doubling at d' over that at d (1 out to
+-- the knee) and the blob reads d'
+L2.flat_distance = require("prototypes.ore_curves").flat_distance()
+local function doubling(d)
+  return "(1 + clamp(size_effective_distance_at(" .. d .. ") / double_density_distance, 0, 1))"
+end
+L2.flat_rho = doubling("flat_distance") .. " / " .. doubling("distance")
+L2.regular_patches = swap(L2.regular_patches, "spot_noise{", "flat_rho * spot_noise{")
+L2.regular_patches = swap(L2.regular_patches, "regular_blob_amplitude_at(distance)",
+  "regular_blob_amplitude_at(flat_distance)")
+-- regional scarcity (resources.scarcity): the caller's keep, 0 or 1 per spot region, multiplies the regular spot
+-- density and quantity, so a region keeps the spots its Off world takes or none
+fn2.parameters[#fn2.parameters + 1] = NP.keep_param
+L2.regular_patches = swap(L2.regular_patches, NP.density_old, NP.density_new)
+L2.regular_spot_quantity_expression = swap(L2.regular_spot_quantity_expression, NP.quantity_old, NP.quantity_new)
+L2.regular_patches = swap(L2.regular_patches, NP.radius_old, NP.radius_new)
+fn2.parameters[#fn2.parameters + 1] = NP.on_param
+local R = num(NP.spot.region_size)
+local H = num(NP.spot.region_size / 2)
+L2.region_mid_x = "floor((x + " .. H .. ") / " .. R .. ") * " .. R
+L2.region_mid_y = "floor((y + " .. H .. ") / " .. R .. ") * " .. R
+L2.regular_patches = swap(L2.regular_patches, NP.favour_old, NP.favour_new)
+local cut = string.find(L2.regular_patches, NP.split_at, 1, true)
+if not cut or string.find(L2.regular_patches, NP.split_at, cut + 1, true) then
+  error("resources.lua: fn2's regular patches no longer hold '" .. NP.split_at .. "' once")
+end
+local split = cut + #NP.split_at
+L2.regular_spots = string.sub(L2.regular_patches, 1, split - 1)
+L2.regular_blobs = string.sub(L2.regular_patches, split + #NP.split_join)
+L2.regular_patches = "if(" .. NP.on_param .. " * (regular_spots == 0), regular_spots + min(0, regular_blobs), " ..
+  "regular_spots + regular_blobs)"
 E[#E + 1] = fn2
 
 data:extend(E)

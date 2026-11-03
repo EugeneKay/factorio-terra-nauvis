@@ -66,8 +66,13 @@
    "setting_type": "startup",
    "default_value": "100",
   },
+  "regional_scarcity": {
+   "source": "terra-nauvis-regional-scarcity (0.3.0): regional scarcity of regular ore past about 1,500 tiles at scale 12; startup, a dropdown of off, medium and strong, default medium",
    "type": "string-setting",
    "setting_type": "startup",
+   "default_value": "medium",
+   "allowed_values": ["off", "medium", "strong"]
+  },
   "inland_lakes": {
    "source": "terra-nauvis-inland-lakes, added after the first playtest (by default no random lakes, only the lake at the chosen spawn city): startup, bool, default off",
    "type": "bool-setting",
@@ -90,6 +95,7 @@
   },
    "type": "string-setting",
    "setting_type": "startup",
+   "default_value": "medium",
   "exact_coast": {
    "type": "bool-setting",
    "setting_type": "startup",

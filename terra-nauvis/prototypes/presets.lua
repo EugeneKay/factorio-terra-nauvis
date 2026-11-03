@@ -91,6 +91,11 @@ end
 local scale = tonumber(settings.startup[cfg.settings.scale.name].value)
 -- The hotspot amount is a percentage in the setting and a multiplier in the bodies.
 local hotspot_amount = tonumber(settings.startup[cfg.settings.hotspot_amount.name].value) / cfg.hotspots.amount_percent
+-- The regional scarcity level (resources.scarcity): the setting's value as a number.
+local scarcity = cfg.resources.scarcity.levels[settings.startup[cfg.settings.regional_scarcity.name].value]
+if not scarcity then
+  error("config.lua resources.scarcity.levels has no level for the setting's value")
+end
 
 -- The per-save city number a spawn-city setting stands for: its value's position in the setting's
 -- allowed values, less one, so random (the first) is 0 and the first city 1.
@@ -181,8 +186,11 @@ local function ridge_values(map_key)
     return {}
   end
   -- 0.3.0: the band, highland, passes and tile reach a new world takes (ridges.preset, the union of both range
+  -- tables)
   local out = {[K.cliff_elevation] = RP.cliff_elevation, [K.cliffiness] = RN.cliffiness, [K.crest] = crest,
                [K.openings] = openings, [K.band] = (RP.band or RN.band)[map_key],
+               [K.high] = RP.high[map_key], [K.passes] = RP.passes[map_key],
+               [K.high_tile] = RP.high_tile[map_key]}
   for name, n in pairs(cfg.trees.restore.rocks) do
     if n.high then
       out[AB and n.key or ("entity:" .. name .. ":probability")] = n.high
@@ -391,6 +399,7 @@ local function baked(map_key, v)
     [K.map] = cfg.maps[map_key].id,
     [K.scale] = scale,
     [K.hotspot_amount] = hotspot_amount,
+    [K.scarcity] = scarcity,
     [K.geo] = v.geo_id,
     [v.cx] = v.city_offset[1],
     [v.cy] = v.city_offset[2],

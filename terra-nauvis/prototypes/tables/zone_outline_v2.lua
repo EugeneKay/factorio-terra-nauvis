@@ -13,6 +13,7 @@
 -- alone and runs through water on every map, so it reads its crossing count and takes no roughness; a land cut is a
 -- keep the barrier measures from as well, and takes the shared roughness as a keep row does. A cut holds one latlon
 -- list for every map, or maps, one list per map key, folded on the map. Fitted from previews at seed 1000
+-- (by the zone work's fitting scripts): nordic, one list, is the mid-line of the straits between the zone's
 -- land (Jutland north and south of the Limfjord with Als and the islets within 3 pixels of its coast, the Wadden
 -- islands, the German and Polish coast with Fehmarn and all of Rugen) and the rest (the Danish islands, Samsoe, Laesoe,
 -- Anholt, Bornholm, Scandinavia), on the three maps at scales 1, 6 and 12 at once, so it keeps at least a quarter

@@ -5,6 +5,116 @@ All notable changes to Terra Nauvis are documented in this file. The format foll
 [Semantic Versioning](https://semver.org/). The changelog players see in the game is
 `terra-nauvis/changelog.txt`.
 
+## [0.3.0] - 2026-11-01
+
+### Changed
+
+- Exact coastlines at scales 1 and 2 on new Old World and Atlantic worlds (tn_geo 21 and 22): a tile reads the
+  reference blurred and interpolated between pixel centres, moved by the warp tables plus a short tile noise,
+  in every K+ pixel. Specks and islets of up to 8 tiles with nothing to join go under.
+- River sets of tn_geo 21, 22 and 23 at scales 1 and 2 take a wider bank noise, so each bank wanders on its
+  own.
+- The spawn lake of tn_geo 21 and 22 takes a third warp row up to scale 2.
+- New worlds (tn_geo 21 to 23): biter bases stand scattered instead of in even rows, trees thin out on hotspot
+  ore, and Batu Hijau's copper keeps off Lombok.
+- Ordinary ore patches on new worlds are vanilla's own again, in size, shape and richness for their distance
+  from the spawn, and keep out of ore hotspots. Presets set the ore sliders to 1. Past about 1,000 tiles from
+  the spawn they grow richer at half vanilla's pace, and from about 4,000 tiles they stop growing.
+- An ore hotspot on new worlds holds three to six times a large ordinary patch at its distance, at most about
+  100 million, about 1.75 times as rich per tile as vanilla's ordinary ore, in more bodies for a stronger
+  field. Far out it is two to two and a half times as rich per tile as the ordinary ore round it, so far
+  fields spread over a district of large bodies instead of a few small rich ones. The map's ore size and
+  richness sliders reach hotspots, and the Ore hotspot size setting adds or removes bodies.
+- A start with less than nine tenths of vanilla's average coal gets topped up to that average.
+- New worlds: the snow line runs north of Russia's main lowland, a spawn in the cold north starts in a
+  clearing off the snow, and palms grow on warm Mediterranean shores (with Destroyed Europe on as well).
+- With Space Age, the plants and decoratives Terra Nauvis re-lists keep the tiles of the other planets that
+  place them.
+- New worlds beside Alien Biomes keep its blue and purple trees, plants and ground inside the Blue corrupted
+  zone; outside it each blue tile takes a green, brown or orange counterpart.
+- At scale 12 on new Old World and Atlantic worlds (tn_geo 21, 22) rivers take a finer warp octave and ford
+  ends a finer noise, so banks run straight for shorter stretches; scales 1 to 6 and 24 keep their tiles.
+- New worlds: trees and plants beside hotspot ore thin out only where ore lies, not on the band a field's
+  wandering outline leaves bare (tn_ore_open_v2, tn_ore_open_plants_v2).
+- New worlds: with Destroyed Europe on, great forests inside the zone stand as dead forests
+  (tn_destroyed_dead_v2); with Blue corrupted on, Alien Biomes' green and olive plants no longer grow inside
+  the blue zone (tn_zone_plants).
+- New worlds: marsh pools fray along their edges in tiles (tn_marsh_water_mud_v2), so their shores run
+  straight for shorter stretches.
+- Inland lakes of the 0.3.0 geography versions (tn_inland_lakes_europe_v6, _atlantic_v3, _olde_world_v3) hold
+  a floor off every lake spot, so the shore noise leaves no water specks between lakes (Old World 12 at
+  Frankfurt, a 3,072 tile window: 1,157 water bodies of 1 to 4 tiles to 27).
+- With Destroyed Europe or Blue corrupted on beside Alien Biomes, the tiles only the zone places (Alien
+  Biomes' orange heat bands, black and red sand and dirt; the Blue zone's dirt) absorb pollution like grass-1
+  (7.5e-6 a second) and the zone's dead tree copies like tree-01 (0.001 a second), in
+  prototypes/zone_look.lua. Grey dirt 6, which also lies outside the zone, keeps its value. A prototype
+  change, so saves made before take it.
+- Zone recolour (prototypes/zone_look.lua): with a zone on beside Alien Biomes, each light brown or
+  dirt-coloured decal and plant of its list (config.lua zone_look.zones) gets a tinted copy, ember red for
+  Destroyed Europe and blue-purple for Blue corrupted, which takes the original's probability inside the zone
+  behind the zone's key while the original keeps it outside. Spawner and worm creep (zone_look.creep) gets a
+  copy per zone in every spawn list, kept to the zone's own ground by the collision layers tn_zone_ground and
+  tn_off_zone_<id>. Biter Cleanup clears creep by name and does not know the copies.
+- With a zone on beside Alien Biomes, its own ground walks at speed 1 and caps vehicle friction at 2 (Alien
+  Biomes' heat bands walked at 0.9 to 0.7 with friction 4 to 16; its black and red sand at 0.8), and with
+  Space Age the tree farm plant (tree-plant) lists the zones' ground among its plot tiles. Prototype changes,
+  so saves made before take them.
+- The tooltips of canals, great forests, ridges, hotspots, inland lakes and both zones give each layer's map
+  generation cost at Old World 12 beside Alien Biomes (noise program complexity), and the Destroyed Europe and
+  Blue tooltips and README rows say what the zone does to speed, pollution and creep.
+- Beside Alien Biomes with Space Age, the tree farm plant (tree-plant) lists the vanilla land tiles again
+  (Space Age's own list, tiles.vanilla.tiles): Alien Biomes rewrites the list to its own tiles, and Earth
+  presets restore vanilla grass, dirt, sand and red desert, where agricultural towers planted nothing.
+- With Destroyed Europe on beside Alien Biomes, the zone's ground on new worlds is mostly cracked volcanic
+  heat ground with lava pools, without the light grey and red sand patches; the Alps inside it take that heat
+  ground instead of brown dirt, and its dead great forests stand half as dense.
+- Destroyed Europe on new worlds takes in Jutland and the north German coast while the Danish islands stay
+  out, reaches the foothills of the Pyrenees, and takes in Veneto, Friuli and western Istria. The band between
+  its heat ground and ordinary land varies in width and breaks in places.
+- The grey rims along snow lines, on mountain ranges and in the cold north, are narrow and ragged on new
+  worlds and break in places, instead of wide grey bands. Desert ranges such as the Atlas and the Zagros carry
+  no snow.
+- Biomes on new worlds are about 1.5 times larger: the presets open the Moisture and Terrain type sliders, and
+  Alien Biomes' temperature sliders, at 150 percent scale.
+- Deserts on new worlds meet grass across a narrower, broken band of dirt. The Namib is a desert; Sicily,
+  Greece and Cyprus take grass and dirt instead of sand; the Pacific coast of North America, southern Chile,
+  Japan, Korea and eastern Madagascar are greener.
+- The snow line across northern Europe and Siberia on new worlds runs at the tree line, about 64 to 70 N, with
+  green taiga south of it.
+- New worlds have savanna and dry scrub in East Africa, the Karoo, the Cerrado and the Caatinga, a greener
+  Pampas and northern Australia, and grass and scrub in California and central Chile instead of sand.
+- Great forests grow in Borneo, Sumatra, New Guinea, the Pacific Northwest, the Appalachians and Valdivia, and
+  marshes spread in the Sundarbans, the Inner Niger Delta and the Mekong delta, on new worlds of the maps that
+  hold them.
+- New worlds have ten more mountain ranges with cliff ridges, snow and rock fields on the maps that hold them:
+  the Taurus, the Talysh, the Alborz, the Ethiopian Highlands, the Tian Shan, the Altai, the Gobi Altai, the
+  Great Dividing Range, the Sierra Nevada and the Cascades. Cliffs on every range stand as walls with short
+  breaks, so straight cliff runs are shorter, the Alps, the Pyrenees and the Zagros included.
+- Each map keeps only its 0.3.0 geography version, so the game starts about 4.5 seconds faster with a large
+  mod pack. Worlds made on versions before 0.3.0 no longer load.
+- Ground seams on new worlds fray finely, so grass, dirt, sand and snow meet along ragged edges instead of
+  long smooth lines, and inside Destroyed Europe the heat ground frays against its rock.
+- With Destroyed Europe on, the zone's light grey sand and red dirt patches are gone on new worlds: they break
+  into heat ground and black ash.
+- Inland lakes on new worlds no longer fold into L shapes, and fewer small water specks sit beside them.
+- At scale 12 on new Old World and Atlantic worlds, rivers meander, so their banks no longer run straight for
+  hundreds of tiles, and the ends of fords are rougher.
+- New Old World worlds at scales 12 and 24 generate faster: their coast fit costs about 28 percent less, and
+  the Thames and Cotentin shores are cleaned up.
+- Ore hotspots on new worlds have rougher outlines, and each field's design total is capped by its strength,
+  at about 46 to 73 million.
+- The first range table's unused ridge bodies are gone, so the game starts a little faster with a large mod
+  pack.
+- The README describes 0.3.0, with a new map render and in-game shots.
+- The Ore hotspot amount setting is now called Ore hotspot size, and its values read Small, Normal, Large and
+  Huge instead of 50, 100, 200 and 400 percent; the values themselves are unchanged.
+- The new setting Regional scarcity, Medium by default, makes ordinary ore patches on new worlds rarer outside
+  the regions where each resource is found on Earth, from about 1,500 tiles from the spawn at scale 12: whole
+  patches drop out, uranium and oil most, stone least, and the patches that remain keep their size. The start
+  and the hotspots stay the same.
+- The snow on the old ranges of new worlds frays at its edges like the new ranges' snow, so southern Norway's
+  massif loses its long straight eastern edge.
+
 ## [0.2.0] - 2026-11-01
 
 ### Added

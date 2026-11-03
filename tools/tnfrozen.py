@@ -300,6 +300,7 @@ def moved(moves, name, sha256):
     return bool(moves) and sha256 in ((moves.get("records") or {}).get(name) or [])
 
 
+# The collapse (0.3.0: one geography version per map, allowed because no world exists on any
 # version before 0.3.0). Unlike the unreleased waiver, no release tag voids it: it
 # names exactly what the collapse took out of landed states, so the append-only checks excuse that and hold every other
 # record, row, version and file as before.

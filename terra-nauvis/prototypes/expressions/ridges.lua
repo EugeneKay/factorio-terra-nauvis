@@ -357,6 +357,9 @@ local function highland(key, Bd, O, NM)
         num(h.span) .. " - abs(" .. h.p .. " - " .. S .. " * " .. num(h.mid) .. "))"
     end
   end
+  if NM.high then
+    def(NM.high, joined("max", terms, "-inf"), L)
+  end
   -- The tiles pay for their own crest functions, so they read them at the wandering point itself, their reach
   -- follows the vertex heights, one local per piece, and a piece ends round: its box's corners drew flat-topped
   -- tabs of grey ground.
@@ -372,6 +375,9 @@ local function highland(key, Bd, O, NM)
     T2["e" .. s] = "max(0, abs(" .. h.p .. " - " .. S .. " * " .. num(h.mid) .. ") - " .. S .. " * " .. num(h.span) ..
       ")"
     terms[k] = h.reach_text .. " - sqrt(a" .. s .. " * a" .. s .. " + e" .. s .. " * e" .. s .. ")"
+  end
+  if NM.high_tile then
+    def(NM.high_tile, joined("max", terms, "-inf"), T2)
   end
   -- The cold field (config.lua ridges.cold): one field per piece, on the pieces the rocks read, so the rocks' reach
   -- covers every cold tile and the palm mask can stand on it.
@@ -420,6 +426,11 @@ local function highland(key, Bd, O, NM)
           local term = "1 - " .. dist .. " / (" .. num(h.reach * (snowy and 1 or CO.grey_reach)) .. " * " ..
             N.cold.reach .. ")"
           if not o.second then
+            -- the cold field's second version frays the first table's snow edges with the same noise: the slow region
+            -- noise alone left southern Norway's east edge one straight line 1,200 tiles long (scale 12)
+            if rise then
+              term = term .. " + fr + fw"
+            end
             out[#out + 1] = snowy and term or ("min(" .. num(CO.grey_top) .. ", " .. term .. ")")
           elseif snowy then
             C2["c" .. s] = term .. " + fr"
@@ -436,8 +447,30 @@ local function highland(key, Bd, O, NM)
   end
   if NM.cold2 then
     local cterms = cold_terms(true)
+    local L2 = {}
+    for k, v in pairs(T2) do
+      L2[k] = v
     end
+    for k, v in pairs(C2) do
+      L2[k] = v
+    end
+    -- the snow edge noise, once for every term of both tables: the ragged factor and two rows in tiles
+    local fr = num(UC.fray) .. " * (" .. cfg.climate.ragged.name .. " - 1)"
+    for _, w in ipairs(UC.edge) do
+      fr = fr .. " + " .. num(w.amplitude) .. " * basis_noise{x = x, y = y, seed0 = map_seed, seed1 = " ..
+        num(w.seed1) .. ", input_scale = " .. num(1 / w.tiles) .. ", output_scale = 1}"
+    end
+    L2.fr = fr
+    local fw = "0"
+    for _, w in ipairs(UC.wide) do
+      fw = fw .. " + " .. num(w.amplitude) .. " * basis_noise{x = x, y = y, seed0 = map_seed, seed1 = " ..
+        num(w.seed1) .. ", input_scale = " .. num(1 / w.tiles) .. ", output_scale = 1}"
+    end
+    L2.fw = fw
     def(NM.cold2, joined("max", cterms, "-inf"), L2)
+  end
+  if not NM.passes then
+    return
   end
   local P, ds = {}, {}
   for i, c in ipairs(O.named) do
@@ -459,6 +492,8 @@ end
 -- The union (0.3.0): both tables' ranges in the next keep, run, crest band, highland
 -- reach, tile reach and passes, and in the cold field's second version, which only 0.3.0 reads; line_bodies below
 -- builds the union's line field (crest and openings) with the chop (ridges.union.field), which keeps every straight
+-- cliff run short (under 50 tiles at scales 12 and 24).
+-- g is the map's frame, waves its noise rows.
 local function union_bodies(key, m, g, waves)
   local centre = " + " .. num(RD.centre_tiles)
   local O2 = {u = N.wander_u[key], v = N.wander_v[key], fixed_u = g.u, fixed_v = g.v, L = {}, terms = {}, keeps = {},
@@ -496,6 +531,9 @@ local function union_bodies(key, m, g, waves)
                           passes = UN.passes[key]})
 end
 
+-- A map's first-table ridge bodies: the wandering axis, the run, the keep and the crest band (Entity), and the
+-- cold field's first line. The first table's depth, distance to the axis, crest, openings, highland, tile reach and
+-- passes left in 0.3.0 (tests/collapsed.json): no preset names them.
 local function map_bodies(key)
   -- the chain every map-wide layer reads (config.lua layer_chain_geo): a later geography version keeps
   -- its frame, so these registered bodies never move with one
@@ -566,10 +604,12 @@ local function map_bodies(key)
   else
     def(N.band[key], joined("max", Bd.terms, "0"), Bd.L)
   end
+  highland(key, Bd, O, {cold = N.cold.map[key]})
   union_bodies(key, m, g, waves)
 end
 
 for _, key in ipairs(cfg.map_order) do
+  if cfg.geography[key] and N.band[key] then
     map_bodies(key)
   end
 end
@@ -848,6 +888,7 @@ local function line_bodies(key, ranges, LNN, RUN, KP, OPT)
 end
 
 for _, key in ipairs(cfg.map_order) do
+  if cfg.geography[key] and N.band[key] then
     line_bodies(key, T.ranges, LN.names, N.run[key], N.keep[key])
     -- the union's line field (0.3.0): both tables' ranges, its own keep and run (union_bodies) and the chop
     local U = cfg.ridges.union

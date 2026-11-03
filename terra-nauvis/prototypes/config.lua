@@ -537,6 +537,7 @@ local REN = {
   OFFSHORE_P = NOISE .. "offshore_p" .. RE_V,
   OFFSHORE_R = NOISE .. "offshore_r" .. RE_V,
   K_HS_AMOUNT = NOISE .. "hotspot_amount",
+  K_SCARCITY = NOISE .. "scarcity",
   ORE_FN = ORE .. "all_patches" .. RE_V,
   ORE_GAP = ORE .. "gap" .. RE_V,
   ORE_PATCH_IRON = ORE .. "iron_ore_patches" .. RE_V,
@@ -1038,6 +1039,13 @@ return {
     hotspot_amount = {
       name = ID .. "-hotspot-amount", type = "string-setting", setting_type = "startup", default_value = "100",
     },
+    -- Regional scarcity (0.3.0, default medium): past about 1,500 tiles from the spawn at scale
+    -- 12, regular ore outside each resource's provinces keeps a share of its patches (resources.scarcity). Baked
+    -- per save through tn_scarcity (0 off, 1 medium, 2 strong).
+    regional_scarcity = {
+      name = ID .. "-regional-scarcity", type = "string-setting", setting_type = "startup", default_value = "medium",
+      allowed_values = {"off", "medium", "strong"}, order = "c-ab",
+    },
     -- Inland lakes (default off): spawn-cities'
     -- sparse random inland lakes. Off leaves the spawn lake at the chosen city, the rivers and the real
     -- lakes of the coast fit as the only fresh water. Baked per save through the toggle tn_inland_lakes.
@@ -1070,6 +1078,8 @@ return {
       order = "d-a",
     },
   },
+                   "great_forests", "ridges", "hotspots", "hotspot_amount", "regional_scarcity",
+                   "inland_lakes",
 
   -- Map-gen presets, sorted right after Default ("a") and before Rich resources ("b").
   -- withheld_with lists the mods whose presence withholds a preset (presets.lua defines no such
@@ -1428,6 +1438,8 @@ return {
                  "default-iron-ore-patches", "default-copper-ore-patches", "default-coal-patches",
                  "default-stone-patches", "default-uranium-ore-patches", "default-crude-oil-patches",
                  "default-offshore-oil-patches", REN.K_HS_AMOUNT,
+                 -- 0.3.0: the regional scarcity level
+                 REN.K_SCARCITY,
                  -- edge-and-lakes: the inland lakes switch and the new versions' city offset names
                  ELN.K_INLAND_LAKES, ELN.EU6_CX, ELN.EU6_CY,
                  -- the Old World and Atlantic spawn city: the maps' city numbers and the new versions' offset names
@@ -1625,6 +1637,15 @@ return {
                HS .. "iron_ore_qty_v3", HS .. "copper_ore_qty_v3", HS .. "coal_qty_v3", HS .. "stone_qty_v3",
                HS .. "uranium_ore_qty_v3"},
     },
+    -- Regional scarcity (resources.scarcity): each resource's province weight and the keep its regular patch density
+    -- reads; no geography; 0.3.0's patch bodies read them.
+    {
+      release = "0.3.0",
+      names = {ORE .. "province_iron_ore_v1", ORE .. "province_copper_ore_v1", ORE .. "province_coal_v1",
+               ORE .. "province_stone_v1", ORE .. "province_uranium_ore_v1", ORE .. "province_crude_oil_v1",
+               ORE .. "keep_iron_ore_v1", ORE .. "keep_copper_ore_v1", ORE .. "keep_coal_v1", ORE .. "keep_stone_v1",
+               ORE .. "keep_uranium_ore_v1", ORE .. "keep_crude_oil_v1"},
+    },
     -- The palm switch (climate-tiles): the constant and the copies of the installed palm autoplace, built at
     -- data-final-fixes (tiles.palm); with no Alien Biomes each copy is the neutral body.
     {
@@ -1672,6 +1693,14 @@ return {
     -- them.
     {
       release = "0.1.0",
+      names = {RDN.EU_BAND, RDN.AT_BAND, RDN.OW_BAND, RDN.RD_HEIGHT, RDN.EU_WANDER_U, RDN.AT_WANDER_U,
+               RDN.OW_WANDER_U, RDN.EU_WANDER_V, RDN.AT_WANDER_V, RDN.OW_WANDER_V, RDN.EU_RUN, RDN.AT_RUN,
+               RDN.OW_RUN, RDN.EU_KEEP, RDN.AT_KEEP, RDN.OW_KEEP, RDN.RD_FREE, RDN.K_ROCK_LIFT, RDN.K_GROUND,
+               RDN.K_HIGH_TILE, RDN.RD_RISE, RDN.RD_GATE, RDN.RD_LAPSE, RDN.RD_GROUND, RDN.RD_HIGH, RDN.RD_RISE_TILE,
+               RDN.RD_HIGH_TILE, RDN.RD_FRAY, RDN.RD_FRAY_TILE, RDN.RD_MASSIF, RDN.RD_ROCK_LIFT, RDN.RD_ROCK_LIFT_AB,
+               RDN.RD_ROCK_DENSITY, TF_ROCKS["huge-rock"].high, TF_ROCKS["big-rock"].high,
+               TF_ROCKS["big-sand-rock"].high, RDN.RD_CLIFFINESS, RDN.RD_CLEAR, RDN.ORE_IRON, RDN.ORE_COPPER,
+               RDN.ORE_COAL, RDN.ORE_STONE, RDN.ORE_URANIUM, RDN.ORE_OIL},
       files = {"prototypes/tables/ranges.lua"},
     },
     -- The line field: no geography of its own, the same as the ridges row above.
@@ -2311,7 +2340,12 @@ return {
     -- and fray times the ragged factor plus the edge rows (field units, wavelengths in tiles) fray its edge, which the
     -- slow region noise left smooth for hundreds of tiles.
     union = {
+      -- wide: the first table's pieces also take these rows (0.3.0, the cold field's second version): their reach is a
+      -- crest's whole length, and with the edge rows alone southern Norway's east edge still ran straight for about
+      -- 1,000 tiles at map view
       cold = {ref_px = 15, fray = 0.05, taper = 1,
+              edge = {{seed1 = 7523, tiles = 26, amplitude = 0.05}, {seed1 = 7524, tiles = 70, amplitude = 0.07}},
+              wide = {{seed1 = 7531, tiles = 240, amplitude = 0.12}, {seed1 = 7532, tiles = 560, amplitude = 0.12}}},
       -- field: the union's line field (ridges.lua line_bodies): each chop row is a gap where sin(2 pi / tiles * axis +
       -- phase * slow noise + jitter) passes level, axis the map's x or y in tiles and jitter fast noise in tiles; the x
       -- row cuts every east-west run and the y row every north-south one, so no cliff holds one row of the 4-tile
@@ -2424,6 +2458,7 @@ return {
       cold2 = {field = RDN.RD_COLD_F2, gated = RDN.RD_COLD_GATED2, high = RDN.RD_COLD_HIGH2, cap = RDN.RD_COLD_CAP2,
                map = {europe = RDN.EU_COLD2, atlantic = RDN.AT_COLD2, olde_world = RDN.OW_COLD2}},
       rock_density = RDN.RD_ROCK_DENSITY,
+      height = RDN.RD_HEIGHT, free = RDN.RD_FREE,
       cliffiness = RDN.RD_CLIFFINESS,
       clear = RDN.RD_CLEAR,
       band = {europe = RDN.EU_BAND, atlantic = RDN.AT_BAND, olde_world = RDN.OW_BAND},
@@ -2583,6 +2618,34 @@ return {
       -- vanilla's spot radius cap and cube root, and the two texts of its regular spot noise fn2 swaps (a cleared
       -- candidate ranks last and takes a radius of 1: a spot of no quantity and no radius is not one the game makes)
       gap_radius = {cap = 32, cube_root = "1 / 3"},
+      -- flat (far ore grew too much, and hotspots stay what players seek out): regular ore
+      -- reads the distance d' = min(d, knee) + rate * clamp(d - knee, 0, stop - knee), so out to knee tiles it is
+      -- as before, and past it a patch's richness and size grow at rate times vanilla's pace and stop at `stop`
+      -- (real tiles from the spawn at every scale). fn2 keeps vanilla's density and spot quantities at the real
+      -- distance, so every regular spot stays where it was: the spots' output takes vanilla's quantity growth at
+      -- d' over that at d, the blob reads d', and the richness wrapper (richness_v2) takes vanilla's richness
+      -- factor at d' over that at d. Hotspots read prototypes/ore_curves.lua at the real distance, unchanged.
+      flat = {knee = 1000, rate = 0.5, stop = 4000},
+      -- the keep each body passes fn2 (resources.scarcity); the offshore oil body passes 1
+      keep_param = "scarcity_keep",
+      density_old = "density_expression = regular_density_at(distance),",
+      density_new = "density_expression = scarcity_keep * regular_density_at(distance),",
+      -- and, since a region places its first spot whatever its target (measured: a density of 0 left uranium and
+      -- oil as they were), the spots' quantity too: a dropped region's one spot carries nothing, at radius 1 as a
+      -- cleared candidate does, and is the candidate nearest the region's centre (its favourability), so the flat 0
+      -- such a spot leaves out to maximum_spot_basement_radius stays clear of every other region's spots; where the
+      -- spots read exactly 0 with scarcity on (on_param), the blob may only lower the field, so no speck of ore
+      -- grows out of that flat 0
+      on_param = "scarcity_on",
+      quantity_old = "clear * (",
+      quantity_new = "clear * scarcity_keep * (",
+      radius_old = "max(1 - clear,",
+      radius_new = "max(1 - clear * scarcity_keep,",
+      favour_old = "spot_favorability_expression = clear,",
+      favour_new = "spot_favorability_expression = clear * (scarcity_keep + (1 - scarcity_keep) * " ..
+        "(1 - sqrt((x - region_mid_x) ^ 2 + (y - region_mid_y) ^ 2) / 1024)),",
+      split_at = "maximum_spot_basement_radius = 128}",
+      split_join = " + ",
       fn2_swaps = {
         {old = "spot_favorability_expression = 1,", new = "spot_favorability_expression = clear,"},
         {old = "spot_radius_expression = min(32, regular_rq_factor * regular_spot_quantity_expression ^ (1/3)),",
@@ -2590,9 +2653,66 @@ return {
            "regular_spot_quantity_expression ^ (1/3))),"},
       },
       bodies = {
+        {live = "default-iron-ore-patches", scarcity = "iron-ore",
+         name = REN.ORE_PATCH_IRON, name2 = ORE .. "iron_ore_patches_v2"},
+        {live = "default-copper-ore-patches", scarcity = "copper-ore",
+         name = REN.ORE_PATCH_COPPER, name2 = ORE .. "copper_ore_patches_v2"},
+        {live = "default-coal-patches", scarcity = "coal",
+         name = REN.ORE_PATCH_COAL, name2 = ORE .. "coal_patches_v2"},
+        {live = "default-stone-patches", scarcity = "stone",
+         name = REN.ORE_PATCH_STONE, name2 = ORE .. "stone_patches_v2"},
+        {live = "default-uranium-ore-patches", scarcity = "uranium-ore",
+         name = REN.ORE_PATCH_URANIUM, name2 = ORE .. "uranium_ore_patches_v2"},
+        {live = "default-crude-oil-patches", scarcity = "crude-oil",
+         name = REN.ORE_PATCH_OIL, name2 = ORE .. "crude_oil_patches_v2"},
         {live = "default-offshore-oil-patches", name = REN.ORE_PATCH_OFFSHORE,
          name2 = ORE .. "offshore_oil_patches_v2"},
       },
+    },
+    -- Regional scarcity (0.3.0): regular ore thins out away from its real regions past the start. Hotspots become
+    -- destinations a long game needs. Outside a resource's provinces, a share `medium` or `strong` of its regular
+    -- patches stays (the setting's level, tn_scarcity: 0 off, 1 medium, 2 strong); inside them, and inside
+    -- ramp.from * scale tiles of the spawn, all of them. The keep multiplies fn2's regular spot density alone, so the
+    -- spot quantities, radii and favourabilities stay vanilla's and the spots a region keeps are the first ones its
+    -- Off world takes, in the same places and at the same size: whole patches drop out. The keep is 0 or 1 per spot
+    -- region (vanilla's 1,024 tile squares, region_size, centred on its multiples: measured from the Off world's one
+    -- uranium spot per region). A region places its first spot whatever its target, so the keep zeroes the spots'
+    -- quantity too (resources.natural.quantity_new). The draw is per region and resource (a sine hash of the
+    -- region's index, the resource's seed and map_seed_small; random_penalty with a region's constant x and y was
+    -- measured to vary inside the region); the bar is 1 - (1 - share) * ramp * (1 - province), the ramp read at
+    -- the region's nearest point to the spawn (plus margin tiles, a spot's reach), so a region touching the near
+    -- disc keeps everything. Provinces: per resource the soft union of discs around its hotspot rows on the map
+    -- (hotspot_rows_v2: real deposits), reach_px past each footprint, the edge moved by a ragged noise (rag) and soft
+    -- over a width that varies from 0 (a hard edge) to about wide.px (NO PERFECT BANDS). No raster is read.
+    scarcity = {
+      key = REN.K_SCARCITY,
+      setting = "regional_scarcity",
+      levels = {off = 0, medium = 1, strong = 2},
+      shares = {
+        ["uranium-ore"] = {medium = 0.20, strong = 0.08},
+        ["crude-oil"] = {medium = 0.35, strong = 0.15},
+        ["copper-ore"] = {medium = 0.50, strong = 0.30},
+        ["iron-ore"] = {medium = 0.65, strong = 0.40},
+        ["coal"] = {medium = 0.75, strong = 0.55},
+        ["stone"] = {medium = 0.95, strong = 0.80},
+      },
+      names = {
+        ["iron-ore"] = {province = ORE .. "province_iron_ore_v1", keep = ORE .. "keep_iron_ore_v1", seed = 7411},
+        ["copper-ore"] = {province = ORE .. "province_copper_ore_v1", keep = ORE .. "keep_copper_ore_v1", seed = 7412},
+        ["coal"] = {province = ORE .. "province_coal_v1", keep = ORE .. "keep_coal_v1", seed = 7413},
+        ["stone"] = {province = ORE .. "province_stone_v1", keep = ORE .. "keep_stone_v1", seed = 7414},
+        ["uranium-ore"] = {province = ORE .. "province_uranium_ore_v1", keep = ORE .. "keep_uranium_ore_v1",
+                           seed = 7415},
+        ["crude-oil"] = {province = ORE .. "province_crude_oil_v1", keep = ORE .. "keep_crude_oil_v1", seed = 7416},
+      },
+      -- tiles per unit of scale: full keep inside from, the full share from full (1,500 and 3,000 at scale 12)
+      ramp = {from = 125, full = 250, margin = 64},
+      region = 1024,
+      hash = {a = 12.9898, b = 78.233, seed_gain = 0.0137, gain = 43758.5453},
+      reach_px = 60,
+      rag = {px = 24, wavelength_px = 90, seed1 = 7421},
+      wide = {px = 36, base = 0.3, gain = 0.9, wavelength_px = 70, seed1 = 7422},
+      no_gap = 1000000,
     },
   },
 
@@ -2765,6 +2885,13 @@ return {
       p90 = {["iron-ore"] = 0.9, ["copper-ore"] = 0.93, coal = 0.92, stone = 0.92, ["uranium-ore"] = 1.05},
       per_tile_fit = 1.05,
       per_tile = 1.75,
+      -- past where per_tile times vanilla's P(d) passes flat_ratio times the flattened regular ore per tile
+      -- (resources.natural.flat), a field's per tile is held there and its total spreads over more tiles
+      -- (ore_curves.lua per_tile; never tiny rich bodies); 2.2 reads 2.1 to 2.7 times the regular ore
+      -- in game (the design's P is the typical spot's, a little under a measured patch's mean)
+      flat_ratio = 2.2,
+      -- far fields at full body size held 1.12 times the cap tip's totals: their area reads flat_fit less
+      flat_fit = 0.9,
       radius_cap = 32,
       quantity = {per_km2 = 1000000, fade_from = 150, fade_span = 300, double_from = 300, double_span = 1300},
       body_tiles = 600,
@@ -2778,6 +2905,30 @@ return {
       -- the tree shares read it for these bodies): at full height and 6 tiles they ate most of a body_tiles cone
       blob_scale = 0.5,
       trim = 3,
+      -- the outline's grain (Kiruna's edge read blocky): a body is a cone plus the shared blob, whose
+      -- finest wave is 8 tiles, so its outline was a smooth curve and its digitized sides ran straight for 8 to 15
+      -- tiles (Kiruna at 12; with the blob off a body is a plain circle). One more basis
+      -- wave of `wavelength` tiles at `output` of the blob's, under the same height, roughens the outline as vanilla's
+      -- patches are rough: at 0.6 the three fields' straight runs fell to vanilla's rate and their ore held 1.01 to
+      -- 1.02; at 1.2 every field shed 10 to 14 fragments
+      grain = {seed1 = 7445, wavelength = 4, output = 0.6},
+      -- far fields: past about 10,000 tiles at scale 12 a design asks for under one or
+      -- two body_tiles cones (vanilla's ore per tile grows with distance, the total is held), so a field was one or
+      -- two whole bodies of a drawn size and held 0.03 to 2.9 times its design (33 over 100 M, 21 under half). Where
+      -- a strength-k_ref row would hold under `bodies` cones, every body's tiles scale by f = k_ref * W1 / bodies
+      -- (ore_curves.lua body_scale, W1 the cones one unit of k asks for, never under `least`): its quantity by
+      -- f ^ 1.5, its height by f ^ 0.5 (the richness wrapper divides by it, so ore per tile stays the design's), the
+      -- blob under it by f ^ blob_power (the blob's waves do not shrink with the body), the outline trim by f ^ 0.5,
+      -- and its size draw narrows to `size` (one large draw set a field's total). So a world-class far field is about
+      -- `bodies` large bodies and a strength-3 one about half that. A small disc whose candidates cannot hold that
+      -- many takes fewer, larger ones (hotspots_v2.lua fr). Far bodies lose less to the blob and the trim than the
+      -- near ones area_fit was fitted on: `fit` takes that back, ramped in below f = fit_from. A row's design total is
+      -- held to total_cap by its K: each is the 100 M ceiling over the worst total /
+      -- design its K reached at scales 6 and 12 (K 3 1.95, K 4 1.75, K 5 1.35, K 6 1.26), less 8 percent,
+      -- so no field passes 100 M at amount 100; the amount setting multiplies it.
+      far = {bodies = 5, k_ref = 6, least = 0.06, blob_power = 1, fit = 0.91, fit_from = 0.7,
+             total_cap = {[3] = 46000000, [4] = 52000000, [5] = 68000000, [6] = 73000000},
+             size = {gain = 1.5, power = 0.5}},
       area_fit = 1.65,
       rich_fit = 0.74,
       cube_root = 1 / 3,
@@ -3372,8 +3523,29 @@ return {
                   half = 0.5, gain = 0.6},
       ford_edge = {seed1 = 7509, wavelength = {5, 0.5}, amplitude = {0.6, 0.2}, hold_above = 6},
       -- ford_fine: the listed geographies add these octaves to J, fixed in tiles, past ford_edge.hold_above.
+      -- soft: the ford set alone adds these octaves to J, then under at tiles J falls at slope, so a ford's end keeps
+      -- its wiggle where the noise runs low but seldom pulls back from a bank, and bias_tiles lengthens it everywhere:
+      -- with the fine octaves alone a ford read as a pale rectangle across its river (f-eyetest row 5).
       ford_fine = {geographies = {21, 22}, max_scale = 12,
                    octaves = {{seed1 = 7523, wavelength_tiles = 9, amplitude_tiles = 2.0},
+                              {seed1 = 7524, wavelength_tiles = 5, amplitude_tiles = 0.8}},
+                   soft = {bias_tiles = 1.5, at = -3, slope = 0.3,
+                           octaves = {{seed1 = 7547, wavelength_tiles = 17, amplitude_tiles = 3.2}}}},
+      -- bank_fine: the listed geographies' river sets (kind) widen B by these octaves, fixed in tiles, so a bank
+      -- tangent to a grid axis on a meander breaks within a few tiles instead of running straight along it.
+      bank_fine = {geographies = {21, 22}, min_scale = 12, max_scale = 12, kind = "ww",
+                   octaves = {{seed1 = 7548, wavelength_tiles = 11, amplitude_tiles = 1.6}}},
+      -- warp_fine: the listed geographies' rivers bend by these octaves, fixed in tiles, from min_scale up. They fade
+      -- in over fade_outer_tiles from the spawn_fade's inner disc, not spawn_fade's longer reach: the meander octaves
+      -- are what keep a reach near the spawn from running straight along a grid axis (f-eyetest rows 1 and 8).
+      warp_fine = {geographies = {21, 22}, min_scale = 12, max_scale = 12, fade_outer_tiles = 220,
+                   octaves = {{seed1x = 7525, seed1y = 7526, wavelength_tiles = 7, amplitude_tiles = 1.1},
+                              {meander = true, seed1x = 7541, seed1y = 7542,
+                               wavelength_tiles = 230, amplitude_tiles = 34},
+                              {meander = true, seed1x = 7543, seed1y = 7544,
+                               wavelength_tiles = 95, amplitude_tiles = 13},
+                              {meander = true, seed1x = 7545, seed1y = 7546,
+                               wavelength_tiles = 38, amplitude_tiles = 4.5}}},
       profile = {source = 0.7, mouth = 1.35, tip = 0.12, taper_tiles = {10, 45}, step_tiles = 0.75,
                  step_per_scale = 0.125, taper_full_scale = 6},
       basin = {half_length_tiles = 8, radius_tiles = 12, least_river_scale = 4},

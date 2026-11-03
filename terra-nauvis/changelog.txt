@@ -2,7 +2,9 @@
     - Great forests have their own ground: on new worlds beside Alien Biomes, the ground inside a
       great forest turns to forest ground and the trees fill in, in stands broken by glades. Older
       worlds keep their forests.
+    - River deltas: on new Atlantic and Old World worlds the Nile, Amazon, Niger, Indus, Mississippi,
       Orinoco and Lena deltas fan out into shallow side channels you can walk through, on wet green
+      ground, also in a desert. Older worlds keep their river mouths.
     - The mod is titled Terra Nauvis: Earth Maps, with a shorter description. The mod ID, every
       setting name and the log and chat prefix stay as they were.
     - With Destroyed Europe on, the snowy ranges inside the zone keep their snow and grey rim on new
@@ -18,7 +20,18 @@ Date: 2026-11-01
       the spawners. Nests keep off hotspot ore.
     - Ordinary ore patches on new worlds are vanilla's own again, in size, shape and richness for
       their distance from the spawn, and keep out of ore hotspots. Presets set the ore sliders to 1.
+      Past about 1,000 tiles from the spawn they grow richer at half vanilla's pace, and from about
+      4,000 tiles they stop growing.
     - An ore hotspot on new worlds holds three to six times a large ordinary patch at its distance,
+      at most about 100 million, about 1.75 times as rich per tile as vanilla's ordinary ore, in
+      more bodies for a stronger field. Far out it is two to two and a half times as rich per tile
+      as the ordinary ore round it, so far fields spread over a district of large bodies instead of
+      a few small rich ones. The map's ore size and richness sliders reach hotspots, and the Ore
+      hotspot size setting adds or removes bodies.
+    - The new setting Regional scarcity, Medium by default, makes ordinary ore patches on new worlds
+      rarer outside the regions where each resource is found on Earth, from about 1,500 tiles from
+      the spawn at scale 12: whole patches drop out, uranium and oil most, stone least, and the
+      patches that remain keep their size. The start and the hotspots stay the same.
     - A start with less than nine tenths of vanilla's average coal gets topped up to that average.
     - Trees thin out on hotspot ore, and hotspot field outlines wander. Batu Hijau's copper keeps
       off Lombok.
@@ -81,8 +94,34 @@ Date: 2026-11-01
     - Great forests grow in Borneo, Sumatra, New Guinea, the Pacific Northwest, the Appalachians and
       Valdivia, and marshes spread in the Sundarbans, the Inner Niger Delta and the Mekong delta, on
       new worlds of the maps that hold them.
+    - New worlds have ten more mountain ranges with cliff ridges, snow and rock fields on the maps
+      that hold them: the Taurus, the Talysh, the Alborz, the Ethiopian Highlands, the Tian Shan,
+      the Altai, the Gobi Altai, the Great Dividing Range, the Sierra Nevada and the Cascades.
+      Cliffs on every range stand as walls with short breaks, so straight cliff runs are shorter,
+      the Alps, the Pyrenees and the Zagros included.
     - Each map keeps only its 0.3.0 geography version, so the game starts about 4.5 seconds faster
       with a large mod pack. Worlds made on versions before 0.3.0 no longer load.
+    - Ground seams on new worlds fray finely, so grass, dirt, sand and snow meet along ragged edges
+      instead of long smooth lines, and inside Destroyed Europe the heat ground frays against its
+      rock.
+    - With Destroyed Europe on, the zone's light grey sand and red dirt patches are gone on new
+      worlds: they break into heat ground and black ash.
+    - Inland lakes on new worlds no longer fold into L shapes, and fewer small water specks sit
+      beside them.
+    - At scale 12 on new Old World and Atlantic worlds, rivers meander, so their banks no longer run
+      straight for hundreds of tiles, and the ends of fords are rougher.
+    - New Old World worlds at scales 12 and 24 generate faster: their coast fit costs about 28
+      percent less, and the Thames and Cotentin shores are cleaned up.
+    - Ore hotspots on new worlds have rougher outlines, and each field's design total is capped by
+      its strength, at about 46 to 73 million.
+    - The first range table's unused ridge bodies are gone, so the game starts a little faster with
+      a large mod pack.
+    - The README describes 0.3.0, with a new map render and in-game shots.
+    - The Ore hotspot amount setting is now called Ore hotspot size, and its values read Small,
+      Normal, Large and Huge instead of 50, 100, 200 and 400 percent; the values themselves are
+      unchanged.
+    - The snow on the old ranges of new worlds frays at its edges like the new ranges' snow, so
+      southern Norway's massif loses its long straight eastern edge.
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.0
 Date: 2026-11-01

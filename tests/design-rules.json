@@ -95,9 +95,12 @@
    "setting_type": "startup",
    "default_value": false
   },
+  "north_snow": {
    "type": "string-setting",
    "setting_type": "startup",
    "default_value": "medium",
+   "allowed_values": ["low", "medium", "high"]
+  },
   "exact_coast": {
    "type": "bool-setting",
    "setting_type": "startup",

@@ -167,6 +167,13 @@ local function grain_hooks(excluded, n)
     if G.ice[name] then
       on = on .. " - " .. num(G.ice[name])
     end
+    -- 0.3.1: the Corrupted Moscow zone's snow fringe (config.lua moscow.snow.tiles), whose score folds to -inf on
+    -- every world made before
+    for _, t in ipairs(cfg.moscow.snow.tiles) do
+      if t.tile == name then
+        on = "max(" .. on .. ", " .. t.body .. ")"
+      end
+    end
     autoplace.probability_expression = hook(on, original)
   end
   log(cfg.identity.title .. ": climate grain copies on " .. (n + #others) .. " Alien Biomes tiles")
@@ -200,6 +207,8 @@ local function with_chaos(name, text)
       return "max(" .. text .. ", " .. t.body .. ")"
     end
   end
+  -- 0.3.1: the devastation field's dry dirt (destroyed.dev.tiles), whose score folds to -inf on every world made before
+  for _, t in ipairs(cfg.destroyed.dev.tiles) do
     if t.tile == name then
       return "max(" .. text .. ", " .. t.body .. ")"
     end
@@ -526,8 +535,12 @@ palm_check()
 if AB then
   vanilla_hooks()
   exclusion_hooks()
+  -- 0.3.1: the Moscow zone at chaos or corrupted takes the same map colours (config.lua moscow)
+  local moscow = settings.startup[cfg.settings[cfg.moscow.setting].name].value
+  if settings.startup[cfg.settings.destroyed_europe.name].value or moscow == cfg.moscow.values.chaos then
     heat_map_colors()
   end
+  if settings.startup[cfg.settings.blue_corrupted.name].value or moscow == cfg.moscow.values.corrupted then
     blue_map_colors()
   end
 else

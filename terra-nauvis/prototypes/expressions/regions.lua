@@ -47,6 +47,7 @@ local TC = require("prototypes.tables.zone_outline")
 local TC2 = require("prototypes.tables.zone_outline_v2")
 local TB = require("prototypes.tables.zone_blue")
 local TB2 = require("prototypes.tables.zone_blue_v2")
+local TM = require("prototypes.tables.zone_moscow")
 
 local R = cfg.regions
 local N = R.names
@@ -459,6 +460,21 @@ def(N.destroyed_depth, N.destroyed_sd .. " * " .. K.scale)
 -- by the whole outline, so a sea edge that lands on an island still frays. A vertex's locals repeat per body, and
 -- each folds per save. OT is the table, O the names it builds: the first release's, then 0.3.0's next outline
 -- (prototypes/tables/zone_outline_v2.lua), which adds the fixed cuts.
+-- A later presence and depth over the same outline (NP): every term the same, but a land cut NP.cuts names opens where
+-- its function says, so the zone may cross the cut's line there.
+local function next_outline(NP, present, opened, depth, deep)
+  local parts, dparts = {}, {}
+  for i, t in ipairs(present) do
+    parts[i] = opened[i] or t
+  end
+  for i, t in ipairs(depth) do
+    dparts[i] = deep[i] or t
+  end
+  def(NP.present, joined("min", parts))
+  def(NP.depth, joined("min", dparts))
+end
+
+local function outline(OT, O, NP)
   local Q = cfg.destroyed.outline
   local verts = OT.vertices
   local n = #verts
@@ -525,6 +541,10 @@ def(N.destroyed_depth, N.destroyed_sd .. " * " .. K.scale)
     def(O.isles, text, isles)
   end
 
+  local present, opened, deep = {O.sd}, {}, {}
+  if O.isles then
+    present[2] = "-" .. O.isles
+  end
   local function fray(FR, per_tile)
     -- in tiles: size tiles, but never more than cap reference pixels (at scale 1 a tile is a reference pixel)
     return (per_tile and ("min(" .. num(FR.cap) .. ", " .. num(FR.size) .. " / " .. K.scale .. ")") or num(FR.size)) ..
@@ -541,6 +561,7 @@ def(N.destroyed_depth, N.destroyed_sd .. " * " .. K.scale)
     present[1] = O.sd .. " + " .. fray(EF.px) .. " + " .. fray(EF.tiles, true)
   end
   local depth = {sign .. " * sqrt(" .. O.land .. ") + " .. N.rough, num(Q.squeeze) .. " * " .. O.sd}
+  for _, id in ipairs(OT.land_keeps or {}) do
     local keep = "-" .. N.row.sd .. id .. SUF
     present[#present + 1] = keep
     depth[#depth + 1] = keep
@@ -578,6 +599,10 @@ def(N.destroyed_depth, N.destroyed_sd .. " * " .. K.scale)
       def(name, "(" .. ctext .. ") + " .. N.rough, cl)
       depth[#depth + 1] = "-" .. name .. (c.depth_px and (" + " .. num(c.depth_px)) or "")
       present[#present + 1] = "-" .. name .. " + " .. fray(Q.cut_fray, true)
+      if NP and NP.cuts[c.id] then
+        opened[#present] = NP.cuts[c.id](name) .. " + " .. fray(Q.cut_fray, true)
+        deep[#depth] = NP.cuts[c.id](name) .. " + " .. num(NP.depth_add)
+      end
     else
       local cpts = cut_points(c.latlon)
       local SL, scross = lines(cpts, QU, QV, true)
@@ -592,8 +617,25 @@ def(N.destroyed_depth, N.destroyed_sd .. " * " .. K.scale)
   end
   def(O.present, joined("min", present))
   def(O.depth, joined("min", depth))
+  if NP then
+    next_outline(NP, present, opened, depth, deep)
+  end
 end
 outline(TC, cfg.destroyed.outline.names)
+-- 0.3.1 (destroyed.dev.pyrenees): the next outline's presence and depth with the Iberia cut moved strip_px into Spain,
+-- under the Pyrenees' snow: the zone then reaches the massif's snow, and the devastation field yields to the snow
+-- there (destroyed.lua). The depth's cut term starts at the field's own start_px, so where no snow stands the field's
+-- edge stands on the moved cut.
+local DV = cfg.destroyed.dev
+local PY = DV.pyrenees
+outline(TC2, cfg.destroyed.outline.next, {present = DV.names.present, depth = DV.names.depth, depth_add = DV.start_px,
+                                          cuts = {iberia = function(name)
+  return num(PY.strip_px) .. " - " .. name
+end}})
+
+-- 0.3.1: the Moscow zone's outline (config.lua moscow; prototypes/tables/zone_moscow.lua), the same formulas: no isles
+-- line, keep rows or cuts.
+outline(TM, cfg.moscow.outline.names)
 
 -- The shapes of Blue corrupted (config.lua blue; prototypes/tables/zone_blue.lua). A sea shape needs its crossing
 -- count alone, so it costs a fraction of a distance to every edge, and a map skips the shapes it does not hold. BT is

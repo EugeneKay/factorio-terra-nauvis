@@ -864,6 +864,30 @@ local DE = {
   heat3 = NOISE .. "destroyed_heat_v3",
   class3 = NOISE .. "destroyed_class_v3",
   gap = NOISE .. "destroyed_gap_v1",
+  -- 0.3.1's devastation field (destroyed.dev): one ordered gradient from the zone's edge in
+  dev = NOISE .. "destroyed_dev_v1",
+  dev_ragged = NOISE .. "destroyed_dev_ragged_v1",
+  dev_width = NOISE .. "destroyed_dev_width_v1",
+  heat4 = NOISE .. "destroyed_heat_v4",
+  class4 = NOISE .. "destroyed_class_v4",
+  reach2 = NOISE .. "destroyed_reach_v2",
+  open2 = NOISE .. "destroyed_open_v2",
+  out_present3 = NOISE .. "destroyed_outline_present_v3",
+  out_depth3 = NOISE .. "destroyed_outline_depth_v3",
+  chaos_dry = NOISE .. "chaos_brown_dirt_v1",
+  dev_wobble_a = NOISE .. "destroyed_dev_wobble_a_v1",
+  dev_wobble_b = NOISE .. "destroyed_dev_wobble_b_v1",
+  dev_fray = NOISE .. "destroyed_dev_fray_v1",
+  -- 0.3.1's Moscow zone (config.lua moscow): its outline, the Moscow position, the picklist's key and the Europe key
+  mz_land = NOISE .. "moscow_outline_land_v1",
+  mz_sea = NOISE .. "moscow_outline_sea_v1",
+  mz_inside = NOISE .. "moscow_outline_inside_v1",
+  mz_sd = NOISE .. "moscow_outline_sd_v1",
+  mz_present = NOISE .. "moscow_outline_present_v1",
+  mz_depth = NOISE .. "moscow_outline_depth_v1",
+  mz_dev = NOISE .. "moscow_dev_v1",
+  mz_key = NOISE .. "moscow",
+  eu_key = NOISE .. "destroyed_europe",
   temperature = NOISE .. "temperature_ab_v2",
   pool_europe = NOISE .. "city_pool_europe_v1",
   pool_atlantic = NOISE .. "city_pool_atlantic_v1",
@@ -913,6 +937,17 @@ local BC = {
   out_ulster2 = NOISE .. "blue_outline_ulster_v2",
   out_land2 = NOISE .. "blue_outline_land_v2",
   out_depth2 = NOISE .. "blue_outline_depth_v2",
+  -- 0.3.1's Moscow zone when Corrupted (config.lua moscow): the UK key, the union of the outlines, the Moscow depth and
+  -- its gap to the Chaos zone, the class with the snow join and the grey rim's keep
+  uk_key = NOISE .. "blue_uk",
+  out_depth3 = NOISE .. "blue_outline_depth_v3",
+  mz_corrupt = NOISE .. "moscow_corrupt_depth_v1",
+  mz_gap = NOISE .. "moscow_corrupt_gap_v1",
+  class_under = NOISE .. "blue_class_under_v1",
+  class2 = NOISE .. "blue_class_v2",
+  rim_keep = NOISE .. "corrupt_rim_keep_v1",
+  mz_snow_0 = NOISE .. "moscow_snow_0_v1",
+  mz_snow_2 = NOISE .. "moscow_snow_2_v1",
 }
 
 -- Exact coastlines: the per-save name switch a map's preset carries, set to the
@@ -1112,6 +1147,13 @@ return {
       name = ID .. "-north-snow", type = "string-setting", setting_type = "startup", default_value = "medium",
       allowed_values = {"low", "medium", "high"}, order = "c-fc",
     },
+    -- Moscow zone (0.3.1, default normal): normal leaves the region as it is, chaos makes it a Destroyed Europe zone,
+    -- corrupted a Blue corrupted one, inside one outline (config.lua moscow). It needs Alien Biomes: without it the
+    -- level bakes normal and the mod warns. Baked per save through tn_moscow (the level's index).
+    moscow_zone = {
+      name = ID .. "-moscow-zone", type = "string-setting", setting_type = "startup", default_value = "normal",
+      allowed_values = {"normal", "chaos", "corrupted"}, order = "c-fb",
+    },
     -- Exact coastlines (on by default, because Old World's and Atlantic's coasts need it to match
     -- Europe's): a new world's preset bakes the band-fix
     -- key from it, for the maps bandfix.maps lists.
@@ -1127,6 +1169,7 @@ return {
   },
                    "great_forests", "ridges", "hotspots", "hotspot_amount", "regional_scarcity",
                    "inland_lakes",
+                   "destroyed_europe", "blue_corrupted", "moscow_zone", "north_snow", "exact_coast", "city_markers"},
 
   -- Map-gen presets, sorted right after Default ("a") and before Rich resources ("b").
   -- withheld_with lists the mods whose presence withholds a preset (presets.lua defines no such
@@ -1175,6 +1218,8 @@ return {
     destroyed = DE.K,
     -- Blue corrupted UK and Australia: the zone toggle
     blue = BC.K,
+    -- 0.3.1: the Moscow zone's level, and whether Destroyed Europe's and Blue corrupted's own outlines are on
+    moscow = DE.mz_key, destroyed_europe = DE.eu_key, blue_uk = BC.uk_key,
     -- coast-band-fix: the band-fix key (no prototype; control only)
     bandfix = BFN.K,
   },
@@ -1442,6 +1487,9 @@ return {
                  -- 0.3.0: the barrier's zone and the outline's presence and depth, which presets point at their next
                  -- versions (destroyed.barrier.next, destroyed.outline.next)
                  DE.zone2, DE.out_present, DE.out_depth,
+                 -- 0.3.1: the barrier's reach and open mask, which presets point at the devastation field's
+                 -- (destroyed.dev)
+                 DE.reach, DE.open,
                  REN.HS_IRON, REN.HS_COPPER, REN.HS_COAL, REN.HS_STONE, REN.HS_URANIUM, REN.HS_OIL, REN.ORE_GAP,
                  REN.ENEMY_LAYER,
                  -- 0.3.0: the trees' hook gate off hotspot ore (resources.ore_trees), and its shares, which presets
@@ -1514,6 +1562,9 @@ return {
                  CT.AB_KEEP_BODY,
                  -- 0.3.1: Blue corrupted UK's outline depth, which a new world with the zone on names the next one
                  BC.out_depth,
+                 -- 0.3.1: the Moscow zone's level, the Europe and UK keys, and with Corrupted the Blue class and the
+                 -- north rim's keep, which presets name over their first names
+                 DE.mz_key, DE.eu_key, BC.uk_key, BC.class, CT.CL_N_RIM_KEEP,
                  -- coast-band-fix: the band-fix key, on presets whose map the setting acts on
                  BFN.K,
                  -- 0.3.1: the spawn lake name Atlantic's entry reads, which a preset past the released folds' cities
@@ -1681,6 +1732,15 @@ return {
       names = {DE.out_land2, DE.out_sea2, DE.out_inside2, DE.out_sd2, DE.out_present2, DE.out_depth2, DE.out_nordic,
                DE.out_iberia, DE.zone3, DE.heat3, DE.class3, DE.gap},
       files = {"prototypes/tables/zone_outline_v2.lua"},
+    },
+    -- The Chaos zone's devastation field (0.3.1; destroyed.dev). The presence and depth are defined on every load, as
+    -- the outline's are; the rest exist with Alien Biomes only. A preset with the zone on names them over the
+    -- barrier's.
+    {
+      release = "0.3.1",
+      names = {DE.dev, DE.dev_ragged, DE.dev_width, DE.heat4, DE.class4, DE.reach2, DE.open2, DE.out_present3,
+               DE.out_depth3, DE.chaos_dry, DE.dev_wobble_a, DE.dev_wobble_b,
+               DE.dev_fray},
     },
     -- The second hotspot table's bodies: under files its table, which releases the row names regions.lua composes
     -- from it, as the region table does. No geography: a preset names them over the first table's (rule 15).
@@ -1992,6 +2052,15 @@ return {
                BC.blue_1, BC.aubergine_dirt, BC.purple_dirt, BC.aubergine_rim, BC.out_britain, BC.out_australia,
                BC.out_sea, BC.out_ulster, BC.out_land, BC.out_depth},
       files = {"prototypes/tables/zone_blue.lua"},
+    },
+    -- The Moscow zone (0.3.1; config.lua moscow): its outline, the Moscow position, the keys, and the Corrupted bodies.
+    -- The outline and keys are defined on every load; the rest exist with Alien Biomes only. Under files its table.
+    {
+      release = "0.3.1",
+      names = {DE.mz_land, DE.mz_sea, DE.mz_inside, DE.mz_sd, DE.mz_present, DE.mz_depth, DE.mz_dev, DE.mz_key,
+               DE.eu_key, BC.uk_key, BC.out_depth3, BC.mz_corrupt, BC.mz_gap, BC.class_under, BC.class2, BC.rim_keep,
+               BC.mz_snow_0, BC.mz_snow_2},
+      files = {"prototypes/tables/zone_moscow.lua"},
     },
     -- Blue corrupted UK's next outline (0.3.1; blue.outline.next): the United Kingdom alone. No geography; defined on
     -- every load, as the first outline's bodies are; a preset with the zone on names the next depth over the first.
@@ -3370,6 +3439,87 @@ return {
     -- ground.
     range_heat = 106,
     switch_threshold = 0.5,
+    -- The devastation field (0.3.1; prototypes/expressions/destroyed.lua): a new world with the zone on names these
+    -- over the barrier's heat, class, reach and open mask, so the zone fades into ordinary ground as one ordered
+    -- gradient: from its edge in, dry dirt, scorched red grass, black ash, then heat ground climbing from heat 1
+    -- through heat 2 and heat 3 into the lava blob's mix. Every class is a cut on one position in tiles, never a noise
+    -- of its own, so no class stands outside its band.
+    --   dev     the position: the next outline's depth less start_px, moved out and in by the ragged offset (px times
+    --           a noise of wavelength_px and two coarser octaves), all in reference pixels times the scale, so it
+    --           scales with the map; outside the presence it is outside_tiles
+    --   width   the gradient's width in tiles: width_px times the scale times clamp(1 + amp * noise, low, high), so it
+    --           narrows to almost nothing in places and runs more than twice as wide in others (NO PERFECT BANDS)
+    --   cuts    dry_at, scorched_at, ash_at and heat_at, in widths from the edge, each moved by wobble times its share
+    --           of the two wobble noises, so each band narrows, widens and breaks on its own
+    --   fray    each cut moves by its own share of the zone's noises, macro and kind in reference pixels, fine and
+    --           grain in tiles: about a tenth of each octave's wavelength, so an edge bends at every scale and seldom
+    --           closes round an island
+    --   ramp    from the heat cut in, the heat ground's temperature rises from heat 1 by ramp degrees a width, and the
+    --           lava blob's temperature (the barrier's) takes over where it is cooler
+    --   pyrenees  the Iberia cut moves strip_px into Spain, under the massif's snow (regions.lua), and near the cut
+    --           (up to gate_px north of it) the position yields to the snow: snow_px pixels a unit of the highland's
+    --           cold field under snow_at, the field at the snow's north edge, less south pixels a pixel of the cut's
+    --           depth, so the zone's edge stands on the snow's own frayed edge and never passes the snow into Spain
+    dev = {
+      names = {dev = DE.dev, ragged = DE.dev_ragged, width = DE.dev_width, heat = DE.heat4, class = DE.class4,
+               reach = DE.reach2, open = DE.open2, present = DE.out_present3, depth = DE.out_depth3,
+               wobble_a = DE.dev_wobble_a, wobble_b = DE.dev_wobble_b, fray = DE.dev_fray},
+      start_px = 40, width_px = 22, outside_tiles = -100000,
+      ragged = {px = 18, wavelength_px = 25, octaves = 3, persistence = 0.5, seed1 = 7917},
+      width = {amp = 1.6, low = 0.03, high = 2.4, wavelength_px = 40, octaves = 2, persistence = 0.5, seed1 = 7918},
+      wobble = {a = {wavelength_px = 50, octaves = 2, persistence = 0.5, seed1 = 7919},
+                b = {wavelength_px = 50, octaves = 2, persistence = 0.5, seed1 = 7920}},
+      cuts = {
+        dry = {at = 0, a = 0, b = 0, kind = 5, macro = 0, fine = 8, grain = 1},
+        scorched = {at = 0.25, a = 0.15, b = 0, kind = 0, macro = 6, fine = -8, grain = 1},
+        ash = {at = 0.5, a = 0, b = -0.18, kind = -5, macro = -4, fine = 6, grain = 1},
+        heat = {at = 1, a = 0.12, b = -0.12, kind = 4, macro = -4, fine = -6, grain = 1},
+      },
+      -- the tile fray every cut adds: basis noises in tiles, finest first, so no edge runs straight along the grid
+      tile_fray = {{tiles = 6, amp = 1.4, seed1 = 7921}, {tiles = 13, amp = 2.2, seed1 = 7922},
+                   {tiles = 27, amp = 3, seed1 = 7923}},
+      ramp = 60,
+      open_tiles = 2,
+      pyrenees = {strip_px = 30, snow_at = 0.6, snow_px = 20, south = 0.3, gate_px = 25, gate_per_px = 10},
+      -- the dry dirt: class 7 of the red palette's class body, with the same score
+    },
+  },
+
+  -- The Moscow zone (0.3.1; prototypes/tables/zone_moscow.lua): a startup picklist, normal (no zone), chaos (Destroyed
+  -- Europe's devastation field over its outline) or corrupted (Blue corrupted's ground, trees and climate over it).
+  -- Baked per save through key, the level's index; without Alien Biomes it bakes normal and the mod warns. Either
+  -- zone's machinery may now run for the Moscow zone alone, so europe.key and uk.key bake whether Destroyed Europe's
+  -- and Blue corrupted's own outlines are on (1 with the setting on beside Alien Biomes, else 0).
+  --   dev      the Moscow position in tiles (destroyed.lua): the outline's depth less start_px plus ragged_share of
+  --            the shared ragged offset, so the zone's edge keeps to the drawn outline; with chaos the devastation
+  --            field is the larger of it and Europe's
+  --   corrupt  the Corrupted zone's depth in reference pixels: the outline's plus fray times the devastation field's
+  --            tile fray (destroyed.dev.tile_fray, tiles over the scale), never nearer the Chaos zone's wasteland
+  --            than gap pixels (clamp(mid + amp * noise, low, top)), so ordinary ground between the two zones narrows
+  --            to nothing in places and never runs as an even strip; union is the depth Blue corrupted reads, the
+  --            larger of the UK's (with the UK key on) and this one (with corrupted)
+  --   snow     the Corrupted Moscow zone's edge (within outer_tiles outside and strip_tiles inside its outline): its
+  --            dirt and rim classes take its grass classes, and where the north snow's weight (climate.north_snow) is
+  --            over at its fringe, fringe_tiles past the edge, takes snow (tiles, scored like the zone's), so the zone
+  --            runs straight from blue and purple into snow; the grey rim's keep is 0 inside the zone and keep_tiles
+  --            past it, frayed by fray tiles of noise, rising to 1 over ramp_tiles
+  moscow = {
+    setting = "moscow_zone", key = DE.mz_key, requires = "alien-biomes",
+    levels = {{value = "normal", index = 0}, {value = "chaos", index = 1}, {value = "corrupted", index = 2}},
+    chaos = 1, corrupted = 2, match = 0.5, values = {normal = "normal", chaos = "chaos", corrupted = "corrupted"},
+    europe = {key = DE.eu_key, on = 1, off = 0}, uk = {key = BC.uk_key, on = 1, off = 0},
+    outline = {names = {land = DE.mz_land, sea = DE.mz_sea, inside = DE.mz_inside, sd = DE.mz_sd,
+                        present = DE.mz_present, depth = DE.mz_depth}},
+    dev = DE.mz_dev, start_px = 6, ragged_share = 0.6,
+    corrupt = {depth = BC.mz_corrupt, union = BC.out_depth3, big_px = 4000, fray = 14,
+               gap = {name = BC.mz_gap, wavelength_px = 30, octaves = 2, persistence = 0.5, seed1 = 7924, mid = 3,
+                      amp = 9, low = 0, top = 12}},
+    snow = {class = BC.class2, under = BC.class_under, rim_keep = BC.rim_keep, w = CT.CL_N_SNOW_W,
+            north_keep = CT.CL_N_RIM_KEEP, at = 0.05, strip_tiles = 480, keep_tiles = 56, ramp_tiles = 64,
+            fringe_tiles = 60, fringe_fray = 18, outer_tiles = 240,
+            fray = {tiles = 40, amp = 24, octaves = 2, persistence = 0.5, seed1 = 7925},
+            tiles = {{tile = "frozen-snow-0", class = 10, body = BC.mz_snow_0},
+                     {tile = "frozen-snow-2", class = 11, body = BC.mz_snow_2}}},
   },
 
   -- Blue corrupted UK and Australia (prototypes/expressions/blue.lua, prototypes/tables/zone_blue.lua). Mostly mauve
@@ -3509,6 +3659,7 @@ return {
       toggle_off = "toggle-off",
       cliff_reset = "cliff-reset",
       destroyed_no_ab = "destroyed-no-ab",
+      moscow_no_ab = "moscow-no-ab",
       start_ore = "start-ore",
       start_ore_none = "start-ore-none",
     },

@@ -97,11 +97,28 @@ if not scarcity then
   error("config.lua resources.scarcity.levels has no level for the setting's value")
 end
 
+-- The Moscow zone's level (config.lua moscow): the setting's value as the level's index, normal without Alien Biomes
+-- (it needs it, as Destroyed Europe does).
+-- A picklist setting's level index (levels of {value, index}); `what` names the levels in the error.
+local function level_index(levels, setting_key, what)
+  local value = settings.startup[cfg.settings[setting_key].name].value
+  for _, level in ipairs(levels) do
+    if level.value == value then
+      return level.index
+    end
   end
+  error("config.lua " .. what .. " has no level for the setting's value")
 end
+
+local moscow = level_index(cfg.moscow.levels, cfg.moscow.setting, "moscow.levels")
+if not mods[cfg.moscow.requires] then
+  moscow = cfg.moscow.levels[1].index
 end
 
 -- The North snow level (climate.north_snow): the setting's value as the level's index.
+local north_snow = level_index(cfg.climate.north_snow.levels, cfg.climate.north_snow.setting,
+  "climate.north_snow.levels")
+
 -- The per-save city number a spawn-city setting stands for: its value's position in the setting's
 -- allowed values, less one, so random (the first) is 0 and the first city 1.
 local function city_number(setting_key)
@@ -233,6 +250,9 @@ local function destroyed_values(map_key, v, names)
     out.temperature = D.names.temperature
   end
   local pool, sp = D.pools[map_key], v.spawn
+  -- the random pool skips Destroyed Europe's cities: with the Moscow zone alone at chaos the Europe key is off
+  local europe = names[cfg.moscow.europe.key] == nil or names[cfg.moscow.europe.key] == cfg.moscow.europe.on
+  if sp and pool and names[sw.preset_key] == sw.on and europe and names[sp.city] == 0 then
     out[sp.city] = pool
   end
   -- The barrier (config.lua destroyed.barrier): a new world with the zone on names the next heat and class in place
@@ -242,6 +262,12 @@ local function destroyed_values(map_key, v, names)
     -- destroyed.outline.next), which reach and the rest read by name
     out[D.names.heat] = D.barrier.names.heat3
     out[D.chaos.names.class] = D.barrier.names.class3
+    -- 0.3.1: the devastation field's heat, class, reach and open mask over the barrier's (destroyed.dev); the dead
+    -- trees, the thinning and the exclusion read the reach and the mask by name
+    out[D.names.heat] = D.dev.names.heat
+    out[D.chaos.names.class] = D.dev.names.class
+    out[D.barrier.names.reach] = D.dev.names.reach
+    out[D.barrier.names.open] = D.dev.names.open
     out[D.barrier.names.zone] = D.barrier.names.zone3
     out[D.outline.names.present] = D.outline.next.present
     out[D.outline.names.depth] = D.outline.next.depth
@@ -362,6 +388,11 @@ local function blue_values(names)
       out[p.key] = p.body
     end
     out[cfg.tiles.scan.body] = B.names.keep
+    -- 0.3.1: the next outline's depth (blue.outline.next), the United Kingdom alone, as the union with the Moscow zone
+    -- (moscow.corrupt.union), each behind its key; the class with the snow join, and the north rim's keep
+    out[B.outline.names.depth] = cfg.moscow.corrupt.union
+    out[B.names.class] = cfg.moscow.snow.class
+    out[cfg.moscow.snow.north_keep] = cfg.moscow.snow.rim_keep
   end
   return out
 end
@@ -375,6 +406,22 @@ end
     end
   end
   return out
+end
+
+-- 0.3.1: the Moscow zone (config.lua moscow), after the toggles: its level, whether each zone's own outline is on, and
+-- the zone's machinery switched on for it: chaos runs Destroyed Europe's, corrupted Blue corrupted's.
+local function moscow_values(names)
+  local MZ, TG = cfg.moscow, cfg.toggles
+  local de, bl = TG.destroyed_europe, TG.blue_corrupted
+  names[K.moscow] = moscow
+  names[MZ.europe.key] = names[de.preset_key] == de.on and MZ.europe.on or MZ.europe.off
+  names[MZ.uk.key] = names[bl.preset_key] == bl.on and MZ.uk.on or MZ.uk.off
+  if moscow == MZ.chaos and names[de.preset_key] ~= nil then
+    names[de.preset_key] = de.on
+  end
+  if moscow == MZ.corrupted and names[bl.preset_key] ~= nil then
+    names[bl.preset_key] = bl.on
+  end
 end
 
 -- The property_expression_names one geography version's preset bakes under the current startup
@@ -431,6 +478,7 @@ local function baked(map_key, v)
   for k, value in pairs(toggle_values(map_key)) do
     names[k] = value
   end
+  moscow_values(names)
   for k, value in pairs(climate_names()) do
     names[k] = value
   end
@@ -503,11 +551,20 @@ end
 
 local presets = data.raw["map-gen-presets"]["default"]
 
+-- Copies every pair of `extra` into `names`, extra's value winning.
+local function merge_into(names, extra)
+  for k, value in pairs(extra) do
+    names[k] = value
+  end
+end
+
 for _, key in ipairs(cfg.preset_order) do
   local p = cfg.presets[key]
   if not withheld(p) then
     local v = geography(p.map)
     local names = baked(p.map, v)
+    merge_into(names, spawn_next_values(p.map, v, names))
+    merge_into(names, geo_next_values(v))
     presets[p.name] = {
       order = p.order,
       basic_settings = {property_expression_names = names, autoplace_controls = controls()},

@@ -25,6 +25,7 @@
 -- comes from config.lua, the city tables and the generated bearings. A body that several
 -- versions name is defined once, and two versions that would build it differently fail at load.
 local cfg = require("prototypes.config")
+local fray = require("prototypes.expressions.coast_fray")
 local cities = require("prototypes.city_tables")
 -- destroyed-europe: the cities its zone covers, which a random pick on a world with the zone on skips
 local destroyed = require("prototypes.tables.destroyed")
@@ -352,6 +353,10 @@ end
 for _, key in ipairs(cfg.map_order) do
   local g = cfg.geography[key]
   for _, v in ipairs(g and g.versions or {}) do
+    -- a Map type version (coast_fray.lua): its base's bodies by name, which def() keeps, and inland lakes of its own
+    if v.map_type_of then
+      spawn(key, (fray.record(key, v)))
+    elseif v.spawn then
       spawn(key, v)
     end
   end

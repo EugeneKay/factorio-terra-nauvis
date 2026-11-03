@@ -56,6 +56,7 @@ local FILES = {
   ["prototypes/generated/land_coarse_atlantic_v1.lua"] = require("prototypes.generated.land_coarse_atlantic_v1"),
   ["prototypes/generated/geo_olde_world_v2.lua"] = require("prototypes.generated.geo_olde_world_v2"),
   ["prototypes/generated/geo_olde_world_v3.lua"] = require("prototypes.generated.geo_olde_world_v3"),
+  ["prototypes/generated/geo_olde_world_v4.lua"] = require("prototypes.generated.geo_olde_world_v4"),
   ["prototypes/generated/land_coarse_olde_world_v1.lua"] = require("prototypes.generated.land_coarse_olde_world_v1"),
 }
 
@@ -107,6 +108,20 @@ local function warps(g)
   return listed(C.warp.geographies, g)
 end
 
+-- The next geo body of a version (config.lua coast.next, 0.3.1), which a new world's preset names over the version's
+-- own past above_scale: a generated fit bound to the same (warped) chain, or a fit the version defines, by name.
+local function next_fit(g, wu, wv)
+  local n = C.next and C.next.versions[g.geo_id]
+  if not n then
+    return
+  end
+  if n.file then
+    fit_body(n.body, n.file, g, wu, wv)
+  else
+    def(n.body, n.reads)
+  end
+end
+
 -- Octaves fixed in tiles (config.lua coast.warp.tile_octaves) appended to a warped axis, each folded to 0 below its
 -- min_scale.
 local function tile_octaves(parts, g, axis, s)
@@ -131,6 +146,7 @@ end
 -- band fix's tables were built from the fine fit, keep it exactly.
 local function warped_fits(g, s, wu, wv)
   local split = C.split and C.split.versions[g.geo_id]
+  next_fit(g, wu, wv)
   if not split then
     fit_body(g.geo, g.fits.geo, g, wu, wv)
     return

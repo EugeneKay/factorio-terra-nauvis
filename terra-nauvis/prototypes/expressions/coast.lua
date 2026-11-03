@@ -57,6 +57,9 @@ local FILES = {
   ["prototypes/generated/geo_olde_world_v2.lua"] = require("prototypes.generated.geo_olde_world_v2"),
   ["prototypes/generated/geo_olde_world_v3.lua"] = require("prototypes.generated.geo_olde_world_v3"),
   ["prototypes/generated/geo_olde_world_v4.lua"] = require("prototypes.generated.geo_olde_world_v4"),
+  ["prototypes/generated/overlay_land_olde_world_v1.lua"] = require("prototypes.generated.overlay_land_olde_world_v1"),
+  ["prototypes/generated/overlay_water_olde_world_v1.lua"] =
+    require("prototypes.generated.overlay_water_olde_world_v1"),
   ["prototypes/generated/land_coarse_olde_world_v1.lua"] = require("prototypes.generated.land_coarse_olde_world_v1"),
 }
 
@@ -122,6 +125,21 @@ local function next_fit(g, wu, wv)
   end
 end
 
+-- The overlay geo body of a version (config.lua coast.overlay, 0.3.2), which a new world's preset names over the
+-- version's own past above_scale: its next body with the land layer added by max() and the water layer by min(), both
+-- generated from the reference raster and bound to the same (warped) chain. Away from its mask a layer reads exactly
+-- -offset_px (land) or +offset_px (water), so the next body passes unchanged there.
+local function overlay_fit(g, wu, wv)
+  local O = C.overlay and C.overlay.versions[g.geo_id]
+  if not O then
+    return
+  end
+  fit_body(O.land, O.land_file, g, wu, wv)
+  fit_body(O.water, O.water_file, g, wu, wv)
+  local off = num(C.overlay.offset_px)
+  def(O.body, "min(max(" .. O.over .. ", " .. O.land .. " - " .. off .. "), " .. off .. " - " .. O.water .. ")")
+end
+
 -- Octaves fixed in tiles (config.lua coast.warp.tile_octaves) appended to a warped axis, each folded to 0 below its
 -- min_scale.
 local function tile_octaves(parts, g, axis, s)
@@ -147,6 +165,7 @@ end
 local function warped_fits(g, s, wu, wv)
   local split = C.split and C.split.versions[g.geo_id]
   next_fit(g, wu, wv)
+  overlay_fit(g, wu, wv)
   if not split then
     fit_body(g.geo, g.fits.geo, g, wu, wv)
     return

@@ -532,7 +532,13 @@ local function spawn_next_values(map_key, v, names)
 end
 
 -- The next geo body (config.lua coast.next): past its above_scale a new world names it over the version's own. Not part
+-- of baked(): no Map type fallback reads a geo body. A version with an overlay body (coast.overlay, 0.3.2) names that
+-- one instead past the overlay's above_scale.
 local function geo_next_values(v)
+  local ov = cfg.coast.overlay and cfg.coast.overlay.versions[v.geo_id]
+  if ov and scale > ov.above_scale then
+    return {[v.geo] = ov.body}
+  end
   local nx = cfg.coast.next and cfg.coast.next.versions[v.geo_id]
   if nx and scale > nx.above_scale then
     return {[v.geo] = nx.body}

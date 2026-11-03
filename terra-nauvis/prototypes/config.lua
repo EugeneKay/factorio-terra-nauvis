@@ -696,6 +696,13 @@ local OAS = {
   -- chain.
   OW9_GEO = NOISE .. "geo_olde_world_v9",
   OW9_GEO_FILE = "prototypes/generated/geo_olde_world_v4.lua",
+  -- 0.3.2: Old World's geo body past scale 6 over OW9_GEO (coast.overlay): its land and water layers drawn from the
+  -- reference raster, combined with it by max and min, each layer bound to version 8's warped chain.
+  OW10_GEO = NOISE .. "geo_olde_world_v10",
+  OW10_LAND = NOISE .. "overlay_land_olde_world_v1",
+  OW10_WATER = NOISE .. "overlay_water_olde_world_v1",
+  OW10_LAND_FILE = "prototypes/generated/overlay_land_olde_world_v1.lua",
+  OW10_WATER_FILE = "prototypes/generated/overlay_water_olde_world_v1.lua",
   OW8_LAND_COARSE = NOISE .. "land_coarse_olde_world_v8",
   OW8_DETAIL = NOISE .. "detail_olde_world_v8",
   OW8_FAR = NOISE .. "far_olde_world_v8",
@@ -1611,6 +1618,7 @@ return {
     },
     olde_world = {
       REN.OW_FIELDS, START_LAND, OAS.OW8_ENTRY, OAS.OW8_GEO, OAS.OW9_GEO, OAS.OW8_DETAIL, OAS.OW8_FAR,
+      OAS.OW10_GEO, OAS.OW10_LAND, OAS.OW10_WATER,
       OAS.OW8_LAKES,
       OAS.OW8_SHORE, OAS.OW_WW7[1], OAS.OW_WW7[2], OAS.OW_WW7[3], OAS.OW_WW7[4], OAS.OW_WW7[5], OAS.OW_WW7[6],
       OAS.OW_WW7[7], OAS.OW_WW7[8], OAS.OW_CANALS7[1], OAS.OW_CANALS7[2], OAS.OW_CANALS7[3], OAS.OW_CANALS7[4],
@@ -1963,6 +1971,13 @@ return {
       names = {OAS.OW9_GEO},
       files = {OAS.OW9_GEO_FILE},
     },
+    -- 0.3.2: Old World's geo body over the next one (coast.overlay) and its two layers, which a new world's preset
+    -- names over version 8's past scale 6.
+    {
+      release = "0.3.2",
+      names = {OAS.OW10_GEO, OAS.OW10_LAND, OAS.OW10_WATER},
+      files = {OAS.OW10_LAND_FILE, OAS.OW10_WATER_FILE},
+    },
     -- 0.3.1: Atlantic's next spawn folds (spawn_next) and the city table's version 2 they are built from. No
     -- geography: a new world names them over version 8's folds by preset.
     {
@@ -1997,6 +2012,8 @@ return {
                OAS.AT7_WW_FILES[1], OAS.AT7_WW_FILES[2], OAS.AT7_WW_FILES[3], OAS.AT7_WW_FILES[4],
                OAS.AT7_WW_FILES[5], OAS.AT7_WW_FILES[6], OAS.AT7_WW_FILES[7], OAS.AT7_WW_FILES[8]},
     },
+    -- names over version 8's past scale 6.
+    {
     -- 0.3.0: Europe's version 7, version 6 and its scale extension under names of its own.
     {
       release = "0.3.0",
@@ -2102,6 +2119,15 @@ return {
     -- `file`: a generated fit bound to the version's warped chain, as its own fits are; `reads`: a fit it defines.
     next = {versions = {
       [21] = {body = OAS.OW9_GEO, file = OAS.OW9_GEO_FILE, above_scale = 6},
+    }},
+    -- overlay (0.3.2): per geography version, a geo body over its next body (`over`) that a new world's preset names in
+    -- place of both past above_scale: min(max(over, land - offset_px), offset_px - water). The land and water layers
+    -- are generated from the reference raster (data-src/fits PROVENANCE, overlay stage) and bound to the version's
+    -- warped chain. Away from its mask the land term reads exactly -offset_px and the water term +offset_px, so every
+    -- other coast is the next body's to the bit; offset_px stays above any value a fit reaches.
+    overlay = {offset_px = 1024, versions = {
+      [21] = {body = OAS.OW10_GEO, over = OAS.OW9_GEO, above_scale = 6, land = OAS.OW10_LAND,
+              land_file = OAS.OW10_LAND_FILE, water = OAS.OW10_WATER, water_file = OAS.OW10_WATER_FILE},
     }},
     transfer_offset = 0.1,
     transfer_clamp_px = 16,

@@ -736,6 +736,13 @@ local OAS = {
   AT8_SHORE = NOISE .. "shore_atlantic_v6",
   AT8_SPAWN_LAKE = NOISE .. "spawn_lake_atlantic_v3",
   AT8_SPAWN_BIAS = NOISE .. "spawn_bias_atlantic_v3",
+  -- 0.3.1: Atlantic's next spawn folds over the city table's version 2 (spawn_next), which a new world whose spawn
+  -- city is past the released folds' cities names over the released ones.
+  AT_CITY_CX2 = NOISE .. "city_cx_atlantic_v2",
+  AT_CITY_CY2 = NOISE .. "city_cy_atlantic_v2",
+  AT9_SPAWN_LAKE = NOISE .. "spawn_lake_atlantic_v4",
+  AT9_SPAWN_BIAS = NOISE .. "spawn_bias_atlantic_v4",
+  AT9_SPAWN_FILE = "prototypes/generated/spawn_atlantic_v3.lua",
   AT_WW7 = {NOISE .. "ww_atlantic_s1_v7", NOISE .. "ww_atlantic_s2_v7", NOISE .. "ww_atlantic_s3_v7",
     NOISE .. "ww_atlantic_s4_v7", NOISE .. "ww_atlantic_s5_v7", NOISE .. "ww_atlantic_s6_v7",
     NOISE .. "ww_atlantic_s12_v7", NOISE .. "ww_atlantic_s24_v7"},
@@ -993,6 +1000,8 @@ return {
         "ellesmere-island", "fort-liard", "hearst", "mid-baffin", "okak", "saskatoon", "yellowknife", "qaanaaq",
         "summit-camp", "uranienborg", "albany", "boise", "minneapolis", "el-paso", "hughes", "montgomery", "cordoba",
         "palmas", "iquitos", "griffith", "newman",
+        -- 0.3.1: appended with the city table's version 2, so every earlier value keeps its number (spawn_next)
+        "frankfurt", "moscow",
       },
       order = "b-b",
     },
@@ -1321,6 +1330,18 @@ return {
     },
   },
 
+  -- The next spawn folds (0.3.1), per geography version: the version's released spawn record serves the first `served`
+  -- cities of its setting, and its folds keep their text. A new world whose city number is past them names these
+  -- bodies over the released ones (presets.lua spawn_next_values): the city offset (the version's own cx and cy and
+  -- its map's frame), the spawn lake (under the key and the name the entry reads) and the starting-ore bias, each built
+  -- from the map's newest city table and its own bearings file by the released record's resolved index, whose random
+  -- pick stays on the served cities, so a random world keeps its city. A Map-type-only world reads the released folds
+  -- (frozen fallbacks), so there a city past them falls back to random.
+  spawn_next = {versions = {
+    [22] = {served = 50, city_offset = {OAS.AT_CITY_CX2, OAS.AT_CITY_CY2}, spawn_lake = OAS.AT9_SPAWN_LAKE,
+            spawn_bias = OAS.AT9_SPAWN_BIAS, bearings = OAS.AT9_SPAWN_FILE},
+  }},
+
   -- The chain every map-wide layer reads (the region layer, the climate and the layers after them):
   -- per map, the geography release (tn_geo) whose coordinate chain their bodies read. Since the
   -- superseded versions were retired that is each map's own version, so a preset world and a
@@ -1451,6 +1472,9 @@ return {
                  BC.K, BC.temperature_under, BC.moisture_under, BC.aux_under, BC.palm_a_under, BC.palm_b_under,
                  CT.AB_KEEP_BODY,
                  -- coast-band-fix: the band-fix key, on presets whose map the setting acts on
+                 BFN.K,
+                 -- 0.3.1: the spawn lake name Atlantic's entry reads, which a preset past the released folds' cities
+                 -- points at the next one (spawn_next)
 
   -- The fine field per map (ARCHITECTURE.md, "Programs and the firewall"): map key -> {the map's
   -- elevation entry and every term
@@ -1804,6 +1828,13 @@ return {
                "prototypes/tables/hotspots.lua",
                OAS.OW7_WW_FILES[1], OAS.OW7_WW_FILES[2], OAS.OW7_WW_FILES[3], OAS.OW7_WW_FILES[4],
                OAS.OW7_WW_FILES[5], OAS.OW7_WW_FILES[6], OAS.OW7_WW_FILES[7], OAS.OW7_WW_FILES[8]},
+    },
+    -- 0.3.1: Atlantic's next spawn folds (spawn_next) and the city table's version 2 they are built from. No
+    -- geography: a new world names them over version 8's folds by preset.
+    {
+      release = "0.3.1",
+      names = {OAS.AT_CITY_CX2, OAS.AT_CITY_CY2, OAS.AT9_SPAWN_LAKE, OAS.AT9_SPAWN_BIAS},
+      files = {"prototypes/tables/cities_atlantic_v2.lua", OAS.AT9_SPAWN_FILE},
     },
     -- 0.3.0: Atlantic's version 8, version 7's composition under names of its own.
     {

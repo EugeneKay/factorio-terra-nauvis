@@ -453,6 +453,27 @@ local function baked(map_key, v)
   return names
 end
 
+-- The next spawn folds (config.lua spawn_next): a new world whose city number is past the cities the version's
+-- released folds serve names the next folds over them, as the city offset under the version's own cx and cy and its
+-- map's frame, the spawn lake under the key and the name the entry reads, and the starting-ore bias under its key. Any
+-- other world, random included, bakes what 0.3.0 baked. Not part of baked(): a Map type fallback stays the released
+-- fold.
+local function spawn_next_values(map_key, v, names)
+  local nx = cfg.spawn_next and cfg.spawn_next.versions[v.geo_id]
+  local sp = v.spawn
+  local out = {}
+  if nx and sp and type(names[sp.city]) == "number" and names[sp.city] > nx.served then
+    local fr = cfg.frames[map_key]
+    out[v.cx], out[v.cy] = nx.city_offset[1], nx.city_offset[2]
+    if fr then
+      out[fr.cx], out[fr.cy] = nx.city_offset[1], nx.city_offset[2]
+    end
+    out[K.spawn_lake], out[sp.spawn_lake] = nx.spawn_lake, nx.spawn_lake
+    out[K.spawn_bias] = nx.spawn_bias
+  end
+  return out
+end
+
 local function withheld(p)
   for _, m in ipairs(p.withheld_with or {}) do
     if mods[m] then
@@ -467,8 +488,11 @@ local presets = data.raw["map-gen-presets"]["default"]
 for _, key in ipairs(cfg.preset_order) do
   local p = cfg.presets[key]
   if not withheld(p) then
+    local v = geography(p.map)
+    local names = baked(p.map, v)
     presets[p.name] = {
       order = p.order,
+      basic_settings = {property_expression_names = names, autoplace_controls = controls()},
     }
   end
 end
@@ -499,6 +523,12 @@ for _, key in ipairs(cfg.map_order) do
   local g = cfg.geography[key]
   for _, v in ipairs(g and g.versions or {}) do
     local names = baked(key, v)
+    -- A city past the released folds' cities (config.lua spawn_next) falls back to random on a Map-type-only world,
+    -- which reads the released folds through its frozen fallbacks.
+    local nx = cfg.spawn_next and cfg.spawn_next.versions[v.geo_id]
+    if nx and v.spawn and type(names[v.spawn.city]) == "number" and names[v.spawn.city] > nx.served then
+      names[v.spawn.city] = 0
+    end
     for _, f in ipairs(v.fallbacks) do
       local value = names[f.name]
       if value == nil then

@@ -1035,8 +1035,16 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
     go = go.get(version["geo_id"]) or go.get(str(version["geo_id"]))
     if go and int(scale) > go["above_scale"]:
         pen[version["geo"]] = go["body"]
+    # the Map type version's entry (presets.lua map_type_values, after baked): at every scale the preset names it
+    # for elevation (0.4.0 one-click; below above_scale it folds to the base version's composition); the ford set
+    # stays scale-gated past above_scale
     mt = map_type_version(geography_versions(cfg)[map_key], version)
+    if mt:
         pen[K["elevation"]] = mt["entry"]
+        if int(scale) > mt["map_type_of"]["above_scale"]:
+            own = version_scales(cfg, mt)
+            if waterways_of(mt) and int(scale) in own:
+                pen[K["fords"]] = waterways_of(mt)["fords"][own.index(int(scale))]
     # the next spawn folds (presets.lua spawn_next_values, after baked): a city number past the released folds'
     # cities names the next folds over the version's city offset, its map's frame, the spawn lake and the bias
     nx, sp = spawn_next_of(cfg, version), spawn_of(version)
@@ -1085,6 +1093,22 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
         if rs.get("ore_trees") and rs["ore_trees"].get("open_v3"):
             pen[rs["ore_trees"]["open"]] = rs["ore_trees"]["open_v3"]
             pen[rs["ore_trees"]["plants"]["open"]] = rs["ore_trees"]["plants"]["open_v3"]
+    # Koppen biomes (0.4.0; presets.lua koppen_names, last): with the toggle on beside Alien Biomes the
+    # preset points temperature/moisture/aux and the grain tile keys (tn_tile_* and the vegetation
+    # tn_tile_*_veg) at the Koppen bodies: temperature and the vegetation at the cold-north/spawn-aware
+    # compose bodies, moisture at the green-lifted snap, and aux at the plain snap.
+    # Mirrors koppen_names exactly; off or without Alien Biomes nothing changes.
+    kp = (cfg.get("climate") or {}).get("koppen")
+    sw = (cfg.get("toggles") or {}).get("koppen")
+    if ab and kp and sw and pen.get(sw["preset_key"]) == sw["on"]:
+        sn = kp["snap"]["names"]
+        cm = kp["compose"]["names"]
+        gk = cfg["climate"]["grain"]["keys"]
+        # roles (Entity) read the plain snaps; the grain tile keys (Tile) read the cooled drop/clear-composed
+        # temperature and the green-lifted moisture
+        pen["temperature"], pen["moisture"], pen["aux"] = sn["t"], sn["m"], sn["a"]
+        pen[gk["temperature"]], pen[gk["moisture"]], pen[gk["aux"]] = cm["t"], cm["m"], sn["a"]
+        pen[cfg["climate"]["grain"]["veg_key"]] = cm["tv"]
     return pen
 
 

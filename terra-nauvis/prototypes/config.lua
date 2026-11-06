@@ -27,6 +27,10 @@ local K_LAND_COARSE = NOISE .. "land_coarse"
 -- spawn lake and starting-ore bias (preset keys only, like tn_land_coarse).
 local K_SPAWN_LAKE = NOISE .. "spawn_lake"
 local K_SPAWN_BIAS = NOISE .. "spawn_bias"
+-- Koppen biomes (0.4.0): the toggle key a new world bakes (tn_koppen), orthogonal to elevation. The
+-- class field and its four fitted fields are new bodies (climate.koppen.names); the centroid snap
+-- that drives tiles is built on them (KOPPEN_CLASS2 and the snaps in CT).
+local K_KOPPEN = NOISE .. "koppen"
 
 -- Each map's geography. Every name a map's elevation entry reads is bound to that map: its coordinate
 -- chain carries the map's radii and extent and reads the city offset through the map's own
@@ -274,6 +278,31 @@ local CT = {
   PALM_A_R_KEY = "entity:tree-palm-a:richness",
   PALM_B_P_KEY = "entity:tree-palm-b:probability",
   PALM_B_R_KEY = "entity:tree-palm-b:richness",
+  -- Koppen biomes (0.4.0): the four smooth fitted fields and
+  -- the A/B/C/D/E classifier, new released bodies no older save names (new names only).
+  KOPPEN_TANN = NOISE .. "koppen_tann_v1",
+  KOPPEN_SEASON = NOISE .. "koppen_season_v1",
+  KOPPEN_TCOLD = NOISE .. "koppen_tcold_v1",
+  KOPPEN_TWARM = NOISE .. "koppen_twarm_v1",
+  KOPPEN_PANN = NOISE .. "koppen_pann_v1",
+  KOPPEN_SW = NOISE .. "koppen_sw_v1",
+  KOPPEN_CLASS = NOISE .. "koppen_class_v1",
+  -- Koppen biomes (0.4.0): the warped classifier the snap reads and the three axis-snap
+  -- bodies (plus the vegetation-temperature snap) the preset points the climate axes at when Koppen
+  -- is on (prototypes/expressions/climate_koppen.lua). New
+  -- released bodies no older save names.
+  KOPPEN_CLASS2 = NOISE .. "koppen_class_v2",
+  KOPPEN_T_SNAP = NOISE .. "koppen_t_snap_v1",
+  KOPPEN_M_SNAP = NOISE .. "koppen_m_snap_v1",
+  KOPPEN_A_SNAP = NOISE .. "koppen_a_snap_v1",
+  KOPPEN_TV_SNAP = NOISE .. "koppen_tv_snap_v1",
+  -- Koppen biomes (0.4.0; climate.koppen.compose): the composition bodies the preset points the
+  -- climate axes at when Koppen is on - the cold-north/spawn-aware temperature and its vegetation cap on the
+  -- Koppen snap, and the green-lifted moisture snap for the oceanic belt. New bodies, no older save names.
+  KOPPEN_COOL_T = NOISE .. "koppen_cool_t_v1",
+  KOPPEN_CN_T = NOISE .. "koppen_cn_t_v1",
+  KOPPEN_CN_TV = NOISE .. "koppen_cn_tv_v1",
+  KOPPEN_M_SNAP2 = NOISE .. "koppen_m_snap_v2",
 }
 
 -- Trees and great forests. The great-forests gate (prototype 0; Earth presets 1 or
@@ -1205,6 +1234,13 @@ return {
     exact_coast = {
       name = ID .. "-exact-coast", type = "bool-setting", setting_type = "startup", default_value = true,
     },
+    -- Koppen biomes (0.4.0, default on): the headline climate feature of 0.4.0. On, a new
+    -- world's tiles, trees and decoratives follow Koppen-Geiger classes computed per tile from four
+    -- smooth climate fields; off keeps the continuous 0.3.2 climate. Baked per save through the toggle
+    -- tn_koppen. The class field (tn_koppen_class_v1) is computed per tile, and the centroid snap
+    -- over the warped classifier drives the tiles.
+    koppen = {
+    },
     -- City markers (default off): runtime-global, so any admin can switch
     -- it in a running game; on, the map view shows every city of the world's map (scripts/markers.lua).
     city_markers = {
@@ -1212,6 +1248,7 @@ return {
       order = "d-a",
     },
   },
+  setting_order = {"scale", "koppen", "spawn_city_europe", "spawn_city_atlantic", "spawn_city_olde_world", "canals",
                    "great_forests", "ridges", "hotspots", "hotspot_amount", "regional_scarcity",
                    "inland_lakes",
                    "destroyed_europe", "blue_corrupted", "moscow_zone", "north_snow", "exact_coast", "city_markers"},
@@ -1267,6 +1304,9 @@ return {
     moscow = DE.mz_key, destroyed_europe = DE.eu_key, blue_uk = BC.uk_key,
     -- coast-band-fix: the band-fix key (no prototype; control only)
     bandfix = BFN.K,
+    -- Koppen biomes (0.4.0): the toggle key a new world bakes (the preset points the axes at the Koppen
+    -- bodies when it is on)
+    koppen = K_KOPPEN,
   },
 
   -- Each map's geography (ARCHITECTURE.md, "Map type entries"): map_type_order, the order of the
@@ -1369,6 +1409,8 @@ return {
         },
           -- read `geo` past above_scale and version 8's geo up to it. `geo` is the frayed coast fit (coast_fray): the
           -- generated fit fits.geo names, bound to version 8's warped chain plus the fray. A Map-type-only world names
+          -- every scale (0.4.0 one-click; below above_scale it folds to version 8's composition), so both routes read
+          -- one entry. fits.geo is the one field that names the coast fit past
           gx = OAS.AT8_GX, gy = OAS.AT8_GY, u = OAS.AT8_U, v = OAS.AT8_V,
           cx = OAS.AT8_CX, cy = OAS.AT8_CY, city_offset = {OAS.AT_CITY_CX, OAS.AT_CITY_CY},
           start_mask = START_MASK2,
@@ -1438,6 +1480,9 @@ return {
           -- 21) by name, its chain, box, spawn bodies and sets, with an entry, shore and inland lakes of its own that
           -- read `geo` past above_scale and version 8's geo up to it. `geo` is the frayed coast fit (coast_fray): the
           -- generated fit fits.geo names, bound to version 8's warped chain plus the fray. A Map-type-only world names
+          -- this entry; the Old World preset keeps version 8 (tn_geo 21) and names this entry for elevation at
+          -- every scale (0.4.0 one-click; below above_scale it folds to version 8's composition), so both routes read
+          -- one entry. fits.geo is the one field that names the coast fit past
           -- scale 6: the generated file of the preset's next geo body (coast.next).
           geo_id = 24,
           map_type_of = {geo_id = 21, above_scale = 6},
@@ -1633,6 +1678,8 @@ return {
                  -- points at the next one (spawn_next)
                  OAS.AT8_SPAWN_LAKE,
                  -- 0.3.1: Old World's geo body, which a preset past scale 6 points at the next one (coast.next)
+                 OAS.OW8_GEO,
+                 -- 0.4.0: the Koppen toggle; the preset points the axes at the Koppen bodies when it is on
 
   -- The fine field per map (ARCHITECTURE.md, "Programs and the firewall"): map key -> {the map's
   -- elevation entry and every term
@@ -1814,6 +1861,32 @@ return {
       release = "0.3.2",
       names = {DE.dev2, DE.dev_width2, DE.dev_jog_x, DE.dev_jog_y, DE.dev_fray2, DE.mz_dev2, DE.class5, DE.chaos_grey2,
                CT.CL_N_DROP4},
+    },
+    -- Koppen biomes (0.4.0; climate.koppen): the four smooth fitted fields and the A/B/C/D/E
+    -- classifier (prototypes/expressions/climate_koppen.lua). No geography; defined on every load (base and
+    -- beside Alien Biomes alike, as they read only the shared climate axes, the highland field and the tile
+    -- belts). The toggle (tn_koppen) is a preset key, not a body.
+    {
+      release = "0.4.0",
+      names = {CT.KOPPEN_TANN, CT.KOPPEN_SEASON, CT.KOPPEN_TCOLD, CT.KOPPEN_TWARM, CT.KOPPEN_PANN, CT.KOPPEN_SW,
+               CT.KOPPEN_CLASS},
+    },
+    -- Koppen biomes (0.4.0; climate.koppen.snap): the warped classifier the snap reads and
+    -- the three axis-snap bodies plus the vegetation-temperature snap, which the preset points the
+    -- climate axes and the grain tile keys at when Koppen is on (presets.lua koppen_names). New bodies,
+    -- no older save names them; reached only when a 0.4.0 preset bakes tn_koppen on beside Alien Biomes.
+    {
+      release = "0.4.0",
+      names = {CT.KOPPEN_CLASS2, CT.KOPPEN_T_SNAP, CT.KOPPEN_M_SNAP, CT.KOPPEN_A_SNAP, CT.KOPPEN_TV_SNAP},
+    },
+    -- Koppen biomes (0.4.0; climate.koppen.compose): the cold-north/spawn-aware temperature and
+    -- its vegetation cap, and the green-lifted moisture snap, which the preset points the climate axes and
+    -- the grain tile keys at when Koppen is on (presets.lua koppen_names). New bodies, no older save names
+    -- them; reached only when a 0.4.0 preset bakes tn_koppen on beside Alien Biomes. The Chaos/Corrupted/
+    -- Moscow zone, the north snow and the spawn clearing compose over them with no body change.
+    {
+      release = "0.4.0",
+      names = {CT.KOPPEN_COOL_T, CT.KOPPEN_CN_T, CT.KOPPEN_CN_TV, CT.KOPPEN_M_SNAP2},
     },
     -- The second hotspot table's bodies: under files its table, which releases the row names regions.lua composes
     -- from it, as the region table does. No geography: a preset names them over the first table's (rule 15).
@@ -3878,9 +3951,13 @@ return {
     blue_corrupted = {setting = "blue_corrupted", preset_key = BC.K, default = false,
                       mechanism = "name switch", on = ONE, off = ZERO, maps = {"europe", "atlantic", "olde_world"},
                       requires = "alien-biomes"},
+    -- Koppen biomes (0.4.0, default on): a name switch baked as tn_koppen. presets.lua reads it in its
+    -- baked function (koppen_names) to point temperature/moisture/aux at the Koppen snap bodies when on. Orthogonal to
+    -- elevation, so one-click world creation is preserved.
               on = ONE, off = ZERO, maps = {"europe", "atlantic", "olde_world"}},
   },
   toggle_order = {"canals", "great_forests", "ridges", "hotspots", "inland_lakes", "destroyed_europe",
+                  "blue_corrupted", "koppen"},
 
   -- Stable hooks on shared prototypes (ARCHITECTURE.md, "Stable hooks"): if(gate > threshold, on
   -- branch, off value), whose outermost `if` folds away on worlds without the gate. The gate's
@@ -4558,6 +4635,119 @@ return {
               fallback = {temperature = CT.CL_T_FB, moisture = CT.CL_M_FB, aux = CT.CL_A_FB}},
     -- The climate bands the oracle (t3_oracle) and the climate checks read, in Alien Biomes units.
     bands = {frozen_below = 0, cold_below = 25, hot_from = 65, dry_below = 0.4},
+    -- Koppen biomes (0.4.0). A quantizer in front of the three
+    -- climate axes: four smooth fitted fields (annual mean temperature Tann, coldest- and warmest-month
+    -- temperature Tcold/Twarm in Alien Biomes units, an annual precipitation proxy Pann, and a dry-season
+    -- regime s_w), then the standard A/B/C/D/E cascade into the 14 shipped classes (tn_koppen_class_v1,
+    -- prototypes/expressions/climate_koppen.lua), and a centroid snap (snap below) that drives tiles, trees
+    -- and decoratives. The thresholds are in the mod's own field units (AB temperature, the moisture
+    -- proxy), calibrated in game against an offline class-map preview, not real Celsius or mm.
+    koppen = {
+      key = K_KOPPEN,
+      names = {tann = CT.KOPPEN_TANN, season = CT.KOPPEN_SEASON, tcold = CT.KOPPEN_TCOLD,
+               twarm = CT.KOPPEN_TWARM, pann = CT.KOPPEN_PANN, sw = CT.KOPPEN_SW, class = CT.KOPPEN_CLASS},
+      -- CAVEAT 5 (binding): fold the ridges highland field (tn_high_tile, 0..1, 0 off ridges) into Tann and
+      -- so into Tcold/Twarm, so Tibet, the Alps and the Andes classify cold (tundra/boreal), not warm by
+      -- latitude. lapse_t is the AB-temperature drop at full highland membership.
+      highland = {lapse_t = 55},
+      -- seasonality = clamp((amp0 + per_deg * |lat|) * (1 + continentality * cont_box), 0, max), where
+      -- cont_box is the Eurasia-interior continental box of climate.temperature.continental (0..1), so
+      -- continental interiors get colder winters (lower Tcold) and hotter summers (higher Twarm).
+      season = {amp0 = 2, per_deg = 0.5, max = 45, continentality = 0.85},
+      -- precip proxy Pann = moisture_mean (reused from climate.moisture) + the tile-belt m sum (CL_BELT_M),
+      -- monotone in real precipitation. aridity Pth (proxy units) = base + per_t * Tann + the regime term
+      -- (summer-dry lowers it, winter-dry raises it, the standard Koppen 0.5/1.0/1.4 P-sum spirit). B (arid)
+      -- when Pann < Pth; desert when Pann < desert_frac * Pth, else steppe.
+      aridity = {base = 0.3, per_t = 0.0025, summer_dry = -0.05, neutral = 0, winter_dry = 0.12, desert_frac = 0.62},
+      -- the cascade thresholds, AB temperature units and the precip proxy. cd_tcold is the classic
+      -- Koppen C/D boundary (-3C), kept swappable here. sw_hi/sw_lo are the summer-dry/winter-dry regime cuts
+      -- (0.33 standard). Calibrated in game.
+      thresholds = {a_tcold = 61, bwh_tann = 76, e_twarm = 42, ef_tann = -23, cd_tcold = -6,
+                    cfa_twarm = 84, dfa_twarm = 74, dfb_twarm = 50, dfc_tcold = -58,
+                    af_pann = 0.95, af_sw = -0.1, cs_sw = 0.2, sw_hi = 0.33, sw_lo = -0.33},
+      -- the 14 class ids (in cascade order), the value tn_koppen_class_v1 returns per tile.
+      classes = {af = 1, amaw = 2, bwh = 3, bwk = 4, bs = 5, cs = 6, cfa = 7, cfb = 8,
+                 dfa = 9, dfb = 10, dfc = 11, dfd = 12, et = 13, ef = 14},
+      -- the dry-season regime s_w = clamp(sum(summer-dry box weights) - sum(winter-dry box weights), -1, 1),
+      -- reusing climate.tile_belts' boxes by id: Mediterranean boxes run summer-dry (+), monsoon and savanna
+      -- boxes winter-dry (-). belt_weight and the belt wander mirror climate.lua.
+      regime = {summer_dry = {"mediterranean", "california", "chile_central", "maghreb"},
+                winter_dry = {"india", "se_asia", "south_china", "sahel", "east_africa", "north_australia"}},
+      -- the boundary warp: the cascade temperatures wander by warp_t times the existing climate
+      -- meander (no new noise call), so class edges are not latitude lines. The extra mid-wavelength warp and
+      -- the centroid transition blend are in snap below.
+      warp_t = 1.5,
+      -- The centroid snap: each class's Alien Biomes
+      -- (T, M, A) centroid, indexed by the class id (classes above), the value the axis-snap bodies
+      -- point the climate axes at when Koppen is on. Every T is below the grain veg_cap (79.5), so no
+      -- class signs orange grass (the palette allows none); every A is at or below aux ab_cap (0.5), so
+      -- no class reaches Alien Biomes' alien palette. AB units, as the fields are.
+      centroids = {
+        {t = 75, m = 0.90, a = 0.30}, -- 1  Af       tropical rainforest
+        {t = 72, m = 0.55, a = 0.35}, -- 2  Am/Aw    tropical monsoon & savanna
+        {t = 76, m = 0.06, a = 0.42}, -- 3  BWh      hot desert
+        {t = 40, m = 0.08, a = 0.42}, -- 4  BWk      cold desert
+        {t = 52, m = 0.30, a = 0.40}, -- 5  BS       steppe / semi-arid
+        {t = 60, m = 0.42, a = 0.38}, -- 6  Cs       mediterranean (dry summer)
+        {t = 62, m = 0.70, a = 0.30}, -- 7  Cfa/Cwa  humid subtropical
+        {t = 48, m = 0.72, a = 0.28}, -- 8  Cfb      oceanic / marine temperate
+        {t = 45, m = 0.60, a = 0.30}, -- 9  Dfa/Dwa  continental, hot summer
+        {t = 35, m = 0.62, a = 0.30}, -- 10 Dfb      continental, warm summer
+        {t = 22, m = 0.58, a = 0.32}, -- 11 Dfc/Dwc  boreal / taiga
+        {t = 8,  m = 0.50, a = 0.35}, -- 12 Dfd      extreme subarctic
+        {t = -5, m = 0.45, a = 0.45}, -- 13 ET       tundra
+        {t = -18, m = 0.40, a = 0.50}, -- 14 EF      ice cap
+      },
+      -- The snap: the axis is the class centroid blended toward the continuous
+      -- mean by blend (0 at the centroid, 1 at the continuous field), so a class boundary ramps instead
+      -- of stepping - the continuous field sits near the threshold value there, so the ramp interpolates
+      -- the two neighbouring centroids - plus the existing per-axis spread noise (climate.lua T/M/A noise,
+      -- the same seeds) so each class is a patchwork, plus a Tile-only fray on temperature
+      -- (noise_layer_noise on the grain layer, already in the Tile program) that breaks Alien Biomes'
+      -- razor tile-score edges. Moisture clamps to ab_top, aux folds under ab_cap, and the vegetation
+      -- temperature caps at veg_cap so no spread can carry a class into orange grass.
+      snap = {
+        names = {class = CT.KOPPEN_CLASS2, t = CT.KOPPEN_T_SNAP, m = CT.KOPPEN_M_SNAP,
+                 a = CT.KOPPEN_A_SNAP, tv = CT.KOPPEN_TV_SNAP},
+        blend = {t = 0.25, m = 0.25, a = 0},
+        -- the extra mid-wavelength boundary warp: a basis noise on class_v2's cascade
+        -- temperatures, on top of v1's warp_t * meander, so class edges wander on a shorter wavelength
+        -- and no edge runs straight (measured at zoom 0.25).
+        warp2 = {amplitude = 0.3, wavelength_px = 3, octaves = 3, persistence = 0.6, seed1 = 7630},
+        -- the Tile razor-edge fray on temperature (reuses the grain noise layer, already in the Tile
+        -- program); veg_margin keeps the vegetation-temperature snap strictly under veg_cap.
+        fray = {amplitude = 4, veg_margin = 0.5},
+      },
+      -- Composition and greenness. New names
+      -- only; the released cold-north, zone and spawn bodies are untouched. Koppen is the base biome
+      -- layer; the overrides win where they apply:
+      --   temperature (compose.names.t) - the Koppen snap lowered by the cold north's drop north of the
+      --   snow line (so the class deepens into Dfc/ET/EF and the frozen tile still overrides), and warmed
+      --   to the spawn clearing's floor at spawn (a playable cold-grass start; the frozen weight is cleared
+      --   by the same clearing in tiles.lua, so no spawn on snow). It reads the released drop by name
+      --   (climate.north3.names.drop), which a preset with a zone on redirects to the zone drop
+      --   (climate.north3.zone_drop), so the Chaos heat ground keeps its heat under High snow.
+      --   The Chaos/Corrupted/Moscow zone tile look is a tile-score overlay (destroyed.lua/blue.lua) taken
+      --   by max in data-final-fixes, so it wins inside its outline over the Koppen tiles and fades to the
+      --   Koppen base at its edge with no new body here; the zone trees are the zone's own dead/excluded set.
+      --   Scarcity is ore-only (resources.lua), orthogonal.
+      compose = {
+        names = {cool_t = CT.KOPPEN_COOL_T, t = CT.KOPPEN_CN_T, tv = CT.KOPPEN_CN_TV, m = CT.KOPPEN_M_SNAP2},
+        -- Frankfurt/oceanic greenness (measured at Frankfurt, class Cfb, scale 12): the Koppen Cfb tile
+        -- reads browner than the v0.3.2 OFF baseline because the ground is both drier and warmer than the
+        -- continuous climate there (OFF tile moisture 0.74, temperature 29; the snap gave 0.67 and 40).
+        -- The brown is dirt, not off-palette grass, so two per-class lifts on the Tile-only grain keys
+        -- (new names, trees unchanged) bring the oceanic/temperate/boreal ground back to the OFF look:
+        --   green - added to the moisture snap (Tile-only grain key), under ab_top so no forest ring
+        --   cool  - subtracted from the tile temperature (via the cooled base compose.names.cool_t), so the
+        --           oceanic/temperate ground reads as cool green grass, not the warm dry grass the snap
+        --           centroid gives. Tile-only (the roles keep the plain snap for the Entity budget), a cheap
+        --           per-class offset on the snap with no new noise.
+        -- Indexed by the class id (koppen.classes); an absent class lifts 0.
+        green = {[6] = 0.04, [7] = 0.08, [8] = 0.08, [9] = 0.06, [10] = 0.06, [11] = 0.04},
+        cool = {[6] = 4, [7] = 8, [8] = 10, [9] = 6, [10] = 6, [11] = 4},
+      },
+    },
   },
 
   -- The tile hooks (ARCHITECTURE.md, "Stable hooks"). Every hook is

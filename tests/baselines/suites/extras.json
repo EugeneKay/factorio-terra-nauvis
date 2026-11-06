@@ -7195,6 +7195,118 @@
     "slice": "extras",
     "registered": "2026-11-03"
    },
+   "tn_koppen_a_snap_v1": {
+    "type": "noise-expression",
+    "sha256": "57dcc0d65d30a5fc91b0a9f6d2b064adab74498f0511ef827f89e51c11545f86",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_class_v1": {
+    "type": "noise-expression",
+    "sha256": "f010d3305b7104514c716da130b211e9d1772bacc7d7a43c20fb3ed77455032c",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_class_v2": {
+    "type": "noise-expression",
+    "sha256": "6707276e8b002ba49dc6c80e940e2994e4fb155274211a2087b1d57a86bbaad3",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_cn_t_v1": {
+    "type": "noise-expression",
+    "sha256": "36cf1e283e5b968f0c1428307635c5f24b8c5a60583b5c2180b119a33747a611",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_cn_tv_v1": {
+    "type": "noise-expression",
+    "sha256": "89de2810b3dd1d877280701af5939b33ec72b2e77e35ce4d3551646d7a4be75e",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_cool_t_v1": {
+    "type": "noise-expression",
+    "sha256": "442d1acdec489b59616e0e5ff4c1b7ac462de6b8a0ded57c61e4c170b6e19405",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_m_snap_v1": {
+    "type": "noise-expression",
+    "sha256": "57d89e58904812123715ca25f7598f6f5f525de76e3e78191ea45493614f98a9",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_m_snap_v2": {
+    "type": "noise-expression",
+    "sha256": "6bd60afa77e92e7349aa52ba861978e6aa02de14c5d29ccf32410a7936a1de04",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_pann_v1": {
+    "type": "noise-expression",
+    "sha256": "69091d916f66f653a93a85516d2bf117ca8592eb6f9590e1919af1d7129a5397",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_season_v1": {
+    "type": "noise-expression",
+    "sha256": "6525fcc63f60e45210b61e3f555d3c12a86a8b97debf4a3cd3055623a012d961",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_sw_v1": {
+    "type": "noise-expression",
+    "sha256": "f0be7d5000dc54d2e391d625697036e88d31b28ca813a0193fc98b1210768498",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_t_snap_v1": {
+    "type": "noise-expression",
+    "sha256": "3764448a362a72408770834d7118a662c0bddec1a2e0d670de9e72833d66b5e4",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_tann_v1": {
+    "type": "noise-expression",
+    "sha256": "f6cff133f3c1f8b43fe67bbd269253d8b5191ea511c84076a5787cdbc9e9ca99",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_tcold_v1": {
+    "type": "noise-expression",
+    "sha256": "5696fb1f501a809806105235babef074aa57bcfb074c41464d47715c38bb0c76",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_tv_snap_v1": {
+    "type": "noise-expression",
+    "sha256": "7d32bda1e99d04fd49f8a24ac02d4cfbf749508a52a3d921b7a544796cc5c9fa",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_koppen_twarm_v1": {
+    "type": "noise-expression",
+    "sha256": "966fa8257ac0f5fb0494edcd225fdd01796463153b22cfb7bbe1fb87896567ad",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
    "tn_land_coarse_atlantic_v8": {
     "type": "noise-expression",
     "sha256": "928301135396f9d5db0ef2bbbbf40778b3fd0867f1c17121df41b7399e985fc8",

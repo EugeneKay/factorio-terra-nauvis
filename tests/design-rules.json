@@ -41,8 +41,10 @@
     "kharkiv", "huambo", "mongo", "dangila", "bamako", "akka", "waddan", "johannesburg", "songea", "tabuk", "chengdu",
     "nanchang", "songling", "delhi", "hampi", "bam", "aktobe", "semey", "moron", "bangkok", "griffith", "newman", "frankfurt", "aachen", "moscow"]
   },
+  "koppen": {
    "type": "bool-setting",
    "setting_type": "startup",
+  },
   "canals": {
    "type": "bool-setting",
    "setting_type": "startup",

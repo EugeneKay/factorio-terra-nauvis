@@ -170,7 +170,35 @@ local function climate_names()
   return out
 end
 
+-- Koppen biomes (0.4.0): with the toggle on and Alien Biomes loaded, the preset points the
+-- climate axis roles (temperature/moisture/aux) and the grain tile keys (tn_tile_t/m/a and the vegetation
+-- tn_tile_tv) at the Koppen bodies, so the trees and decoratives, which read the roles, and the Alien Biomes
+-- tiles, which read the grain tile keys, both follow the per-tile Koppen class. The composition
+-- (climate.koppen.compose): temperature and its vegetation cap are the cold-north/spawn-aware bodies (the
+-- Koppen snap lowered by the cold north's drop north of the snow line and warmed in the spawn clearing), and
+-- moisture is the green-lifted snap for the oceanic belt; aux stays the plain snap. The composed temperature
+-- reads the released cold-north drop by name, which a preset with a zone on redirects to the zone drop, so
+-- the Chaos heat ground keeps its heat under High snow; the zone/corrupted tile look is a tile-score overlay
+-- that wins inside its outline by max() regardless, and fades to the Koppen base at its edge. Merged into
+-- baked() after grain_values and the zones, so the Koppen base reaches the tile keys (placed before them it
+-- would be clobbered and inert on Alien Biomes grain maps). With the toggle off or without Alien Biomes
+-- nothing here fires, so the v0.3.2 bodies stand.
+local function koppen_names(names)
+  local sw, SN = cfg.toggles.koppen, cfg.climate.koppen.snap.names
   if AB and names[sw.preset_key] == sw.on then
+    local GK = cfg.climate.grain.keys
+    local CM = cfg.climate.koppen.compose.names
+    -- The axis roles (trees/decoratives, Entity program) read the plain snaps; the Alien Biomes ground tiles
+    -- read the grain tile keys (data-final-fixes grain_scores rewrites temperature/moisture/aux to them), so
+    -- the oceanic cool+green greenness lift and the cold-north/spawn drop+clear composition ride the Tile-only
+    -- grain keys where the ground, the spawn clearing and the dirt-show need them, off the Entity program
+    -- (noise budget: the roles stay byte-identical to the plain centroid snap). Trees follow the pure Koppen class.
+    names.temperature, names.moisture, names.aux = SN.t, SN.m, SN.a
+    names[GK.temperature], names[GK.moisture], names[GK.aux] = CM.t, CM.m, SN.a
+    names[cfg.climate.grain.veg_key] = CM.tv
+  end
+end
+
 -- The tree keys every Earth preset sets (trees-forests), the same on every map: the great-forests
 -- multiplier key names the region layer's multiplier (the gate is a toggle); with Alien Biomes each
 -- restored vanilla tree's, rock's, decal's and decorative's key names its Earth body, and each palm's
@@ -516,6 +544,9 @@ local function baked(map_key, v)
   for k, value in pairs(blue_values(names)) do
     names[k] = value
   end
+  -- Koppen biomes (0.4.0): after the climate, grain and zone keys, so the centroid snap reaches
+  -- the axis roles and the grain tile keys. Mutates names in place; off or without Alien Biomes it is a no-op.
+  koppen_names(names)
   -- The second hotspot table and the second region table: every new world reads them through the first tables'
   -- names.
     names[k] = value
@@ -564,7 +595,17 @@ end
 -- save's scale under the ford key. Not part of baked(): the version's own fallbacks stay its base's.
 local function map_type_values(map_key, v)
   for _, o in ipairs(cfg.geography[map_key].versions) do
+    if o.map_type_of and o.map_type_of.geo_id == v.geo_id then
+      -- Name the registered Map type entry for elevation at EVERY scale, not only past
+      -- above_scale, so the preset's baked elevation matches the dropdown's Map type entry and picking
+      -- the preset sets the Map type (one-click). Below above_scale the entry folds to the base
+      -- version's composition. The ford set stays scale-gated exactly as before.
       local out = {[K.elevation] = o.entry}
+      if scale > o.map_type_of.above_scale then
+        for pos, s in ipairs(o.scales or cfg.scales.released) do
+          if s == scale and o.waterways then
+            out[K.fords] = o.waterways.fords[pos]
+          end
         end
       end
       return out

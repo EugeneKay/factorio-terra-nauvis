@@ -3261,6 +3261,13 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_elevation_atlantic_v9": {
+    "type": "noise-expression",
+    "sha256": "629dc21780bed1d418365b2d96c0a8f241ddcc6246424fabc7632fafe7361f98",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
    "tn_elevation_europe_v7": {
     "type": "noise-expression",
     "sha256": "13935eb3bf34c2c46aab6ae77b6423bffdb2ec31e65e215f02cbf14e8c5dd274",
@@ -3639,12 +3646,26 @@
     "slice": "extras",
     "registered": "2026-11-03"
    },
+   "tn_geo_atlantic_v10": {
+    "type": "noise-expression",
+    "sha256": "cfb147dd5077b504983f483e71b783da6a086ebfce3a3d158aab07aea4478eeb",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
    "tn_geo_atlantic_v8": {
     "type": "noise-expression",
     "sha256": "246e1ec3e5767c40f24446963dd6a2f82332a70f87eb3fd79582ee1bb0b1cf5c",
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-02"
+   },
+   "tn_geo_atlantic_v9": {
+    "type": "noise-expression",
+    "sha256": "74344180dc05687cd230a7a20bd3d1a79e3609120f260a80f16d032f2cc78a24",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
    },
    "tn_geo_europe_v7": {
     "type": "noise-expression",
@@ -3659,6 +3680,20 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-02"
+   },
+   "tn_geo_fray_atlantic_v1": {
+    "type": "noise-expression",
+    "sha256": "79ba73d989bcbd2be3410fa7624b3c989c50f67fd9587d8e4e4f7aca641444de",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_geo_fray_fit_atlantic_v1": {
+    "type": "noise-expression",
+    "sha256": "8a72c9e2b1fdea468844d01f47fab099c5822d60c7b47be36306b97edac2b219",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
    },
    "tn_geo_fray_fit_olde_world_v1": {
     "type": "noise-expression",
@@ -7174,6 +7209,13 @@
     "slice": "extras",
     "registered": "2026-11-02"
    },
+   "tn_inland_lakes_atlantic_v4": {
+    "type": "noise-expression",
+    "sha256": "4e4dcd3b0b19de88e8e0288540463c4858b78dc50b4f52a7230ed77a845fb1cb",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
    "tn_inland_lakes_europe_v6": {
     "type": "noise-expression",
     "sha256": "b58b7fc5b0f02e6ba636c20c7b0ec0ee8ef7cc320b75151146e7a1b4dcc2b862",
@@ -8716,6 +8758,20 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_overlay_land_atlantic_v1": {
+    "type": "noise-expression",
+    "sha256": "f17304a573772377220958a8545da86c1560754ea6e31a0a321cab7e9fbdf447",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_overlay_land_fray_atlantic_v1": {
+    "type": "noise-expression",
+    "sha256": "31800c2563a054453fbd059e8a6d858727c94a867980828c2c3b189f25579a39",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
    "tn_overlay_land_fray_olde_world_v1": {
     "type": "noise-expression",
     "sha256": "e31fc22dedc058e6c54f7b605cfae1aa4d9e7ad3a792629ce25bf1c2c10932ba",
@@ -8729,6 +8785,20 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-03"
+   },
+   "tn_overlay_water_atlantic_v1": {
+    "type": "noise-expression",
+    "sha256": "faaaffd80ebf59869d913802fe0ce9e503ea85fff72644ec82106e02a0471eee",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
+   },
+   "tn_overlay_water_fray_atlantic_v1": {
+    "type": "noise-expression",
+    "sha256": "aaa7654acddb4f345dd844a8cd0836793c52328746f3a52476293233a0dffa2d",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
    },
    "tn_overlay_water_fray_olde_world_v1": {
     "type": "noise-expression",
@@ -12159,6 +12229,13 @@
     "dump": "m1",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+   "tn_shore_atlantic_v7": {
+    "type": "noise-expression",
+    "sha256": "51a9be6b4758fcdf042891af490f4880faf08ef74097fa6246163c05074cd126",
+    "dump": "m1",
+    "slice": "extras",
+    "registered": "2026-11-06"
    },
    "tn_shore_europe_v4": {
     "type": "noise-expression",

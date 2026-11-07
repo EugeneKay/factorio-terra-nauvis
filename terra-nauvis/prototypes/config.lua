@@ -853,8 +853,27 @@ local OAS = {
     NOISE .. "warp_x_atlantic_s24_v2", NOISE .. "warp_y_atlantic_s24_v2",
     NOISE .. "warp_xp_atlantic_s24_v2", NOISE .. "warp_yp_atlantic_s24_v2",
   },
+  -- 0.3.2: Atlantic's geo body past scale 6, which a new world's preset names over AT8_GEO (coast.next): the coast fit
+  -- regrown in place boxes (data-src/fits/atlantic PROVENANCE, next stage), bound to version 8's warped chain.
+  AT9_GEO = NOISE .. "geo_atlantic_v9",
+  AT9_GEO_FILE = "prototypes/generated/geo_atlantic_v3.lua",
+  -- 0.3.2: Atlantic's Map type version (geography 25, map_type_of 22): its entry, shore, inland lakes and the frayed
   -- coast fit they read past scale 6 (coast_fray).
+  AT9_ENTRY = NOISE .. "elevation_atlantic_v9",
+  AT9_SHORE = NOISE .. "shore_atlantic_v7",
+  AT9_LAKES = NOISE .. "inland_lakes_atlantic_v4",
+  AT_GEO_FRAY1 = NOISE .. "geo_fray_atlantic_v1",
   -- with coast.overlay: the frayed fit and overlay layers the frayed geo body combines
+  AT_FIT_FRAY1 = NOISE .. "geo_fray_fit_atlantic_v1",
+  AT_LAND_FRAY1 = NOISE .. "overlay_land_fray_atlantic_v1",
+  AT_WATER_FRAY1 = NOISE .. "overlay_water_fray_atlantic_v1",
+  -- 0.3.2: Atlantic's geo body past scale 6 over AT9_GEO (coast.overlay): its land and water layers drawn from the
+  -- reference raster, combined with it by max and min, each layer bound to version 8's warped chain.
+  AT10_GEO = NOISE .. "geo_atlantic_v10",
+  AT10_LAND = NOISE .. "overlay_land_atlantic_v1",
+  AT10_WATER = NOISE .. "overlay_water_atlantic_v1",
+  AT10_LAND_FILE = "prototypes/generated/overlay_land_atlantic_v1.lua",
+  AT10_WATER_FILE = "prototypes/generated/overlay_water_atlantic_v1.lua",
 }
 local OAS_SETS = {
   atlantic_v8 = {ww = OAS.AT_WW7, canals = OAS.AT_CANALS7, dams = OAS.AT_DAMS7, fords = OAS.AT_FORDS7},
@@ -1331,6 +1350,7 @@ return {
   -- one id space across every map: each geography release of any map takes the next unused
   -- integer and keeps it for good, so no two maps or versions share one, and release_registry
   -- names each with its map, which is how control code resolves a save's tn_geo (ARCHITECTURE.md,
+  -- "Release versioning policy", rule 4; tnconfig's id-space check). The next unused id is 26.
   geography = {
     europe = {
       map_type_order = "3000-tn-a",
@@ -1407,13 +1427,26 @@ return {
           edge = true,
           lakes = ELN.K_INLAND_LAKES,
         },
+        {
+          -- Version 9 (Atlantic, 0.3.2), a Map type version (map_type_of): the composition of version 8 (geo_id
+          -- 22) by name, its chain, box, spawn bodies and sets, with an entry, shore and inland lakes of its own that
           -- read `geo` past above_scale and version 8's geo up to it. `geo` is the frayed coast fit (coast_fray): the
           -- generated fit fits.geo names, bound to version 8's warped chain plus the fray. A Map-type-only world names
+          -- this entry; the Atlantic preset keeps version 8 (tn_geo 22) and names this entry for elevation at
           -- every scale (0.4.0 one-click; below above_scale it folds to version 8's composition), so both routes read
           -- one entry. fits.geo is the one field that names the coast fit past
+          -- scale 6: the generated file of the preset's next geo body (coast.next). Waterways reuse version 8's sets
+          -- (atlantic_v8): the river and ford sets are drawn against the unchanged geo body (model-10400), so the new
+          -- next + overlay coast needs no re-emission.
+          geo_id = 25,
+          map_type_of = {geo_id = 22, above_scale = 6},
+          entry = OAS.AT9_ENTRY,
+          geo = OAS.AT_GEO_FRAY1, land_coarse = OAS.AT8_LAND_COARSE, detail = OAS.AT8_DETAIL, far = OAS.AT8_FAR,
+          fray_overlay = {fit = OAS.AT_FIT_FRAY1, land = OAS.AT_LAND_FRAY1, water = OAS.AT_WATER_FRAY1},
           gx = OAS.AT8_GX, gy = OAS.AT8_GY, u = OAS.AT8_U, v = OAS.AT8_V,
           cx = OAS.AT8_CX, cy = OAS.AT8_CY, city_offset = {OAS.AT_CITY_CX, OAS.AT_CITY_CY},
           start_mask = START_MASK2,
+          fits = {geo = OAS.AT9_GEO_FILE, land_coarse = AT_LAND_COARSE_FILE},
           fallbacks = {
             {name = K_SCALE, map_qualified = false},
             {name = OAS.AT8_CX, map_qualified = true, frozen = true},
@@ -1425,6 +1458,7 @@ return {
           },
           spawn = {
             city_setting = "spawn_city_atlantic", city = OAS.AT_CITY, city_index = OAS.AT_CITY_INDEX,
+            spawn_lake = OAS.AT8_SPAWN_LAKE, spawn_bias = OAS.AT8_SPAWN_BIAS, inland_lakes = OAS.AT9_LAKES,
             lake_floor = true, start_land = START_LAND, distance = DISTANCE, bearings = OAS.AT7_SPAWN_FILE,
           },
           waterways = OAS_SETS.atlantic_v8,
@@ -1432,6 +1466,7 @@ return {
           waterway_files = 2,
           mouths = OAS.AT_MOUTH2,
           warp = OAS.AT_WARP2,
+          shore = OAS.AT9_SHORE,
           fields = REN.AT_FIELDS_KEY,
           edge = true,
           lakes = ELN.K_INLAND_LAKES,
@@ -1531,6 +1566,10 @@ return {
   spawn_next = {versions = {
     [22] = {served = 50, city_offset = {OAS.AT_CITY_CX2, OAS.AT_CITY_CY2}, spawn_lake = OAS.AT9_SPAWN_LAKE,
             spawn_bias = OAS.AT9_SPAWN_BIAS, bearings = OAS.AT9_SPAWN_FILE},
+    -- 0.4.0: the Atlantic Map-type version (geo 25) names the appended spawn_city_atlantic, so the next-folds
+    -- waiver requires its own served count; a Map-type world only ever reads `served` (presets.lua fallback
+    -- loop resets an appended city to random), never a next-fold body, so no body fields are carried here.
+    [25] = {served = 50},
   }},
 
   -- The chain every map-wide layer reads (the region layer, the climate and the layers after them):
@@ -1705,6 +1744,12 @@ return {
       ELN.EU7_WARP[29], ELN.EU7_WARP[30], ELN.EU7_WARP[31], ELN.EU7_WARP[32],
     },
     atlantic = {
+      REN.AT_FIELDS, START_LAND, OAS.AT8_ENTRY, OAS.AT8_GEO, OAS.AT9_GEO, OAS.AT8_DETAIL, OAS.AT8_FAR,
+      OAS.AT10_GEO, OAS.AT10_LAND, OAS.AT10_WATER,
+      OAS.AT8_LAKES,
+      -- 0.4.0: the Map type version 9's own bodies (geography 25); waterways reuse version 8's sets
+      OAS.AT9_ENTRY, OAS.AT9_SHORE, OAS.AT9_LAKES, OAS.AT_GEO_FRAY1, OAS.AT_FIT_FRAY1, OAS.AT_LAND_FRAY1,
+      OAS.AT_WATER_FRAY1,
       OAS.AT8_SHORE, OAS.AT_WW7[1], OAS.AT_WW7[2], OAS.AT_WW7[3], OAS.AT_WW7[4], OAS.AT_WW7[5], OAS.AT_WW7[6],
       OAS.AT_WW7[7], OAS.AT_WW7[8], OAS.AT_CANALS7[1], OAS.AT_CANALS7[2], OAS.AT_CANALS7[3], OAS.AT_CANALS7[4],
       OAS.AT_CANALS7[5], OAS.AT_CANALS7[6], OAS.AT_CANALS7[7], OAS.AT_CANALS7[8], OAS.AT_DAMS7[1], OAS.AT_DAMS7[2],
@@ -2161,8 +2206,29 @@ return {
                OAS.AT7_WW_FILES[1], OAS.AT7_WW_FILES[2], OAS.AT7_WW_FILES[3], OAS.AT7_WW_FILES[4],
                OAS.AT7_WW_FILES[5], OAS.AT7_WW_FILES[6], OAS.AT7_WW_FILES[7], OAS.AT7_WW_FILES[8]},
     },
+    -- 0.4.0: Atlantic's next geo body (coast.next), which a new world's preset names over version 8's past scale 6.
+    {
+      release = "0.4.0",
+      names = {OAS.AT9_GEO},
+      files = {OAS.AT9_GEO_FILE},
+    },
+    -- 0.4.0: Atlantic's Map type version 9 (geography 25), which a Map-type-only world names and the preset names for
+    -- elevation past scale 6, and the coast fray its coast reads there. Waterways reuse version 8's sets,
+    -- so no new waterway files: the river and ford bodies are already released in the geography-22 row.
+    {
+      release = "0.4.0",
+      map = "atlantic",
+      geography = 25,
+      names = {OAS.AT9_ENTRY, OAS.AT9_SHORE, OAS.AT9_LAKES, OAS.AT_GEO_FRAY1, OAS.AT_FIT_FRAY1,
+               OAS.AT_LAND_FRAY1, OAS.AT_WATER_FRAY1},
+    },
+    -- 0.4.0: Atlantic's geo body over the next one (coast.overlay) and its two layers, which a new world's preset
     -- names over version 8's past scale 6.
     {
+      release = "0.4.0",
+      names = {OAS.AT10_GEO, OAS.AT10_LAND, OAS.AT10_WATER},
+      files = {OAS.AT10_LAND_FILE, OAS.AT10_WATER_FILE},
+    },
     -- 0.3.0: Europe's version 7, version 6 and its scale extension under names of its own.
     {
       release = "0.3.0",
@@ -2268,6 +2334,7 @@ return {
     -- `file`: a generated fit bound to the version's warped chain, as its own fits are; `reads`: a fit it defines.
     next = {versions = {
       [21] = {body = OAS.OW9_GEO, file = OAS.OW9_GEO_FILE, above_scale = 6},
+      [22] = {body = OAS.AT9_GEO, file = OAS.AT9_GEO_FILE, above_scale = 6},
     }},
     -- overlay (0.3.2): per geography version, a geo body over its next body (`over`) that a new world's preset names in
     -- place of both past above_scale: min(max(over, land - offset_px), offset_px - water). The land and water layers
@@ -2277,6 +2344,8 @@ return {
     overlay = {offset_px = 1024, versions = {
       [21] = {body = OAS.OW10_GEO, over = OAS.OW9_GEO, above_scale = 6, land = OAS.OW10_LAND,
               land_file = OAS.OW10_LAND_FILE, water = OAS.OW10_WATER, water_file = OAS.OW10_WATER_FILE},
+      [22] = {body = OAS.AT10_GEO, over = OAS.AT9_GEO, above_scale = 6, land = OAS.AT10_LAND,
+              land_file = OAS.AT10_LAND_FILE, water = OAS.AT10_WATER, water_file = OAS.AT10_WATER_FILE},
     }},
     transfer_offset = 0.1,
     transfer_clamp_px = 16,

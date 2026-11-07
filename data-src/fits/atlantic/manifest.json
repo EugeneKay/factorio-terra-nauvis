@@ -23,6 +23,38 @@
    "file": "terra-nauvis/prototypes/generated/land_coarse_atlantic_v1.lua",
    "sha256": "e62104951763d0c37ecc1de1e150edff28b89e5d263d0265e379db5c2add5454",
    "bytes": 19453
+  },
+  "geo_next": {
+   "terms": 11000,
+   "factors": 4402,
+   "row_groups": 1502,
+   "checkpoint": "data-src/fits/atlantic/model-next-at-11000.npz",
+   "checkpoint_sha256": "e90e7fc93ac0a852843344a6664a0f5584c35368c8f338d7fb470692dbdb918a",
+   "file": "terra-nauvis/prototypes/generated/geo_atlantic_v3.lua",
+   "sha256": "5c1bfbfa80ed7ce457dce98cb9cef325206025f74e958c00150ae3cf35f00947",
+   "bytes": 544581
+  },
+  "overlay_land": {
+   "terms": 37147,
+   "factors": 6575,
+   "row_groups": 2300,
+   "clusters": 152,
+   "checkpoint": "data-src/fits/atlantic/overlay-land-1.npz",
+   "checkpoint_sha256": "ff7f1dbd3e86d55777818f8c4b7da1d85931da132cada10193038bf489c6b93a",
+   "file": "terra-nauvis/prototypes/generated/overlay_land_atlantic_v1.lua",
+   "sha256": "e70649855cef17553f0509ce06e89121a010bcfb09267bbaa6f87391ac22b8ed",
+   "bytes": 1160089
+  },
+  "overlay_water": {
+   "terms": 1085,
+   "factors": 211,
+   "row_groups": 75,
+   "clusters": 4,
+   "checkpoint": "data-src/fits/atlantic/overlay-water-1.npz",
+   "checkpoint_sha256": "0ff254901f3acd86bcb670da9bffca9cc7d4ea3c6e0d5d721d66aefd231b09b1",
+   "file": "terra-nauvis/prototypes/generated/overlay_water_atlantic_v1.lua",
+   "sha256": "fffb6d29d16478d8769fd53befcc78896c4ff89953a0c6c8c23b36a390eb044d",
+   "bytes": 33257
   }
  }
 }

@@ -54,6 +54,10 @@ local FILES = {
   ["prototypes/generated/geo_europe_v1.lua"] = require("prototypes.generated.geo_europe_v1"),
   ["prototypes/generated/land_coarse_europe_v1.lua"] = require("prototypes.generated.land_coarse_europe_v1"),
   ["prototypes/generated/geo_atlantic_v2.lua"] = require("prototypes.generated.geo_atlantic_v2"),
+  ["prototypes/generated/geo_atlantic_v3.lua"] = require("prototypes.generated.geo_atlantic_v3"),
+  ["prototypes/generated/overlay_land_atlantic_v1.lua"] = require("prototypes.generated.overlay_land_atlantic_v1"),
+  ["prototypes/generated/overlay_water_atlantic_v1.lua"] =
+    require("prototypes.generated.overlay_water_atlantic_v1"),
   ["prototypes/generated/land_coarse_atlantic_v1.lua"] = require("prototypes.generated.land_coarse_atlantic_v1"),
   ["prototypes/generated/geo_olde_world_v2.lua"] = require("prototypes.generated.geo_olde_world_v2"),
   ["prototypes/generated/geo_olde_world_v3.lua"] = require("prototypes.generated.geo_olde_world_v3"),

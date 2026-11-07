@@ -4227,6 +4227,11 @@ def thin_version_fixtures(cfg):
     and takes only its entry and basin as its own; the same names without `over`, or an `over` that names
     no older entry, fail."""
     out = []
+    # Build the synthetic thin version on the first map (alphabetically) whose newest version is a base version.
+    # A Map-type newest version (map_type_of) must stay the map's newest, so appending a test version onto it
+    # would de-newest it and trip its own map_type_of==newest rule; pick a map without a Map-type tail instead.
+    key = sorted(k for k, g in _as_dict(cfg.get("geography")).items()
+                 if "map_type_of" not in (_as_dict(g).get("versions") or [{}])[-1])[0]
 
     def with_version(**fields):
         c = copy.deepcopy(cfg)

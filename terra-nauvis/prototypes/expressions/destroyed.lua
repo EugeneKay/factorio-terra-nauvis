@@ -332,8 +332,36 @@ if AB then
   def(NN.class, "if(" .. DN.reach .. " <= 0, 0, if(" .. cut_at(CU.heat) .. " > 0, 0, if(max(" .. ash .. ", " ..
     num(NC.thin) .. " - " .. DN.reach .. " + " .. ash .. ") > 0, " .. L[T.black_dirt] .. ", " .. num(NC.grey) ..
     ")))", at)
+  -- 0.4.0 (config.lua destroyed.dev.next.class2): class6, the next class's successor. Ships inert
+  -- under DE.class6; a preset repoints dev.next.names.class to it. Three
+  -- fixes over class5, all inside the zone: the black-ash boundary moves inward by ash_shift widths and the
+  -- thin break drops, so the grey rock reaches the zone's outer edge (no pinch under 10% where the width narrows);
+  -- ash_fray (finer basis noises in tiles) breaks the black-ash edge's straight runs; and heat ground becomes
+  -- grey rock wherever the North snow weight is over snow_cut, so the palette covers the snow-prone tiles the
+  -- Koppen compose leaves cold and no outside snow shows under High snow.
+  local NC2 = NX.class2
+  local SNOW_W = cfg.climate.north_snow.names.w
+  local af = {}
+  for _, o in ipairs(NC2.ash_fray) do
+    af[#af + 1] = num(o.amp) .. " * basis_noise{x = x, y = y, seed0 = map_seed, seed1 = " .. num(o.seed1) ..
       ", input_scale = 1 / " .. num(o.tiles) .. ", output_scale = 1}"
   end
+  local ash2 = "(" .. cut_at(CU.ash) .. " - " .. num(NC2.ash_shift) .. " * " .. DN.width .. " + " ..
+    num(CU.ash.at - CU.dry.at) .. " * " .. DN.width .. " * clamp((" .. noise(BK) .. " - " .. num(BK.at) .. ") / " ..
+    num(BK.span) .. ", 0, 1) + " .. table.concat(af, " + ") .. ")"
+  -- class6's body past the reach gate (heat ground, then grey on snow-prone tiles, else black ash or grey rock);
+  -- class7 shares it unchanged, so reach > 0 renders byte-identical under either class.
+  local inner_class = "if(" .. cut_at(CU.heat) .. " > 0, if(" .. SNOW_W .. " > " ..
+    num(NC2.snow_cut) .. ", " .. num(NC2.grey) .. ", 0), if(max(" .. ash2 .. ", " .. num(NC2.thin) .. " - " ..
+    DN.reach .. " + " .. ash2 .. ") > 0, " .. L[T.black_dirt] .. ", " .. num(NC2.grey) .. "))"
+  def(NC2.name, "if(" .. DN.reach .. " <= 0, 0, " .. inner_class .. ")", at)
+  -- 0.4.0: class7, class6's successor. Where reach <= 0 the grey rock now reaches the dev > 0
+  -- zone fringe (the frayed outer edge, outside the dry-cut core): the fringe is assigned the grey-rock class, so the
+  -- palette scores and places grey rock there, over the Alien Biomes frozen-snow (and the water-mud a bare snow
+  -- penalty would reveal) the cold Koppen edge left. dev <= 0 stays class 0, so the surrounding Koppen is
+  -- byte-identical, and reach > 0 keeps class6's body. Ships inert under DE.class7; a preset repoints class to name2.
+  def(NC2.name2, "if(" .. DN.reach .. " <= 0, if(" .. DN.dev .. " > 0, " .. num(NC2.grey) .. ", 0), " ..
+    inner_class .. ")", at)
   -- The heat ground: heat 1 at the cut, rising by ramp degrees a width, and never hotter than the lava blob's
   -- temperature or the spawn's cooler cap.
   def(DN.heat, "if(h > 0, clamp(min(" .. hot .. ", " .. num(H.rim) .. " + " .. num(DV.ramp) .. " * h / " .. DN.width ..

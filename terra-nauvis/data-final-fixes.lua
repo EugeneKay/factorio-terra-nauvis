@@ -174,6 +174,16 @@ local function grain_hooks(excluded, n)
         on = "max(" .. on .. ", " .. t.body .. ")"
       end
     end
+    -- Since 0.4.0, no outside frozen snow inside the Chaos devastation field. Alien Biomes' frozen-snow
+    -- spot noise out-scores the grey-rock palette (score 20) at a few e57n46 heat-ground tiles the Koppen compose
+    -- leaves cold, so specks of snow survive inside the zone under High snow, ignoring the composed temperature lift.
+    -- The devastation reach (destroyed.dev, positive inside the Chaos and Moscow-chaos zone, folded to outside_tiles
+    -- everywhere else) folds the score to -inf where it is over 0, so the grey rock wins and nothing outside the zone
+    -- changes. Mirrors the Corrupted snow fringe max above, inverted: that one ADDS snow inside the Corrupted zone,
+    -- this one removes it inside Chaos. The reach is defined only beside Alien Biomes, as this hook is.
+    if string.sub(name, 1, #"frozen-snow") == "frozen-snow" then
+      on = "if(" .. cfg.destroyed.dev.names.reach .. " > 0, -inf, " .. on .. ")"
+    end
     autoplace.probability_expression = hook(on, original)
   end
   log(cfg.identity.title .. ": climate grain copies on " .. (n + #others) .. " Alien Biomes tiles")

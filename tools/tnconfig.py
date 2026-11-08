@@ -914,6 +914,8 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
         variant = cl["points"]["ab" if ab else "fallback"]
         for prop in ("temperature", "moisture", "aux"):
             pen[prop] = variant[prop]
+        pen[tl["marsh"]["water_mud"]["key"]]     = tl["marsh"]["water_mud"]["body2"]
+        pen[tl["marsh"]["water_shallow"]["key"]] = tl["marsh"]["water_shallow"]["body"]
         # 0.3.0: the spread's frequency sliders at the biome size (presets.lua climate_names)
         size = cl.get("size")
         if size:
@@ -939,6 +941,7 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
     if tr:
         rs = tr["restore"]
         pen[tr["boost"]["key"]] = cfg["regions"]["names"]["tree_mult"]
+        pen[tr["boost"]["lift"]] = tr["boost"]["lift_body"]
         if ab:
             for n in rs["trees"].values():
                 pen[n["p"]] = n["body"]
@@ -1018,6 +1021,26 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
     # the cold north (presets.lua grain_values): its plain temperature, which reads the zone's by name
     if ab and cl and cl["points"].get("north"):
         pen["temperature"] = cl["points"]["north"]
+    # the climate grain (presets.lua grain_values, after climate/destroyed, before koppen): on a grain map
+    # beside Alien Biomes the tile scores read the grain bodies through the grain tile keys and the temperate
+    # exclusion and vanilla tiles their grain versions (the vanilla and stony bodies, or their frayed next
+    # bodies on the maps that fray), and every shared tile-mix field its fray-2 field. koppen_names below
+    # re-points the grain tile keys, the vegetation key and the roles when the toggle is on, as presets.lua does.
+    gr = (cl or {}).get("grain")
+    if ab and tl and gr and map_key in (gr.get("maps") or {}):
+        gp = cl["points"]["grain"]
+        for field, key in gr["keys"].items():
+            pen[key] = gp[field]
+        pen[gr["veg_key"]] = gp["veg"]
+        van = tl["vanilla"]
+        pen[tl["exclude"]["key"]] = tl["exclude"]["body_grain"]
+        fray = map_key in (van["next"].get("maps") or {})
+        for name in van["tiles"]:
+            pen[van["keys"][name]] = van["next"]["grain"] if fray else van["body_grain"]
+        for name in van["stony"]:
+            pen[van["keys"][name]] = van["next"]["high"] if fray else van["body_high"]
+        for i, name in enumerate(tl["noise_share"]["fields"]):
+            pen[name] = tl["noise_share"]["fray2"]["fields"][i]
     # coast-band-fix (presets.lua bandfix_names, last): the band-fix key where the setting is on at its
     # default, acts on the map and serves the scale
     bf = cfg.get("bandfix")

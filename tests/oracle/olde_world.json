@@ -1889,6 +1889,8 @@
    ],
    "snap_px": 0.223,
    "expect": {
+    "land": false,
+    "water": true,
     "river": null,
     "climate_band": null,
     "tile_family_ab": null,
@@ -1933,6 +1935,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "origin": "s8"
   },
   {
@@ -1949,6 +1952,8 @@
    ],
    "snap_px": 0.024,
    "expect": {
+    "land": false,
+    "water": true,
     "river": null,
     "climate_band": null,
     "tile_family_ab": null,
@@ -1993,6 +1998,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "origin": "s8"
   },
   {
@@ -2009,6 +2015,8 @@
    ],
    "snap_px": 0.369,
    "expect": {
+    "land": false,
+    "water": true,
     "river": null,
     "climate_band": null,
     "tile_family_ab": null,
@@ -2053,6 +2061,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "origin": "s8"
   },
   {
@@ -2069,6 +2078,8 @@
    ],
    "snap_px": 0.181,
    "expect": {
+    "land": false,
+    "water": true,
     "river": null,
     "climate_band": null,
     "tile_family_ab": null,
@@ -2113,6 +2124,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "origin": "s8"
   },
   {
@@ -2129,6 +2141,8 @@
    ],
    "snap_px": 0.536,
    "expect": {
+    "land": false,
+    "water": true,
     "river": null,
     "climate_band": null,
     "tile_family_ab": null,
@@ -2173,6 +2187,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "origin": "s8"
   },
   {
@@ -2189,6 +2204,8 @@
    ],
    "snap_px": 0.696,
    "expect": {
+    "land": false,
+    "water": true,
     "river": null,
     "climate_band": null,
     "tile_family_ab": null,
@@ -2233,6 +2250,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "origin": "s8"
   },
   {
@@ -2249,6 +2267,8 @@
    ],
    "snap_px": 0.374,
    "expect": {
+    "land": false,
+    "water": true,
     "river": null,
     "climate_band": null,
     "tile_family_ab": null,
@@ -2293,6 +2313,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "origin": "s8"
   },
   {
@@ -2309,6 +2330,8 @@
    ],
    "snap_px": 0.146,
    "expect": {
+    "land": true,
+    "water": false,
     "river": null,
     "climate_band": null,
     "tile_family_ab": null,
@@ -2325,6 +2348,8 @@
       "canals": true
      },
      "expect": {
+      "land": false,
+      "water": true
      },
      "note": "the point lies on the canal line (geography research canals)"
     }
@@ -2363,6 +2388,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "origin": "s8"
   },
   {
@@ -2379,6 +2405,8 @@
    ],
    "snap_px": 1.015,
    "expect": {
+    "land": true,
+    "water": false,
     "river": null,
     "climate_band": null,
     "tile_family_ab": null,
@@ -2395,6 +2423,8 @@
       "canals": true
      },
      "expect": {
+      "land": false,
+      "water": true
      },
      "note": "the point lies on the canal line (geography research canals)"
     }
@@ -2433,6 +2463,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "origin": "s8"
   },
   {
@@ -2494,6 +2525,7 @@
      -18603,
      -8067
     ]
+   }
   },
   {
    "id": "pass:gotthard",
@@ -2554,6 +2586,7 @@
      -19395,
      -7947
     ]
+   }
   },
   {
    "id": "pass:simplon",
@@ -2614,6 +2647,7 @@
      -19539,
      -7863
     ]
+   }
   },
   {
    "id": "pass:great_st_bernard",
@@ -2674,6 +2708,7 @@
      -19773,
      -7761
     ]
+   }
   },
   {
    "id": "pass:mont_cenis",
@@ -2734,6 +2769,7 @@
      -19845,
      -7593
     ]
+   }
   },
   {
    "id": "pass:little_st_bernard",
@@ -2794,6 +2830,7 @@
      -19851,
      -7707
     ]
+   }
   },
   {
    "id": "pass:montgenevre",
@@ -2854,6 +2891,7 @@
      -19893,
      -7503
     ]
+   }
   },
   {
    "id": "pass:col_de_tende",
@@ -2914,6 +2952,7 @@
      -19665,
      -7293
     ]
+   }
   },
   {
    "id": "pass:reschen",
@@ -2974,6 +3013,7 @@
      -18873,
      -8025
     ]
+   }
   },
   {
    "id": "pass:splugen",
@@ -3034,6 +3074,7 @@
      -19191,
      -7929
     ]
+   }
   },
   {
    "id": "pass:semmering",
@@ -3094,6 +3135,7 @@
      -17433,
      -8235
     ]
+   }
   },
   {
    "id": "pass:cadibona",
@@ -3154,6 +3196,7 @@
      -19455,
      -7347
     ]
+   }
   },
   {
    "id": "pass:somport",
@@ -3218,6 +3261,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 37.5
    },
    "region_hard": [
     "destroyed"
@@ -3286,6 +3330,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 30.6
    },
    "region_hard": [
     "destroyed"
@@ -3350,6 +3395,7 @@
      -20937,
      -6837
     ]
+   }
   },
   {
    "id": "pass:puymorens",
@@ -3414,6 +3460,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 9.4
    },
    "region_hard": [
     "destroyed"
@@ -3482,6 +3529,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 39.8
    },
    "region_hard": [
     "destroyed"
@@ -4240,6 +4288,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 773.7
    },
    "region_hard": [
     "destroyed"
@@ -4308,6 +4357,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 882.0
    },
    "region_hard": [
     "destroyed"
@@ -4372,6 +4422,7 @@
      -19029,
      -7383
     ]
+   }
   },
   {
    "id": "pass:futa",
@@ -4432,6 +4483,7 @@
      -18663,
      -7281
     ]
+   }
   },
   {
    "id": "pass:shipka",
@@ -4837,6 +4889,7 @@
      -17871,
      -7737
     ]
+   }
   },
   {
    "id": "pass:babinov",
@@ -4970,6 +5023,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 1475.7
    },
    "region_hard": [
     "destroyed"
@@ -6703,6 +6757,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     32.3222,
     31.27779
@@ -6735,6 +6790,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 2305.4
    },
    "region_hard": [
     "destroyed"
@@ -6775,6 +6831,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     32.29998,
     31.21112
@@ -6807,6 +6864,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 2307.2
    },
    "region_hard": [
     "destroyed"
@@ -6847,6 +6905,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     32.34442,
     30.70001
@@ -6879,6 +6938,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 2341.9
    },
    "region_hard": [
     "destroyed"
@@ -6919,6 +6979,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     32.29998,
     30.56668
@@ -6951,6 +7012,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 2345.9
    },
    "region_hard": [
     "destroyed"
@@ -6991,6 +7053,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     32.36664,
     30.36668
@@ -7023,6 +7086,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 2364.4
    },
    "region_hard": [
     "destroyed"
@@ -7063,6 +7127,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     32.56664,
     30.21112
@@ -7095,6 +7160,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 2392.5
    },
    "region_hard": [
     "destroyed"
@@ -7135,6 +7201,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     32.58887,
     29.96668
@@ -7167,6 +7234,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 2409.8
    },
    "region_hard": [
     "destroyed"
@@ -7207,6 +7275,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     32.56664,
     29.92223
@@ -7239,6 +7308,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 2410.6
    },
    "region_hard": [
     "destroyed"
@@ -7277,6 +7347,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     9.14442,
     53.90001
@@ -7307,6 +7378,7 @@
      -19239,
      -9927
     ]
+   }
   },
   {
    "id": "canal:kiel:1",
@@ -7341,6 +7413,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     9.27776,
     53.9889
@@ -7362,6 +7435,16 @@
     "4": [
      -12802,
      -6634
+    ],
+    "5": [
+     -16003,
+     -8293
+    ],
+    "6": [
+     -19203,
+     -9951
+    ]
+   }
   },
   {
    "id": "canal:kiel:2",
@@ -7396,6 +7479,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     9.34442,
     54.14446
@@ -7426,6 +7510,7 @@
      -19185,
      -9993
     ]
+   }
   },
   {
    "id": "canal:kiel:3",
@@ -7460,6 +7545,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     9.58887,
     54.21112
@@ -7490,6 +7576,7 @@
      -19119,
      -10011
     ]
+   }
   },
   {
    "id": "canal:kiel:4",
@@ -7526,6 +7613,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     9.63331,
     54.27779
@@ -7558,6 +7646,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 36.0
    },
    "region_hard": [
     "destroyed"
@@ -7598,6 +7687,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     9.78887,
     54.36668
@@ -7630,6 +7720,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 42.5
    },
    "region_hard": [
     "destroyed"
@@ -7670,6 +7761,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     9.94442,
     54.34446
@@ -7702,6 +7794,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 36.9
    },
    "region_hard": [
     "destroyed"
@@ -7742,6 +7835,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     10.14442,
     54.36668
@@ -7774,6 +7868,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 35.2
    },
    "region_hard": [
     "destroyed"
@@ -7814,6 +7909,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     22.96664,
     37.94446
@@ -7846,6 +7942,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 1033.9
    },
    "region_hard": [
     "destroyed"
@@ -7886,6 +7983,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     22.98887,
     37.94446
@@ -7918,6 +8016,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 1036.1
    },
    "region_hard": [
     "destroyed"
@@ -7958,6 +8057,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     22.98887,
     37.92223
@@ -7990,6 +8090,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 1037.2
    },
    "region_hard": [
     "destroyed"
@@ -8030,6 +8131,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     23.01109,
     37.92223
@@ -8062,6 +8164,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 1039.4
    },
    "region_hard": [
     "destroyed"
@@ -8102,6 +8205,7 @@
     "land": "waterways",
     "water": "waterways"
    },
+   "ruling": "strait and canal rows carry null expectations until the waterways layer ships them",
    "ref_pixel_lonlat": [
     23.01109,
     37.92223
@@ -8134,6 +8238,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 1039.4
    },
    "region_hard": [
     "destroyed"
@@ -8203,6 +8308,7 @@
     ]
    },
    "region_margin_km": {
+    "row:pripet": 85.6
    }
   },
   {
@@ -8996,6 +9102,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 241.3
    }
   },
   {
@@ -9464,6 +9571,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 443.5
    }
   },
   {
@@ -9530,6 +9638,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 233.7
    }
   },
   {
@@ -9596,6 +9705,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 51.9
    }
   },
   {
@@ -9662,6 +9772,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 376.3
    }
   },
   {
@@ -9728,6 +9839,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 425.8
    }
   },
   {
@@ -9794,6 +9906,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 318.7
    }
   },
   {
@@ -9860,6 +9973,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 284.0
    }
   },
   {
@@ -9926,6 +10040,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 263.5
    }
   },
   {
@@ -9992,6 +10107,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 263.3
    }
   },
   {
@@ -10058,6 +10174,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 571.6
    }
   },
   {
@@ -10124,6 +10241,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 400.8
    }
   },
   {
@@ -10190,6 +10308,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 340.8
    }
   },
   {
@@ -10256,6 +10375,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 175.2
    }
   },
   {
@@ -10322,6 +10442,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 94.9
    }
   },
   {
@@ -10388,6 +10509,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 520.7
    }
   },
   {
@@ -10454,6 +10576,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 240.7
    }
   },
   {
@@ -10520,6 +10643,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 352.2
    }
   },
   {
@@ -10586,6 +10710,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 288.4
    }
   },
   {
@@ -10652,6 +10777,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 497.1
    }
   },
   {
@@ -10718,6 +10844,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 549.2
    }
   },
   {
@@ -10784,6 +10911,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 439.9
    }
   },
   {
@@ -10850,6 +10978,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 438.1
    }
   },
   {
@@ -10916,6 +11045,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 345.5
    }
   },
   {
@@ -10982,6 +11112,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 88.9
    }
   },
   {
@@ -11048,6 +11179,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 418.6
    }
   },
   {
@@ -11114,6 +11246,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 56.3
    }
   },
   {
@@ -11247,6 +11380,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 47.9
    }
   },
   {
@@ -11313,6 +11447,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 242.8
    }
   },
   {
@@ -11379,6 +11514,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 279.3
    }
   },
   {
@@ -11445,6 +11581,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 265.7
    }
   },
   {
@@ -11511,6 +11648,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 13.7
    }
   },
   {
@@ -11577,6 +11715,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 198.8
    }
   },
   {
@@ -11710,6 +11849,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 317.0
    }
   },
   {
@@ -11776,6 +11916,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 77.0
    }
   },
   {
@@ -11842,6 +11983,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 59.3
    }
   },
   {
@@ -11908,6 +12050,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 157.5
    }
   },
   {
@@ -11974,6 +12117,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 222.2
    }
   },
   {
@@ -12040,6 +12184,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 224.3
    }
   },
   {
@@ -12307,6 +12452,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 39.6
    }
   },
   {
@@ -12574,6 +12720,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 590.7
    }
   },
   {
@@ -12640,6 +12787,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 119.5
    }
   },
   {
@@ -12706,6 +12854,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 275.6
    }
   },
   {
@@ -12906,6 +13055,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 145.2
    }
   },
   {
@@ -13240,6 +13390,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 345.5
    }
   },
   {
@@ -13306,6 +13457,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 329.3
    }
   },
   {
@@ -13372,6 +13524,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 260.7
    }
   },
   {
@@ -13438,6 +13591,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 538.9
    }
   },
   {
@@ -13504,6 +13658,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 304.6
    }
   },
   {
@@ -13570,6 +13725,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 133.2
    }
   },
   {
@@ -13636,6 +13792,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 490.6
    }
   },
   {
@@ -13702,6 +13859,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 525.7
    }
   },
   {
@@ -13768,6 +13926,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 423.4
    }
   },
   {
@@ -13834,6 +13993,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 668.2
    }
   },
   {
@@ -13900,6 +14060,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 653.4
    }
   },
   {
@@ -13966,6 +14127,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 586.8
    }
   },
   {
@@ -14032,6 +14194,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 582.7
    }
   },
   {
@@ -14098,6 +14261,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 256.0
    }
   },
   {
@@ -14164,6 +14328,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 7.6
    }
   },
   {
@@ -14230,6 +14395,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 29.2
    }
   },
   {
@@ -14296,6 +14462,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 37.1
    }
   },
   {
@@ -14429,6 +14596,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 334.5
    }
   },
   {
@@ -14518,7 +14686,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -14560,6 +14730,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 403.6
    }
   },
   {
@@ -14582,7 +14753,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -14624,6 +14797,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 184.3
    }
   },
   {
@@ -14646,7 +14820,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -14688,6 +14864,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 477.3
    }
   },
   {
@@ -14710,7 +14887,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -14752,6 +14931,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 334.2
    }
   },
   {
@@ -14774,7 +14954,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -14816,6 +14998,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 369.8
    }
   },
   {
@@ -14838,7 +15021,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -14880,6 +15065,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 232.0
    }
   },
   {
@@ -14946,6 +15132,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 34.8
    }
   },
   {
@@ -15079,6 +15266,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 128.5
    }
   },
   {
@@ -15145,6 +15333,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 30.3
    }
   },
   {
@@ -15211,6 +15400,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 96.0
    }
   },
   {
@@ -15233,7 +15423,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -15275,6 +15467,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 7.4
    }
   },
   {
@@ -15743,6 +15936,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 22.8
    }
   },
   {
@@ -15832,7 +16026,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -15874,6 +16070,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 59.3
    }
   },
   {
@@ -15896,7 +16093,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -15938,6 +16137,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 313.6
    }
   },
   {
@@ -15960,7 +16160,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -16002,6 +16204,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 455.2
    }
   },
   {
@@ -16024,7 +16227,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -16066,6 +16271,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 382.5
    }
   },
   {
@@ -16088,7 +16294,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -16130,6 +16338,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 64.1
    }
   },
   {
@@ -16152,7 +16361,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -16194,6 +16405,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 143.6
    }
   },
   {
@@ -16216,7 +16428,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -16258,6 +16472,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 96.0
    }
   },
   {
@@ -16280,7 +16495,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -16322,6 +16539,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 149.2
    }
   },
   {
@@ -16344,7 +16562,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -16386,6 +16606,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 203.5
    }
   },
   {
@@ -16408,7 +16629,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -16450,6 +16673,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 354.9
    }
   },
   {
@@ -16472,7 +16696,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -16514,6 +16740,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 445.3
    }
   },
   {
@@ -16536,7 +16763,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -16578,6 +16807,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 459.7
    }
   },
   {
@@ -16644,6 +16874,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 141.9
    }
   },
   {
@@ -16710,6 +16941,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 230.5
    }
   },
   {
@@ -16776,6 +17008,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 156.0
    }
   },
   {
@@ -16865,7 +17098,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -16907,6 +17142,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 358.6
    }
   },
   {
@@ -16929,7 +17165,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -16971,6 +17209,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 312.4
    }
   },
   {
@@ -16993,7 +17232,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -17035,6 +17276,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 72.6
    }
   },
   {
@@ -17057,7 +17299,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -17099,6 +17343,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 14.9
    }
   },
   {
@@ -17121,7 +17366,9 @@
     "tile_family_ab": null,
     "tile_family_vanilla": null,
     "region": {
+     "destroyed": true
     },
+    "destroyed_zone": true,
     "forest": null,
     "hotspot": null,
     "marsh": null
@@ -17163,6 +17410,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 19.3
    }
   },
   {
@@ -24359,6 +24607,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 909.3
    },
    "region_hard": [
     "destroyed"
@@ -24427,6 +24676,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 919.7
    },
    "region_hard": [
     "destroyed"
@@ -24771,6 +25021,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 35.0
    },
    "region_hard": [
     "destroyed"
@@ -24900,6 +25151,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 166.5
    },
    "region_hard": [
     "destroyed"
@@ -24968,6 +25220,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 166.6
    },
    "region_hard": [
     "destroyed"
@@ -25036,6 +25289,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 121.4
    },
    "region_hard": [
     "destroyed"
@@ -25104,6 +25358,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 122.7
    },
    "region_hard": [
     "destroyed"
@@ -25172,6 +25427,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 170.6
    },
    "region_hard": [
     "destroyed"
@@ -25240,6 +25496,7 @@
     ]
    },
    "region_margin_km": {
+    "destroyed": 169.7
    },
    "region_hard": [
     "destroyed"
@@ -25249,7 +25506,12 @@
    "id": "region-interior:destroyed_europe",
    "name": "destroyed_europe interior",
    "kind": "region_interior",
+   "lon": 7.811088888888886,
+   "lat": 47.7889,
+   "source": "tools/build_regions.py: the reference pixel deepest inside row destroyed_europe's nominal shape (679.8 km from its edge)",
    "ref_pixel": [
+    1214,
+    1543
    ],
    "snap_px": 0.0,
    "expect": {
@@ -25272,23 +25534,38 @@
    "region_row": "destroyed_europe",
    "layer": "region-layer",
    "ref_pixel_lonlat": [
+    7.81109,
+    47.7889
    ],
    "on_reference_land": true,
    "tiles_by_scale": {
     "1": [
+     -3267,
+     -1380
     ],
     "2": [
+     -6533,
+     -2759
     ],
     "3": [
+     -9800,
+     -4139
     ],
     "4": [
+     -13066,
+     -5518
     ],
     "5": [
+     -16333,
+     -6898
     ],
     "6": [
+     -19599,
+     -8277
     ]
    },
    "region_margin_km": {
+    "destroyed": 679.8
    }
   },
   {
@@ -25823,7 +26100,12 @@
    "id": "region-interior:pripet",
    "name": "pripet interior",
    "kind": "region_interior",
+   "lon": 27.433311111111113,
+   "lat": 51.76667777777777,
+   "source": "tools/build_regions.py: the reference pixel deepest inside row pripet's nominal shape (90.0 km from its edge)",
    "ref_pixel": [
+    2097,
+    1364
    ],
    "snap_px": 0.0,
    "expect": {
@@ -25846,23 +26128,38 @@
    "region_row": "pripet",
    "layer": "region-layer",
    "ref_pixel_lonlat": [
+    27.43331,
+    51.76668
    ],
    "on_reference_land": true,
    "tiles_by_scale": {
     "1": [
+     -2384,
+     -1559
     ],
     "2": [
+     -4767,
+     -3117
     ],
     "3": [
+     -7151,
+     -4676
     ],
     "4": [
+     -9534,
+     -6234
     ],
     "5": [
+     -11918,
+     -7793
     ],
     "6": [
+     -14301,
+     -9351
     ]
    },
    "region_margin_km": {
+    "row:pripet": 90.0
    }
   },
   {

@@ -444,14 +444,22 @@ def start_mask_of(cfg, map_key):
 
 
 def spawn_record(cfg, map_key):
+    """The spawn record of the geography version the map's preset names (its newest, a Map type version aside): the
+    preset bakes the spawn cities of the version it names, not of a Map type overlay appended above it (e.g. geo_id 25)."""
     import tnconfig
+    sp = tnconfig.spawn_of(tnconfig.preset_version(tnconfig.geography_versions(cfg)[map_key]))
     if not sp:
         raise SystemExit(f"config.lua gives {map_key}'s newest geography version no spawn record")
     return sp
 
 
 def spawn_next(cfg, map_key):
+    """The next spawn folds of the geography version the map's preset names (config.lua spawn_next, 0.3.1), or None.
+    A Map type version (map_type_of, e.g. atlantic geo_id 25) is aside: presets.lua bakes no next-fold body for it and
+    config.lua gives its spawn_next only `served`, so resolving by the preset's version (the newest non-Map-type one)
+    reads the real next folds and the bearings file they name, reproducing pre-Map-type base behaviour exactly."""
     import tnconfig
+    return tnconfig.spawn_next_of(cfg, tnconfig.preset_version(tnconfig.geography_versions(cfg)[map_key]))
 
 
 def out_path(map_key):

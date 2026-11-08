@@ -54,11 +54,15 @@
      "complexity": 287
     },
     "entity": {
+     "expressions": 2144,
+     "unique": 978,
      "operations": 600,
      "registers": 92,
      "complexity": 8549
     },
     "tile": {
+     "expressions": 1321,
+     "unique": 603,
      "operations": 479,
      "registers": 53,
      "complexity": 10068
@@ -76,10 +80,25 @@
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 7642,
+     "unique": 4513,
+     "operations": 3716,
+     "registers": 403,
+     "complexity": 602
     },
     "entity": {
+     "expressions": 8295,
+     "unique": 4539,
+     "operations": 3527,
+     "registers": 179,
+     "complexity": 18271
     },
     "tile": {
+     "expressions": 83356,
+     "unique": 52911,
+     "operations": 52273,
+     "registers": 908,
+     "complexity": 100113
     }
    }
   },
@@ -94,10 +113,25 @@
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
     },
     "entity": {
+     "expressions": 3283,
+     "unique": 1595,
+     "operations": 1093,
+     "registers": 95,
+     "complexity": 9884
     },
     "tile": {
+     "expressions": 82228,
+     "unique": 52160,
+     "operations": 51588,
+     "registers": 909,
+     "complexity": 98887
     }
    }
   },
@@ -112,10 +146,25 @@
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 7227,
+     "unique": 4513,
+     "operations": 4132,
+     "registers": 404,
+     "complexity": 668
     },
     "entity": {
+     "expressions": 8277,
+     "unique": 4539,
+     "operations": 3548,
+     "registers": 179,
+     "complexity": 17903
     },
     "tile": {
+     "expressions": 87307,
+     "unique": 55465,
+     "operations": 54833,
+     "registers": 919,
+     "complexity": 104534
     }
    }
   },
@@ -130,10 +179,25 @@
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
     },
     "entity": {
+     "expressions": 3277,
+     "unique": 1595,
+     "operations": 1099,
+     "registers": 96,
+     "complexity": 9896
     },
     "tile": {
+     "expressions": 86069,
+     "unique": 54652,
+     "operations": 54084,
+     "registers": 917,
+     "complexity": 103196
     }
    }
   },
@@ -148,10 +212,25 @@
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 7227,
+     "unique": 4513,
+     "operations": 4131,
+     "registers": 404,
+     "complexity": 668
     },
     "entity": {
+     "expressions": 8277,
+     "unique": 4539,
+     "operations": 3547,
+     "registers": 179,
+     "complexity": 17902
     },
     "tile": {
+     "expressions": 87979,
+     "unique": 55942,
+     "operations": 55318,
+     "registers": 922,
+     "complexity": 105280
     }
    }
   },
@@ -166,10 +245,25 @@
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
     },
     "entity": {
+     "expressions": 3277,
+     "unique": 1595,
+     "operations": 1099,
+     "registers": 95,
+     "complexity": 9896
     },
     "tile": {
+     "expressions": 86686,
+     "unique": 55082,
+     "operations": 54518,
+     "registers": 922,
+     "complexity": 103916
     }
    }
   },
@@ -184,10 +278,25 @@
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 7227,
+     "unique": 4514,
+     "operations": 4133,
+     "registers": 404,
+     "complexity": 668
     },
     "entity": {
+     "expressions": 8277,
+     "unique": 4539,
+     "operations": 3548,
+     "registers": 179,
+     "complexity": 17903
     },
     "tile": {
+     "expressions": 90622,
+     "unique": 57645,
+     "operations": 57015,
+     "registers": 924,
+     "complexity": 108216
     }
    }
   },
@@ -202,10 +311,25 @@
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
     },
     "entity": {
+     "expressions": 3277,
+     "unique": 1595,
+     "operations": 1099,
+     "registers": 96,
+     "complexity": 9896
     },
     "tile": {
+     "expressions": 89269,
+     "unique": 56748,
+     "operations": 56178,
+     "registers": 924,
+     "complexity": 106784
     }
    }
   },
@@ -220,10 +344,25 @@
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 7227,
+     "unique": 4513,
+     "operations": 4132,
+     "registers": 404,
+     "complexity": 668
     },
     "entity": {
+     "expressions": 8277,
+     "unique": 4539,
+     "operations": 3548,
+     "registers": 179,
+     "complexity": 17903
     },
     "tile": {
+     "expressions": 90250,
+     "unique": 57410,
+     "operations": 56771,
+     "registers": 914,
+     "complexity": 107809
     }
    }
   },
@@ -238,10 +377,25 @@
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
     },
     "entity": {
+     "expressions": 3277,
+     "unique": 1595,
+     "operations": 1099,
+     "registers": 96,
+     "complexity": 9896
     },
     "tile": {
+     "expressions": 88879,
+     "unique": 56513,
+     "operations": 55935,
+     "registers": 913,
+     "complexity": 106370
     }
    }
   },
@@ -256,10 +410,25 @@
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 7228,
+     "unique": 4513,
+     "operations": 4129,
+     "registers": 405,
+     "complexity": 667
     },
     "entity": {
+     "expressions": 8278,
+     "unique": 4539,
+     "operations": 3544,
+     "registers": 179,
+     "complexity": 17898
     },
     "tile": {
+     "expressions": 88428,
+     "unique": 56303,
+     "operations": 55664,
+     "registers": 912,
+     "complexity": 105853
     }
    }
   },
@@ -274,8 +443,25 @@
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
     },
     "entity": {
+     "expressions": 3277,
+     "unique": 1595,
+     "operations": 1099,
+     "registers": 95,
+     "complexity": 9896
+    },
+    "tile": {
+     "expressions": 87045,
+     "unique": 55388,
+     "operations": 54809,
+     "registers": 912,
+     "complexity": 104389
     }
    }
   },
@@ -283,9 +469,27 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M1",
+   "preset": "terra-nauvis-atlantic",
+   "scale": 1,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 17846,
+     "unique": 10490,
+     "operations": 8714,
+     "registers": 945,
+     "complexity": 1335
+    },
+    "entity": {
+     "expressions": 15090,
+     "unique": 8763,
+     "operations": 7287,
+     "registers": 261,
+     "complexity": 25068
+    },
+    "tile": {
     }
    }
   },
@@ -293,10 +497,27 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M1",
+   "preset": "terra-nauvis-atlantic",
    "scale": 1,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "expressions": 3701,
+     "unique": 1836,
+     "operations": 1330,
+     "registers": 95,
+     "complexity": 10305
+    },
+    "tile": {
     }
    }
   },
@@ -304,10 +525,27 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M1",
+   "preset": "terra-nauvis-atlantic",
    "scale": 2,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 16908,
+     "unique": 10490,
+     "operations": 9653,
+     "registers": 946,
+     "complexity": 1483
+    },
+    "entity": {
+     "expressions": 15072,
+     "unique": 8763,
+     "operations": 7308,
+     "registers": 261,
+     "complexity": 24596
+    },
+    "tile": {
     }
    }
   },
@@ -315,9 +553,27 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M1",
+   "preset": "terra-nauvis-atlantic",
+   "scale": 2,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "expressions": 3695,
+     "unique": 1836,
+     "operations": 1336,
+     "registers": 96,
+     "complexity": 10319
+    },
+    "tile": {
     }
    }
   },
@@ -325,9 +581,27 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M1",
+   "preset": "terra-nauvis-atlantic",
+   "scale": 3,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 16908,
+     "unique": 10490,
+     "operations": 9652,
+     "registers": 946,
+     "complexity": 1483
+    },
+    "entity": {
+     "expressions": 15072,
+     "unique": 8763,
+     "operations": 7307,
+     "registers": 261,
+     "complexity": 24596
+    },
+    "tile": {
     }
    }
   },
@@ -335,10 +609,27 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M1",
+   "preset": "terra-nauvis-atlantic",
    "scale": 3,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "expressions": 3695,
+     "unique": 1836,
+     "operations": 1336,
+     "registers": 95,
+     "complexity": 10319
+    },
+    "tile": {
     }
    }
   },
@@ -346,9 +637,27 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M1",
+   "preset": "terra-nauvis-atlantic",
+   "scale": 4,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 16908,
+     "unique": 10491,
+     "operations": 9654,
+     "registers": 946,
+     "complexity": 1483
+    },
+    "entity": {
+     "expressions": 15072,
+     "unique": 8763,
+     "operations": 7308,
+     "registers": 261,
+     "complexity": 24598
+    },
+    "tile": {
     }
    }
   },
@@ -356,10 +665,27 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M1",
+   "preset": "terra-nauvis-atlantic",
    "scale": 4,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "expressions": 3695,
+     "unique": 1836,
+     "operations": 1336,
+     "registers": 96,
+     "complexity": 10319
+    },
+    "tile": {
     }
    }
   },
@@ -367,10 +693,27 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M1",
+   "preset": "terra-nauvis-atlantic",
    "scale": 5,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 16908,
+     "unique": 10490,
+     "operations": 9653,
+     "registers": 946,
+     "complexity": 1483
+    },
+    "entity": {
+     "expressions": 15072,
+     "unique": 8763,
+     "operations": 7308,
+     "registers": 261,
+     "complexity": 24599
+    },
+    "tile": {
     }
    }
   },
@@ -378,9 +721,27 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M1",
+   "preset": "terra-nauvis-atlantic",
+   "scale": 5,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "expressions": 3695,
+     "unique": 1836,
+     "operations": 1336,
+     "registers": 96,
+     "complexity": 10319
+    },
+    "tile": {
     }
    }
   },
@@ -388,10 +749,27 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M1",
+   "preset": "terra-nauvis-atlantic",
    "scale": 6,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 16909,
+     "unique": 10490,
+     "operations": 9650,
+     "registers": 947,
+     "complexity": 1483
+    },
+    "entity": {
+     "expressions": 15073,
+     "unique": 8763,
+     "operations": 7304,
+     "registers": 262,
+     "complexity": 24594
+    },
+    "tile": {
     }
    }
   },
@@ -399,10 +777,27 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M1",
+   "preset": "terra-nauvis-atlantic",
    "scale": 6,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "expressions": 3695,
+     "unique": 1836,
+     "operations": 1336,
+     "registers": 95,
+     "complexity": 10319
+    },
+    "tile": {
     }
    }
   },
@@ -410,9 +805,28 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M1",
+   "preset": "terra-nauvis-old-world",
+   "scale": 1,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 13576,
+     "unique": 8022,
+     "operations": 6591,
+     "registers": 723,
+     "complexity": 1028
+    },
+    "entity": {
+     "expressions": 13265,
+     "unique": 7608,
+     "operations": 6222,
+     "registers": 231,
+     "complexity": 23239
+    },
+    "tile": {
+     "registers": 1002,
     }
    }
   },
@@ -420,10 +834,28 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M1",
+   "preset": "terra-nauvis-old-world",
    "scale": 1,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "expressions": 3640,
+     "unique": 1795,
+     "operations": 1227,
+     "registers": 95,
+     "complexity": 10124
+    },
+    "tile": {
+     "registers": 1002,
     }
    }
   },
@@ -431,10 +863,28 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M1",
+   "preset": "terra-nauvis-old-world",
    "scale": 2,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 12879,
+     "unique": 8022,
+     "operations": 7289,
+     "registers": 724,
+     "complexity": 1138
+    },
+    "entity": {
+     "expressions": 13247,
+     "unique": 7608,
+     "operations": 6243,
+     "registers": 231,
+     "complexity": 22781
+    },
+    "tile": {
+     "registers": 1002,
     }
    }
   },
@@ -442,9 +892,28 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M1",
+   "preset": "terra-nauvis-old-world",
+   "scale": 2,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "expressions": 3634,
+     "unique": 1795,
+     "operations": 1233,
+     "registers": 96,
+     "complexity": 10136
+    },
+    "tile": {
+     "registers": 1002,
     }
    }
   },
@@ -452,9 +921,28 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M1",
+   "preset": "terra-nauvis-old-world",
+   "scale": 3,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 12879,
+     "unique": 8022,
+     "operations": 7288,
+     "registers": 724,
+     "complexity": 1138
+    },
+    "entity": {
+     "expressions": 13247,
+     "unique": 7608,
+     "operations": 6242,
+     "registers": 231,
+     "complexity": 22781
+    },
+    "tile": {
+     "registers": 1001,
     }
    }
   },
@@ -462,10 +950,28 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M1",
+   "preset": "terra-nauvis-old-world",
    "scale": 3,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "expressions": 3634,
+     "unique": 1795,
+     "operations": 1233,
+     "registers": 95,
+     "complexity": 10136
+    },
+    "tile": {
+     "registers": 1001,
     }
    }
   },
@@ -473,9 +979,28 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M1",
+   "preset": "terra-nauvis-old-world",
+   "scale": 4,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 12879,
+     "unique": 8022,
+     "operations": 7290,
+     "registers": 724,
+     "complexity": 1138
+    },
+    "entity": {
+     "expressions": 13247,
+     "unique": 7608,
+     "operations": 6243,
+     "registers": 231,
+     "complexity": 22782
+    },
+    "tile": {
+     "registers": 1008,
     }
    }
   },
@@ -483,10 +1008,28 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M1",
+   "preset": "terra-nauvis-old-world",
    "scale": 4,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "expressions": 3634,
+     "unique": 1795,
+     "operations": 1233,
+     "registers": 96,
+     "complexity": 10136
+    },
+    "tile": {
+     "registers": 1008,
     }
    }
   },
@@ -494,10 +1037,28 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M1",
+   "preset": "terra-nauvis-old-world",
    "scale": 5,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 12879,
+     "unique": 8022,
+     "operations": 7289,
+     "registers": 724,
+     "complexity": 1138
+    },
+    "entity": {
+     "expressions": 13247,
+     "unique": 7608,
+     "operations": 6243,
+     "registers": 231,
+     "complexity": 22782
+    },
+    "tile": {
+     "registers": 1000,
     }
    }
   },
@@ -505,9 +1066,28 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M1",
+   "preset": "terra-nauvis-old-world",
+   "scale": 5,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "expressions": 3634,
+     "unique": 1795,
+     "operations": 1233,
+     "registers": 96,
+     "complexity": 10136
+    },
+    "tile": {
+     "registers": 1000,
     }
    }
   },
@@ -515,10 +1095,28 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M1",
+   "preset": "terra-nauvis-old-world",
    "scale": 6,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 12880,
+     "unique": 8022,
+     "operations": 7286,
+     "registers": 725,
+     "complexity": 1138
+    },
+    "entity": {
+     "expressions": 13248,
+     "unique": 7608,
+     "operations": 6239,
+     "registers": 231,
+     "complexity": 22777
+    },
+    "tile": {
+     "registers": 1000,
     }
    }
   },
@@ -526,10 +1124,37 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M1",
+   "preset": "terra-nauvis-old-world",
    "scale": 6,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "expressions": 3634,
+     "unique": 1795,
+     "operations": 1233,
+     "registers": 95,
+     "complexity": 10136
+    },
+    "tile": {
+     "registers": 1000,
+    }
+   }
+  },
+  {
+   "seed": 1000,
+   "size": 64,
+   "row": "bab",
+   "map": null,
+   "modset": "BAB",
    "preset": null,
    "scale": null,
    "toggles": "n/a",
@@ -542,6 +1167,18 @@
      "complexity": 287
     },
     "entity": {
+     "expressions": 4607,
+     "unique": 2028,
+     "operations": 1743,
+     "registers": 187,
+     "complexity": 24377
+    },
+    "tile": {
+     "expressions": 4071,
+     "unique": 1349,
+     "operations": 1125,
+     "registers": 213,
+     "complexity": 68924
     }
    }
   },
@@ -550,11 +1187,21 @@
    "size": 64,
    "row": "map",
    "map": "europe",
+   "modset": "M2",
    "preset": "terra-nauvis-europe",
    "scale": 1,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 7642,
+     "unique": 4513,
+     "operations": 3716,
+     "registers": 403,
+     "complexity": 602
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -563,11 +1210,21 @@
    "size": 64,
    "row": "map",
    "map": "europe",
+   "modset": "M2",
    "preset": "terra-nauvis-europe",
    "scale": 1,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -576,11 +1233,21 @@
    "size": 64,
    "row": "map",
    "map": "europe",
+   "modset": "M2",
    "preset": "terra-nauvis-europe",
    "scale": 2,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 7227,
+     "unique": 4513,
+     "operations": 4132,
+     "registers": 404,
+     "complexity": 668
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -589,11 +1256,22 @@
    "size": 64,
    "row": "map",
    "map": "europe",
+   "modset": "M2",
    "preset": "terra-nauvis-europe",
    "scale": 2,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "registers": 210,
+    },
+    "tile": {
     }
    }
   },
@@ -602,11 +1280,21 @@
    "size": 64,
    "row": "map",
    "map": "europe",
+   "modset": "M2",
    "preset": "terra-nauvis-europe",
    "scale": 3,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 7227,
+     "unique": 4513,
+     "operations": 4131,
+     "registers": 404,
+     "complexity": 668
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -615,11 +1303,21 @@
    "size": 64,
    "row": "map",
    "map": "europe",
+   "modset": "M2",
    "preset": "terra-nauvis-europe",
    "scale": 3,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -628,11 +1326,21 @@
    "size": 64,
    "row": "map",
    "map": "europe",
+   "modset": "M2",
    "preset": "terra-nauvis-europe",
    "scale": 4,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 7227,
+     "unique": 4514,
+     "operations": 4133,
+     "registers": 404,
+     "complexity": 668
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -641,11 +1349,21 @@
    "size": 64,
    "row": "map",
    "map": "europe",
+   "modset": "M2",
    "preset": "terra-nauvis-europe",
    "scale": 4,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -654,11 +1372,21 @@
    "size": 64,
    "row": "map",
    "map": "europe",
+   "modset": "M2",
    "preset": "terra-nauvis-europe",
    "scale": 5,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 7227,
+     "unique": 4513,
+     "operations": 4132,
+     "registers": 404,
+     "complexity": 668
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -667,11 +1395,22 @@
    "size": 64,
    "row": "map",
    "map": "europe",
+   "modset": "M2",
    "preset": "terra-nauvis-europe",
    "scale": 5,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+     "registers": 210,
+    },
+    "tile": {
     }
    }
   },
@@ -680,11 +1419,21 @@
    "size": 64,
    "row": "map",
    "map": "europe",
+   "modset": "M2",
    "preset": "terra-nauvis-europe",
    "scale": 6,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 7228,
+     "unique": 4513,
+     "operations": 4129,
+     "registers": 405,
+     "complexity": 667
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -693,11 +1442,21 @@
    "size": 64,
    "row": "map",
    "map": "europe",
+   "modset": "M2",
    "preset": "terra-nauvis-europe",
    "scale": 6,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -705,9 +1464,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M2",
+   "preset": "terra-nauvis-atlantic",
+   "scale": 1,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 17846,
+     "unique": 10490,
+     "operations": 8714,
+     "registers": 945,
+     "complexity": 1335
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -715,10 +1487,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M2",
+   "preset": "terra-nauvis-atlantic",
    "scale": 1,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -726,9 +1510,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M2",
+   "preset": "terra-nauvis-atlantic",
+   "scale": 2,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 16908,
+     "unique": 10490,
+     "operations": 9653,
+     "registers": 946,
+     "complexity": 1483
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -736,10 +1533,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M2",
+   "preset": "terra-nauvis-atlantic",
    "scale": 2,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -747,9 +1556,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M2",
+   "preset": "terra-nauvis-atlantic",
+   "scale": 3,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 16908,
+     "unique": 10490,
+     "operations": 9652,
+     "registers": 946,
+     "complexity": 1483
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -757,10 +1579,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M2",
+   "preset": "terra-nauvis-atlantic",
    "scale": 3,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -768,9 +1602,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M2",
+   "preset": "terra-nauvis-atlantic",
+   "scale": 4,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 16908,
+     "unique": 10491,
+     "operations": 9654,
+     "registers": 946,
+     "complexity": 1483
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -778,10 +1625,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M2",
+   "preset": "terra-nauvis-atlantic",
    "scale": 4,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -789,9 +1648,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M2",
+   "preset": "terra-nauvis-atlantic",
+   "scale": 5,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 16908,
+     "unique": 10490,
+     "operations": 9653,
+     "registers": 946,
+     "complexity": 1483
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -799,10 +1671,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M2",
+   "preset": "terra-nauvis-atlantic",
    "scale": 5,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -810,10 +1694,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M2",
+   "preset": "terra-nauvis-atlantic",
    "scale": 6,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 16909,
+     "unique": 10490,
+     "operations": 9650,
+     "registers": 947,
+     "complexity": 1483
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -821,10 +1717,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "atlantic",
+   "modset": "M2",
+   "preset": "terra-nauvis-atlantic",
    "scale": 6,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -832,9 +1740,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M2",
+   "preset": "terra-nauvis-old-world",
+   "scale": 1,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 13576,
+     "unique": 8022,
+     "operations": 6591,
+     "registers": 723,
+     "complexity": 1028
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -842,10 +1763,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M2",
+   "preset": "terra-nauvis-old-world",
    "scale": 1,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -853,9 +1786,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M2",
+   "preset": "terra-nauvis-old-world",
+   "scale": 2,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 12879,
+     "unique": 8022,
+     "operations": 7289,
+     "registers": 724,
+     "complexity": 1138
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -863,10 +1809,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M2",
+   "preset": "terra-nauvis-old-world",
    "scale": 2,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -874,9 +1832,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M2",
+   "preset": "terra-nauvis-old-world",
+   "scale": 3,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 12879,
+     "unique": 8022,
+     "operations": 7288,
+     "registers": 724,
+     "complexity": 1138
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -884,10 +1855,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M2",
+   "preset": "terra-nauvis-old-world",
    "scale": 3,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -895,9 +1878,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M2",
+   "preset": "terra-nauvis-old-world",
+   "scale": 4,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 12879,
+     "unique": 8022,
+     "operations": 7290,
+     "registers": 724,
+     "complexity": 1138
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -905,10 +1901,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M2",
+   "preset": "terra-nauvis-old-world",
    "scale": 4,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -916,9 +1924,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M2",
+   "preset": "terra-nauvis-old-world",
+   "scale": 5,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 12879,
+     "unique": 8022,
+     "operations": 7289,
+     "registers": 724,
+     "complexity": 1138
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -926,10 +1947,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M2",
+   "preset": "terra-nauvis-old-world",
    "scale": 5,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -937,10 +1970,22 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M2",
+   "preset": "terra-nauvis-old-world",
    "scale": 6,
    "toggles": "on",
    "programs": {
     "cliff": {
+     "expressions": 12880,
+     "unique": 8022,
+     "operations": 7286,
+     "registers": 725,
+     "complexity": 1138
+    },
+    "entity": {
+    },
+    "tile": {
     }
    }
   },
@@ -948,10 +1993,20 @@
    "seed": 1000,
    "size": 64,
    "row": "map",
+   "map": "olde_world",
+   "modset": "M2",
+   "preset": "terra-nauvis-old-world",
    "scale": 6,
    "toggles": "off",
    "programs": {
     "cliff": {
+     "expressions": 19,
+     "unique": 17,
+     "operations": 2,
+     "registers": 4,
+     "complexity": 0
+    },
+    "entity": {
     },
     "tile": {
     }

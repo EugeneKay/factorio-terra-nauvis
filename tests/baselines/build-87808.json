@@ -9,6 +9,19 @@
    "1004": "0f6c371136cd39825c39a46ffea37b89e7732a0ff7d6b9036d4e8ff8609ab7e2"
   },
   "europe": {
+   "1000": "5ef0b2543d7e7256272712e3499d21fbe7030744ac41e3c91a5d87ee9be72f2b",
+   "1002": "8d53146f6f4e75a52c679612dee16201aedbff1bae8ca1c47c8260e94ca37f59",
+   "1004": "33cfe96ceb8480808c0b277cb305d1afcc5d56c037890d17e27ee7dc0e745c05"
+  },
+  "atlantic": {
+   "1000": "be08512f47e8b53499d56208d5634d65088ca9b1e70138f2f99582ebdf2cfcb9",
+   "1002": "0ad4aac202abb6297e747034fb0c35e52e6f4981cfd2e9a8853d243accc227cd",
+   "1004": "b1eb1cc4ca133cec14c1ba9d913333e5e3badf37d573007bf438261582590eeb"
+  },
+  "olde_world": {
+   "1000": "8cbe8ac56c489c774700718e509721cb64d19c6240a2581f2b17154e39e4276c",
+   "1002": "2728abf2a7dd2d407fbf263a6ad9e42d8a363d7acc3ee0ea823534e6081f300d",
+   "1004": "ff0c7a61576b3fd92eaae94c5a8bfea1e2f05f1889e8b8252e981c72eab23c24"
   }
  },
  "t15b_block": {
@@ -48,6 +61,48 @@
     "resources": 7274,
     "rocks": 222,
     "cliffs": 330
+   }
+  }
+ },
+ "t15b_maps": {
+  "atlantic": {
+   "blocks": {
+   },
+   "block_land": {
+   },
+   "census_m0": {
+    "1": {
+    },
+    "6": {
+    }
+   }
+  },
+  "olde_world": {
+   "blocks": {
+    "6": "-258:71:-386:-9",
+    "1": "-43:4:-53:-3"
+   },
+   "block_land": {
+    "6": 0.6191,
+    "1": 0.5834
+   },
+   "census_m0": {
+    "1": {
+     "water_tiles": 31787,
+     "trees": 707,
+     "enemies": 105,
+     "resources": 2975,
+     "rocks": 113,
+     "cliffs": 325
+    },
+    "6": {
+     "water_tiles": 23471,
+     "trees": 7366,
+     "enemies": 585,
+     "resources": 3247,
+     "rocks": 185,
+     "cliffs": 204
+    }
    }
   }
  }

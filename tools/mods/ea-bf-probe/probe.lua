@@ -142,6 +142,7 @@ do
       return
     end
     local o = game.create_surface(spec.other.name, nauvis().map_gen_settings)
+    o.map_gen_settings = nauvis().map_gen_settings   -- undo the D33 surface_guard strip (guards.lua)
     for _, c in ipairs(spec.recheck or {}) do
       o.request_to_generate_chunks({c[1] * 32 + 16, c[2] * 32 + 16}, 0)
     end

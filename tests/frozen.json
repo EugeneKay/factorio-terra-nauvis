@@ -15411,6 +15411,20 @@
    "dump": "m1",
    "slice": "extras",
    "registered": "2026-11-06"
+  },
+  "tn_destroyed_class_v6": {
+   "type": "noise-expression",
+   "sha256": "fa9f90cd0fe3374879c43c928d1f1a1af3d718f4bcd8b51cfed421e8998028c6",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-11-06"
+  },
+  "tn_destroyed_class_v7": {
+   "type": "noise-expression",
+   "sha256": "b570990046ed7df7a3860e29b5982885bd4f7a1afe189dbb8828264b83f7f34e",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-11-07"
   }
  }
 }

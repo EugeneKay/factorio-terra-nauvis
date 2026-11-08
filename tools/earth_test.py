@@ -1773,6 +1773,7 @@ def frozen_exempt(cfg):
     return tnfrozen.exempt_names(cfg)
 
 
+def frozen_check(fz_work, fz_main, dumps, cfg, registry=None, moves=None):
     """The frozen-body checker (a body an existing save reads never changes): tests/frozen.json keeps the
     tnfrozen contract, every record well formed against the runner's slice registry (a dump label
     that no registry entry assigns, or that the record's slice could not have produced, fails and is
@@ -1797,6 +1798,11 @@ def frozen_exempt(cfg):
     fails += tnfrozen.file_problems(fz_work, registry)
     bodies = (fz_work or {}).get("bodies") if isinstance((fz_work or {}).get("bodies"), dict) else {}
     for name, rec in ((fz_main or {}).get("bodies") or {}).items():
+        # the collapse/unreleased waiver excuses a dropped record at its exact hash (tn_static mirrors this
+        # at append_only_findings); without it the suite flags the 0.3.0-collapsed _v1 bodies the static
+        # gate excuses. moves defaults None (no waiver) for the controls, so their behaviour is unchanged.
+        if tnfrozen.moved(moves, name, rec.get("sha256")):
+            continue
         if name not in bodies:
             fails.append(f"{name} is registered on the reference but missing from tests/frozen.json (append-only)")
             continue
@@ -2279,7 +2285,17 @@ def row_frozen(ctx, mods, sec6, row, cache):
     work = json.loads((TESTS / "frozen.json").read_text(encoding="utf-8"))
     main, ref_shas, ref_fails = reference_registry()
     row.fails += ref_fails
+    # the 0.3.0 collapse waiver (tests/collapsed.json) plus the unreleased moves, as the static gate reads
+    # them (tn_static.row_append_only -> with_collapse(active_moves(tags), read_collapse())): the suite's
+    # append-only comparison then excuses exactly the collapsed _v1 records at their recorded hashes.
+    try:
+        moves = tnfrozen.with_collapse(tnfrozen.active_moves(tn_static.release_tag_refs(REPO)),
+                                       tnfrozen.read_collapse())
+    except (tn_static.ReferenceUnreadable, tnfrozen.RegistryUnreadable) as e:
+        moves = None
+        row.fails.append(f"the collapse waiver is unreadable: {e} (fail closed)")
     dumps = gate_dumps(ctx, ctx.slice, mods)
+    row.fails += frozen_check(work, main, dumps, cfg, moves=moves)
     seen = sorted({n for d in dumps.values() for n in earth_bodies(d, cfg)})
     # the offline data stage, which CI's bodies row and the release build judge bodies by, held to the
     # game's dumps; then the registry held to the offline bodies, as those two hold it
@@ -2293,6 +2309,7 @@ def row_frozen(ctx, mods, sec6, row, cache):
     except tnfrozen.RegistryUnreadable as e:
         snaps, unsnapped = {}, {}
         row.fails.append(f"the earlier slices' suite manifests are unreadable: {e}")
+    row.fails += tnfrozen.snapshot_problems(work, snaps, moves)
     row.fails += tnfrozen.unsnapshotted_problems(work, unsnapped, main)
     ctl = frozen_controls(cfg)
     ctl.update(snapshot_controls())
@@ -2671,6 +2688,8 @@ def section6_controls(main):
     out["every 6.2 row in force through europe-coast has an enforcing check"] = (not unenforced_limits(ec),
                                                                                   unenforced_limits(ec))
     # a row that first comes into force in a later slice, before its consumer lands
+    cb = parse_section6(main, "release")
+    out["a row in force with no enforcing check fails closed (release' P15 before its consumer lands)"] = (
         "P15" in unenforced_limits(cb), unenforced_limits(cb)[:3])
     ct = parse_section6(main, "climate-tiles")
     out["every 6.2 row in force through climate-tiles has an enforcing check (P2 on M2)"] = (
@@ -2694,9 +2713,11 @@ def section6_controls(main):
         want = {("climate-tiles", "tile", "M1", "europe"): ("add", 1500.0),
                 ("climate-tiles", "tile", "M1", "atlantic"): ("add", 2300.0),
                 ("climate-tiles", "tile", "M2", "europe"): ("cap", None),
+                ("trees-forests", "entity", "M2", "atlantic"): ("add", 10800.0),
                 ("olde-world-atlantic", "tile", "M1", "europe"): ("add", 0.0),
                 ("olde-world-atlantic", "tile", "M1", "olde_world"): ("cap", None),
                 ("olde-world-atlantic", "time", "M1", "atlantic"): ("first", None),
+                ("waterways", "tile", "M1", "europe"): ("headroom", 162980.0),
                 ("resources-enemies", "tile", "M1", "olde_world"): ("add", 500.0),
                 ("destroyed-europe", "tile", "M1", "europe"): ("add", 0.0),
                 ("coast-band-fix", "entity", "M1", "europe"): ("add", 0.0),
@@ -2709,6 +2730,7 @@ def section6_controls(main):
         out["6.3 cells read per map and modset as the plan states them"] = (not diff, diff[:3])
         per = r["all_limits"]["P12"]["limit"].get("per_map")
         out["P12 binds its three values to Europe, Atlantic and Old World"] = (
+            per == {"europe": 21000.0, "atlantic": 28000.0, "olde_world": 26000.0}, per)
     except GateError as e:
         out["6.3 cells read per map and modset as the plan states them"] = (False, str(e))
     return out
@@ -2738,15 +2760,21 @@ def t15a_controls(main):
     def chk(rows, sec=fake, through="fixture"):
         return check_t15a(rows, sec, [], through)
     ent = VANILLA["entity"]
+    out["T15a: an M1 Tile row over P10 fails"] = bool(chk([van, row_("europe", "M1", 165001, ent)]))
     out["T15a: an M2 Tile row between P10 and P11 passes (P10 binds M1 only)"] = not chk(
         [van, bab, row_("europe", "M2", 150000, 14900)])
     out["T15a: an M2 Tile row over P11 fails"] = bool(chk([van, bab, row_("europe", "M2", 180001, 14900)]))
     out["T15a: an M1 Entity row over P12 fails even within the allocation"] = bool(chk(
+        [van, row_("europe", "M1", 90000, 21500)], dict(fake, allocations=dict(fake["allocations"], fixture=dict(
             fake["allocations"]["fixture"], entity={"cell": "cap", "rules": [
                 {"modset": None, "maps": ["europe"], "variant": None, "kind": "cap"}]})))))
     capall = dict(fake, allocations=dict(fake["allocations"], fixture=dict(fake["allocations"]["fixture"], entity={
         "cell": "cap", "rules": [{"modset": None, "maps": ["europe", "atlantic", "olde_world"], "variant": None,
                                   "kind": "cap"}]})))
+    out["T15a: P12 is per map (Atlantic 27,000 passes, Old World 27,000 fails)"] = (
+        not chk([van, row_("atlantic", "M1", 90000, 27000)], capall) and
+        bool(chk([van, row_("olde_world", "M1", 90000, 27000)], capall)))
+    out["T15a: an M2 Entity row over P13 fails"] = bool(chk([van, bab, row_("europe", "M2", 150000, 42500)], capall))
     out["T15a: Entity growth over the slice's allocation fails"] = bool(chk([van, row_("europe", "M1", 90000, ent + 401)]))
     out["T15a: growth within the allocation passes"] = not chk([van, row_("europe", "M1", 90000, ent + 400)])
     out["T15a: a row equal to its comparator fails (G5)"] = bool(chk(
@@ -2760,6 +2788,7 @@ def t15a_controls(main):
     out["T15a: a Europe row's Cliff growth over europe-coast's 0 fails"] = bool(check_t15a(
         [van, dict(eu, programs=prog(82000, ent, VANILLA["cliff"] + 1))], ec, [], "europe-coast"))
     out["T15a: a Europe row over P10's Tile cap fails"] = bool(check_t15a(
+        [van, dict(eu, programs=prog(165001, ent, VANILLA["cliff"]))], ec, [], "europe-coast"))
     out["T15a: a Europe row within europe-coast's allocation passes"] = not check_t15a(
         [van, dict(eu, programs=prog(82000, ent + 400, VANILLA["cliff"]))], ec, [], "europe-coast")
     # a batch (several slices land as one commit and gates them with the last one): its
@@ -3536,10 +3565,15 @@ def added_prototype_findings(d0, d1, earth_noise, cfg=None):
                 changed.append((t, n))
     if changed:
         out.append(f"Earth changed vanilla prototypes {changed[:5]} (A-1: default worlds stay vanilla)")
+    frozen_tile = (((cfg or {}).get("tiles") or {}).get("frozen") or {}).get("tile")
     for t, n in added:
         if t in NOISE_TYPES:
             if n not in earth_noise:
                 out.append(f"{t} {n} is not a name config.lua defines")
+        elif t == "tile" and frozen_tile and n == frozen_tile:
+            # the Koppen frozen-ground tile is an intended Earth tile (config.lua tiles.frozen); the slice
+            # registers it on Nauvis, so it is added, not a vanilla-prototype change
+            continue
         else:
             out.append(f"Earth added a {t} prototype {n} (only noise bodies and presets in this slice)")
     return out, added
@@ -3811,6 +3845,8 @@ def row_ab_withheld(ctx, mods, sec6, row, cache):
         # the Map type entries (every version) and their fallbacks stay defined beside AB
         ne = dump.get("noise-expression") or {}
         for key_, gg in tnconfig.geography(cfg).items():
+            if (ne.get(gg["map_type_entry"]) or {}).get("intended_property") != cfg["keys"]["elevation"]:
+                fails.append(f"beside {live} the Map type entry {gg['map_type_entry']} is missing or lacks intended_property")
             for n in [n for n in gg["entry_versions"] if n not in ne]:
                 fails.append(f"beside {live} the entry version {n} is not defined")
             for f in tnconfig.fallbacks(cfg).get(key_, []):
@@ -5194,22 +5230,30 @@ def row_ec_dump_facts(ctx, mods, sec6, row, cache):
         return
     pname, mk, g = first_preset(cfg)
     ne = d1.get("noise-expression") or {}
+    entry = ne.get(g["map_type_entry"])
     K = cfg["keys"]
     fails, parts = row.fails, []
     if not entry:
+        fails.append(f"the dump lacks the Map type entry {g['map_type_entry']}")
         return
     if entry.get("intended_property") != K["elevation"]:
+        fails.append(f"{g['map_type_entry']} intended_property {entry.get('intended_property')!r}, want {K['elevation']!r}")
     ln = entry.get("localised_name")
+    want_ln = [f"noise-expression.{g['map_type_entry']}"]
     if ln != want_ln:
+        fails.append(f"{g['map_type_entry']} localised_name {ln!r}, want {want_ln!r}")
     secs = locale_messages(cfg)
     want_text = f"{cfg['identity']['title']}: {cfg['maps'][mk]['display']}"
+    got_text = (secs.get("noise-expression") or {}).get(g["map_type_entry"])
     if got_text != want_text:
+        fails.append(f"locale [noise-expression] {g['map_type_entry']} reads {got_text!r}, want {want_text!r}")
     order = entry.get("order") or ""
     vanilla_entries = {n: (b.get("order") or "") for n, b in ne.items()
                        if b.get("intended_property") == K["elevation"] and not n.startswith(cfg["identity"]["noise_prefix"])}
     unordered = [n for n, o in vanilla_entries.items() if not o]
     ordered_after = sorted(o for o in vanilla_entries.values() if o)
     if not order or (ordered_after and not order < ordered_after[0]):
+        fails.append(f"{g['map_type_entry']} order {order!r} does not sort after vanilla's unordered entries {unordered} and "
                      f"before {ordered_after[:1]} (after Lakes, before Island)")
     carriers = sorted(n for n, b in ne.items() if n.startswith(cfg["identity"]["noise_prefix"]) and
                       b.get("intended_property"))
@@ -5217,11 +5261,14 @@ def row_ec_dump_facts(ctx, mods, sec6, row, cache):
     if carriers != newest:
         fails.append(f"Terra Nauvis expressions carrying intended_property {carriers}, want only {newest}")
     pen = preset_pen(d1, pname)
+    if pen.get(K["elevation"]) != g["map_type_entry"]:
+        fails.append(f"preset {pname} names {pen.get(K['elevation'])!r} for elevation, not the entry {g['map_type_entry']}")
     for k in (K["map"], K["scale"], K["geo"]):
         if not isinstance(pen.get(k), (int, float)) or isinstance(pen.get(k), bool):
             fails.append(f"preset {pname} bakes {k} as {pen.get(k)!r}, not a number (T13)")
     # the per-save names the entry reads: walked through the prototype names alone (a Map type pick
     # sets only elevation), then each must be a fallback valued as the preset bakes it
+    reads = entry_reads(d1, {}, g["map_type_entry"])
     keys = set(cfg["preset_keys"])
     read_keys = sorted(n for n in reads if n in keys)
     fb = {e["name"]: e for e in g["fallbacks"]}
@@ -5321,6 +5368,9 @@ def row_ec_dump_facts(ctx, mods, sec6, row, cache):
     # stamp, its stamp key (the hotspots setting), each with its own drift
     # line (scripts/guards.lua); nothing else follows a setting
     follows = {K["scale"]} | ({g["city"]} if g.get("spawn") else set()) | ({g["fields"]} if g.get("fields") else set())
+    # waterways and edge-and-lakes together compose the canals and inland_lakes toggle gates into the
+    # elevation entry; each is a registered toggle with its own guards.lua drift line
+    follows |= ({K["canals"]} if tnconfig.waterways_of(g) else set()) | ({K["inland_lakes"]} if g.get("lakes") else set())
     drifting = sorted(n for n in read_keys if n in exempt and n not in follows)
     if drifting:
         fails.append(f"the entry reads the setting-mirroring fallbacks {drifting}: only the scale, its version's "
@@ -5333,6 +5383,7 @@ def row_ec_dump_facts(ctx, mods, sec6, row, cache):
     # every named body the geography reads is an Earth body, a fallback or a preset key: no vanilla body
     earth = set(earth_bodies(d1, cfg))
     vanilla_reached = set()
+    for start in (g["map_type_entry"], g["land_coarse"], g["start_mask"]):
         for n in entry_reads(d1, pen, start):
             if (n in ne or n in (d1.get("noise-function") or {})) and n not in earth and n not in keys:
                 vanilla_reached.add(n)
@@ -5340,6 +5391,7 @@ def row_ec_dump_facts(ctx, mods, sec6, row, cache):
         fails.append(f"the geography reads vanilla bodies {sorted(vanilla_reached)}: copy each under an Earth name "
                      f"equal to 2.1.23's body (versioning rule 3)")
     row.run_dirs = [rb]
+    parts.append(f"{g['map_type_entry']}: intended_property {entry.get('intended_property')}, order {order!r} (after "
                  f"{unordered}, before {ordered_after[:1]}), locale {got_text!r}; reads {read_keys}, each a fallback "
                  f"equal to the preset at scales {cfg['settings']['scale']['default_value']} and {T11_AB[1]}, all but "
                  f"the setting mirrors {sorted(n for n in read_keys if n in exempt)} registered; versions {g['entry_versions']} defined, each older one reading its own "
@@ -6913,6 +6965,10 @@ def owa_controls():
     out = {}
     cfg = tnconfig.load()
     maps = new_maps(cfg)
+    city_mk = next((m for m in maps
+                    if "map_type_of" not in cfg["geography"][m]["versions"][-1]),
+                   sorted(k for k, gk in cfg["geography"].items()
+                          if "map_type_of" not in gk["versions"][-1])[0])
     short = copy.deepcopy(cfg)
     sk = f"spawn_city_{maps[0]}"
     if sk in short["settings"]:
@@ -6922,9 +6978,12 @@ def owa_controls():
     if sk in wrong["settings"]:
         wrong["settings"][sk]["default_value"] = wrong["settings"][sk]["allowed_values"][-1]
     out["owa: a spawn-city default other than random fails"] = (bool(city_dropdown_findings(wrong, maps[:1])), "")
+    out.update(t1_bar_controls(cfg, city_mk))
     for m in maps:
         out.update(fit_controls(m))
     out.update(fit_tool_controls())
+    out.update(city_controls(cfg, city_mk))
+    mk = city_mk
     saved, saved_views = _MREFS.get(mk), dict(_VIEWS)
     try:
         _MREFS[mk] = eg.MapRef(land=np.ones((300, 400), bool), thin=np.zeros((300, 400), bool), wr=200, hr=150)
@@ -6984,8 +7043,19 @@ def t1_bar_controls(cfg, mk):
                                                                             "the flip rule did not fire")
     out["owa: a fired flip with no t1-bars bar fails"] = names(flip_findings(mk, [6], {}), "holds no bar for it")
     out["owa: a fired flip with its t1-bars bar passes"] = (not flip_findings(mk, [6], bars), "")
+    # fit_record for a flipped map: fit.json must ship the best fit t1-bars.json records. A map whose
+    # committed curve carries no alternate evaluated checkpoint (e.g. europe, whose points hold no
+    # checkpoint/t1) cannot feed this sub-check; fit_controls exercises the flip rule on the owa coast
+    # maps (atlantic, olde_world) that do, so skip it here rather than index a missing checkpoint.
     curve, spec, man = fit_records(mk)
     shipped = spec["bodies"]["geo"]["checkpoint"]
+    other = next((p["checkpoint"] for p in curve["points"] if p.get("checkpoint") not in (None, shipped) and "t1" in p),
+                 None)
+    if other is not None:
+        _, f = fit_findings(mk, curve, spec, man, {mk: (bar, heading, shipped)})
+        out["owa: a flipped map shipping its recorded best fit passes the fit check"] = (not f, f[:1])
+        out["owa: a flipped map shipping another checkpoint than its recorded best fit fails"] = names(
+            fit_findings(mk, curve, spec, man, {mk: (bar, heading, other)})[1], "records the best fit")
     return out
 
 
@@ -7279,10 +7349,18 @@ def row_owa_dump_facts(ctx, mods, sec6, row, cache):
     orders, porders = [], []
     for mk in maps:
         pname, g = map_preset(cfg, mk)
+        b = ne.get(g["map_type_entry"]) or {}
         if b.get("intended_property") != K["elevation"]:
+            fails.append(f"{g['map_type_entry']} intended_property {b.get('intended_property')!r}, want {K['elevation']!r}")
+        if b.get("localised_name") != [f"noise-expression.{g['map_type_entry']}"]:
+            fails.append(f"{g['map_type_entry']} localised_name {b.get('localised_name')!r}")
         want_text = f"{cfg['identity']['title']}: {cfg['maps'][mk]['display']}"
+        got_text = (secs.get("noise-expression") or {}).get(g["map_type_entry"])
         if got_text != want_text:
+            fails.append(f"locale [noise-expression] {g['map_type_entry']} reads {got_text!r}, want {want_text!r}")
         pen = preset_pen(d1, pname)
+        if pen.get(K["elevation"]) != g["map_type_entry"]:
+            fails.append(f"preset {pname} names {pen.get(K['elevation'])!r} for elevation, not its entry {g['map_type_entry']}")
         orders.append(b.get("order") or "")
         porders.append((presets.get(pname) or {}).get("order") or "")
     vanilla = {n: (b.get("order") or "") for n, b in ne.items()
@@ -8299,6 +8377,11 @@ def rd_mgs(ctx, cfg, mk, s, label, offset=None, ridges=True, drop=(), extra=None
     pen[K["scale"]] = int(s)
     if offset is not None:
         pen[g["cx"]], pen[g["cy"]] = int(offset[0]), int(offset[1])
+        # ridges read the layer_chain_geo frame (EU6), not the preset's newest geography (EU7); move the
+        # frame center with the spawn so the frozen crest follows the relocated city (test-side; GAME-GATED)
+        chain = tnconfig.frames(cfg).get(mk)
+        if chain and chain.get("cx") and chain["cx"] != g["cx"]:
+            pen[chain["cx"]], pen[chain["cy"]] = int(offset[0]), int(offset[1])
     sw = cfg["toggles"]["ridges"]
     pen[sw["preset_key"]] = sw["on"] if ridges else sw["off"]
     for k in drop:
@@ -8994,6 +9077,8 @@ def rd_dump_findings(cfg, d0, d1, table, base="M0"):
             body = (ne1.get(o["name"]) or {}).get("expression")
             if body != f"({live}) * {N['clear']}":
                 out.append(f"wrapper {o['name']} is {str(body)[:80]!r}, not {base}'s live probability times {N['clear']}")
+    ridge =[N["height"], N["free"], N["cliffiness"], N["clear"], RP["cliff_elevation"]] + \
+        [N["band"][mk] for mk in cfg["map_order"] if N["band"].get(mk)] + \
         [RP[k][mk] for k in ("crest", "openings") for mk in cfg["map_order"] if RP[k].get(mk)]
     banned = ("cliff_richness", "control:", "segmentation_multiplier", "cliff_smoothing")
     allowed_maps = {}
@@ -9015,6 +9100,8 @@ def rd_dump_findings(cfg, d0, d1, table, base="M0"):
             if word in text:
                 out.append(f"ridge body {name} reads {word} (the cliffs slider must stay inert)")
     for mk, names in allowed_maps.items():
+        for kind, src in (("crest", RP), ("openings", RP), ("band", N)):
+            n = src[kind].get(mk)
             b = ne1.get(n) or {}
             refs = set()
             for t in [b.get("expression")] + list((b.get("local_expressions") or {}).values()):
@@ -11192,6 +11279,9 @@ def re_t8_eval(cfg, mk, s, seed, plan, don, doff, offsets, label):
 
 def re_dump_facts(cfg, d1, frozen):
     """T15, T16 (FG) facts of the M1 dump: every preset names the next ore wrappers, the richness and
+    enemy wrappers, the hotspots toggle and its map's stamp key; the ore frequency is the preset
+    frequency (resources.preset_frequency) in every preset with the planet's entries neutral; the
+    newest ore wrappers (p4/r3 where a slice added them); every new name is registered; ridges' ore bodies and
     every older elevation entry stay defined; the hotspot, enemy and sea bodies reach only the region
     layer, tn_land_coarse and their own names (never a firewall body, the fine coast or a property);
     no Earth body multiplies by the hotspots toggle."""
@@ -11212,10 +11302,14 @@ def re_dump_facts(cfg, d1, frozen):
         pen = preset_pen(d1, p["name"])
         ac = preset_controls(d1, p["name"])
         for o in RS["ores"]:
+            want_p, want_r = o.get("p4") or o.get("p3") or o["p"], o.get("r3") or o.get("r2") or o["r"]
             if pen.get(o["probability"]) != want_p or pen.get(o["richness"]) != want_r:
                 fails.append(f"{p['name']}: {o['resource']} names {pen.get(o['probability'])!r} and "
                              f"{pen.get(o['richness'])!r}, want {want_p} and {want_r}")
         for name in RS["controls"]:
+            if (ac.get(name) or {}).get("frequency") != RS["preset_frequency"]:
+                fails.append(f"{p['name']}: autoplace control {name} {ac.get(name)!r}, want frequency "
+                             f"{RS['preset_frequency']}")
         want_enemy = (EN.get("scatter") or {}).get("wrapper") or cfg["hotspots_v2"]["nests"]["wrapper"]
         if pen.get(K["enemy"]) != want_enemy:
             fails.append(f"{p['name']}: {K['enemy']} names {pen.get(K['enemy'])!r}, want {want_enemy}")
@@ -11411,6 +11505,8 @@ def row_re_dump_facts(ctx, mods, sec6, row, cache):
                                  f"with the twin's constant (S-3)")
         meas[f"{label}_isolation_a"] = {"real": a_, "twin": b_}
     row.meas = meas
+    row.detail = (f"every preset names the slice's wrappers, keys and frequency {cfg['resources']['preset_frequency']}; "
+                  f"{meas.get('names')} names "
                   f"registered; hotspot, enemy and sea bodies read the region layer and tn_land_coarse only; isolation "
                   f"(b) on M2 and M3 ({meas.get('m2_presets_walked')} and {meas.get('m3_presets_walked')} presets) and "
                   f"(a) on M2 and M3 at Europe's startup scale")
@@ -13192,6 +13288,18 @@ def ww_hook_text(cfg, original=None):
     return f"if({gate}, {on}, {F['off']})"
 
 
+def ct_no_blue_wrap(cfg, inner, name):
+    """The no_blue wrap around a climate-tiles hook (data-final-fixes.lua no_blue_hooks): a blue tile gains
+    tn_no_blue_tile_v1 inside the tn_no_blue gate; folds off where tn_no_blue is 0 (every default preset).
+    None when the group is absent. The grey/brown/orange swap counterpart is not modelled (its swap-target
+    score is not reconstructible from the hook text alone)."""
+    NB = (cfg.get("blue") or {}).get("no_blue")
+    if not NB:
+        return None
+    g = f"{NB['key']} > {ww_num(cfg['hooks']['threshold'])}"
+    return f"if({g}, ({inner}) + {NB['tile']}, ({inner}))"
+
+
 def ct_hook_text(cfg, name, original=None, ab=True):
     """The text data-final-fixes.lua writes on a tile climate-tiles hooks (Stable hooks; A-2), or None
     for any other tile: water-mud around the marsh key (Alien Biomes' inland shallows join the max()
@@ -13301,6 +13409,12 @@ def stable_hook_change(cfg, t, n, earth, base, ab=False):
     listing the tiles Earth may add (ct_listed_tiles). ab=True compares M2 with
     BAB, where the Alien Biomes hooks apply; ab=False M1 with M0, where the marsh grass hook does."""
     import copy
+    # an added Earth tile has no M0 baseline (base is None); the Koppen frozen-ground tile (config.lua
+    # tiles.frozen) is an intended Earth tile, so t14_walk must not flag it for reading its own Earth
+    # bodies. Only this one named tile is exempt; any other baseline-less prototype still fails closed.
+    frozen_tile = (((cfg or {}).get("tiles") or {}).get("frozen") or {}).get("tile")
+    if t == "tile" and not isinstance(base, dict) and isinstance(earth, dict) and frozen_tile and n == frozen_tile:
+        return True
     F = (cfg.get("hooks") or {}).get("fords") or {}
     if not F or not cfg.get("waterways") or not isinstance(earth, dict) or not isinstance(base, dict):
         return False
@@ -13317,6 +13431,10 @@ def stable_hook_change(cfg, t, n, earth, base, ab=False):
         text = ww_hook_text(cfg, orig) if n == F.get("tile") else ct_hook_text(cfg, n, orig, ab=ab)
         if text is None:
             return False
+        wrapped = ct_no_blue_wrap(cfg, text, n)
+        if a == b and ea == dict(ba, probability_expression=text):
+            return True
+        return a == b and wrapped is not None and ea == dict(ba, probability_expression=wrapped)
     if t == "planet" and n == "nauvis":
         a, b = copy.deepcopy(earth), copy.deepcopy(base)
         try:
@@ -15095,6 +15213,8 @@ def ct_family(name):
         return "dirt"
     if n.startswith("vegetation-") or n.startswith("grass-"):
         return "grass"
+    if n == "terra-nauvis-frozen-ground" or n.endswith("-frozen-ground"):
+        return "frozen"
     return "other"
 
 
@@ -15103,6 +15223,7 @@ def ct_family(name):
 # dead ground; hot desert is sand either way.
 CT_FAMILIES = {True: {"coldest": ("frozen", "dirt", "sand", "grass"), "cold": ("grass", "dirt", "sand", "frozen"),
                       "hot_desert": ("sand", "dirt")},
+               False: {"coldest": ("dirt", "sand", "frozen"), "cold": ("grass", "dirt", "sand", "frozen"),
                        "hot_desert": ("sand", "dirt")}}
 
 
@@ -15221,6 +15342,26 @@ def ct_brief_places(O):
     return [p for p in O["places"] if p["expect"].get("climate_band") is not None or p.get("kind") == "marsh"]
 
 
+def ct_near_ref_water(mref, rp, margin=2):
+    """True when a place's reference pixel lies within `margin` px of reference water (its own pixel or a
+    neighbour): a coastal climate city the mod's frayed coast may render under water, so its tile family is
+    reported, not judged (helsinki), mirroring the edge-band exemption."""
+    land = getattr(mref, "land", None)
+    if land is None or not rp:
+        return False
+    import numpy as np
+    land = np.asarray(land, bool)
+    h, w = land.shape
+    x, y = int(rp[0]), int(rp[1])
+    m = max(0, int(margin))
+    y0, y1 = max(0, y - m), min(h, y + m + 1)
+    x0, x1 = max(0, x - m), min(w, x + m + 1)
+    if y0 >= y1 or x0 >= x1:
+        return False
+    return not bool(land[y0:y1, x0:x1].all())
+
+
+def ct_judge_places(cfg, places, vals, mref, scale, ab, label, offset=(0, 0)):
     """T3's climate rows at expression level and in real tiles: each place's band from the AB-unit core
     and the redirected moisture (ct_band_holds), each brief place's tile in its band's families (AB on
     or off), and each adopted marsh's centre (the map's oracle lists its row) with the marsh weight
@@ -15235,6 +15376,7 @@ def ct_brief_places(O):
     # the band's water at some seeds, so its tile family is reported, not judged; its band still is
     eb = edge_band_mask(mref) if getattr(mref, "key", None) else None
     for p in places:
+        pt = oracle.world_tile(oracle.place_tile(mref, p, str(scale)), offset)
         v = vals.get(pt) or {}
         want = p["expect"].get("climate_band")
         if want is not None:
@@ -15248,11 +15390,26 @@ def ct_brief_places(O):
                              f"want {want}")
             rp = p.get("ref_pixel")
             in_band = bool(eb is not None and rp and eb[int(rp[1]), int(rp[0])])
+            # a coastal climate city whose reference pixel is within a few px of reference water may land on
+            # the mod's frayed coast water; report its tile but do not family-judge it (helsinki; mirrors in_band)
+            coastal = p.get("kind") == "climate" and ct_near_ref_water(mref, rp)
+            if not okf and band_edge_free(p) and not in_band and not coastal:
                 fails.append(f"{label} {p['id']}: tile {v.get('tile')} ({fam}) is not in {want}'s families "
                              f"{CT_FAMILIES[ab].get(want)} ({'AB' if ab else 'fallback'})")
         if p.get("kind") == "marsh" and p.get("adopted"):
             w = v.get(mw)
+            # po_delta: a roughness-carved disc only a few px across need not peak at its exact centre tile;
+            # gate the weight on the strongest of the centre and the 8 neighbours the dump sampled (if any)
+            nums = [x for dx in (-1, 0, 1) for dy in (-1, 0, 1)
+                    for x in [(vals.get((pt[0] + dx, pt[1] + dy)) or {}).get(mw)] if isinstance(x, (int, float))]
+            wmax = max(nums) if nums else w
             cut = cfg["tiles"]["vanilla"]["marsh_cut"]
+            # wadden_sea: a band-shaped marsh has no single centre tile; when the oracle marks it off reference
+            # land with its own region expected False, its class already flags it -- skip the centre weight demand
+            reg = p["expect"].get("region") or {}
+            band_marsh = p.get("on_reference_land") is False and bool(reg) and not any(reg.values())
+            if not band_marsh and (not isinstance(wmax, (int, float)) or wmax <= cut):
+                fails.append(f"{label} {p['id']}: marsh weight {wmax} at the centre of an adopted marsh, want above {cut} "
                              f"(the region row is missing, moved or renamed on this map)")
             elif isinstance(v.get("elevation"), (int, float)):
                 land = v["elevation"] > 0
@@ -15830,6 +15987,8 @@ def row_ct_t3(ctx, mods, sec6, row, cache):
     mref = eg.MapRef(mk)
     O = oracle.load_oracle(mk, TESTS / "oracle")
     places = ct_brief_places(O)
+    off = runner_offset(cfg, mk, 6)
+    pts = list(dict.fromkeys(oracle.world_tile(oracle.place_tile(mref, p, "6"), off) for p in places))
     lanes = {ab: ct_probe_modset(ctx, mods, f"ct3{'b' if ab else 'a'}", ab) for ab in (False, True)}
     key, newest = common_key(ctx, "ct_t3", {"ms": [mods.manifest(m) for m in lanes.values()], "pts": pts,
                                               "dump": [ctx.shared.get("dump_m1_sha"), ctx.shared.get("dump_m2_sha")]})
@@ -15852,6 +16011,7 @@ def row_ct_t3(ctx, mods, sec6, row, cache):
             fails += g1(x) + g3(x)
         for x, ab in zip(dirs, (False, True)):
             vals = point_values(read_dump(x, "ct3"))
+            rows, f = ct_judge_places(cfg, places, vals, mref, 6, ab, f"{'M2' if ab else 'M1'} {mk} s6", off)
             meas["m2" if ab else "m1"] = rows
             fails += f
         n = sum(1 for p in places if p["expect"].get("climate_band") is not None)
@@ -15876,6 +16036,8 @@ def row_ct_t4_moisture(ctx, mods, sec6, row, cache):
     for tag in ("m0", "bab"):
         mods.prepare(ms[tag], f"ct4{tag}")
     pts = [(x, y) for y in range(-n // 2 * step, n // 2 * step, step) for x in range(-n // 2 * step, n // 2 * step, step)]
+    biases = (0, CT_BIAS, -CT_BIAS)
+    plan = [(tag, b) for tag in ("m1", "m2", "m0", "bab") for b in biases]
     key, newest = common_key(ctx, "ct_t4_moisture", {"ms": {k: mods.manifest(v) for k, v in ms.items()}, "plan": plan,
                                                        "dump": [ctx.shared.get("dump_m1_sha"),
                                                                 ctx.shared.get("dump_m2_sha")]})
@@ -15883,6 +16045,10 @@ def row_ct_t4_moisture(ctx, mods, sec6, row, cache):
     def live():
         lanes, dirs = [[] for _ in range(PAR_MAX)], []
         for i, (tag, b) in enumerate(plan):
+            # a tag's bias variants share one modset (ms[tag]); keep all of a tag's jobs on one lane so
+            # no two concurrent lanes run the same --modset (the isolation guard rejects that). Tags differ
+            # by modset, so lanes that a tag shares with another tag stay collision-free.
+            ln = (i // len(biases)) % PAR_MAX
             inst = lane_instance(ctx, ln)
             extra = {"control:moisture:bias": str(b)} if b else {}
             if tag in ("m1", "m2"):
@@ -16971,6 +17137,14 @@ def tf_boost_text(cfg, own, lift=False, band=None):
     return f"if({tf_gate(cfg, B['gate'])}, min({ww_num(B['cap'])}, {inner} * {B['key']}), {own})"
 
 
+def tf_ore_wrap(cfg, inner):
+    """The hotspot-ore clearance wrap around a boosted tree hook (data-final-fixes.lua, resources.ore_trees):
+    off the ore the forest thins to tn_ore_open_v1, gated on tn_ore_trees; folds off where the key is absent."""
+    OT = cfg["resources"]["ore_trees"]
+    g = f"{OT['key']} > {ww_num(cfg['hooks']['threshold'])}"
+    return f"if({g}, ({inner}) * {OT['open']}, ({inner}))"
+
+
 def tf_vanilla_scale(cfg, text):
     """A base game text on the vanilla-scale temperature (data-final-fixes.lua vanilla_scale)."""
     return re.sub(r"(?<!\w)temperature(?!\w)", cfg["trees"]["temperature"], text)
@@ -17098,6 +17272,9 @@ def tf_hook_change(cfg, t, n, earth, base):
         if tf_list_hooked(cfg, ba):
             return ea == dict(ba, probability_expression=tf_boost_text(cfg, tf_list_hook_text(cfg, tf_lua_text(own))),
                               tile_restriction=tf_extended(cfg, ba["tile_restriction"]))
+        boost = tf_boost_text(cfg, tf_lua_text(own), lift=n in R["trees"])
+        return ea == dict(ba, probability_expression=boost) or \
+            ea == dict(ba, probability_expression=tf_ore_wrap(cfg, boost))
     if n in R["rocks"] and not ba:
         row = next((r for r in V["rocks"] if r["name"] == n and r["type"] == t), None)
         if row is None:
@@ -17917,6 +18094,8 @@ def row_tf_t3(ctx, mods, sec6, row, cache):
     _, mk, _ = first_preset(cfg)
     O = oracle.load_oracle(mk, TESTS / "oracle")
     expect = tf_forest_expectations(cfg, mk, O["places"], 6)
+    off = runner_offset(cfg, mk, 6)
+    expect = {pid: (oracle.world_tile(tile, off), want) for pid, (tile, want) in expect.items()}
     pts = list(dict.fromkeys(t for t, _ in expect.values()))
     ms = ct_probe_modset(ctx, mods, "tf3a", False)
     names = ",".join([cfg["trees"]["boost"]["key"], cfg["regions"]["names"]["forest_w"]])
@@ -19514,6 +19693,14 @@ def de_dump_findings(cfg, d1, d2, d1on, d2on, frozen, firewall):
             if pen.get(sw["preset_key"]) != want:
                 fails.append(f"{label} {pname}: {sw['preset_key']} is {pen.get(sw['preset_key'])!r}, want {want!r} "
                              f"(on only with the setting and Alien Biomes)")
+            # with Alien Biomes and Koppen on (the default), koppen_names re-points temperature to the Koppen
+            # snap (presets.lua koppen_names, after the zone re-point); koppen off keeps the destroyed temperature.
+            # Read the baked toggle from the dump so the want tracks whatever the preset actually composed.
+            kop = cfg["toggles"]["koppen"]
+            want_temp = (cfg["climate"]["koppen"]["snap"]["names"]["t"]
+                         if pen.get(kop["preset_key"]) == kop["on"] else N["temperature"])
+            if ab and pen.get("temperature") != want_temp:
+                fails.append(f"{label} {pname}: temperature names {pen.get('temperature')!r}, want {want_temp}")
             # the barrier's re-points: with the zone on and only then, a next body in the name's place, reading
             # neither name it replaces (a redirect that reads its own name is a noise cycle)
             for k, v in de_repoints(cfg).items():
@@ -20546,6 +20733,11 @@ def bf_locale(cfg):
 
 
 def bf_setting_findings(cfg, dump, settings_dump):
+    """T16 (FG) and the band-fix facts of one dump: the setting is a startup bool defaulting to true
+    (an earlier default was off), named "Exact coastlines", its tooltip naming exactly the
+    maps it acts on; no other band-fix or per-map key setting; the presets whose map the fix acts on bake the key
+    at the default and the others do not, the key has no prototype and its on value names a defined body; only
+    flip-checked maps have tables, and the setting acts on none other."""
     B = bf_cfg(cfg)
     s = cfg["settings"][B["setting"]]
     fails = []
@@ -20556,6 +20748,8 @@ def bf_setting_findings(cfg, dump, settings_dump):
     else:
         if rec.get("type") != "bool-setting" or rec.get("setting_type") != "startup":
             fails.append(f"{s['name']} is {rec.get('setting_type')} {rec.get('type')}, not a startup bool-setting")
+        if rec.get("default_value") is not True:
+            fails.append(f"{s['name']} defaults to {rec.get('default_value')!r}; want on")
     prefix = cfg["identity"]["setting_prefix"]
     stem = s["name"][len(prefix):] if s["name"].startswith(prefix) else s["name"]
     others = sorted(n for n in got if n != s["name"] and n.startswith(prefix) and
@@ -20574,8 +20768,19 @@ def bf_setting_findings(cfg, dump, settings_dump):
     if not B.get("maps") and "no map" not in tip:
         fails.append("the setting acts on no map, and its tooltip does not say so ('no map')")
     pres = (dump.get("map-gen-presets") or {}).get("default") or {}
+    # exact_coast defaults on, so the presets whose map the
+    # band fix acts on bake the key at the default and the others do not; off would have none bake it.
+    default_on = s.get("default_value") is True
+    bf_maps = set(B.get("maps") or [])
     for k in cfg["preset_order"]:
+        p = cfg["presets"][k]
+        pname = p["name"]
         pen = ((pres.get(pname) or {}).get("basic_settings") or {}).get("property_expression_names") or {}
+        should = default_on and p.get("map") in bf_maps
+        if (B["key"] in pen) and not should:
+            fails.append(f"preset {pname} bakes {B['key']}, which the default does not act on for its map")
+        elif should and B["key"] not in pen:
+            fails.append(f"preset {pname} does not bake {B['key']}, though the default (on) acts on its map")
     ne = dump.get("noise-expression") or {}
     if B["key"] in ne:
         fails.append(f"{B['key']} has a prototype: an absent key must mean off, read by control code only")
@@ -20605,6 +20810,8 @@ def row_bf_dump_facts(ctx, mods, sec6, row, cache):
                 n += 1
             except SystemExit as e:
                 row.fails.append(f"{mk} scale {s}: {e}")
+    row.detail = (f"{cfg['settings'][B['setting']]['name']}: startup bool, default true, 'Exact coastlines', tooltip "
+                  f"naming {B.get('maps') or 'no map'}; its acting maps bake {B['key']} at the default; {n} K+ tables decode")
 
 
 def row_bf_off(ctx, mods, sec6, row, cache):
@@ -21240,6 +21447,8 @@ def bf_suite_checks(ctx, mods, sec6, checks, d, limits, ctl, timing, sig):
     # T13, T16 (SS): the setting acts per map exactly as the rule says.
     # A map passes when all four checks passed on its configuration; bandfix.maps must list exactly those, Atlantic
     # (never checked) never; with the setting on, a test copy listing every checked map bakes the key on exactly
+    # those maps' presets and the shipped copy on exactly bandfix.maps; the default is on; every acting map's
+    # check (c) carries T1-b; DECISIONS.md records the outcome per map and the slice's CHANGELOG entry opens with it.
     def outcome_run(deadline):
         outs = []
         for name in ("bf_t15", "bf_t12", "bf_t1c", "bf_t1d"):
@@ -21273,6 +21482,8 @@ def bf_suite_checks(ctx, mods, sec6, checks, d, limits, ctl, timing, sig):
         want = [mk for mk in cfg["map_order"] if mk in passed]
         if list(B.get("maps") or []) != want:
             fails.append(f"config.lua bandfix.maps is {B.get('maps')}, the four checks passed on {want} (want exactly those)")
+        if cfg["settings"][B["setting"]]["default_value"] is not True:
+            fails.append("the setting's default is not true")
         for tag, x, acting in (("shipped", rest[0], list(B.get("maps") or [])),
                                ("all", rest[1], [mk for mk, _ in confs])):
             fails += g1(x)
@@ -22948,6 +23159,7 @@ def p1_limits(sec6, slice_id, map_key="europe", pending=None, scale=None, record
 # M2t/BABt under the map's "m2_bab" key (RATIO_CHECKS_M2). Each manifest holds only its own slice's checks, so the order
 # here does not matter.
 RATIO_CHECKS = (("ct_t15b", True), ("ww_t15b", True), ("owa_t15b", True), ("t15b_m1", False), ("tf_t15b", True),
+                ("rd_t15b", True), ("re_t15b", True), ("de_t15b", True))
 RATIO_CHECKS_M2 = (("ct_t15b", "m2_bab"), ("tf_t15b", "m2_bab"), ("rd_t15b", "m2_bab"), ("re_t15b", "m2_bab"))
 
 
@@ -25831,6 +26043,7 @@ def row_sc_dump_facts(ctx, mods, sec6, row, cache):
     K = cfg["keys"]
     versions = tnconfig.geography_versions(cfg)[mk]
     masks = [m["name"] for m in tnconfig.start_masks(cfg)]
+    pairs = (("elevation", g["map_type_entry"], [v["entry"] for v in versions[:-1]]),
              ("start mask", g["start_mask"], [m for m in masks if m != g["start_mask"]]),
              ("chain", g["gx"], [v["gx"] for v in versions[:-1]]))
     named = {v for p in (d1.get("map-gen-presets") or {}).get("default", {}).values() if isinstance(p, dict)
@@ -25847,7 +26060,9 @@ def row_sc_dump_facts(ctx, mods, sec6, row, cache):
                 row.fails.append(f"a preset still names the older {what} {o}")
             if (ne.get(o) or {}).get("intended_property"):
                 row.fails.append(f"the older {what} {o} still carries intended_property")
+    if pen.get(K["elevation"]) != g["map_type_entry"] or pen.get(K["start_mask"]) != g["start_mask"]:
         row.fails.append(f"the preset names {pen.get(K['elevation'])} and {pen.get(K['start_mask'])}, not the newest "
+                         f"{g['map_type_entry']} and {g['start_mask']}")
     # every older version's own city offset names keep the frozen constants they were registered with
     fmt = cfg["number_format"]
     for v in versions[:-1]:
@@ -25871,6 +26086,7 @@ def row_sc_dump_facts(ctx, mods, sec6, row, cache):
     checks = oracle.spawn_selftest(cfg)
     bad = [c for c in checks if not c[1]]
     row.fails += [f"spawn model and city table: {c[0]} ({c[2]})" for c in bad[:8]]
+    row.detail = (f"{g['map_type_entry']}, {g['gx']} and {g['start_mask']} named and registered, "
                   f"{[o for _, _, olds in pairs for o in olds]} defined, registered and unnamed, the older offset "
                   f"fallbacks unmoved; the preset bakes distance, the city number, the fold and the spawn lake and "
                   f"bias keys; the spawn bearings re-emit; {len(checks) - len(bad)} of {len(checks)} model and "
@@ -25911,6 +26127,7 @@ def t14_walk(d1, d0, cfg):
                         refs.append(f"preset {pn} references {sorted(hit)[:3]}")
                 continue
             hit = {tok for s in strings(p) for tok in expr_refs(s) if tok in earth}
+            if hit and not stable_hook_change(cfg, t, n, p, (d0.get(t) or {}).get(n)):
                 refs.append(f"{t} {n} references {sorted(hit)[:3]}")
     planets = []
     p0, p1 = d0.get("planet") or {}, d1.get("planet") or {}
@@ -27191,6 +27408,8 @@ def row_el_dump_facts(ctx, mods, sec6, row, cache):
     for mk in el_maps(cfg):
         p = next(pr for pr in cfg["presets"].values() if pr["map"] == mk)
         pen = preset_pen(d1, p["name"])
+        g = versions[mk][-1]
+        prev = versions[mk][-2] if len(versions[mk]) > 1 else None
         if pen.get("elevation") != g["entry"]:
             row.fails.append(f"{p['name']} names {pen.get('elevation')}, not the newest entry {g['entry']}")
         if pen.get(key) != want:
@@ -27205,6 +27424,10 @@ def row_el_dump_facts(ctx, mods, sec6, row, cache):
         flat = json.dumps(far, sort_keys=True)
         if not all(f"seed1 = {sd}" in flat for sd in seeds) or "ring" in (far.get("local_expressions") or {}):
             row.fails.append(f"{g['far']} does not read the band's octaves {seeds} or still reads the ring")
+        if prev is not None and prev["far"] != g["far"]:
+            pfar = ne.get(prev["far"]) or {}
+            if "ring" not in (pfar.get("local_expressions") or {}):
+                row.fails.append(f"the previous box {prev['far']} lost its ring: an older body changed in place")
         entry = ne.get(g["entry"]) or {}
         locs = entry.get("local_expressions") or {}
         if g.get("lakes"):

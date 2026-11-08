@@ -308,6 +308,10 @@ local function destroyed_values(map_key, v, names)
     -- 0.3.2: the next class (grey rock in place of scorched red grass and dry dirt), and the cold north's drop with
     -- none in the heat ground (climate.north3.zone_drop), which neither reads the name it replaces
     out[D.chaos.names.class] = D.dev.next.names.class
+    -- 0.4.0: advance the chaos class to class7 (dev.next.class2.name2), class6's superset -- it keeps class6's
+    -- widened grey band, frayed black-ash and greyed snow-prone heat ground where reach > 0, and extends the grey
+    -- rock across the dev > 0 zone fringe (reach <= 0) so the cold-Koppen edge leaves no frozen snow or marsh there.
+    out[D.chaos.names.class] = D.dev.next.class2.name2
     out[cfg.climate.north3.names.drop] = cfg.climate.north3.zone_drop
     out[D.barrier.names.zone] = D.barrier.names.zone3
     out[D.outline.names.present] = D.outline.next.present

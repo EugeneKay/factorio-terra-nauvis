@@ -5,6 +5,28 @@ All notable changes to Terra Nauvis are documented in this file. The format foll
 [Semantic Versioning](https://semver.org/). The changelog players see in the game is
 `terra-nauvis/changelog.txt`.
 
+## [0.4.0] - 2026-11-08
+
+### Added
+
+- Koppen climate biomes, on by default: every tile's ground, trees and decoratives follow the Koppen-Geiger
+  climate computed for its place on Earth, so deserts, grasslands, forests, taiga and polar ground each read
+  as themselves, with Alien Biomes or on the base game alone. Turn Koppen biomes off in the mod settings to
+  keep the plain Terra Nauvis 0.3.2 climate.
+- One-click world creation: pick a Terra Nauvis preset at the top of the new-game screen and the whole world
+  is configured, with no second choice in the Map type dropdown. The Map type entries stay as an advanced path
+  and keep older saves loading.
+
+### Changed
+
+- Atlantic past scale 6, on new worlds made from a Terra Nauvis preset: islands the coast fit missed are drawn
+  from the reference map and coasts fray at tile scale, with fewer straight runs and right angles, matching
+  the Old World. Scales 1 to 6 keep their coasts.
+- Chaos zones on new worlds (Destroyed Europe, and the Moscow zone at Chaos): the grey rocky transition
+  reaches the zone edge, the black-ash edge frays instead of running straight, and the cold fringe no longer
+  shows snow specks or marsh.
+- Worlds made with 0.3.x keep loading unchanged; the new terrain applies to new worlds only.
+
 ## [0.3.2] - 2026-11-03
 
 ### Changed

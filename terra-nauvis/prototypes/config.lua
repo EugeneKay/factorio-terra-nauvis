@@ -970,6 +970,11 @@ local DE = {
   dev_fray2 = NOISE .. "destroyed_dev_fray_v2",
   class5 = NOISE .. "destroyed_class_v5",
   chaos_grey2 = NOISE .. "chaos_grey_rock_v1",
+  -- 0.4.0: the next class's successor with a widened grey band; no preset names it
+  class6 = NOISE .. "destroyed_class_v6",
+  -- 0.4.0: class6's successor, the class the 0.4.0 presets name; grey rock also covers the dev>0 zone fringe
+  -- (reach<=0), so the frayed zone edge reads grey rock instead of the Koppen base where Alien Biomes placed snow.
+  class7 = NOISE .. "destroyed_class_v7",
   -- 0.3.1's Moscow zone (config.lua moscow): its outline, the Moscow position, the picklist's key and the Europe key
   mz_land = NOISE .. "moscow_outline_land_v1",
   mz_sea = NOISE .. "moscow_outline_sea_v1",
@@ -1719,6 +1724,14 @@ return {
                  -- 0.3.1: Old World's geo body, which a preset past scale 6 points at the next one (coast.next)
                  OAS.OW8_GEO,
                  -- 0.4.0: the Koppen toggle; the preset points the axes at the Koppen bodies when it is on
+                 K_KOPPEN,
+                 -- 0.4.0: the per-tile Koppen climate keys and the no-blue/zone-plants keys the preset
+                 -- bakes when Koppen and Alien Biomes are on, so the Nauvis-only guard (scripts/guards.lua) strips them
+                 CT.K_TILE_T, CT.K_TILE_M, CT.K_TILE_A, CT.K_TILE_TV, TFN.NB_KEY, TFN.ZP_KEY,
+                 -- 0.4.0: keys an ab / zone-on preset bakes but preset_keys lacked, so the Nauvis-only
+                 -- guard left them on other surfaces (ARCHITECTURE.md, "D33 surface guard").
+                 -- atlantic/olde_world ab grain mix (VT_MIX); europe zone-on devastation field position,
+                 -- width, dead-forest, north drop
 
   -- The fine field per map (ARCHITECTURE.md, "Programs and the firewall"): map key -> {the map's
   -- elevation entry and every term
@@ -1932,6 +1945,14 @@ return {
     {
       release = "0.4.0",
       names = {CT.KOPPEN_COOL_T, CT.KOPPEN_CN_T, CT.KOPPEN_CN_TV, CT.KOPPEN_M_SNAP2},
+    },
+    -- The Chaos zone's class successors (0.4.0; destroyed.dev.next.class2): Alien Biomes only, as
+    -- class5 is. Named over class5 by a 0.4.0 preset with the zone on (presets.lua points the zone's class at
+    -- class7). class6 widens the grey band; class7 (the active body) extends grey rock to the
+    -- dev>0 fringe. New bodies, no older save names them; both ship in the Alien Biomes data stage.
+    {
+      release = "0.4.0",
+      names = {DE.class6, DE.class7},
     },
     -- The second hotspot table's bodies: under files its table, which releases the row names regions.lua composes
     -- from it, as the region table does. No geography: a preset names them over the first table's (rule 15).
@@ -3770,6 +3791,7 @@ return {
       --          own edge, and the yield's gate line frays by the outline's edge fray and this fray
       next = {
         names = {dev = DE.dev2, width = DE.dev_width2, jog_x = DE.dev_jog_x, jog_y = DE.dev_jog_y,
+                 fray = DE.dev_fray2, class = DE.class5, class2 = DE.class6},
         --   class  the next class: heat ground, black ash, then grey rock (grey, a class of the red palette) out to the
         --          zone's edge, with no scorched red grass or dry dirt. Where the grey band would be under thin tiles
         --          of the position wide, the black ash runs to the edge instead, so the band breaks off rather than
@@ -3780,6 +3802,26 @@ return {
         --          dirt 2, which reads as rock and stones beside the black ash)
         class = {thin = 16, grey = 8,
                  brk = {wavelength_px = 90, octaves = 2, persistence = 0.5, seed1 = 7937, at = 0.4, span = 0.5}},
+        -- 0.4.0 (destroyed.lua class6): the next class's successor under DE.class6 (a preset that repoints
+        -- dev.next.names.class to class2.name selects it). Three fixes over class5, all inside the
+        -- Chaos/Moscow-chaos zone:
+        --   the grey band no longer pinches below 10%: the black-ash boundary moves inward by ash_shift
+        --        widths and the thin break drops from 16 to 2, so the grey rock reaches the zone's outer
+        --        edge where the width noise narrows (57.5N 46E), instead of black ash eating the strip
+        --   the black-ash edge has no straight run over ~55 tiles: ash_fray, finer basis noises in tiles
+        --        added to the black-ash boundary, breaks the runs the smooth width/position contour left
+        --   no outside snow tile inside the zone under High snow: heat ground (class 0) becomes grey
+        --        rock wherever the North snow weight (climate.north_snow) is over snow_cut, so the palette
+        --        overlay covers the snow-prone tiles the Koppen compose left at a cold temperature
+        -- 0.4.0 (destroyed.lua class7): class6's successor, name2 = DE.class7, same params.
+        -- class6 only painted grey rock where reach > 0 (the dry-cut core), so the dev > 0 zone fringe (reach <= 0,
+        -- the frayed outer edge) fell back to class 0 (the Koppen base), where Alien Biomes' frozen-snow spot noise
+        -- out-placed the cold edge under High snow. class7 assigns the fringe (reach <= 0 and dev > 0) the grey-rock
+        -- class wholesale, so grey rock is scored and placed there; dev <= 0 (the surrounding Koppen) stays class 0,
+        -- byte-identical, and reach > 0 keeps class6's body. The 0.4.0 presets repoint class to name2.
+        class2 = {name = DE.class6, name2 = DE.class7, thin = 2, grey = 8, ash_shift = 0.22, snow_cut = 0.5,
+                  ash_fray = {{tiles = 5.3, amp = 2.5, seed1 = 7941}, {tiles = 11.7, amp = 4.5, seed1 = 7942},
+                              {tiles = 2.9, amp = 1.5, seed1 = 7943}}},
         jog = {{tiles = 7.3, amp = 1, seed1 = 7926}, {tiles = 15.7, amp = 2, seed1 = 7927},
                {tiles = 31.1, amp = 4, seed1 = 7928}, {tiles = 63.7, amp = 6, seed1 = 7933},
                {tiles = 127.3, amp = 12, seed1 = 7934}},

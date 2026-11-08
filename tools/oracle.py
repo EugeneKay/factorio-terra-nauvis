@@ -201,6 +201,8 @@ DEFAULT_EXPRESSIONS = {
               "the test harness's sample command or the ep-s8-dump points probe; null = not built yet, so the property is skipped. "
               "rule: ge/gt/le/lt against threshold gives a boolean; bands maps value ranges to names; values "
               "maps rounded values to names; source 'tile' reads the real tile name from a probe."),
+    "land": {"expr": "elevation", "rule": "ge", "threshold": 0},
+    "water": {"expr": "elevation", "rule": "lt", "threshold": 0},
     "river": {"expr": None, "rule": "gt", "threshold": 0},
     "climate_band": {"expr": None, "bands": None},
     "tile_family_ab": {"source": "tile", "families": None},
@@ -1374,8 +1376,16 @@ def random_city_index(cfg, seed, n):
 
 
 def resolved_city(cfg, map_key, seed, number):
+    """The city index (1 to n) a world resolves: its baked city number, or for 0 (random) the model over the
+    random pool -- spawn_next.served when the newest version folds next cities, else the full fold (it
+    mirrors spawn.lua:298-300)."""
+    import tnconfig
     _, px = city_fold(cfg, map_key)
     number = int(number or 0)
+    if number > 0:
+        return number
+    nx = tnconfig.spawn_next_of(cfg, tnconfig.geography(cfg)[map_key])
+    return random_city_index(cfg, seed, nx["served"] if nx else len(px))
 
 
 def spawn_offset(cfg, map_key, scale, seed, number):

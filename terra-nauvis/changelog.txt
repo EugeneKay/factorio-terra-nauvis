@@ -1,4 +1,5 @@
 ---------------------------------------------------------------------------------------------------
+  Features:
     - Great forests have their own ground: on new worlds beside Alien Biomes, the ground inside a
       great forest turns to forest ground and the trees fill in, in stands broken by glades. Older
       worlds keep their forests.
@@ -10,6 +11,26 @@
     - With Destroyed Europe on, the snowy ranges inside the zone keep their snow and grey rim on new
       worlds, and the heat ground starts outside the rim.
     - Worlds made with 0.3.x and 0.4.0 keep loading unchanged; the new terrain applies to new worlds.
+Version: 0.4.0
+Date: 2026-11-08
+  Features:
+    - Koppen climate biomes, on by default: every tile's ground, trees and decoratives follow the
+      Koppen-Geiger climate computed for its place on Earth, so deserts, grasslands, forests, taiga
+      and polar ground each read as themselves, with Alien Biomes or on the base game. Turn Koppen
+      biomes off in the mod settings to keep the plain Earth climate.
+    - One-click world creation: pick a Terra Nauvis preset at the top of the new-game screen and the
+      whole world is configured, with no second choice in the Map type dropdown. The Map type entries
+      stay as an advanced path and keep older saves loading.
+  Changes:
+    - The Atlantic world past scale 6, on new worlds made from a preset: islands the coast fit missed
+      are drawn from the reference map and coasts fray at tile scale, with fewer straight runs and
+      right angles, matching the Old World. Scales 1 to 6 keep their coasts.
+    - The chaos zones (Destroyed Europe, and the Moscow zone at Chaos): the grey rocky transition
+      reaches the zone edge, the black-ash edge frays instead of running straight, and the cold fringe
+      no longer shows snow specks or marsh.
+  Bugfixes:
+    - Worlds made with 0.3.x keep loading unchanged.
+---------------------------------------------------------------------------------------------------
 Version: 0.3.2
 Date: 2026-11-03
   Changes:

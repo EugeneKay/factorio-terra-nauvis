@@ -191,6 +191,9 @@ local CT = {
   CL_BELT_EDGE2 = NOISE .. "tile_belt_edge_v1",
   CL_LIFT_M2 = NOISE .. "lift_m_v2",
   -- 1.0.0: the Middle East's sand desert (climate.desert): the two warps, the depths in degrees of the plain rows,
+  -- of the rows with patches of old ground and of the keep rows, the patches, the weight, the sand weight, the two
+  -- bodies a new world's preset names over the tile temperature and tile aux keys, the name each of those reads what
+  -- it wraps through, and the band tests' five bodies with the sand weight
   DS_WARP_A = NOISE .. "desert_warp_a_v1",
   DS_WARP_B = NOISE .. "desert_warp_b_v1",
   DS_DEPTH = NOISE .. "desert_depth_v1",
@@ -202,6 +205,13 @@ local CT = {
   DS_TILE_T_UNDER = NOISE .. "desert_tile_t_under",
   DS_TILE_A = NOISE .. "desert_tile_a_v1",
   DS_TILE_A_UNDER = NOISE .. "desert_tile_a_under",
+  DS_SAND = NOISE .. "desert_sand_v1",
+  DS_COAST = NOISE .. "desert_coast_v1",
+  DS_VANILLA = NOISE .. "desert_vtile_bonus_v1",
+  DS_VANILLA_HIGH = NOISE .. "desert_vtile_bonus_high_v1",
+  DS_VANILLA_NEXT = NOISE .. "desert_vtile_bonus_fray_v1",
+  DS_VANILLA_NEXT_HIGH = NOISE .. "desert_vtile_bonus_fray_high_v1",
+  DS_EXCLUDE = NOISE .. "desert_ab_exclude_v1",
   -- 1.0.0: Patagonia and the Monte as dry steppe (climate.steppe): the depth in degrees of the rows, the weight, the
   -- patches, the three bodies a new Atlantic world's preset names over the tile moisture, tile aux and grass
   -- temperature keys, the reach and the body it names over the living trees' multiplier, and the name each of
@@ -2062,9 +2072,13 @@ return {
     },
     -- The Middle East's sand desert (1.0.0; climate.desert): Alien Biomes only, as the climate bodies it wraps are.
     -- No geography: a 1.0.0 preset beside Alien Biomes names the two bodies over the tile temperature and tile aux
+    -- keys, each under name at what the key held, and the band tests' bodies with the sand weight over the vanilla
+    -- tile and exclusion keys.
     {
       release = "1.0.0",
       names = {CT.DS_WARP_A, CT.DS_WARP_B, CT.DS_DEPTH, CT.DS_DEPTH_FLATS, CT.DS_KEEP, CT.DS_FLATS, CT.DS_W,
+               CT.DS_SAND, CT.DS_COAST, CT.DS_TILE_T, CT.DS_TILE_T_UNDER, CT.DS_TILE_A, CT.DS_TILE_A_UNDER,
+               CT.DS_VANILLA, CT.DS_VANILLA_HIGH, CT.DS_VANILLA_NEXT, CT.DS_VANILLA_NEXT_HIGH, CT.DS_EXCLUDE},
     },
     -- Patagonia and the Monte as dry steppe (1.0.0; climate.steppe): Alien Biomes only, as the climate bodies it wraps
     -- are. No geography: a 1.0.0 Atlantic preset beside Alien Biomes names the three bodies over the tile moisture,
@@ -4962,7 +4976,17 @@ return {
       {id = "australia", lat = {-35, -17}, lon = {113, 147}, ramp = {3, 4}},
       {id = "south_america_sw", lat = {-56, -16}, lon = {-76, -63}, ramp = {3, 3}},
     },
+    -- The Middle East's sand desert (1.0.0; new worlds beside Alien Biomes). Alien Biomes has two desert sands: tan
+    -- dune sand (its temperature box 60 to 100) and cream sand, the pale yellow sand with dark specks (30 to 60, aux
+    -- under 0.3). The Sahara reads tan. Arabia read tan, the Syrian desert tan with brown blocks, Mesopotamia four
+    -- sand colours, and the Iranian plateau cream and beige. Inside the rows below, ground that is desert sand
+    -- already takes the cream sand: its tile temperature falls to t and its tile aux to a, each only where it was
+    -- above, so the Sahara, the Levant coast, Sinai and the Negev stay tan. Cream sand lies inside the temperate band
+    -- (tiles.exclude), where only adopted Alien Biomes tiles stand and the base game's tiles take a bonus, so the
+    -- band tests' bodies read the sand weight too, band_gain times beside the wild belt (tiles.lua): inside the rows
+    -- the ground counts as a wild belt's, as the Iranian plateau's does by its iran belt.
     --   rows    capsules in degrees: every point within r of the segment from {lat, lon} `from` to `to`; a row with
+    --           flats = true leaves patches of its old ground (tan in Arabia, beige on the plateau)
     --   keep    capsules the weight is none in, on the plain position (no warp: they guard real places): ground
     --           the rows' reach must not touch (the Caspian shore's forest); none within keep_ramp of the capsule's
     --           edge inward, fading out to the edge
@@ -4971,6 +4995,11 @@ return {
     --   root    the exponent of the capsule's distance, a square root
     --   edge    the outline moves by mid_tiles of the tile scores' shared noise field number mix (24 to 768 tiles)
     --           and fray_tiles of the grain's (6 to 48), in tiles at every scale, and the ramp is ramp degrees times a
+    --           width that follows the second warp between width_min and width_max, so the edge is ragged at two
+    --           scales and swells and thins along its length
+    --   flats   the patches of old ground: where a noise of octaves from wavelength_px up passes cut (soft wide, its
+    --           rim moved by mid of the shared field number mix, by rag of the ragged factor and frayed by fray of
+    --           the grain's noise) a flats row has no weight, in patches of no fixed shape and no smooth side
     --   cap     none at a range: the weight falls with the highland's temperature cap from cap.full to none at
     --           cap.from, so no snow, no grey rim and none of the rim's aux floor moves
     --   dry     none on moist ground: the weight falls with the tile moisture from dry.from to none at dry.full, the
@@ -4982,16 +5011,42 @@ return {
     --           over wild_soft). On the temperate band's own ground the weight is none, so the grass and dirt north
     --           of 35 N keep their ground and their edge. On cold ground it is none too, up to cold_from (the top of
     --           Alien Biomes' grey band) and full from cold_full, whatever the cap reads there
+    --   coast   none west of a line down the Red Sea's middle, the Gulf of Aqaba's and the rift to the Beqaa:
+    --           Africa, Sinai, the Negev and the Levant coast stay tan, and the cream meets them at the water where
+    --           there is water. The line is on the plain position (points, lon and land by lat between them), soft
+    --           over soft_tiles and moved by mid_tiles of the shared field number mix and fray_tiles of the grain's
+    --           noise, so over water it stays in the water; where it runs on land, in the rift, it takes land's
+    --           values instead, ragged at the outline's two scales, and stands shift_tiles east, so its ragged edge
+    --           stays off the Negev, the hills west of the Dead Sea and the valley floor. Past its ends it fades out
+    --           over taper degrees
+    --   band    the band tests' bodies with the sand weight; band_gain lifts the ground out of the band once the
+    --           weight passes the wild cut over band_gain, while the tile temperature is still above the band
     --   under   each body reads what it wraps through its under name, which the preset points at whatever the key
     --           held, so it composes with any other body that wraps the same key
+    -- What it leaves alone: the tile moisture (pulled dry, it cut the grass on a range's foothills along straight
+    -- lines) and the temperate ground north of 35 N (turned to sand, it met the grass on one hard brown band).
     -- No green strip follows the Euphrates: only Old World draws that river, and its course moves with the scale, so
     -- a strip placed in degrees stood on bare sand beside the river at scale 12 and along no river at all on the
     -- other maps. A river-side green has to read the waterway's own distance.
     desert = {
       names = {warp_a = CT.DS_WARP_A, warp_b = CT.DS_WARP_B, depth = CT.DS_DEPTH, depth_flats = CT.DS_DEPTH_FLATS,
+               keep = CT.DS_KEEP, flats = CT.DS_FLATS, w = CT.DS_W, sand = CT.DS_SAND, coast = CT.DS_COAST},
       tile = {temperature = {body = CT.DS_TILE_T, under = CT.DS_TILE_T_UNDER},
               aux = {body = CT.DS_TILE_A, under = CT.DS_TILE_A_UNDER}},
+      band = {vanilla = CT.DS_VANILLA, vanilla_high = CT.DS_VANILLA_HIGH, vanilla_next = CT.DS_VANILLA_NEXT,
+              vanilla_next_high = CT.DS_VANILLA_NEXT_HIGH, exclude = CT.DS_EXCLUDE},
+      band_gain = 20,
       rows = {
+        {id = "syrian_desert", from = {31.6, 38.6}, to = {34.6, 39.6}, r = 2.1, flats = true},
+        {id = "jordan", from = {29.8, 36.0}, to = {32.8, 36.4}, r = 1.0, flats = true},
+        {id = "iraq_west", from = {33.8, 40.6}, to = {30.8, 43.6}, r = 2.0, flats = true},
+        {id = "mesopotamia", from = {35.2, 42.4}, to = {31.0, 46.6}, r = 1.8},
+        {id = "arabia_north_east", from = {30.0, 46.0}, to = {22.8, 46.6}, r = 2.8, flats = true},
+        {id = "hasa", from = {27.5, 49.2}, to = {24.6, 50.6}, r = 1.6, flats = true},
+        {id = "hejaz", from = {28.8, 36.4}, to = {17.8, 42.4}, r = 2.4, flats = true},
+        {id = "najd", from = {29.5, 41.0}, to = {21.0, 47.0}, r = 3.5, flats = true},
+        {id = "rub_al_khali", from = {21.0, 46.5}, to = {19.6, 54.8}, r = 2.3, flats = true},
+        {id = "trucial_coast", from = {23.5, 51.5}, to = {22.5, 55.5}, r = 1.6, flats = true},
         {id = "dasht_e_kavir", from = {34.8, 51.6}, to = {34.4, 56.4}, r = 1.9, flats = true},
         {id = "iran_centre", from = {33.6, 53.0}, to = {30.4, 56.4}, r = 1.8, flats = true},
         {id = "iran_east", from = {34.6, 56.4}, to = {31.0, 60.2}, r = 1.8, flats = true},
@@ -5004,10 +5059,24 @@ return {
       root = 0.5, ramp = 0.6,
       edge = {mix = 3, mid_tiles = 70, fray_tiles = 28, width_per_noise = 0.8, width_min = 0.3, width_max = 2.2},
       warp = {degrees = 0.6, wavelength_px = 16, octaves = 4, persistence = 0.5, seed1_a = 7651, seed1_b = 7652},
+      flats = {wavelength_px = 8, octaves = 4, persistence = 0.6, seed1 = 7653, cut = 1.0, soft = 0.06, mix = 4,
                mid = 0.45, rag = 0.3, fray = 0.45},
       cap = {from = 200, full = 300},
       dry = {from = 0.45, full = 0.58},
       ground = {band_from = 65, band_full = 69, wild_soft = 0.02, cold_from = 30, cold_full = 36},
+      -- {lat, lon, land} along the Red Sea's middle, the Gulf of Aqaba's and on up the rift through the Dead Sea and
+      -- the Sea of Galilee to the Beqaa, south to north; land is 1 where the line runs on land
+      coast = {points = {{13.5, 42.7, 0}, {14.5, 42.1, 0}, {15.5, 41.2, 0}, {16.5, 41.0, 0}, {17.5, 40.5, 0},
+                         {18.5, 39.65, 0}, {19.5, 39.0, 0}, {20.5, 38.4, 0}, {21.5, 38.0, 0}, {22.5, 37.7, 0},
+                         {23.5, 37.0, 0}, {24.5, 36.3, 0}, {25.5, 35.8, 0}, {26.5, 35.15, 0}, {27.5, 34.6, 0},
+                         {28.0, 34.75, 0}, {28.2, 34.61, 0}, {28.4, 34.735, 0}, {28.6, 34.745, 0}, {28.8, 34.71, 0},
+                         {29.0, 34.745, 0}, {29.1, 34.8, 0}, {29.2, 34.845, 0}, {29.3, 34.89, 0}, {29.4, 34.89, 0},
+                         {29.6, 34.954, 1}, {31.0, 35.4, 1}, {31.6, 35.5, 1}, {32.8, 35.58, 1}, {33.3, 35.65, 1},
+                         {34.0, 35.95, 1}, {34.6, 36.35, 1}},
+               soft_tiles = 8, mid_tiles = 8, fray_tiles = 6, shift_tiles = 0,
+               land = {soft_tiles = 40, mid_tiles = 55, fray_tiles = 25, shift_tiles = 70}, mix = 5, taper = 0.4,
+               fields = {lat = 1, lon = 2, land = 3}},
+      t = 45, a = 0.15,
     },
     -- Patagonia and the Monte as dry steppe (1.0.0; new Atlantic worlds beside Alien Biomes). Until 1.0.0 the dry
     -- belt and the patagonia tile belt held the tile moisture at the foot of Alien Biomes' sand box from Mendoza to

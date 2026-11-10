@@ -1,9 +1,18 @@
 -- The Middle East's sand desert (config.lua climate.desert; 1.0.0).
 --
 -- Rows of capsules in degrees give a depth, degrees inside the nearest edge, on a warped position. Inside it,
+-- ground that is desert sand already reads as Alien Biomes' cream sand, the pale yellow sand with dark specks: the
+-- tile temperature falls out of its tan band and the tile aux under its beige and brown, each read through an under
+-- name the preset points at whatever the key held, so past the rows every reader meets the value it read before, bit
+-- for bit. Cream sand lies inside the temperate band, where the band tests hold back Alien Biomes' ground, so the
+-- band's own bodies take the weight too (tiles.lua): inside the rows the ground counts as a wild belt's.
 --
 -- Nothing else moves. The weight is none at a range (the highland's cap), on moist ground (the tile moisture past
 -- the sand's box: grass, forest ground, marsh), on the temperate band's own ground, inside the keep rows and, in the
+-- rows that carry them, inside the patches of old ground, so no snow, grey rim, marsh or grass changes and the
+-- desert gains no new edge against green ground; the tile moisture and everything trees and decoratives read stay
+-- as they were. Tile scores alone read these bodies. Everything here exists with Alien Biomes only, as the climate
+-- bodies it wraps do; a world whose preset names none of it compiles none of it.
 local cfg = require("prototypes.config")
 
 if not mods["alien-biomes"] then
@@ -82,24 +91,73 @@ local GRAIN = "noise_layer_noise(" .. num(C.grain.layer) .. ")"
 -- weight's edge and of the flats' rim.
 local MIX = cfg.tiles.noise_share.fields
 
+-- The patches of old ground (the flats): 1 inside, where a noise of their own passes the cut, its rim moved by mid
+-- of a shared field, by rag of the ragged factor (12 to 384 tiles) and by fray of the grain's noise, so a patch has
+-- no smooth side.
 local F = D.flats
 def(N.flats, fade("flat + " .. num(F.mid) .. " * " .. MIX[F.mix] .. " + " .. num(F.rag) .. " * (" .. C.ragged.name ..
   " - " .. num(C.ragged.mean) .. ") + " .. num(F.fray) .. " * " .. GRAIN, F.cut, F.cut + F.soft),
   {flat = px_noise(F, F.seed1)})
 
+-- The coast line (config.lua climate.desert.coast): 1 east of it and past its ends, 0 west of it, on the plain
+-- position. along(i) is the points' i-th value run piecewise linear in latitude: the line's longitude and its land
+-- share, which takes each tile count (the shift east, the meander's two scales, the soft) from the sea's value to
+-- the land's.
+local CO = D.coast
+local pts = CO.points
+local LAT = CO.fields.lat
+local function along(i)
+  local run = {num(pts[1][i])}
+  for j = 2, #pts do
+    local a, b = pts[j - 1], pts[j]
+    if b[i] ~= a[i] then
+      run[#run + 1] = num((b[i] - a[i]) / (b[LAT] - a[LAT])) .. " * (clamp(c_lat, " .. num(a[LAT]) .. ", " ..
+        num(b[LAT]) .. ") - " .. num(a[LAT]) .. ")"
+    end
+  end
+  return table.concat(run, " + ")
+end
+local function tiles(key)
+  return "((" .. num(CO[key]) .. " + " .. num(CO.land[key] - CO[key]) .. " * on_land) / (" .. num(PPD) .. " * " ..
+    K.scale .. "))"
+end
+def(N.coast, "max(clamp((c_lon - axis - " .. tiles("shift_tiles") .. " + " .. tiles("mid_tiles") .. " * " ..
+  MIX[CO.mix] .. " + " .. tiles("fray_tiles") .. " * " .. GRAIN .. ") / " .. tiles("soft_tiles") .. ", 0, 1), " ..
+  "clamp((c_lat - " .. num(pts[#pts][LAT]) .. ") / " .. num(CO.taper) .. ", 0, 1), clamp((" .. num(pts[1][LAT]) ..
+  " - c_lat) / " .. num(CO.taper) .. ", 0, 1))",
+  {c_lat = C.names.lat .. " - " .. num(MD.degrees) .. " * " .. MD.name, c_lon = C.names.lon,
+   axis = along(CO.fields.lon), on_land = along(CO.fields.land)})
+
 -- The weight. edge moves the outline at two scales in tiles (a shared field's 24 to 768 tiles and the grain's 6 to
+-- 48); wide lets the ramp swell and thin along the outline with the second warp. Then none west of the coast line,
+-- none at a range (from the highland cap's cap.from down), none on moist ground and none inside a keep row.
 local EG = D.edge
 local CAP = cfg.ridges.names.cold2.cap
 def(N.w, "max(clamp((" .. N.depth .. " + edge) / wide, 0, 1), clamp((" .. N.depth_flats ..
+  " + edge) / wide, 0, 1) * " .. "(1 - " .. N.flats .. ")) * " .. N.coast .. " * " ..
+  fade(CAP, D.cap.from, D.cap.full) .. " * (1 - " .. fade(C.grain.keys.moisture, D.dry.from, D.dry.full) ..
+  ") * (1 - " .. fade(N.keep, 0, D.keep_ramp) .. ")",
   {edge = "(" .. num(EG.mid_tiles / PPD) .. " * " .. MIX[EG.mix] .. " + " .. num(EG.fray_tiles / PPD) .. " * " ..
      GRAIN .. ") / " .. K.scale,
    wide = num(D.ramp) .. " * clamp(1 + " .. num(EG.width_per_noise) .. " * " .. N.warp_b .. ", " ..
      num(EG.width_min) .. ", " .. num(EG.width_max) .. ")"})
 
+-- The sand weight, which every tile body reads: the weight on Alien Biomes ground alone, judged on the temperature
+-- under the desert (past the temperate band's top before any tile belt cooled it, or lifted out of the band by a wild
+-- belt, by the band tests' own measure), none on the temperate band's own ground and none on cold ground (up to
+-- ground.cold_from: snow, ice and the grey rim, whatever the cap reads beside them).
 local T = D.tile
 local G = D.ground
 local WILD = C.tile_belts_wild
+def(N.sand, N.w .. " * max(" .. fade("t_under - " .. C.names.belts.t, G.band_from, G.band_full) .. ", " ..
+  fade(C.names.belts.wild .. " + " .. num(WILD.fine) .. " * " .. cfg.tiles.marsh.pool.name, WILD.cut,
+    WILD.cut + G.wild_soft) .. ") * " .. fade("t_under", G.cold_from, G.cold_full), {t_under = T.temperature.under})
+
+-- The tile bodies: each falls toward the cream sand's middle, only where it was above it. Each under name is what a
+-- world reads if no preset points it, which never happens on a world that compiles these.
 def(T.temperature.under, "0")
+def(T.temperature.body, "u - " .. N.sand .. " * max(0, u - " .. num(D.t) .. ")", {u = T.temperature.under})
 def(T.aux.under, "0")
+def(T.aux.body, "u - " .. N.sand .. " * max(0, u - " .. num(D.a) .. ")", {u = T.aux.under})
 
 data:extend(E)

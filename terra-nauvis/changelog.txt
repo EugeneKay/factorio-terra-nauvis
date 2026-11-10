@@ -8,6 +8,10 @@ Date: 2026-11-10
     - River deltas: on new Atlantic and Old World worlds the Nile, Amazon, Niger, Indus, Mississippi,
       Orinoco and Lena deltas fan out into shallow side channels you can walk through, on wet green
       ground, also in a desert. Older worlds keep their river mouths.
+    - Deserts in the Middle East: on new worlds beside Alien Biomes, Arabia, the Syrian desert,
+      Mesopotamia and the Iranian plateau draw the pale cream sand, broken by patches of older
+      ground, while the Sahara, Sinai, the Negev and the Levant coast keep their tan sand. The
+      ranges keep their snow and grey rim. Older worlds keep their ground.
     - Patagonia as a dry steppe: on new Atlantic worlds beside Alien Biomes, the plains east of the
       Andes from 30 S to Tierra del Fuego draw dry grass and dirt instead of sand. The Andes keep
       their snow and grey rim. Older worlds keep their ground.

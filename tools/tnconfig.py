@@ -1071,11 +1071,20 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
         pen[bf["key"]] = bf["on"]
     # 1.0.0: the Middle East's sand desert (presets.lua desert_values, after the band fix): beside Alien Biomes on
     # a grain map the tile temperature and tile aux keys each name their desert body, and the body's under name what
+    # the key held, and the vanilla tile and exclusion keys the band bodies with the sand weight
     ds = (cl or {}).get("desert")
     if ab and ds and gr and gr["keys"]["temperature"] in pen:
         for field, c in ds["tile"].items():
             pen[c["under"]] = pen[gr["keys"][field]]
             pen[gr["keys"][field]] = c["body"]
+        # the band tests' bodies with the sand weight, over each vanilla tile key and the exclusion key that names one
+        van, b = tl["vanilla"], ds["band"]
+        swaps = {van["body_grain"]: b["vanilla"], van["body_high"]: b["vanilla_high"],
+                 van["next"]["grain"]: b["vanilla_next"], van["next"]["high"]: b["vanilla_next_high"],
+                 tl["exclude"]["body_grain"]: b["exclude"]}
+        for key in [tl["exclude"]["key"]] + [van["keys"][t] for t in van["tiles"]]:
+            if pen.get(key) in swaps:
+                pen[key] = swaps[pen[key]]
     # 1.0.0: Patagonia and the Monte as dry steppe (presets.lua steppe_values, after the desert): beside Alien Biomes
     # on a grain map the steppe lists, the tile moisture, tile aux and grass temperature keys each name their steppe
     # body, the living trees' multiplier its tree body, and each body's under name what the key held

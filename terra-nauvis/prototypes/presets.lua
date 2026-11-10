@@ -450,6 +450,8 @@ end
 
 -- The Middle East's sand desert (config.lua climate.desert; 1.0.0): beside Alien Biomes, on a map whose tile scores
 -- read the grain's keys, the tile temperature and tile aux keys each name their desert body, and the body's under
+-- name what the key held; each vanilla tile key and the exclusion key that names a band body of tiles.lua names its
+-- version with the sand weight. It runs after the grain, the zones and any step that names a tile key of its own, and
 -- before Blue corrupted. A world made before holds none of these. Mutates `names`, the version's table so far.
 local function desert_values(names)
   local DS = cfg.climate.desert
@@ -460,6 +462,20 @@ local function desert_values(names)
   for field, c in pairs(DS.tile) do
     names[c.under] = names[GK[field]]
     names[GK[field]] = c.body
+  end
+  -- the band tests' bodies: each key that names one of tiles.lua's band bodies names its version with the sand weight
+  local TL, B = cfg.tiles, DS.band
+  local swaps = {[TL.vanilla.body_grain] = B.vanilla, [TL.vanilla.body_high] = B.vanilla_high,
+                 [TL.vanilla.next.grain] = B.vanilla_next, [TL.vanilla.next.high] = B.vanilla_next_high,
+                 [TL.exclude.body_grain] = B.exclude}
+  local keys = {TL.exclude.key}
+  for _, t in ipairs(TL.vanilla.tiles) do
+    keys[#keys + 1] = TL.vanilla.keys[t]
+  end
+  for _, key in ipairs(keys) do
+    if swaps[names[key]] then
+      names[key] = swaps[names[key]]
+    end
   end
 end
 

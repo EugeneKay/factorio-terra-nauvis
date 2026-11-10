@@ -15617,18 +15617,21 @@
   },
   "tn_desert_depth_flats_v1": {
    "type": "noise-expression",
+   "sha256": "a0bae75ea423e585312e06cb28ba6a81bb37d98f04b65ec576a98f4c78467fad",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
   "tn_desert_depth_v1": {
    "type": "noise-expression",
+   "sha256": "1660ae62d7da0468457b599f49c20cab6656ad2ec3a9a54ad6c21304d259d230",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
   "tn_desert_flats_v1": {
    "type": "noise-expression",
+   "sha256": "11506cb6be42f60255d21488d70bbbba8b6802ee1a44c2531a06a1beb482307c",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
@@ -15649,6 +15652,7 @@
   },
   "tn_desert_tile_a_v1": {
    "type": "noise-expression",
+   "sha256": "53d2324f8f9aefc96f4ce3b89b87c1bd666f5e3d42203b8786940b6869ecb4ac",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
@@ -15662,12 +15666,14 @@
   },
   "tn_desert_tile_t_v1": {
    "type": "noise-expression",
+   "sha256": "0319c75cf6310f25cfa64b2528e8cfa966797febe1309a184668d1f19fc94ed5",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
   "tn_desert_w_v1": {
    "type": "noise-expression",
+   "sha256": "fd2a5db98130feecf1ad87005d10a02dfdbcef58a99f2aaac8948838f7f7824a",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
@@ -15860,30 +15866,52 @@
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
+  },
+  "tn_desert_ab_exclude_v1": {
+   "type": "noise-expression",
+   "sha256": "851e4520332b3295d108bbf1e19674bc820ea86cddd25a5eca03168dbdc76a1c",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_desert_coast_v1": {
+   "type": "noise-expression",
+   "sha256": "7ed68d5bbd1cdaa0ebc1ddc9c2297011907ebafee3845fc1f36aeee2f1a40a97",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_desert_sand_v1": {
+   "type": "noise-expression",
+   "sha256": "5aacf1b9c823bc162c26a9cf2aff61da5e8e048960d05ebf6cc381d739ba0919",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_desert_vtile_bonus_fray_high_v1": {
+   "type": "noise-expression",
+   "sha256": "b45f1348eabad00135b4a06918719201488f2cfb7fc342380960a7f74b4b650a",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_desert_vtile_bonus_fray_v1": {
+   "type": "noise-expression",
+   "sha256": "f1ce059f1aa2a9e349ad6838b6dc7b2be65740fd9f4094da2afbb697e46e8193",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_desert_vtile_bonus_high_v1": {
+   "type": "noise-expression",
+   "sha256": "1154ba5920eedaecae63ea9c45624357f96534ef1bb0db74d7367a6788493b7d",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_desert_vtile_bonus_v1": {
+   "type": "noise-expression",
+   "sha256": "9bcf920647fd5dca406de4e7b8622823de7f6b1bb1268536de10a132d1b099a5",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"

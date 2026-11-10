@@ -127,6 +127,19 @@ if mods["alien-biomes"] then
     {patch = PATCH.patch, band_t = band_t(GK.temperature, WILD_TILE)})
   def(V.next.high, V.next.grain .. " + " .. cfg.ridges.names.ground)
   def(X.body_grain, exclusion("band_t", MS.edge), {band_t = band_t(GK.temperature, WILD_TILE)})
+  -- 1.0.0: the same five bodies with the Middle East desert's sand weight (config.lua climate.desert) added to the wild
+  -- belt's, band_gain times, so inside the desert's rows the ground counts as a wild belt's and its cream sand is not
+  -- held back; past the rows the weight is 0 and each is the body above, value for value. A new world's preset names
+  -- them in place of the bodies above (presets.lua desert_values).
+  local DS = cfg.climate.desert
+  local DSB = DS.band
+  local DS_BAND = {patch = PATCH.patch, band_t = band_t(GK.temperature, WILD_TILE .. " + " .. num(DS.band_gain) ..
+    " * " .. DS.names.sand)}
+  def(DSB.vanilla, vanilla_bonus("band_t", MS.edge), DS_BAND)
+  def(DSB.vanilla_high, DSB.vanilla .. " + " .. cfg.ridges.names.ground)
+  def(DSB.vanilla_next, vanilla_bonus("band_t", MS.edge, LEAN_FRAY), DS_BAND)
+  def(DSB.vanilla_next_high, DSB.vanilla_next .. " + " .. cfg.ridges.names.ground)
+  def(DSB.exclude, exclusion("band_t", MS.edge), {band_t = DS_BAND.band_t})
   -- The shared fields of the tile scores' noise (config.lua tiles.noise_share), read on the on branch alone. Each is
   -- the installed tiles' own noise call with a seed of this mod's (prototypes/installed.lua); where that call is not
   -- the one this version knows, the neutral body.

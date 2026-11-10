@@ -8,6 +8,9 @@ Date: 2026-11-10
     - River deltas: on new Atlantic and Old World worlds the Nile, Amazon, Niger, Indus, Mississippi,
       Orinoco and Lena deltas fan out into shallow side channels you can walk through, on wet green
       ground, also in a desert. Older worlds keep their river mouths.
+    - Patagonia as a dry steppe: on new Atlantic worlds beside Alien Biomes, the plains east of the
+      Andes from 30 S to Tierra del Fuego draw dry grass and dirt instead of sand. The Andes keep
+      their snow and grey rim. Older worlds keep their ground.
   Changes:
     - The mod is titled Terra Nauvis: Earth Maps, with a shorter description. The mod ID, every
       setting name and the log and chat prefix stay as they were.

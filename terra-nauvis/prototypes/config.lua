@@ -202,6 +202,22 @@ local CT = {
   DS_TILE_T_UNDER = NOISE .. "desert_tile_t_under",
   DS_TILE_A = NOISE .. "desert_tile_a_v1",
   DS_TILE_A_UNDER = NOISE .. "desert_tile_a_under",
+  -- 1.0.0: Patagonia and the Monte as dry steppe (climate.steppe): the depth in degrees of the rows, the weight, the
+  -- patches, the three bodies a new Atlantic world's preset names over the tile moisture, tile aux and grass
+  -- temperature keys, the reach and the body it names over the living trees' multiplier, and the name each of
+  -- those reads what it wraps through
+  SP_DEPTH = NOISE .. "steppe_depth_v1",
+  SP_W = NOISE .. "steppe_w_v1",
+  SP_PATCH = NOISE .. "steppe_patch_v1",
+  SP_TILE_M = NOISE .. "steppe_tile_m_v1",
+  SP_TILE_M_UNDER = NOISE .. "steppe_tile_m_under",
+  SP_TILE_A = NOISE .. "steppe_tile_a_v1",
+  SP_TILE_A_UNDER = NOISE .. "steppe_tile_a_under",
+  SP_TILE_TV = NOISE .. "steppe_tile_tv_v1",
+  SP_TILE_TV_UNDER = NOISE .. "steppe_tile_tv_under",
+  SP_REACH = NOISE .. "steppe_reach_v1",
+  SP_TREES = NOISE .. "steppe_tree_mult_v1",
+  SP_TREES_UNDER = NOISE .. "steppe_tree_mult_under",
   TM_1 = NOISE .. "tile_mix_1_v1",
   TM_2 = NOISE .. "tile_mix_2_v1",
   TM_3 = NOISE .. "tile_mix_3_v1",
@@ -1809,6 +1825,9 @@ return {
                  -- width, dead-forest, north drop
                  CT.VT_MIX, CT.CL_N_DROP3, DE.dev, DE.dev_width, DE.dead,
                  -- 1.0.0: the names the Middle East desert's bodies read what they wrap through (climate.desert)
+                 CT.DS_TILE_T_UNDER, CT.DS_TILE_A_UNDER,
+                 -- 1.0.0: the names the Patagonian steppe's bodies read what they wrap through (climate.steppe)
+                 CT.SP_TILE_M_UNDER, CT.SP_TILE_A_UNDER, CT.SP_TILE_TV_UNDER, CT.SP_TREES_UNDER},
 
   -- The fine field per map (ARCHITECTURE.md, "Programs and the firewall"): map key -> {the map's
   -- elevation entry and every term
@@ -2038,6 +2057,15 @@ return {
     {
       release = "1.0.0",
       names = {CT.DS_WARP_A, CT.DS_WARP_B, CT.DS_DEPTH, CT.DS_DEPTH_FLATS, CT.DS_KEEP, CT.DS_FLATS, CT.DS_W,
+    },
+    -- Patagonia and the Monte as dry steppe (1.0.0; climate.steppe): Alien Biomes only, as the climate bodies it wraps
+    -- are. No geography: a 1.0.0 Atlantic preset beside Alien Biomes names the three bodies over the tile moisture,
+    -- tile aux and grass temperature keys and the tree body over the living trees' multiplier, and each under name at
+    -- what the key held.
+    {
+      release = "1.0.0",
+      names = {CT.SP_DEPTH, CT.SP_W, CT.SP_PATCH, CT.SP_TILE_M, CT.SP_TILE_M_UNDER, CT.SP_TILE_A, CT.SP_TILE_A_UNDER,
+               CT.SP_TILE_TV, CT.SP_TILE_TV_UNDER, CT.SP_REACH, CT.SP_TREES, CT.SP_TREES_UNDER},
     },
     -- The Chaos zone's class successors (0.4.0; destroyed.dev.next.class2): Alien Biomes only, as
     -- class5 is. Named over class5 by a 0.4.0 preset with the zone on (presets.lua points the zone's class at
@@ -4952,9 +4980,74 @@ return {
       dry = {from = 0.45, full = 0.58},
       ground = {band_from = 65, band_full = 69, wild_soft = 0.02, cold_from = 30, cold_full = 36},
     },
+    -- Patagonia and the Monte as dry steppe (1.0.0; new Atlantic worlds beside Alien Biomes). Until 1.0.0 the dry
+    -- belt and the patagonia tile belt held the tile moisture at the foot of Alien Biomes' sand box from Mendoza to
+    -- Tierra del Fuego, so the land east of the Andes read as one dune sea in tan, beige and cream. The real ground is
+    -- a cold steppe of bunch grass and low shrubs on gravel, with the Monte's dry shrubland to its north. Inside the
+    -- rows the tile moisture rises to a target between Alien Biomes' dirt and grass bands, the tile aux moves to the
+    -- band of its brown, beige and grey dirts, and the grasses' own temperature rises to the olive grass, each only
+    -- toward its target, so wetter ground, the Pampas' green and the Chilean side keep what they had.
+    --   rows    capsules in degrees: every point within r of the segment from {lat, lon} `from` to `to`
+    --   depth   the largest r minus distance over the rows, degrees inside the nearest edge, read at a point warped by
+    --           warp.degrees of the desert's two warps (16 reference pixels and up), so no edge is an arc
     --   root    the exponent of the capsule's distance, a square root
+    --   edge    the outline moves by mid_tiles of the tile scores' shared noise field number mix (24 to 768 tiles) and
+    --           fray_tiles of the grain's (6 to 48), in tiles at every scale, and the ramp is ramp degrees times a
+    --           width that follows the second warp between width_min and width_max, so the edge is ragged at two
+    --           scales and swells and thins along its length
     --   cap     none at a range: the weight falls with the highland's temperature cap from cap.full to none at
+    --           cap.from, over the grey rim's top (ridges.cold top_t 30), so no snow, grey rim or rim moisture moves
+    --   crest   none west of the Andes' crest, where a gap in the range leaves the cap high: the crest's longitude,
+    --           linear in latitude between the points (the ranges table's Andes crest, then its southern end to the
+    --           Strait of Magellan), on the plain position; the weight rises from none at from degrees east of it to
+    --           full at full. The trees' reach takes it too
+    --   patch   a noise of octaves from wavelength_tiles up, in tiles at every scale: grass and bare ground in patches
+    --   m       the tile moisture's target: mid plus amp times the patches plus fine times the grain, within min and
+    --           max; Alien Biomes' dirt is 0.4 to 0.6 and its grass from 0.6
+    --   a       the tile aux's target: mid plus amp times shared field number mix, within min and max: brown dirt over
+    --           temperature 60, beige from 30, grey under 30, all from aux 0.3; red and dusty rose start at 0.6
+    --   veg     the grasses' temperature floor: floor plus amp times shared field number mix, within min and max, in
+    --           Alien Biomes' olive grass (50 to 65); a warmer grass keeps its own (yellow from 65)
+    --   dry     the aux and the grasses' temperature move only on ground that was sand: in full under dry.from of the
+    --           tile moisture under the steppe, none from dry.full (Alien Biomes' dirt starts at 0.4), so grass and
+    --           dirt that stood before (the Pampas' edge, the Chilean side, the Monte's grass, cold grey ground) keep
+    --           their colour
+    --   trees   Alien Biomes' wetland and grassland trees stand on its grass and dirt and not on its sand, so the new
+    --           ground would carry their clumps where the steppe has almost none. On the rows marked thin, the living
+    --           trees' multiplier falls by thin times the reach (the depth over those rows on the plain position, no
+    --           warp, full from ramp degrees inside: a slow change in density, no line) times the dryness (none from
+    --           the moisture trees read at dry.full, the forests of the Andes' east side at 0.8 and more; full under
+    --           dry.from, the steppe at 0.1 to 0.25). The Monte keeps its trees.
+    steppe = {
+      names = {depth = CT.SP_DEPTH, w = CT.SP_W, patch = CT.SP_PATCH},
+      tile = {moisture = {body = CT.SP_TILE_M, under = CT.SP_TILE_M_UNDER},
+              aux = {body = CT.SP_TILE_A, under = CT.SP_TILE_A_UNDER},
+              veg = {body = CT.SP_TILE_TV, under = CT.SP_TILE_TV_UNDER}},
+      maps = {atlantic = true},
+      rows = {
+        {id = "monte", from = {-32.0, -68.0}, to = {-37.0, -67.0}, r = 1.8},
+        {id = "north_patagonia", from = {-36.5, -69.5}, to = {-41.5, -67.0}, r = 2.4, thin = true},
+        {id = "rio_negro", from = {-39.0, -67.0}, to = {-41.0, -63.8}, r = 1.6, thin = true},
+        {id = "chubut", from = {-41.5, -69.0}, to = {-46.5, -68.0}, r = 2.8, thin = true},
+        {id = "santa_cruz", from = {-46.0, -70.0}, to = {-52.0, -70.0}, r = 2.6, thin = true},
+        {id = "santa_cruz_coast", from = {-46.8, -67.0}, to = {-50.5, -68.6}, r = 1.5, thin = true},
+        {id = "fuego", from = {-52.2, -70.2}, to = {-54.6, -66.8}, r = 1.4, thin = true},
+      },
+      root = 0.5, ramp = 0.4,
       edge = {mix = 3, mid_tiles = 70, fray_tiles = 28, width_per_noise = 0.8, width_min = 0.3, width_max = 2.2},
+      warp = {a = CT.DS_WARP_A, b = CT.DS_WARP_B, degrees = 0.8},
+      cap = {from = 35, full = 55},
+      crest = {points = {{-27.1097, -68.5414}, {-32.6531, -70.0117}, {-41.1608, -71.8875}, {-46.595, -73.3458},
+                         {-49.2713, -73.0432}, {-51.5, -73.4}, {-53.0, -73.6}},
+               from = 0, full = 0.3},
+      patch = {wavelength_tiles = 32, octaves = 5, persistence = 0.55, seed1 = 7671},
+      m = {mid = 0.6, amp = 0.16, fine = 0.1, min = 0.42, max = 0.85},
+      a = {mid = 0.42, amp = 0.12, mix = 6, min = 0.24, max = 0.56},
+      dry = {from = 0.36, full = 0.4},
+      veg = {floor = 57, amp = 5, mix = 8, min = 51, max = 64},
+      trees = {reach = CT.SP_REACH, body = CT.SP_TREES, under = CT.SP_TREES_UNDER, thin = 0.85, ramp = 1,
+               dry = {from = 0.35, full = 0.5}},
+    },
     names = {lat = CT.CL_LAT, lon = CT.CL_LON, dry = CT.CL_DRY, core = CT.CL_CORE, shift = CT.CL_SHIFT,
              ab = {temperature = CT.CL_T_AB, moisture = CT.CL_M_AB, aux = CT.CL_A_AB},
              grain = {field = CT.CL_GRAIN, temperature = CT.CL_T_AB_G, moisture = CT.CL_M_AB_G, aux = CT.CL_A_AB_G,

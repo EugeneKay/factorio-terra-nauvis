@@ -1076,6 +1076,19 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
         for field, c in ds["tile"].items():
             pen[c["under"]] = pen[gr["keys"][field]]
             pen[gr["keys"][field]] = c["body"]
+    # 1.0.0: Patagonia and the Monte as dry steppe (presets.lua steppe_values, after the desert): beside Alien Biomes
+    # on a grain map the steppe lists, the tile moisture, tile aux and grass temperature keys each name their steppe
+    # body, the living trees' multiplier its tree body, and each body's under name what the key held
+    sp = (cl or {}).get("steppe")
+    if ab and sp and gr and map_key in (sp.get("maps") or {}) and gr["keys"]["moisture"] in pen:
+        sp_keys = {"moisture": gr["keys"]["moisture"], "aux": gr["keys"]["aux"], "veg": gr["veg_key"]}
+        for field, c in sp["tile"].items():
+            pen[c["under"]] = pen[sp_keys[field]]
+            pen[sp_keys[field]] = c["body"]
+        tree_key = cfg["trees"]["boost"]["key"]
+        if tree_key in pen:
+            pen[sp["trees"]["under"]] = pen[tree_key]
+            pen[tree_key] = sp["trees"]["body"]
     # the next geo body (presets.lua geo_next_values, after baked, config.lua coast.next): past above_scale it
     # replaces the version's own
     gn = ((cfg.get("coast") or {}).get("next") or {}).get("versions") or {}

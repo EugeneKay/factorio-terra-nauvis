@@ -457,6 +457,29 @@ local function desert_values(names)
   end
 end
 
+-- Patagonia and the Monte as dry steppe (config.lua climate.steppe; 1.0.0): beside Alien Biomes, on a map the steppe
+-- lists whose tile scores read the grain's keys, the tile moisture, tile aux and grass temperature keys each name
+-- their steppe body, the living trees' multiplier its tree body, and each body's under name what the key held. It
+-- runs after the desert and the great forests, before Blue corrupted. A world made before holds none of these.
+-- Mutates `names`, the version's table so far.
+local function steppe_values(map_key, names)
+  local SP = cfg.climate.steppe
+  local G = cfg.climate.grain
+  if not (AB and SP and SP.maps[map_key] and names[G.keys.moisture] ~= nil) then
+    return
+  end
+  local keys = {moisture = G.keys.moisture, aux = G.keys.aux, veg = G.veg_key}
+  for field, c in pairs(SP.tile) do
+    names[c.under] = names[keys[field]]
+    names[keys[field]] = c.body
+  end
+  local tree_key = cfg.trees.boost.key
+  if names[tree_key] ~= nil then
+    names[SP.trees.under] = names[tree_key]
+    names[tree_key] = SP.trees.body
+  end
+end
+
 -- Blue corrupted UK (config.lua blue): with the toggle on, each climate field and palm key names its zone
 -- body and its under name what it held, and the list hook's keep body names the zone's. It runs after every other
 -- step, so it wraps Destroyed Europe's temperature and palms when both are on. A world made before holds none of these.
@@ -595,6 +618,7 @@ local function baked(map_key, v)
     names[k] = value
   end
   desert_values(names)
+  steppe_values(map_key, names)
   for k, value in pairs(blue_values(names)) do
     names[k] = value
   end

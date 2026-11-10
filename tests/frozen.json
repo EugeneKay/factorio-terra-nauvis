@@ -15748,50 +15748,87 @@
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
+  },
+  "tn_steppe_depth_v1": {
+   "type": "noise-expression",
+   "sha256": "d215313b7168af45dc7033f440fe8cbef672cc0009ee6bef45e1aefdc0e70f7b",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_steppe_patch_v1": {
+   "type": "noise-expression",
+   "sha256": "a38e80e641c83697767d032f04c0815fdf30b4b9b60a2dd818ccc6a4d26deec2",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_steppe_reach_v1": {
+   "type": "noise-expression",
+   "sha256": "c8d4316452bc57a300971a5e42965f97d8452c466b4051b41e177c5eb00e7ed4",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_steppe_tile_a_under": {
+   "type": "noise-expression",
+   "sha256": "ddee6a12022418e26fdc1c5c05604be35011d4888e5a66a97ca0ac40259f583e",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_steppe_tile_a_v1": {
+   "type": "noise-expression",
+   "sha256": "2c0f7b64b86cbc3e86c154843029580cf954eea6d797763ae09e4e3830bbc840",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_steppe_tile_m_under": {
+   "type": "noise-expression",
+   "sha256": "937f958b520d4f6e0a41346e99c1f708de02c94878dc2ebe8ff604105e358807",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_steppe_tile_m_v1": {
+   "type": "noise-expression",
+   "sha256": "2f492da9e16a66c04f5357d0a69300b379a74106317894a53261096a8cd76d44",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_steppe_tile_tv_under": {
+   "type": "noise-expression",
+   "sha256": "4c821f92553ed8ca0508cb88321c1cca458cc6d5526a99eabe2800cff0a55a10",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_steppe_tile_tv_v1": {
+   "type": "noise-expression",
+   "sha256": "3d7852d92ebc0262f44e7ca53b48c07ff34b0239fc1d01b3767895e76af53301",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_steppe_tree_mult_under": {
+   "type": "noise-expression",
+   "sha256": "ea80ffd8939d47ff850b19d3387d702d250814ec535a1e1459989ca0f36496db",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_steppe_tree_mult_v1": {
+   "type": "noise-expression",
+   "sha256": "ef9ffa34564a111c08fefdc3dde2cfd378b560236e267982c22ab49c9740fbd3",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
   },
+  "tn_steppe_w_v1": {
+   "type": "noise-expression",
+   "sha256": "ff616a2517d20d17fc8d75b5bac6b9ed08b4199ae7db0670b97ddbbf91198b08",
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"

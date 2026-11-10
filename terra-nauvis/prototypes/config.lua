@@ -1026,6 +1026,12 @@ local DE = {
   class7 = NOISE .. "destroyed_class_v7",
   -- 1.0.0: the position that also yields to every range's snow and grey rim (destroyed.dev.ranges)
   dev3 = NOISE .. "destroyed_dev_v3",
+  -- 1.0.0: the trees of a range the zone encloses (destroyed.dev.range_trees): their reach, the trees' mask key
+  -- and its body, and the dead trees' next body
+  tree_reach = NOISE .. "destroyed_tree_reach_v1",
+  range_open = NOISE .. "destroyed_range_open",
+  range_open1 = NOISE .. "destroyed_range_open_v1",
+  dead3 = NOISE .. "destroyed_dead_v3",
   -- 0.3.1's Moscow zone (config.lua moscow): its outline, the Moscow position, the picklist's key and the Europe key
   mz_land = NOISE .. "moscow_outline_land_v1",
   mz_sea = NOISE .. "moscow_outline_sea_v1",
@@ -1730,6 +1736,8 @@ return {
                  -- 0.3.1: the barrier's reach and open mask, which presets point at the devastation field's
                  -- (destroyed.dev)
                  DE.reach, DE.open,
+                 -- 1.0.0: the trees' mask on a range the zone encloses (destroyed.dev.range_trees)
+                 DE.range_open,
                  REN.HS_IRON, REN.HS_COPPER, REN.HS_COAL, REN.HS_STONE, REN.HS_URANIUM, REN.HS_OIL, REN.ORE_GAP,
                  REN.ENEMY_LAYER,
                  -- 0.3.0: the trees' hook gate off hotspot ore (resources.ore_trees), and its shares, which presets
@@ -2081,6 +2089,13 @@ return {
     {
       release = "1.0.0",
       names = {DE.dev3},
+    },
+    -- The trees of a range the zone encloses (1.0.0; destroyed.dev.range_trees): Alien Biomes only, as the exclusion
+    -- is. The mask key's own body is 1, so a world whose preset names none of these keeps its trees; a preset with
+    -- Destroyed Europe on names the mask and the dead trees' next body over the key and dead.
+    {
+      release = "1.0.0",
+      names = {DE.tree_reach, DE.range_open, DE.range_open1, DE.dead3},
     },
     -- The second hotspot table's bodies: under files its table, which releases the row names regions.lua composes
     -- from it, as the region table does. No geography: a preset names them over the first table's (rule 15).
@@ -3845,6 +3860,8 @@ return {
     -- it on saves that hold the volcanic tiles already.
     exclusion = {
       key = DE.clear, open = DE.open, thin = DE.thin, dead = DE.dead, dead_peak = 0.1,
+      -- 1.0.0: every tree's mask on a range the zone encloses, whose own body is 1 (destroyed.dev.range_trees)
+      range_open = DE.range_open,
       dead_order = "zz[" .. ID .. "]-",
       tiles = {"volcanic-orange-heat-1", "volcanic-orange-heat-2", "volcanic-orange-heat-3", "volcanic-orange-heat-4",
                "vegetation-red-grass-1", "mineral-black-sand-1", "mineral-black-dirt-1", "mineral-red-sand-1",
@@ -4004,6 +4021,18 @@ return {
       -- snow, where the snow ban and the palette followed it; at in_px they reach a tile or two.
       ranges = {name = DE.dev3, px = 100, in_px = 1000, rim = 0.67, steep_px = 300, steep_from = 0.12,
                 fray = {next = 0.002, tile = 0.006}, off_tiles = 100000},
+      -- 1.0.0 (destroyed.lua, the trees of an enclosed range): the ground follows the yielding position, the trees
+      -- the zone's own (the next position) wherever that lies deeper than deep_px reference pixels and deep_tiles
+      -- tiles, less that margin. A range the zone encloses lies far deeper than that, so no living tree stands on it:
+      -- where the yield gave the ground back and the trees' reach holds it, every tree takes the mask. The dead trees
+      -- stand there at the zone's density or at convert times the likeliest restored tree's probability, where a
+      -- living tree would have stood, whichever is more, fading out over snow.span of the cold field from snow.at past
+      -- the snow's edge, so the snow stays bare. The restored trees' probability reads the climate, not the tiles they
+      -- may stand on, so it runs above the trees it stood for where their tiles are missing; at convert 1 the dead
+      -- trees number about the living and dead trees they stand in for. A range on the zone's edge, the Pyrenees on
+      -- the Iberia cut, is never that deep: its trees follow the ground, as before.
+      range_trees = {reach = DE.tree_reach, key = DE.range_open, open = DE.range_open1, dead = DE.dead3,
+                     deep_px = 20, deep_tiles = 50, convert = 1, snow = {at = 0, span = 0.01}},
     },
   },
 

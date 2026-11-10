@@ -138,6 +138,17 @@ function M.apply(Z, on_nauvis)
       return true
     end
   end)
+  -- 1.0.0: a zone that encloses ranges masks every tree there, those no zone tile carries too (Z.range_open, whose
+  -- own body is 1, so a world that names no mask keeps every tree's probability)
+  if Z.range_open then
+    for _, name in ipairs(sorted_names(data.raw.tree)) do
+      local autoplace = data.raw.tree[name].autoplace
+      if autoplace and autoplace.probability_expression ~= nil and on_nauvis("entity", name, autoplace) and
+          not palm[name] and not (Z.keep_trees and Z.keep_trees[name]) then
+        times(autoplace, gate, Z.range_open)
+      end
+    end
+  end
   local plants = each_standing(data.raw["optimized-decorative"], "decorative", tiles, on_nauvis,
     function(name, autoplace)
       if not plant_stays(name, Z.plants) then

@@ -323,6 +323,12 @@ local function destroyed_values(map_key, v, names)
     out[D.outline.names.depth] = D.outline.next.depth
     -- Great forests in the zone stand as dead forests: the dead trees' copies read the first body by name.
     out[D.barrier.names.dead] = D.barrier.names.dead2
+    -- 1.0.0: with Destroyed Europe's own outline on, the trees of a range the zone encloses follow the zone's own
+    -- position (destroyed.dev.range_trees): no living tree stands there, and dead trees stand off the snow
+    if europe then
+      out[D.exclusion.range_open] = D.dev.range_trees.open
+      out[D.barrier.names.dead] = D.dev.range_trees.dead
+    end
     -- The exclusion (config.lua destroyed.exclusion): a palm's key names the masked body, the rest read the key.
     out[D.exclusion.key] = cfg.neutral.one
     for _, p in ipairs(D.exclusion.palms) do

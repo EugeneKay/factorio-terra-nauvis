@@ -2982,6 +2982,13 @@
     "slice": "extras",
     "registered": "2026-11-02"
    },
+   "tn_destroyed_dead_v3": {
+    "type": "noise-expression",
+    "sha256": "1b31c2ab309c88f4657bd8fa8b2fb4a8039aa06dfa99b340a78b3b7ab5c0703c",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-10"
+   },
    "tn_destroyed_depth_v1": {
     "type": "noise-expression",
     "sha256": "8c4fbc49eb12768f7e451385ab1b4cfd0ff8f0cc147be575ae8c91bfe5397625",
@@ -3332,6 +3339,20 @@
     "slice": "extras",
     "registered": "2026-11-01"
    },
+   "tn_destroyed_range_open": {
+    "type": "noise-expression",
+    "sha256": "f549757e3fcdcf62097cd279e40607f0a8d8fa14ad9f09aae955f516099ee547",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-10"
+   },
+   "tn_destroyed_range_open_v1": {
+    "type": "noise-expression",
+    "sha256": "ead993a1d4b87058e5f8bc9c2309de1cd65853c8fd3a7e9d2b808eb0015621c0",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-10"
+   },
    "tn_destroyed_reach_v1": {
     "type": "noise-expression",
     "sha256": "a3e2b7858631a58fe09e936d3b542617a3587967d5b90b68393b5d50b304d903",
@@ -3359,6 +3380,13 @@
     "dump": "m2",
     "slice": "extras",
     "registered": "2026-11-01"
+   },
+   "tn_destroyed_tree_reach_v1": {
+    "type": "noise-expression",
+    "sha256": "bba391fb468cc6c8df5707eff7a121c8b1b43f9dcb3c699b31bd53200423cf6f",
+    "dump": "m2",
+    "slice": "extras",
+    "registered": "2026-11-10"
    },
    "tn_destroyed_w_v1": {
     "type": "noise-expression",

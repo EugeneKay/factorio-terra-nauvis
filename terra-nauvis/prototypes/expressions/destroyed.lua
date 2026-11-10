@@ -296,6 +296,8 @@ if AB then
     num(W.low) .. ", " .. num(W.high) .. ")")
   -- A cut, positive inside it: the position, the cut's own fray in tiles (macro and kind in reference pixels, fine and
   -- grain in tiles), less the cut's place in widths, which the wobble noises move.
+  local function cut_at(F, pos)
+    local t = {pos or DN.dev, DN.fray}
     local function add(c, what)
       if c ~= 0 then
         t[#t + 1] = num(c) .. " * " .. what
@@ -409,6 +411,40 @@ if AB then
     ", 0, 1), if(" .. TB.gate .. " > " .. num(cfg.hooks.threshold) .. ", " .. num(GF.peak) .. " * " .. BN.thin ..
     " * clamp(" .. num(GF.gain) .. " * " .. cfg.regions.names.forest_w .. ", 0, 1) * clamp(" .. num(GF.floor) ..
     " + " .. BN.dead_noise .. ", 0, 1), 0)), 0), 0)")
+
+  -- 1.0.0 (destroyed.dev.range_trees): the trees of a range the zone encloses. Wherever the zone's own position, the
+  -- next one, lies deeper than the margin, their reach is the released reach or the dry cut on that position less the
+  -- margin, whichever is more; elsewhere it is the released reach. Off a range the yielding position is the next one,
+  -- so the cut less the margin falls short of the released reach and the trees' reach is that exactly. Where the
+  -- trees' reach passes the released one, the mask takes every tree out as the open mask does, and where the yield
+  -- also gave the ground back to the range (outside the released reach) the dead trees take the released dead body's
+  -- field or convert times the restored trees' likeliest probability, whichever is more, faded out over the snow's
+  -- edge; everywhere else the mask is 1 and the dead trees are the released body's.
+  local RT = DV.range_trees
+  local margin = "(" .. num(RT.deep_px) .. " * " .. K.scale .. " + " .. num(RT.deep_tiles) .. ")"
+  def(RT.reach, "if(" .. NN.dev .. " > " .. margin .. ", max(" .. DN.reach .. ", " ..
+    cut_at(CU.dry, "(" .. NN.dev .. " - " .. margin .. ")") .. "), " .. DN.reach .. ")", at)
+  def(RT.key, "1")
+  def(RT.open, "if(" .. RT.reach .. " > " .. DN.reach .. ", if(" .. RT.reach .. " + " .. num(DV.open_tiles) ..
+    " > 0, 0, 1), 1)")
+  local living = {}
+  local restored = cfg.trees.restore.trees
+  for name in pairs(restored) do
+    living[#living + 1] = name
+  end
+  table.sort(living)
+  for i, name in ipairs(living) do
+    living[i] = restored[name].p
+  end
+  def(RT.dead, "if(" .. RT.reach .. " > 0, if(" .. DN.reach .. " > 0, field, max(field, " .. num(RT.convert) ..
+    " * (1 - " .. cfg.tiles.scan.body .. ") * max(" .. table.concat(living, ", ") .. ")) * fade), 0)",
+    {field = "if(" .. BN.lava .. " < " .. num(B.lava_at) .. ", max(" .. num(G2.peak) .. " * " .. BN.thin ..
+       " * clamp((" .. BN.dead_noise .. " - " .. num(G2.cut) .. ") / " .. num(G2.span) .. ", 0, 1), if(" ..
+       TB.gate .. " > " .. num(cfg.hooks.threshold) .. ", " .. num(GF.peak) .. " * " .. BN.thin .. " * clamp(" ..
+       num(GF.gain) .. " * " .. cfg.regions.names.forest_w .. ", 0, 1) * clamp(" .. num(GF.floor) .. " + " ..
+       BN.dead_noise .. ", 0, 1), 0)), 0)",
+     fade = "clamp((" .. num(snow_edge) .. " - " .. cold .. " - " .. num(RT.snow.at) .. ") / " ..
+       num(RT.snow.span) .. ", 0, 1)"})
 end
 
 data:extend(E)

@@ -16,6 +16,9 @@ Date: 2026-11-10
       setting name and the log and chat prefix stay as they were.
     - With Destroyed Europe on, the snowy ranges inside the zone keep their snow and grey rim on new
       worlds, and the heat ground starts outside the rim.
+    - With Destroyed Europe on, the ranges the zone encloses, such as the Alps and the northern
+      Apennines, carry dead trees where living ones stood, on new worlds. The Pyrenees and the
+      ranges outside the zone keep their living trees.
     - Koppen biomes was an experiment in 0.4.0 and is shelved: the setting is hidden and off, new
       worlds use the 0.3.2 climate, and worlds made with it on keep it.
     - Fewer settings: Canals, Exact coastlines, Great forests and Ore hotspot size are now always at

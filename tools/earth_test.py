@@ -64,6 +64,7 @@ TESTS = REPO / "tests"
 BUDGETS = TESTS / "budgets.json"
 BASELINES = TESTS / "baselines"
 SUITES = BASELINES / "suites"
+DEFAULT_WS = str(Path.home() / "Documents" / "Factorio")
 # re-baselined from 2.1.23 build 87750 after the game's update to 2.1.24
 GAME_VERSION, GAME_BUILD = "2.1.24", "87808"
 GATE_BUDGET_S = 9 * 60

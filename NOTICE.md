@@ -37,6 +37,9 @@ data (c) OpenStreetMap contributors, available under the Open Database License
 (https://www.openstreetmap.org/copyright). Changed: simplified and snapped to the map grid.
 
 Wikipedia: place coordinates, lengths, heights, areas, water depths and some deposit figures were
+read from Wikipedia articles, cited by URL or by name in data-src/hotspots/deposits-research.md and
+.json, data-src/approvals/approvals-data.json and tests/oracle/, and in two research notes the build
+tools read that are not part of this repository. Any Wikipedia text in those files is
 available under CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). Text taken from
 Wikipedia was shortened and reworded; its authors are the contributors to the cited articles, listed in
 each article's history.
@@ -69,6 +72,9 @@ The screenshots and GIFs under docs/images also show the art of Alien Biomes by 
 belongs to its authors, is not offered under the GPL, and appears here only as pictures of the game, as
 the Alien Biomes licence allows.
 
+Quotations in the source notes stay under their sources' terms and are cited where they appear: the
+Factorio wiki (https://wiki.factorio.com/) is under CC BY-NC-SA 3.0, Factorio Friday Facts and the
+game's changelog.txt belong to Wube Software, and forum posts belong to their authors.
 
 ## Read at load time, not shipped
 

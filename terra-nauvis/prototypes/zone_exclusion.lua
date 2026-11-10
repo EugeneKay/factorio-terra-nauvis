@@ -66,8 +66,29 @@ end
 -- On any world but a zone's the probability folds to 0. The game places the likeliest entity on a tile, so an equal
 -- share gives one kind only: a random penalty of its own per copy lets each kind win its share of the tiles. Copies
 -- sort after every other tree: among them, a copy moves its neighbours' placements on worlds with the zone off.
+-- A tree another mod removed gets no copy, and a tree whose autoplace another mod removed (Alien Biomes' disable
+-- vegetation setting) gets a copy that places nowhere, as its source does.
 local function dead_copies(Z, gate)
   for i, row in ipairs(Z.dead_trees or {}) do
+    local source = data.raw.tree[row.tree]
+    if source then
+      local copy = deep(source)
+      copy.name = row.copy
+      copy.localised_name = {"entity-name." .. row.tree}
+      copy.factoriopedia_alternative = row.tree
+      copy.order = Z.dead_order .. row.tree
+      if copy.autoplace then
+        copy.autoplace = {control = copy.autoplace.control, order = Z.dead_order .. row.tree,
+                          probability_expression = "if(" .. gate .. ", random_penalty{x = x, y = y, seed = " ..
+                            num(i) .. ", source = " .. num(row.share) .. " * " .. Z.dead .. ", amplitude = " ..
+                            num(row.share * Z.dead_peak) .. "}, 0)"}
+      else
+        log(cfg.identity.title .. ": " .. row.tree .. " has no autoplace; its zone copy places nowhere")
+      end
+      data:extend({copy})
+    else
+      log(cfg.identity.title .. ": " .. row.tree .. " is missing; no zone copy")
+    end
   end
 end
 

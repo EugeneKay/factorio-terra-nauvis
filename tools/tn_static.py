@@ -374,6 +374,9 @@ def expected_locale(cfg, control_keys=()):
     # a scale extension's entry takes those fields at the scales past its version's list
     for x in (cfg.get("scale_extensions") or {}).values():
         exp.setdefault("noise-expression", set()).add(x["entry"])
+    # every expression a preset can select under the Terrain tab's other dropdowns (config.lua terrain_tab,
+    # checked against the presets by tools/terrain_names.py), which the dropdown shows by its locale name
+    exp.setdefault("noise-expression", set()).update((cfg.get("terrain_tab") or {}).get("names") or [])
     frozen = (cfg.get("tiles") or {}).get("frozen")
     if frozen:
         exp["tile-name"] = {frozen["tile"]}

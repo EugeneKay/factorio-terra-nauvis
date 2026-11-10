@@ -44,6 +44,8 @@ import tnconfig  # noqa: E402
 
 # Every path root comes from the repo or from the test workspace. The rasters and reference JSON live
 # in data-src/earthmaps/; the local test harness (not part of this repository) lives in the workspace,
+# named by the FACTORIO_WS environment variable, else Documents/Factorio in the user's home folder. Absolute, so a relative value names one folder here and in the tools run there.
+WS = Path(os.path.abspath(os.environ.get("FACTORIO_WS") or str(Path.home() / "Documents" / "Factorio")))
 REF_PNG_DIR = REPO / "data-src" / "earthmaps"
 REF_JSON_DIR = REPO / "data-src" / "earthmaps"
 FH = WS / "tools" / "fh.py"

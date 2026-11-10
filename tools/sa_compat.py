@@ -47,6 +47,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 MOD = REPO / "terra-nauvis"
 PROBE = HERE / "mods" / "ea-sa-probe"
+WS = Path(os.environ.get("FACTORIO_WS", str(Path.home() / "Documents" / "Factorio")))
 GAME = Path(os.environ.get("FACTORIO_GAME", r"C:\Program Files (x86)\Steam\steamapps\common\Factorio"))
 FH = WS / "tools" / "fh.py"
 LOCK = WS / "previews" / "earth-build" / "earth-test.lock"

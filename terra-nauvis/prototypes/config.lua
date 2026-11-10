@@ -190,6 +190,7 @@ local CT = {
   CL_BELT_M2 = NOISE .. "tile_belt_m_v2",
   CL_BELT_EDGE2 = NOISE .. "tile_belt_edge_v1",
   CL_LIFT_M2 = NOISE .. "lift_m_v2",
+  -- 1.0.0: the Middle East's sand desert (climate.desert): the two warps, the depths in degrees of the plain rows,
   DS_WARP_A = NOISE .. "desert_warp_a_v1",
   DS_WARP_B = NOISE .. "desert_warp_b_v1",
   DS_DEPTH = NOISE .. "desert_depth_v1",
@@ -1353,6 +1354,21 @@ return {
   },
   preset_order = {"europe", "atlantic", "olde_world"},
 
+  -- The new-game Terrain tab: the properties it offers as dropdowns besides elevation (each one an
+  -- intended_property beside Alien Biomes) and every expression a Terra Nauvis preset can select under
+  -- them, in any settings combination, Koppen biomes on included for the worlds made with 0.4.0. The
+  -- dropdown shows a selected expression by its [noise-expression] locale name, so the locale names each
+  -- one. tools/terrain_names.py collects the names from the presets and checks this list against them.
+  terrain_tab = {
+    properties = {"aux", "moisture", "temperature"},
+    names = {
+      "tn_aux_ab_v6", "tn_aux_fb_v1", "tn_blue_aux_v1", "tn_koppen_a_snap_v1",
+      "tn_forest_moisture_v1", "tn_moisture_ab_v11", "tn_moisture_fb_v1", "tn_blue_moisture_v1",
+      "tn_koppen_m_snap_v1",
+      "tn_temperature_ab_v8", "tn_temperature_fb_v1", "tn_blue_temperature_v1", "tn_koppen_t_snap_v1",
+    },
+  },
+
   -- The per-save keys: map, scale and geography release are numbers every Earth preset bakes;
   -- land_coarse names the map's coarse land field (design rule 8); elevation, start_mask and distance
   -- are the vanilla properties the presets redirect (distance from spawn-cities: vanilla's starting
@@ -1792,6 +1808,7 @@ return {
                  -- atlantic/olde_world ab grain mix (VT_MIX); europe zone-on devastation field position,
                  -- width, dead-forest, north drop
                  CT.VT_MIX, CT.CL_N_DROP3, DE.dev, DE.dev_width, DE.dead,
+                 -- 1.0.0: the names the Middle East desert's bodies read what they wrap through (climate.desert)
 
   -- The fine field per map (ARCHITECTURE.md, "Programs and the firewall"): map key -> {the map's
   -- elevation entry and every term
@@ -2016,7 +2033,10 @@ return {
       release = "0.4.0",
       names = {CT.KOPPEN_COOL_T, CT.KOPPEN_CN_T, CT.KOPPEN_CN_TV, CT.KOPPEN_M_SNAP2},
     },
+    -- The Middle East's sand desert (1.0.0; climate.desert): Alien Biomes only, as the climate bodies it wraps are.
+    -- No geography: a 1.0.0 preset beside Alien Biomes names the two bodies over the tile temperature and tile aux
     {
+      release = "1.0.0",
       names = {CT.DS_WARP_A, CT.DS_WARP_B, CT.DS_DEPTH, CT.DS_DEPTH_FLATS, CT.DS_KEEP, CT.DS_FLATS, CT.DS_W,
     },
     -- The Chaos zone's class successors (0.4.0; destroyed.dev.next.class2): Alien Biomes only, as

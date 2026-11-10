@@ -442,6 +442,7 @@ local function bandfix_names(map_key)
   return out
 end
 
+-- The Middle East's sand desert (config.lua climate.desert; 1.0.0): beside Alien Biomes, on a map whose tile scores
 -- read the grain's keys, the tile temperature and tile aux keys each name their desert body, and the body's under
 -- before Blue corrupted. A world made before holds none of these. Mutates `names`, the version's table so far.
 local function desert_values(names)

@@ -25,6 +25,7 @@ import json
 import os
 from pathlib import Path
 
+DEFAULT_WS = str(Path.home() / "Documents" / "Factorio")
 
 
 def ws_root():

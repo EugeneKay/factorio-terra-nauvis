@@ -1,3 +1,4 @@
+-- The Middle East's sand desert (config.lua climate.desert; 1.0.0).
 --
 -- Rows of capsules in degrees give a depth, degrees inside the nearest edge, on a warped position. Inside it,
 --

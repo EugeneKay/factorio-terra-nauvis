@@ -67,13 +67,29 @@
  "t15b_maps": {
   "atlantic": {
    "blocks": {
+    "6": "-125:353:-253:273",
+    "1": "-35:51:-45:44"
    },
    "block_land": {
+    "6": 0.9045,
+    "1": 0.8783
    },
    "census_m0": {
     "1": {
+     "water_tiles": 29234,
+     "trees": 11720,
+     "enemies": 520,
+     "resources": 656,
+     "rocks": 177,
+     "cliffs": 385
     },
     "6": {
+     "water_tiles": 94143,
+     "trees": 11554,
+     "enemies": 262,
+     "resources": 0,
+     "rocks": 139,
+     "cliffs": 214
     }
    }
   },

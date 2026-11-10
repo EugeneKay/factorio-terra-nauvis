@@ -125,7 +125,7 @@ edge shows at the right.
 
 ![Moscow zone at Normal, Chaos and Corrupted](docs/images/gifs/terra-nauvis-moscow-zone.gif)
 
-## Always on
+## Other Features
 
 These are features, not settings.
 
@@ -148,22 +148,6 @@ These are features, not settings.
 
   ![The Nile delta: side channels fan out to the sea through dense forest](docs/images/delta-nile.jpg)
 
-- **Middle East desert.** Beside Alien Biomes, Arabia, the Syrian desert, Mesopotamia and the Iranian plateau
-  are pale cream sand, broken by patches of older ground. The Sahara, the Levant coast, Sinai and the Negev keep
-  their tan sand, and the two meet down the Red Sea, the Gulf of Aqaba and the Jordan valley. The ranges keep
-  their snow and grey rim.
-
-  ![The head of the Gulf of Aqaba: cream sand on the Arabian side, tan sand on the Sinai side](docs/images/desert-arabia.jpg)
-
-- **Patagonia.** On the Atlantic map beside Alien Biomes, the plains east of the Andes, from 30 S to Tierra del
-  Fuego, are a dry steppe of yellow and olive grass and brown, beige and grey dirt instead of sand. The Andes
-  keep their snow and grey rim.
-
-  ![Yellow grass and brown dirt on the steppe near Neuquen](docs/images/patagonia.jpg)
-
-Koppen biomes, a per-tile climate classification, was an experiment in 0.4.0 and is shelved. Worlds made with it
-keep it.
-
 ## Compatibility
 
 - **Factorio.** 2.1.24 or newer. The base game is enough.
@@ -173,14 +157,6 @@ keep it.
 - **Cargo Ships and Cargo Ships: Oil Rig.** Canals and straits are open water at every scale. The Oil Rig adds
   offshore oil fields.
 - **RSO.** Not supported. It replaces the map's ore with its own, and the game warns when it is active.
-
-## Upgrading
-
-Worlds made with 0.3.0, 0.3.1, 0.3.2 and 0.4.0 keep loading and keep their terrain: a world generates new
-chunks from what it was created with, whatever the mod version. The new terrain of 1.0.0 (forest ground, river
-deltas, the Middle East desert, the Patagonian steppe, snowy ranges with dead trees inside Destroyed Europe)
-applies to new worlds only. A world made with a setting that 1.0.0 no longer shows keeps the value it was made
-with. Worlds made before 0.3.0 do not load.
 
 ## Pictures
 
@@ -217,15 +193,15 @@ refute a change, not to confirm it. Every visual change was judged on in-game sc
 ## About this repository
 
 The history here is a rebuild. The mod was rebuilt several times during development, and the original
-repository held working notes and material that was not safe to publish, so the history was reconstructed with
+repository held working notes and material that was not safe to publish publically, and lots of cursed issues, so the history was reconstructed with
 each change dated when it was first made. The intermediate commits show how the code grew and are not each a
 working build; the tagged release is the tested build.
 
 ## Licence and credits
 
 Written by Jake Mismas and released under the GNU General Public License version 3: see [LICENSE](LICENSE). The
-mod is built on [EarthMaps](https://github.com/HySpeed/EarthMaps) by HySpeed (GPLv3), which descends from
-Factorio World by TheOddler. Forest and marsh outlines come from RESOLVE Ecoregions 2017 (CC BY 4.0), and canal
+mod is built on [EarthMaps](https://github.com/HySpeed/EarthMaps) by HySpeed (GPLv3) (THANK YOU THIS GUY IS THE 🐐), which descends from
+Factorio World by TheOddler (ANOTHER 🐐). Forest and marsh outlines come from RESOLVE Ecoregions 2017 (CC BY 4.0), and canal
 routes use data from OpenStreetMap contributors. The screenshots show the art of Factorio and of Alien Biomes, which belongs to
 their authors. [NOTICE.md](NOTICE.md) has the full notices and what is not covered by the GPL.
 

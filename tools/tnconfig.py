@@ -1069,6 +1069,12 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
     if (bf and cfg["settings"][bf["setting"]]["default_value"] and map_key in (bf.get("maps") or [])
             and int(scale) in [int(s) for s in cfg["scales"]["exact_coast"]]):
         pen[bf["key"]] = bf["on"]
+    # a grain map the tile temperature and tile aux keys each name their desert body, and the body's under name what
+    ds = (cl or {}).get("desert")
+    if ab and ds and gr and gr["keys"]["temperature"] in pen:
+        for field, c in ds["tile"].items():
+            pen[c["under"]] = pen[gr["keys"][field]]
+            pen[gr["keys"][field]] = c["body"]
     # the next geo body (presets.lua geo_next_values, after baked, config.lua coast.next): past above_scale it
     # replaces the version's own
     gn = ((cfg.get("coast") or {}).get("next") or {}).get("versions") or {}

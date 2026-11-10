@@ -442,6 +442,20 @@ local function bandfix_names(map_key)
   return out
 end
 
+-- read the grain's keys, the tile temperature and tile aux keys each name their desert body, and the body's under
+-- before Blue corrupted. A world made before holds none of these. Mutates `names`, the version's table so far.
+local function desert_values(names)
+  local DS = cfg.climate.desert
+  local GK = cfg.climate.grain.keys
+  if not (AB and DS and names[GK.temperature] ~= nil) then
+    return
+  end
+  for field, c in pairs(DS.tile) do
+    names[c.under] = names[GK[field]]
+    names[GK[field]] = c.body
+  end
+end
+
 -- Blue corrupted UK (config.lua blue): with the toggle on, each climate field and palm key names its zone
 -- body and its under name what it held, and the list hook's keep body names the zone's. It runs after every other
 -- step, so it wraps Destroyed Europe's temperature and palms when both are on. A world made before holds none of these.
@@ -579,6 +593,7 @@ local function baked(map_key, v)
   for k, value in pairs(bandfix_names(map_key)) do
     names[k] = value
   end
+  desert_values(names)
   for k, value in pairs(blue_values(names)) do
     names[k] = value
   end

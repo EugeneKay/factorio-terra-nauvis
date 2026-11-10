@@ -190,6 +190,17 @@ local CT = {
   CL_BELT_M2 = NOISE .. "tile_belt_m_v2",
   CL_BELT_EDGE2 = NOISE .. "tile_belt_edge_v1",
   CL_LIFT_M2 = NOISE .. "lift_m_v2",
+  DS_WARP_A = NOISE .. "desert_warp_a_v1",
+  DS_WARP_B = NOISE .. "desert_warp_b_v1",
+  DS_DEPTH = NOISE .. "desert_depth_v1",
+  DS_DEPTH_FLATS = NOISE .. "desert_depth_flats_v1",
+  DS_KEEP = NOISE .. "desert_keep_v1",
+  DS_FLATS = NOISE .. "desert_flats_v1",
+  DS_W = NOISE .. "desert_w_v1",
+  DS_TILE_T = NOISE .. "desert_tile_t_v1",
+  DS_TILE_T_UNDER = NOISE .. "desert_tile_t_under",
+  DS_TILE_A = NOISE .. "desert_tile_a_v1",
+  DS_TILE_A_UNDER = NOISE .. "desert_tile_a_under",
   TM_1 = NOISE .. "tile_mix_1_v1",
   TM_2 = NOISE .. "tile_mix_2_v1",
   TM_3 = NOISE .. "tile_mix_3_v1",
@@ -1780,6 +1791,7 @@ return {
                  -- guard left them on other surfaces (ARCHITECTURE.md, "D33 surface guard").
                  -- atlantic/olde_world ab grain mix (VT_MIX); europe zone-on devastation field position,
                  -- width, dead-forest, north drop
+                 CT.VT_MIX, CT.CL_N_DROP3, DE.dev, DE.dev_width, DE.dead,
 
   -- The fine field per map (ARCHITECTURE.md, "Programs and the firewall"): map key -> {the map's
   -- elevation entry and every term
@@ -2003,6 +2015,9 @@ return {
     {
       release = "0.4.0",
       names = {CT.KOPPEN_COOL_T, CT.KOPPEN_CN_T, CT.KOPPEN_CN_TV, CT.KOPPEN_M_SNAP2},
+    },
+    {
+      names = {CT.DS_WARP_A, CT.DS_WARP_B, CT.DS_DEPTH, CT.DS_DEPTH_FLATS, CT.DS_KEEP, CT.DS_FLATS, CT.DS_W,
     },
     -- The Chaos zone's class successors (0.4.0; destroyed.dev.next.class2): Alien Biomes only, as
     -- class5 is. Named over class5 by a 0.4.0 preset with the zone on (presets.lua points the zone's class at
@@ -4870,6 +4885,56 @@ return {
       {id = "australia", lat = {-35, -17}, lon = {113, 147}, ramp = {3, 4}},
       {id = "south_america_sw", lat = {-56, -16}, lon = {-76, -63}, ramp = {3, 3}},
     },
+    --   rows    capsules in degrees: every point within r of the segment from {lat, lon} `from` to `to`; a row with
+    --   keep    capsules the weight is none in, on the plain position (no warp: they guard real places): ground
+    --           the rows' reach must not touch (the Caspian shore's forest); none within keep_ramp of the capsule's
+    --           edge inward, fading out to the edge
+    --   depth   the largest r minus distance over the rows, degrees inside the nearest edge, read at a point warped
+    --           by up to about warp.degrees of two noises of octaves from warp.wavelength_px up, so no edge is an arc
+    --   root    the exponent of the capsule's distance, a square root
+    --   edge    the outline moves by mid_tiles of the tile scores' shared noise field number mix (24 to 768 tiles)
+    --           and fray_tiles of the grain's (6 to 48), in tiles at every scale, and the ramp is ramp degrees times a
+    --   cap     none at a range: the weight falls with the highland's temperature cap from cap.full to none at
+    --           cap.from, so no snow, no grey rim and none of the rim's aux floor moves
+    --   dry     none on moist ground: the weight falls with the tile moisture from dry.from to none at dry.full, the
+    --           top of Alien Biomes' sand box and the middle of its dirt, so grass, forest ground and marsh keep their
+    --           ground and the sand ends where it ended before
+    --   ground  what counts as Alien Biomes ground, read on the temperature under the desert: past the temperate
+    --           band's top once the tile belts' cooling is taken off again (from band_from, full at band_full), or
+    --           lifted out of the band by a wild belt, by the band tests' own measure (tile_belts_wild.cut and fine,
+    --           over wild_soft). On the temperate band's own ground the weight is none, so the grass and dirt north
+    --           of 35 N keep their ground and their edge. On cold ground it is none too, up to cold_from (the top of
+    --           Alien Biomes' grey band) and full from cold_full, whatever the cap reads there
+    --   under   each body reads what it wraps through its under name, which the preset points at whatever the key
+    --           held, so it composes with any other body that wraps the same key
+    -- No green strip follows the Euphrates: only Old World draws that river, and its course moves with the scale, so
+    -- a strip placed in degrees stood on bare sand beside the river at scale 12 and along no river at all on the
+    -- other maps. A river-side green has to read the waterway's own distance.
+    desert = {
+      names = {warp_a = CT.DS_WARP_A, warp_b = CT.DS_WARP_B, depth = CT.DS_DEPTH, depth_flats = CT.DS_DEPTH_FLATS,
+      tile = {temperature = {body = CT.DS_TILE_T, under = CT.DS_TILE_T_UNDER},
+              aux = {body = CT.DS_TILE_A, under = CT.DS_TILE_A_UNDER}},
+      rows = {
+        {id = "dasht_e_kavir", from = {34.8, 51.6}, to = {34.4, 56.4}, r = 1.9, flats = true},
+        {id = "iran_centre", from = {33.6, 53.0}, to = {30.4, 56.4}, r = 1.8, flats = true},
+        {id = "iran_east", from = {34.6, 56.4}, to = {31.0, 60.2}, r = 1.8, flats = true},
+        {id = "dasht_e_lut", from = {32.0, 57.8}, to = {28.4, 59.2}, r = 2.0, flats = true},
+      },
+      keep = {
+        {id = "caspian_shore", from = {37.2, 49.2}, to = {36.75, 53.8}, r = 0.9},
+      },
+      keep_ramp = 0.4,
+      root = 0.5, ramp = 0.6,
+      edge = {mix = 3, mid_tiles = 70, fray_tiles = 28, width_per_noise = 0.8, width_min = 0.3, width_max = 2.2},
+      warp = {degrees = 0.6, wavelength_px = 16, octaves = 4, persistence = 0.5, seed1_a = 7651, seed1_b = 7652},
+               mid = 0.45, rag = 0.3, fray = 0.45},
+      cap = {from = 200, full = 300},
+      dry = {from = 0.45, full = 0.58},
+      ground = {band_from = 65, band_full = 69, wild_soft = 0.02, cold_from = 30, cold_full = 36},
+    },
+    --   root    the exponent of the capsule's distance, a square root
+    --   cap     none at a range: the weight falls with the highland's temperature cap from cap.full to none at
+      edge = {mix = 3, mid_tiles = 70, fray_tiles = 28, width_per_noise = 0.8, width_min = 0.3, width_max = 2.2},
     names = {lat = CT.CL_LAT, lon = CT.CL_LON, dry = CT.CL_DRY, core = CT.CL_CORE, shift = CT.CL_SHIFT,
              ab = {temperature = CT.CL_T_AB, moisture = CT.CL_M_AB, aux = CT.CL_A_AB},
              grain = {field = CT.CL_GRAIN, temperature = CT.CL_T_AB_G, moisture = CT.CL_M_AB_G, aux = CT.CL_A_AB_G,

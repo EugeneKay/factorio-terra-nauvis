@@ -337,6 +337,18 @@ local TFN = {
   NB_TILE = NOISE .. "no_blue_tile_v1",
   NB_OUT = NOISE .. "no_blue_out_v1",
   ZP_KEY = NOISE .. "zone_plants",
+  -- 1.0.0: the great forests' ground (trees.ground): the weight key (prototype 0) and its two bodies, the moisture
+  -- trees and decoratives read and the tile moisture inside an outline, the tree lift's second version, the weight
+  -- trees take and the multiplier on the ground weight with its zone body
+  K_FOREST_GROUND = NOISE .. "forest_ground",
+  FG_W = NOISE .. "forest_ground_v1",
+  FG_W_ZONE = NOISE .. "forest_ground_zone_v1",
+  FG_M = NOISE .. "forest_moisture_v1",
+  FG_TM = NOISE .. "forest_tile_moisture_v1",
+  TF_LIFT2 = NOISE .. "tree_lift_v2",
+  FG_TREES = NOISE .. "forest_trees_v1",
+  FG_MULT = NOISE .. "forest_tree_mult_v1",
+  FG_MULT_ZONE = NOISE .. "forest_tree_mult_zone_v1",
 }
 local VT = NOISE .. "vtree_"
 local TF_TREES = {
@@ -1686,6 +1698,8 @@ return {
                  -- trees-forests: the great-forests gate and multiplier key, and with Alien Biomes the restored
                  -- vanilla trees', rocks' and decoratives' keys
                  TFN.K_FORESTS_ON, TFN.K_TREE_MULT, TFN.K_TREE_LIFT,
+                 -- 1.0.0: the great forests' ground weight (trees.ground)
+                 TFN.K_FOREST_GROUND,
                  TF_TREES["tree-01"].p, TF_TREES["tree-01"].r, TF_TREES["tree-02"].p, TF_TREES["tree-02"].r,
                  TF_TREES["tree-02-red"].p, TF_TREES["tree-02-red"].r, TF_TREES["tree-03"].p, TF_TREES["tree-03"].r,
                  TF_TREES["tree-04"].p, TF_TREES["tree-04"].r, TF_TREES["tree-05"].p, TF_TREES["tree-05"].r,
@@ -2074,6 +2088,14 @@ return {
                TF_DECO["green-bush-mini"], TF_DECO["green-carpet-grass"], TF_DECO["green-croton"],
                TF_DECO["green-desert-bush"], TF_DECO["green-hairy-grass"], TF_DECO["green-pita"],
                TF_DECO["green-pita-mini"], TF_DECO["green-small-grass"]},
+    },
+    -- The great forests' ground (1.0.0; trees.ground): the weight key, holding its off value, on every load; the
+    -- weight, the forest's moistures, the tree lift's second version and the multiplier on the weight with Alien
+    -- Biomes only, as the climate bodies they read are. No geography: a 1.0.0 preset with the forests on names them.
+    {
+      release = "1.0.0",
+      names = {TFN.K_FOREST_GROUND, TFN.FG_W, TFN.FG_W_ZONE, TFN.FG_TREES, TFN.FG_M, TFN.FG_TM, TFN.TF_LIFT2,
+               TFN.FG_MULT, TFN.FG_MULT_ZONE},
     },
     -- The ridges: no geography of their own; each map's crest and openings bodies read
     -- prototypes/tables/ranges.lua, and the shared bodies with the toggle's neutral pair (waterways') read
@@ -5137,6 +5159,43 @@ return {
     boost = {gate = TFN.K_FORESTS_ON, gate_off = "0", key = TFN.K_TREE_MULT, key_off = "1", cap = 1,
              lift = TFN.K_TREE_LIFT, lift_off = "0", lift_body = TFN.TF_LIFT, lift_per_sum = 0.25,
              boreal_from_t = 18, boreal_full_t = 10},
+    -- The great forests' ground (1.0.0; new worlds with the forests on, beside Alien Biomes). Until 1.0.0 a great
+    -- forest only multiplied the trees its climate already grew, so a forest on dry ground stayed dirt with a few
+    -- trees (the Black Forest at seed 1000: moisture 0.36, no grass, trees on 8 percent of its tiles).
+    --   w, w_zone  the ground weight (regions.lua): the weight ramp, ramp_px wide, on the largest forest signed
+    --           distance. edge moves each row's distance first: by share of its radius, at most cap_px, times the
+    --           marsh outline noise plus bias, and by wide_share of its radius, at most wide_cap_px, times the
+    --           warp's second noise (a disc, which only stands in for a real outline, takes disc_wide_share of its
+    --           radius uncapped: at the cap the Amazon was a round green plate 6,400 tiles across on the whole-map
+    --           view), with rough times the shared roughness on top. So a small forest shows lobes and bays with a
+    --           frayed rim, never its exact disc, a continent-wide one loses the straight sides of its polygon on
+    --           the whole-map view, and the bias leans outward, so a small forest keeps its ground at every seed.
+    --           w_zone is w with none inside a Chaos zone's reach, where the ground, the trees and the dead forests
+    --           stay the zone's own
+    --   key     the weight a world reads, 0 by its prototype; a preset names w, or w_zone with a zone on
+    --   trees   the key's weight for trees: none within spawn.inner_tiles of the start and all of it from
+    --           spawn.outer_tiles, so no world starts inside a wall of trees
+    --   moisture, tile_moisture  inside the weight the moisture trees and decoratives read rises to m (Alien Biomes'
+    --           wetland trees peak at 0.9, under the natural top) and the tile moisture to tile_m plus tile_amp of a
+    --           noise wave_tiles long (grass-1 on vanilla ground, Alien Biomes' grasses elsewhere; under 0.9, where
+    --           its mud outscores cold ground), each only where it was lower, so no wet forest dries. glade: Alien
+    --           Biomes' wetland trees live within 0.05 of 0.9, and at 0.9 everywhere they stood wall to wall (trees
+    --           on 35 percent of the taiga's tiles, no ground in sight); the level falls by up to glade.m along a
+    --           noise glade.wave_tiles long (mid and gain shape its share), so stands and open glades alternate
+    --   lift    the tree lift's second version: the first, or lift_per_w times the trees' weight where that is more,
+    --           so every great forest fills the gaps between the base game's tree patches, not the boreal ones alone
+    --   mult, mult_zone  the tree multiplier on the ground weight, 1 + mult_per_w times it, so the denser trees stand
+    --           on the forest's ground; mult_zone keeps the first multiplier inside a Chaos zone's reach
+    ground = {key = TFN.K_FOREST_GROUND, key_off = "0", w = TFN.FG_W, w_zone = TFN.FG_W_ZONE, trees = TFN.FG_TREES,
+              moisture = TFN.FG_M, tile_moisture = TFN.FG_TM, lift = TFN.TF_LIFT2, mult = TFN.FG_MULT,
+              mult_zone = TFN.FG_MULT_ZONE,
+              ramp_px = 8,
+              edge = {share = 0.35, cap_px = 6, bias = 0.5, wide_share = 0.12, wide_cap_px = 40, disc_wide_share = 0.2,
+                      rough = 2},
+              spawn = {inner_tiles = 96, outer_tiles = 256},
+              m = 0.9, tile_m = 0.84, tile_amp = 0.03, wave_tiles = 96, seed1 = 7641, lift_per_w = 0.45,
+              glade = {m = 0.06, mid = 0.5, gain = 1.2, wave_tiles = 160, seed1 = 7642},
+              mult_per_w = 3},
     -- next2: the second version times tiles.palm_allow2's mask, which a new world's preset names
     palm = {{key = CT.PALM_A_P_KEY, body = TFN.PALM_A_P2, base = CT.PALM_A_P, next = TFN.PALM_A_P3,
              next2 = TFN.PALM_A_P4},

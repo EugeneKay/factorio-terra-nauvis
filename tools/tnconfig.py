@@ -1041,6 +1041,19 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
             pen[van["keys"][name]] = van["next"]["high"] if fray else van["body_high"]
         for i, name in enumerate(tl["noise_share"]["fields"]):
             pen[name] = tl["noise_share"]["fray2"]["fields"][i]
+    # 1.0.0: the great forests' ground (presets.lua forest_values, after the grain): with the forests on at the
+    # setting's default beside Alien Biomes, the ground weight and the tree multiplier on it (their zone bodies only
+    # with a Chaos zone on, never at the defaults), the forest's moisture and tile moisture, and the tree lift's
+    # second version
+    fg = (tr or {}).get("ground")
+    gt = cfg["toggles"]["great_forests"]
+    if ab and fg and pen.get(gt["preset_key"]) == gt["on"]:
+        pen[fg["key"]] = fg["w"]
+        pen[tr["boost"]["key"]] = fg["mult"]
+        pen["moisture"] = fg["moisture"]
+        if gr and gr["keys"]["moisture"] in pen:
+            pen[gr["keys"]["moisture"]] = fg["tile_moisture"]
+        pen[tr["boost"]["lift"]] = fg["lift"]
     # coast-band-fix (presets.lua bandfix_names, last): the band-fix key where the setting is on at its
     # default, acts on the map and serves the scale
     bf = cfg.get("bandfix")

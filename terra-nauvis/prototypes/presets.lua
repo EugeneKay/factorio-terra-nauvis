@@ -358,7 +358,27 @@ local function grain_values(map_key)
   return out
 end
 
+-- The great forests' ground (config.lua trees.ground; 1.0.0): with the forests on beside Alien Biomes a new world
+-- names the ground weight and the tree multiplier on it (their zone bodies when a Chaos zone is on, which leave the
+-- zone's reach as it was), the forest's moisture over the climate's and its tile moisture over the grain's, and the
+-- tree lift's second version. With the forests off, or
+-- without Alien Biomes, it names none of them. It runs after the grain and before Blue corrupted, which wraps
+-- whatever moisture it finds. Mutates `names`, the version's table so far.
+local function forest_values(names)
+  local FG, sw, de = cfg.trees.ground, cfg.toggles.great_forests, cfg.toggles.destroyed_europe
   if AB and names[sw.preset_key] == sw.on then
+    local zone = names[de.preset_key] == de.on
+    names[FG.key] = zone and FG.w_zone or FG.w
+    names[cfg.trees.boost.key] = zone and FG.mult_zone or FG.mult
+    names.moisture = FG.moisture
+    local tile_key = cfg.climate.grain.keys.moisture
+    if names[tile_key] ~= nil then
+      names[tile_key] = FG.tile_moisture
+    end
+    names[cfg.trees.boost.lift] = FG.lift
+  end
+end
+
 -- The six base resources at preset_frequency in the preset (from 0.3.0 vanilla's 1, before it 0.75), planet entries
 -- left neutral (the game multiplies planet values by preset values, so a planet entry would scale the
 -- preset's). A control another mod removed is left out.
@@ -542,6 +562,7 @@ local function baked(map_key, v)
   for k, value in pairs(grain_values(map_key)) do
     names[k] = value
   end
+  forest_values(names)
   for k, value in pairs(bandfix_names(map_key)) do
     names[k] = value
   end

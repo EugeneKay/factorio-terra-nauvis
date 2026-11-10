@@ -759,6 +759,42 @@ def(NR2.marsh_w, by_map(function(M)
   return joined("max", each(on_map(M, "marsh", nil, ROWS2), function(x) return x.names.w end), "0")
 end))
 
+-- 1.0.0: the great forests' ground weight (config.lua trees.ground): the weight ramp on the largest forest signed
+-- distance over both tables, each row's moved by its own share of the marsh outline noise and of the warp's second
+-- noise, plus more of the shared roughness: all noise this layer computes already. A row's size is its radius, or
+-- for a polygon the radius of the disc of its area. It exists with Alien Biomes alone, as its readers do (trees.lua).
+if mods["alien-biomes"] then
+  local FG = cfg.trees.ground
+  local EG = FG.edge
+  local function row_radius(r)
+    if r.radius_km then
+      return r.radius_km / R.km_per_px
+    end
+    local area, n = 0, #r.latlon
+    for i = 1, n do
+      local a, b = r.latlon[i], r.latlon[i % n + 1]
+      local au, av = to_px(a[1], a[2])
+      local bu, bv = to_px(b[1], b[2])
+      area = area + au * bv - bu * av
+    end
+    return math.sqrt(math.abs(area) / 2 / math.pi)
+  end
+  local function moved(x)
+    local radius = row_radius(x.row)
+    local near = math.min(EG.cap_px, EG.share * radius)
+    local wide = math.min(EG.wide_cap_px, EG.wide_share * radius)
+    if x.row.shape == "disc" then
+      -- a disc stands in for a real outline, so it takes more of the wide noise, and no cap
+      wide = EG.disc_wide_share * radius
+    end
+    return x.names.sd .. " + " .. num(near) .. " * " .. N.marsh_rough .. " + " .. num(wide / W.amplitude_px) ..
+      " * " .. N.ay .. " + " .. num(near * EG.bias)
+  end
+  def(FG.w, "clamp(" .. num(R.ramp.mid) .. " + (" .. by_map(function(M)
+    return joined("max", each(on_map(M, "forest", nil, ROWS2), moved), "-inf")
+  end) .. " + " .. num(EG.rough) .. " * " .. N.rough .. ") / " .. num(FG.ramp_px) .. ", 0, 1)")
+end
+
 -- The highland's noise (ridges.lua), in reference pixels, all of it noise this layer already computes: the fray
 -- rocks read, the one tile scores read, and the massif factor, which breaks a long even crest.
 local HF, GM, CF = cfg.ridges.high, cfg.ridges.ground.massif, cfg.ridges.cold

@@ -255,6 +255,31 @@ def(SH.body, "(temperature + " .. cfg.climate.names.belts.t .. " > " .. num(PA.w
   " * basis_noise{x = x, y = y, seed0 = map_seed, seed1 = " .. num(SH.seed1) .. ", input_scale = 1 / " ..
   num(SH.wave_tiles) .. ", output_scale = 1}, 0, 1)")
 
+-- The great forests' ground (config.lua trees.ground; 1.0.0). The weight key holds 0, so a world whose preset names
+-- none of these keeps its ground. The moistures read the released bodies by name and add the key's share of what
+-- they lack to the forest's level, so they are those bodies exactly wherever the weight is 0. The weight itself is
+-- the region layer's (regions.lua). They exist with Alien Biomes alone, as the bodies they read do.
+local FG = TR.ground
+def(FG.key, FG.key_off)
+if mods["alien-biomes"] then
+  local CN3 = cfg.climate.north3
+  local REACH = cfg.destroyed.barrier.names.reach
+  def(FG.w_zone, "if(" .. REACH .. " > 0, 0, " .. FG.w .. ")")
+  def(FG.trees, FG.key .. " * clamp((distance - " .. num(FG.spawn.inner_tiles) .. ") / " ..
+    num(FG.spawn.outer_tiles - FG.spawn.inner_tiles) .. ", 0, 1)")
+  local GL = FG.glade
+  def(FG.moisture, "m + " .. FG.trees .. " * max(0, " .. num(FG.m) .. " - " .. num(GL.m) .. " * clamp(" ..
+    num(GL.mid) .. " + basis_noise{x = x, y = y, seed0 = map_seed, seed1 = " .. num(GL.seed1) ..
+    ", input_scale = 1 / " .. num(GL.wave_tiles) .. ", output_scale = " .. num(GL.gain) .. "}, 0, 1) - m)",
+    {m = CN3.valdai.names.moisture})
+  def(FG.tile_moisture, "m + " .. FG.key .. " * max(0, " .. num(FG.tile_m) .. " + basis_noise{x = x, y = y, " ..
+    "seed0 = map_seed, seed1 = " .. num(FG.seed1) .. ", input_scale = 1 / " .. num(FG.wave_tiles) ..
+    ", output_scale = " .. num(FG.tile_amp) .. "} - m)", {m = CN3.names.moisture})
+  def(FG.lift, "max(" .. B.lift_body .. ", " .. num(FG.lift_per_w) .. " * " .. FG.trees .. ")")
+  def(FG.mult, "1 + " .. num(FG.mult_per_w) .. " * " .. FG.w)
+  def(FG.mult_zone, "if(" .. REACH .. " > 0, " .. cfg.regions.names.tree_mult .. ", " .. FG.mult .. ")")
+end
+
 data:extend(E)
 
 return M

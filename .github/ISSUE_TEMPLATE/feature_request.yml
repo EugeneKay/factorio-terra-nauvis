@@ -1,0 +1,66 @@
+name: Feature request
+description: Propose a change to the maps, the terrain or the settings
+labels: ["type: feature", "priority: low"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Terrain changes apply to new worlds only: a saved world keeps its terrain for life. Read the
+        append-only rule in CONTRIBUTING.md before you propose a change to an existing feature.
+  - type: textarea
+    id: goal
+    attributes:
+      label: What should be different
+      description: The place or the behaviour, and what is wrong or missing today.
+      placeholder: "The Rhine has no delta. It reaches the North Sea as one channel."
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What it should look like
+      description: Describe the result a player sees. A reference map or photo helps, with its source.
+    validations:
+      required: true
+  - type: dropdown
+    id: maps
+    attributes:
+      label: Maps
+      multiple: true
+      options:
+        - Europe
+        - Atlantic
+        - Old World
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Coast or islands
+        - Rivers, fords, canals or deltas
+        - Climate or ground
+        - Forests or marshes
+        - Mountain ranges and cliffs
+        - Ore and hotspots
+        - Spawn cities and the start
+        - Zones (Destroyed Europe, Blue corrupted UK, Moscow zone)
+        - Settings
+        - Compatibility with another mod
+        - Tools or documentation
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Data sources
+      description: For a new place (a city, a range, a deposit, a river), where its position and size come from, with the licence.
+    validations:
+      required: false
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+    validations:
+      required: false

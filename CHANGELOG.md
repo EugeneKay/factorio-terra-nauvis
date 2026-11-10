@@ -5,6 +5,42 @@ All notable changes to Terra Nauvis are documented in this file. The format foll
 [Semantic Versioning](https://semver.org/). The changelog players see in the game is
 `terra-nauvis/changelog.txt`.
 
+Versions before 1.0.0 were released from an earlier repository and have no tags here. Names such as `tn_geo 21`
+or `tn_enemy_v2` are identifiers in the code: a geography version and a named noise expression.
+
+## [1.0.0] - 2026-11-10
+
+Version 1.0.0 follows 0.4.0. Worlds made with 0.3.x and 0.4.0 keep loading unchanged; the new terrain applies
+to new worlds only.
+
+### Added
+
+- Great forests have their own ground: on new worlds beside Alien Biomes, the ground inside a great forest turns
+  to forest ground and the trees fill in. Older worlds keep their forests.
+- River deltas: on new Atlantic and Old World worlds the Nile, Amazon, Niger, Indus, Mississippi, Orinoco and
+  Lena deltas fan out into shallow side channels on wet green ground. Older worlds keep their river mouths.
+- Deserts in the Middle East: on new worlds beside Alien Biomes, Arabia, the Syrian desert, Mesopotamia and the
+  Iranian plateau draw the pale cream sand, broken by patches of older ground, while the Sahara, Sinai, the Negev
+  and the Levant coast keep their tan sand. The ranges keep their snow and grey rim. Older worlds keep their
+  ground.
+- Patagonia as a dry steppe: on new Atlantic worlds beside Alien Biomes, the plains east of the Andes from 30 S
+  to Tierra del Fuego draw dry grass and dirt instead of sand. The Andes keep their snow and grey rim. Older
+  worlds keep their ground.
+
+### Changed
+
+- With Destroyed Europe on, the snowy ranges inside the zone keep their snow and grey rim on new worlds, and the
+  heat ground starts outside the rim.
+- With Destroyed Europe on, the ranges the zone encloses, such as the Alps and the northern Apennines, carry
+  dead trees where living ones stood, on new worlds. The Pyrenees and the ranges outside the zone keep their
+  living trees.
+- Koppen biomes was an experiment in 0.4.0 and is shelved: the setting is hidden and off, new worlds use the
+  0.3.2 climate, and worlds made with it on keep it.
+- Fewer settings: Canals, Exact coastlines, Great forests and Ore hotspot size are now always at their defaults
+  (on, on, on and Normal) and no longer show in the mod settings. Worlds made with another value keep it.
+- The mod is titled Terra Nauvis: Earth Maps, with a shorter description. The mod ID, every setting name and
+  the log and chat prefix stay as they were.
+
 ## [0.4.0] - 2026-11-08
 
 ### Added

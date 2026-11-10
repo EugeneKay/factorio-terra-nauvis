@@ -275,6 +275,9 @@ def version_parts(v):
 def check_info(info, cfg):
     fails = []
     ident = cfg["identity"]
+    # 1.0.0: the listed name is identity.mod_title; identity.title stays the short log and chat prefix
+    for key, want in (("name", ident["id"]), ("version", ident["version"]),
+                      ("title", ident.get("mod_title", ident["title"])),
                       ("author", ident["author"]), ("homepage", ident.get("homepage")),
                       ("factorio_version", ident["factorio_version"])):
         if info.get(key) != want:
@@ -1111,6 +1114,7 @@ def design_findings(mod=MOD, rules_path=REPO / "tests" / "design-rules.json"):
         if key not in have:
             out.append(f"tests/design-rules.json row {key} names a setting config.lua does not define")
             continue
+        for field in ("type", "setting_type", "default_value", "allowed_values", "hidden", "forced_value"):
             if field in rows[key] and have[key].get(field) != rows[key][field]:
                 out.append(f"setting {key}: {field} is {have[key].get(field)!r}, tests/design-rules.json says "
                            f"{rows[key][field]!r}")

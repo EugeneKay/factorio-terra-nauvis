@@ -399,6 +399,9 @@ local function drift_earth(surface)
       on = false
     end
     local want = on and tg.on or tg.off
+    -- a hidden setting is pinned by the mod and no player can change it, so a world that baked the other
+    -- value keeps it without a line: there is no changed setting to name (Koppen biomes from 1.0.0)
+    if was ~= nil and was ~= want and not cfg.settings[tg.setting].hidden then
       say(message(tg.map_type_follows and "drift_toggle" or "drift_toggle_new", setting_label(tg.preset_key),
         fallback_label(tg.preset_key, was), fallback_label(tg.preset_key, want)))
     end
@@ -420,6 +423,10 @@ local function drift_map_type(state, settings_changed)
       local now = body_of(f.name)
       if now ~= f.value then
         local label = setting_label(f.name)
+        -- a fallback of a hidden setting moved with the mod's pin, not with a setting the player changed
+        local tg = TOGGLE_OF[f.name] or STAMP_OF[f.name]
+        local pinned = tg and cfg.settings[tg.setting].hidden
+        local key = (settings_changed and label ~= f.name and not pinned) and "drift_follows" or "drift_update"
         say(message(key, map_label(state.map), label, fallback_label(f.name, now), fallback_label(f.name, f.value)))
         f.value = now
       end

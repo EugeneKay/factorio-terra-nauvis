@@ -1687,6 +1687,8 @@ function M.on_configuration_changed(data)
   local setting = cfg.settings[B.setting].name
   local was = pen[B.key] == B.on
   local now = settings.startup[setting].value == true
+  -- a hidden setting is pinned by the mod and no player can change it: the world keeps its key without a line
+  if was ~= now and not cfg.settings[B.setting].hidden then
     local function state(on)
       return {MSG.section .. "." .. MSG.keys[on and "toggle_on" or "toggle_off"]}
     end

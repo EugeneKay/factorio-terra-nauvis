@@ -42,16 +42,28 @@
     "nanchang", "songling", "delhi", "hampi", "bam", "aktobe", "semey", "moron", "bangkok", "griffith", "newman", "frankfurt", "aachen", "moscow"]
   },
   "koppen": {
+   "source": "terra-nauvis-koppen: Koppen biomes (startup, bool; default on in 0.4.0). Shelved in 1.0.0: the setting is hidden and pinned off (hidden with forced_value false, default off), so new worlds take the continuous 0.3.2 climate and worlds made with it on keep their Koppen names",
    "type": "bool-setting",
    "setting_type": "startup",
+   "default_value": false,
+   "hidden": true,
+   "forced_value": false
   },
   "canals": {
+   "source": "terra-nauvis-canals (startup, bool, default on). 1.0.0 (fewer settings): hidden and pinned on (hidden with forced_value true); a world keeps the value its preset baked",
    "type": "bool-setting",
    "setting_type": "startup",
+   "default_value": true,
+   "hidden": true,
+   "forced_value": true
   },
   "great_forests": {
+   "source": "terra-nauvis-great-forests (startup, bool, default on). 1.0.0 (fewer settings): hidden and pinned on (hidden with forced_value true); a world keeps the value its preset baked",
    "type": "bool-setting",
    "setting_type": "startup",
+   "default_value": true,
+   "hidden": true,
+   "forced_value": true
   },
   "ridges": {
    "source": "terra-nauvis-ridges (startup, bool, default on)",
@@ -66,9 +78,12 @@
    "default_value": true
   },
   "hotspot_amount": {
+   "source": "terra-nauvis-hotspot-amount: hotspots listen only to mod settings; startup, a dropdown of 50, 100, 200 and 400 percent, default 100. 1.0.0 (fewer settings): hidden and pinned at 100 by a one-entry allowed_values, since forced_value pins bool settings only; a world keeps the amount its preset baked",
    "type": "string-setting",
    "setting_type": "startup",
    "default_value": "100",
+   "allowed_values": ["100"],
+   "hidden": true
   },
   "regional_scarcity": {
    "source": "terra-nauvis-regional-scarcity (0.3.0): regional scarcity of regular ore past about 1,500 tiles at scale 12; startup, a dropdown of off, medium and strong, default medium",
@@ -110,8 +125,12 @@
    "allowed_values": ["low", "medium", "high"]
   },
   "exact_coast": {
+   "source": "terra-nauvis-exact-coast (startup, bool, default on; it began as default off and was flipped to on for Old World and Atlantic, a data edit). 1.0.0 (fewer settings): hidden and pinned on (hidden with forced_value true); a world keeps the key its preset baked",
    "type": "bool-setting",
    "setting_type": "startup",
+   "default_value": true,
+   "hidden": true,
+   "forced_value": true
   },
   "city_markers": {
    "source": "terra-nauvis-city-markers (runtime-global, bool, default off)",

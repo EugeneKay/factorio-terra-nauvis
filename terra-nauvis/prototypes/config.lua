@@ -1060,6 +1060,10 @@ return {
   identity = {
     id = ID,
     title = "Terra Nauvis",
+    -- 1.0.0: the name the mod list and the mod portal show (info.json title, locale mod-name). `title` above
+    -- stays the short name that starts every log and chat line.
+    mod_title = "Terra Nauvis: Earth Maps",
+    version = "1.0.0",
     author = "Jake Mismas",
     homepage = "https://github.com/jakemismas/factorio-terra-nauvis",
     factorio_version = "2.1",
@@ -1180,14 +1184,20 @@ return {
     -- Canals (default on): Kiel and Corinth on every map, Suez on
     -- Old World and Atlantic, Panama on Atlantic, open at max(7, scale) tiles; off keeps every
     -- isthmus closed, the drawn leaks under a dam. Baked per save through the toggle tn_canals.
+    -- 1.0.0: hidden and pinned on (hidden with forced_value), so every new world has its canals; a world
+    -- made with the setting off keeps the value its preset baked.
     canals = {
       name = ID .. "-canals", type = "bool-setting", setting_type = "startup", default_value = true, order = "c-d",
+      hidden = true, forced_value = true,
     },
     -- Great forests (default on): the 16 adopted forests of
     -- the region layer hold about twice the trees of the land around them. Baked per save through the hook
     -- gate tn_forests_on.
+    -- 1.0.0: hidden and pinned on (hidden with forced_value); a world made with the setting off keeps the
+    -- value its preset baked.
     great_forests = {
       name = ID .. "-great-forests", type = "bool-setting", setting_type = "startup", default_value = true,
+      order = "c-b", hidden = true, forced_value = true,
     },
     -- Ridges (default on): cliff ridges along the 16 adopted ranges with
     -- rail-width passes, the only cliffs on a Terra Nauvis world. Baked per save through the toggle
@@ -1206,8 +1216,12 @@ return {
     -- 0.3.0's solid ores (hotspots_v2.v3) 100 is the designed amount and the percentage multiplies the field's
     -- bodies, so its ore per tile stays as designed, and the map's size and richness sliders reach it too. Oil
     -- keeps the richness rule. Baked per save through tn_hotspot_amount.
+    -- 1.0.0: hidden and pinned at 100. The game applies forced_value to bool settings only, so the pin is
+    -- the one-entry allowed_values: a stored 50, 200 or 400 is no longer valid and reads as the default. A
+    -- world made at another amount keeps the number its preset baked.
     hotspot_amount = {
       name = ID .. "-hotspot-amount", type = "string-setting", setting_type = "startup", default_value = "100",
+      allowed_values = {"100"}, order = "c-aa", hidden = true,
     },
     -- Regional scarcity (0.3.0, default medium): past about 1,500 tiles from the spawn at scale
     -- 12, regular ore outside each resource's provinces keeps a share of its patches (resources.scarcity). Baked
@@ -1255,15 +1269,24 @@ return {
     -- Exact coastlines (on by default, because Old World's and Atlantic's coasts need it to match
     -- Europe's): a new world's preset bakes the band-fix
     -- key from it, for the maps bandfix.maps lists.
+    -- 1.0.0: hidden and pinned on (hidden with forced_value); a world made with the setting off keeps its
+    -- preset's key unset, so its coast stays as it generated.
     exact_coast = {
       name = ID .. "-exact-coast", type = "bool-setting", setting_type = "startup", default_value = true,
+      order = "c-g", hidden = true, forced_value = true,
     },
     -- Koppen biomes (0.4.0, default on): the headline climate feature of 0.4.0. On, a new
     -- world's tiles, trees and decoratives follow Koppen-Geiger classes computed per tile from four
     -- smooth climate fields; off keeps the continuous 0.3.2 climate. Baked per save through the toggle
     -- tn_koppen. The class field (tn_koppen_class_v1) is computed per tile, and the centroid snap
     -- over the warped classifier drives the tiles.
+    -- 1.0.0: shelved. The setting is hidden and pinned off (hidden with forced_value, which the game
+    -- applies to a bool setting whatever mod-settings.dat stored), so every new world bakes tn_koppen
+    -- off and takes the continuous 0.3.2 climate. Every Koppen body stays defined, so a world made on
+    -- 0.4.0 with the setting on keeps the Koppen names its save holds.
     koppen = {
+      name = ID .. "-koppen", type = "bool-setting", setting_type = "startup", default_value = false,
+      order = "c-aaa", hidden = true, forced_value = false,
     },
     -- City markers (default off): runtime-global, so any admin can switch
     -- it in a running game; on, the map view shows every city of the world's map (scripts/markers.lua).
@@ -4065,6 +4088,9 @@ return {
     -- Koppen biomes (0.4.0, default on): a name switch baked as tn_koppen. presets.lua reads it in its
     -- baked function (koppen_names) to point temperature/moisture/aux at the Koppen snap bodies when on. Orthogonal to
     -- elevation, so one-click world creation is preserved.
+    -- 1.0.0: the setting is hidden and pinned off, so a new world bakes the off value; the toggle stays
+    -- for the worlds that baked it on.
+    koppen = {setting = "koppen", preset_key = K_KOPPEN, default = false, mechanism = "name switch",
               on = ONE, off = ZERO, maps = {"europe", "atlantic", "olde_world"}},
   },
   toggle_order = {"canals", "great_forests", "ridges", "hotspots", "inland_lakes", "destroyed_europe",

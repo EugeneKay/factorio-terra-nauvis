@@ -3521,6 +3521,7 @@ def row_dumps(ctx, mods, sec6, row, cache):
     for key, want in rules.items():
         s = cfg["settings"][key]
         g = got.get(s["name"], {})
+        for field in ("default_value", "setting_type", "allowed_values", "type", "hidden", "forced_value"):
             if field in want and g.get(field) != want[field]:
                 row.fails.append(f"dumped setting {s['name']} {field} {g.get(field)!r}, design-rules.json {want[field]!r}")
     for n in got:

@@ -1,7 +1,11 @@
 {
   "name": "terra-nauvis",
+  "version": "1.0.0",
+  "title": "Terra Nauvis: Earth Maps",
   "author": "Jake Mismas",
+  "homepage": "https://github.com/jakemismas/factorio-terra-nauvis",
   "factorio_version": "2.1",
+  "description": "Play on Earth. Three maps of the real world (Europe, the Old World, the Atlantic) with real coastlines, rivers, mountain ranges and ore fields, in eight sizes.",
   "dependencies": [
     "base >= 2.1.24",
     "? alien-biomes",

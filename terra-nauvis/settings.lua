@@ -14,6 +14,7 @@ for _, key in ipairs(cfg.setting_order) do
     allowed_values = s.allowed_values,
     order = s.order,
     hidden = s.hidden,
+    forced_value = s.forced_value,
   }
 end
 data:extend(defs)

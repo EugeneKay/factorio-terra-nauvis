@@ -17962,6 +17962,9 @@ def row_tf_dump_facts(ctx, mods, sec6, row, cache):
     gate and tn_tree_mult only, and the dead and dry trees and Alien Biomes' palms are not boosted (the
     palms stay AB's for the palm copies); every preset points the key at the region layer's
     multiplier; with Alien Biomes each restored vanilla tree, rock and decal is rebuilt from vanilla.lua
+    behind tn_on on vanilla land, each body is vanilla.lua's text (the restored trees' the base game's own
+    named expression, read at load time, with the vanilla-scale temperature), every vanilla.lua text and tree
+    digest equals the base game's own in M0's dump (a game update changes them), Nauvis lists the restored rocks and decoratives, the re-listed decoratives carry their
     gated hook, the AB-restricted ones the vanilla land tiles, and the palms' second versions are the
     boost around their first on M1 and M2; every body trees.lua defines exists on M1 and M2 alike (they
     are defined on every load, and frozen.json registers them from M1); without AB nothing is restored."""
@@ -18017,8 +18020,16 @@ def row_tf_dump_facts(ctx, mods, sec6, row, cache):
             if pen.get(B["key"]) != cfg["regions"]["names"]["tree_mult"]:
                 fails.append(f"{label} {cfg['presets'][key]['name']}: {B['key']} names {pen.get(B['key'])!r}, want "
                              f"{cfg['regions']['names']['tree_mult']}")
+    # every vanilla.lua text is the base game's own (M0); a tree's text is read at load time, and the table holds
+    # its digest (prototypes/installed.lua; tools/build_installed.py)
+    import build_installed
     ne0 = d0.get("noise-expression") or {}
+    tree_text = {r_["expression"]: (ne0.get(r_["expression"]) or {}).get("expression") for r_ in V["trees"]}
     for r_ in V["trees"]:
+        text0 = tree_text[r_["expression"]]
+        if not isinstance(text0, str) or build_installed.digest(text0, cfg) != r_["digest"]:
+            fails.append(f"vanilla.lua's digest of {r_['expression']} differs from the base game's text (a game "
+                         f"update): ship the table's next version")
         ap0 = ((d0.get("tree") or {}).get(r_["tree"]) or {}).get("autoplace") or {}
         if (ap0.get("order"), ap0.get("control"), ap0.get("richness_expression")) != \
                 (r_["order"], r_["control"], V["tree_richness"]):
@@ -18032,6 +18043,8 @@ def row_tf_dump_facts(ctx, mods, sec6, row, cache):
     ne2 = d2.get("noise-expression") or {}
     for r_ in V["trees"]:
         body = (ne2.get(R["trees"][r_["tree"]]["body"]) or {}).get("expression")
+        want = re.sub(r"(?<![A-Za-z0-9_])temperature(?![A-Za-z0-9_])", TR["temperature"],
+                      str(tree_text[r_["expression"]]))
         if body != want:
             fails.append(f"M2: {R['trees'][r_['tree']]['body']} is not vanilla's {r_['expression']} with "
                          f"{TR['temperature']}")

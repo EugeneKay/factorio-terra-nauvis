@@ -445,6 +445,14 @@ def offline_bodies(source, cfg):
 # record registered from the Alien Biomes (M2) or Oil Rig (M3) dump names a body that exists only beside
 # that mod; the gate's frozen row holds those to the game's own dumps.
 OFFLINE_DUMPS = ("m1",)
+# M2 reproduces offline too: its bodies read only mods["alien-biomes"] and, for the shared tile noise, the
+# installed land tiles (terra-nauvis/prototypes/installed.lua), so a second stage with that flag and with
+# tests/alien-biomes-raw.json beside the base game's prototypes builds them. Without it a config value read
+# only under `if AB` could move a released body with every automated check green. M3 needs the Oil Rig's
+# prototypes and stays with the gate. tests/alien-biomes-raw.json holds Alien Biomes' own text, so it exists only
+# on a machine that made it (tools/make_ab_raw.py) and never on a CI runner: where it is absent the stage runs on
+# the flag alone, the bodies built from the tile noise are skipped with a note, never passed (offline_skipped),
+# and the gate's frozen row compares them with Alien Biomes loaded.
 OFFLINE_AB_DUMPS = ("m2",)
 OFFLINE_AB_MODS = {"alien-biomes": "0.8.0"}
 
@@ -453,7 +461,35 @@ def offline_ab_problems(source, fz, cfg):
     """body_problems for the M2 records against the bodies the data stage builds with Alien Biomes' flag.
     Raises tnlua.LuaError (fail closed)."""
     import tnlua
+    dump = tnlua.data_stage(tnlua.reader_for(source), mods={**tnlua.DEFAULT_MODS, **OFFLINE_AB_MODS},
+                            base=None if tile_noise_missing() else tnlua.ab_base())
     return body_problems(earth_bodies(dump, cfg), fz, cfg, "the offline Alien Biomes data stage", OFFLINE_AB_DUMPS)
+
+
+def tile_noise_bodies(cfg):
+    """The bodies built from the noise call of Alien Biomes' installed land tiles
+    (terra-nauvis/prototypes/installed.lua): the shared fields and their fray versions."""
+    share = ((cfg or {}).get("tiles") or {}).get("noise_share") or {}
+    out = set(share.get("fields") or [])
+    for version in ("fray", "fray2"):
+        out |= set((share.get(version) or {}).get("fields") or [])
+    return out
+
+
+def tile_noise_missing(path=None):
+    """The one line that says why the offline Alien Biomes stage has no installed tiles to read
+    (tests/alien-biomes-raw.json absent or unusable) and how to make them, else None."""
+    import tnlua
+    return tnlua.ab_raw_problem(tnlua.AB_RAW if path is None else path)
+
+
+def offline_skipped(cfg, path=None):
+    """The registered bodies no offline stage can build here: the palm copies always, and the tile noise bodies
+    where the installed tiles are absent. They are reported skipped (`skipped_note`), never passed."""
+    out = set(live_ab_bodies(cfg))
+    if tile_noise_missing(path):
+        out |= tile_noise_bodies(cfg)
+    return out
 
 
 def live_ab_bodies(cfg):
@@ -466,14 +502,22 @@ def live_ab_bodies(cfg):
 
 def skipped_note(cfg):
     n = len(live_ab_bodies(cfg))
+    notes = [f"{n} palm bodies skipped: they need Alien Biomes loaded, and only the gate's frozen row compares them"] if n else []
+    if tile_noise_missing():
+        notes.append(f"{len(tile_noise_bodies(cfg))} shared tile noise bodies skipped: they need Alien Biomes' installed "
+                     f"tiles (python tools/make_ab_raw.py writes tests/alien-biomes-raw.json), and only the gate's "
+                     f"frozen row compares them")
+    return "; ".join(notes)
 
 
 def body_problems(bodies, fz, cfg, where="the offline data stage", dumps=OFFLINE_DUMPS):
     """Every registered record of `dumps` held to the body `bodies` builds under its name ([] when all
     hold): present with the record's type and the record's hash (a body changed in place through its
     code or its data fails like a re-hash), and every Earth body built there registered, the exempt
+    names excepted. The offline_skipped bodies are left out: see skipped_note."""
     out = []
     registered = (fz or {}).get("bodies") if isinstance((fz or {}).get("bodies"), dict) else {}
+    skipped = offline_skipped(cfg)
     for name, rec in sorted(registered.items()):
         if not isinstance(rec, dict) or (dumps is not None and rec.get("dump") not in dumps) or name in skipped:
             continue

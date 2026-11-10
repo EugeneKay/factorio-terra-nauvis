@@ -3324,6 +3324,9 @@ return {
   --   blob       the shared texture on every spot: three basis noises, added as
   --              (blob - mean) * height / divisor where a spot is positive
   --   resources  per resource its seed1, vanilla's base_density, spots per km2, rq factor and mean
+  --              random spot size (base/prototypes/entity/resources.lua; for offshore oil the values of
+  --              Cargo Ships: Oil Rig's own offshore-oil, so the fields match that mod's wells; NOTICE.txt),
+  --              fluids their well penalty and additional richness, sea for offshore fields
   hotspots = {
     floor_tiles = 48,
     amount_percent = 100,
@@ -3566,11 +3569,24 @@ return {
   -- density (mult - 1) times vanilla's at candidates inside enemy_share of a hotspot footprint, on land,
   -- active only beyond start_factor times starting_area_radius; the wrapper takes max(live, layer), so
   -- bobenemies' intensity cap reaches it through enemy_base_radius and enemy_base_frequency.
+  -- `base`: the layer holds none of that expression's text or numbers. At load time prototypes/installed.lua reads
+  -- the installed expression `name` in parts: the `fn` call it opens with (its arguments, of which the layer
+  -- rewrites the three `args` name and its own `own`), the texture terms added to it (calls of the local function
+  -- `texture`, and the last term that opens with `start`, the start clearing), the local expressions `radius` and
+  -- `quantity`, and the texture function, whose `own` the layer rewrites too. `digest` is the digest of those
+  -- texts as Factorio `game` holds them (tools/build_installed.py): a text that changed since is logged and read
+  -- the same way, and one that no longer has this shape leaves each layer `neutral`, under which every wrapper
+  -- keeps the live expression.
   enemies = {
     layer = REN.ENEMY_LAYER,
     wrapper = REN.ENEMY,
     seed1 = 7123,
     start_factor = 2,
+    base = {name = "enemy_base_probability", fn = "spot_noise", own = "seed1", texture = "blob", start = "min",
+            radius = "spot_radius_expression", quantity = "spot_quantity_expression", basement = "basement_value",
+            args = {density = "density_expression", quantity = "spot_quantity_expression",
+                    favorability = "spot_favorability_expression"},
+            game = "2.1.24", digest = "d1290147bfc818d9", neutral = "-inf"},
     -- Scattered nests (0.3.0, new worlds; data-final-fixes.lua enemy_wrapper). Where a base's height passes the spawner
     -- cap of 0.25, a spawner goes down wherever its box fits, in the order the generator walks the tiles, so bases fill
     -- in even rows at box spacing. The wrapper keeps the height only on random runs of `run` tiles along a row, each
@@ -5062,6 +5078,8 @@ return {
       -- The mix (the combined build by eye): every vanilla land tile thresholds one moisture field, so
       -- at scale 6 each dry lobe stood in concentric bands, a contour map with an even dark rim. A
       -- noise shared by the tiles only wiggles the contours; each tile needs its own, so each adds
+      -- amount times a noise of its own, the `first_seed1`-th and on of the tile noises, read through
+      -- noise_share's fields as Alien Biomes' tiles read theirs, which the Tile
       -- program already holds (about 6,800 in noises of its own). A tile's score falls 20 per unit of moisture past
       -- its box, so a tile reaches about amount / 20 past it: the mix redraws boundaries and never puts
       -- sand in a wet meadow. It acts only where the tile holds its bonus: where the lean fails vanilla
@@ -5079,14 +5097,26 @@ return {
       temperate_from = 25, temperate_below = 65, marsh_cut = 0.68,
     },
     -- The noise share: Alien Biomes gives each of its 156 land tiles a
+    -- noise of its own, 56,916 of Old World's 191,543 Tile complexity beside it and the whole
     -- of what lifts that program over the knee. On an Earth preset's on branch
+    -- a tile reads two of twelve shared fields at equal weight instead: `weight` keeps
     -- the variance, a field pair of its own keeps two tiles' scores uncorrelated, or at +-0.5 where their
     -- pairs share one field, and tiles of one family, whose seeds run in order, never share a pair. `steps`
     -- is the distance from a tile's first field to its second, so seed s reads fields s % 12 and that
     -- plus steps[j % 5 + 1], j = floor(s / 12), signed by floor(j / 5) % 4: two tiles with one pair differ
+    -- in sign.
+    -- `call`: the fields are the tiles' own noise in this mod's seeds, and this mod ships none of that noise's
+    -- arguments. At load time prototypes/installed.lua reads them from the installed tiles: of the calls of `fn`
+    -- in the land tiles' scores, grouped by every argument but `own`, the group the most tiles hold, each exactly
+    -- once, and builds each field from that call's own text with a seed from first_seed1 on. `digest` is that argument
+    -- set's digest as Alien Biomes `version` writes it (tools/build_installed.py prints it from a dump). On any
+    -- other set, or where no such call stands, every tile keeps its own noise, each field and each fray version's
+    -- noise is `neutral`, and the log says so. data-final-fixes.lua knows a tile's call by the same reading.
     noise_share = {
       fields = {CT.TM_1, CT.TM_2, CT.TM_3, CT.TM_4, CT.TM_5, CT.TM_6, CT.TM_7, CT.TM_8, CT.TM_9, CT.TM_10, CT.TM_11,
                 CT.TM_12},
+      first_seed1 = 7741, weight = 0.7071, steps = {5, 3, 2, 4, 1}, sign_patterns = 4,
+      call = {fn = "multioctave_noise", own = "seed1", version = "0.8.0", digest = "f38db1fb8dbaf999", neutral = "0"},
       -- The fray (the seam in the Alps' snow): a snow tile's score is its box, the same for all ten, plus a pair of
       -- these fields, so two snow tiles meet on one contour of smooth noise, and the seam can run dead straight
       -- for 34 tiles; no climate field moves it. Each field's next version, which a preset names in its place,

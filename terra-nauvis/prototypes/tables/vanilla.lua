@@ -4,6 +4,16 @@
 -- Pure data, like config.lua: the data stage reads it through require, the Python tools through
 -- tools/tnconfig.py's loader. Alien Biomes nils the autoplace of the 15 living vanilla trees, the three
 -- vanilla rock entities and eight rock and decal decoratives in its data stage, before any mod that
+-- loads after it can read them, so Earth keeps here what it cannot read from the installed game, as
+-- Factorio 2.1.23 (build 87750) loads it (--dump-data of the base game with Terra Nauvis, which changes none of it):
+--   trees     each living tree's named probability expression (tree_01 to tree_09_red), which Alien Biomes
+--             leaves in place: trees.lua reads its text from the installed game at load time and builds the
+--             restored tree's Earth body from it, so the text is not in this file. `digest` is that text's
+--             digest (prototypes/installed.lua; tools/build_installed.py prints it from a dump): a text that a
+--             game update or another mod changed is logged, and the body then follows the installed text.
+--             The tree's autoplace order and control and the shared richness
+--             (base/prototypes/entity/trees.lua:4271-4363) go with the autoplace Alien Biomes clears, so they
+--             stay here. tree_missing is the body of a tree whose named expression the game no longer has.
 --   rocks     the autoplace of huge-rock, big-rock and big-sand-rock (simple entities) and of the rock
 --             and decal decoratives (base/prototypes/decorative/decoratives.lua:4345, 4506, 4669, 4790,
 --             4943, 5104, 5260, 5415, 5574, 6357 and 6558)
@@ -16,9 +26,16 @@
 --   decor     the base game's score of the extended decoratives and of the two garballos, as M1 dumps them:
 --             Alien Biomes rewrites nine and leaves six reading a scale it has moved, so beside it the
 --             temperate band places these from these texts (config.lua trees.decor)
+-- The texts kept here (the trees' order, control and richness, the rocks, the dead-tree score and the decor
+-- rows) are the base game's or adapted from it; they read the base game's shared helpers (rock_density,
+-- tree_small_noise, the core range and ramp functions) by name, as its own entities do.
 -- They belong to Wube Software and are not offered under the GPL that covers the rest of Terra Nauvis:
 -- they are included under the Factorio Terms of Service, which let a mod include adaptations of Factorio
 -- assets (NOTICE.txt, "Not covered by the GPL").
+-- The gate's dump facts compare every text and digest here with the dumped base game (a game update changes them).
+-- A released table version never changes what the game is given: a changed row ships as the next version
+-- (versioning rule 5). 1.0.0 replaced each tree row's text by its digest; the bodies built from the rows are
+-- byte for byte the ones 0.4.0 built.
 return {
   version = 1,
   game = "2.1.23",
@@ -26,65 +43,81 @@ return {
     {
       tree = "tree-01", expression = "tree_01", control = "trees",
       order = "a[tree]-b[forest]-a[wet]-c[cold]",
+      digest = "af8b24e0c29cbf72",
     },
     {
       tree = "tree-02", expression = "tree_02", control = "trees",
       order = "a[tree]-b[forest]-b[moist]-b[cold]",
+      digest = "8c87c4a457a0c9de",
     },
     {
       tree = "tree-02-red", expression = "tree_02_red", control = "trees",
       order = "a[tree]-b[forest]-c[medium]-b[cold]",
+      digest = "811ad9106cad5a3e",
     },
     {
       tree = "tree-03", expression = "tree_03", control = "trees",
       order = "a[tree]-b[forest]-b[moist]-c[hot]",
+      digest = "2d32d068aa616096",
     },
     {
       tree = "tree-04", expression = "tree_04", control = "trees",
       order = "a[tree]-b[forest]-a[wet]-b[medium]",
+      digest = "86b714a02a993a1e",
     },
     {
       tree = "tree-05", expression = "tree_05", control = "trees",
       order = "a[tree]-b[forest]-a[wet]-a[hot]",
+      digest = "e99b0a3941e81e7f",
     },
     {
       tree = "tree-06", expression = "tree_06", control = "trees",
       order = "a[tree]-b[forest]-d[dry]-c[cold]",
+      digest = "7efe77c917c8e60b",
     },
     {
       tree = "tree-06-brown", expression = "tree_06_brown", control = "trees",
       order = "a[tree]-b[forest]-e[verydry]-c[cold]",
+      digest = "aac79e2cca76652e",
     },
     {
       tree = "tree-07", expression = "tree_07", control = "trees",
       order = "a[tree]-b[forest]-b[moist]-a[medium]",
+      digest = "030022f5b9e2e233",
     },
     {
       tree = "tree-08", expression = "tree_08", control = "trees",
       order = "a[tree]-b[forest]-c[medium]-a[medium]",
+      digest = "a296ef288c53be2e",
     },
     {
       tree = "tree-08-brown", expression = "tree_08_brown", control = "trees",
       order = "a[tree]-b[forest]-d[dry]-b[medium]",
+      digest = "8a5b8badf0cd25e3",
     },
     {
       tree = "tree-08-red", expression = "tree_08_red", control = "trees",
       order = "a[tree]-b[forest]-e[verydry]-b[medium]",
+      digest = "f598c3c6fc7f59cc",
     },
     {
       tree = "tree-09", expression = "tree_09", control = "trees",
       order = "a[tree]-b[forest]-c[medium]-c[hot]",
+      digest = "0afc09c9e4ef26eb",
     },
     {
       tree = "tree-09-brown", expression = "tree_09_brown", control = "trees",
       order = "a[tree]-b[forest]-d[dry]-a[hot]",
+      digest = "abacbb14883b1b36",
     },
     {
       tree = "tree-09-red", expression = "tree_09_red", control = "trees",
       order = "a[tree]-b[forest]-e[verydry]-a[hot]",
+      digest = "64916671d691e42f",
     },
   },
   tree_richness = "clamp(random_penalty_at(6, 1), 0, 1)",
+  tree_missing = "0",
   rocks = {
     {
       type = "simple-entity", name = "huge-rock",

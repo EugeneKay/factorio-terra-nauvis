@@ -10,6 +10,7 @@
 --   tn_ab_keep_v1        0 where a vanilla land tile may lie, 1 elsewhere: AB's long-listed decoratives and
 --                        trees multiply by it (the list hook; config.lua tiles.scan), and it reads no fine field
 --   tn_tile_mix_<n>_v1   beside Alien Biomes: the twelve shared noise fields AB's land tile scores read on
+--                        their on branch, in place of a noise of its own per tile (config.lua tiles.noise_share)
 --   tn_marsh_water_mud   water-mud pools on land inside marshes, outside the start clearing
 --   tn_marsh_water_shallow  water-shallow along open water inside marshes, above shallow_depth, so a
 --                        river's floor (-2.2) stays player-blocking water
@@ -126,8 +127,18 @@ if mods["alien-biomes"] then
     {patch = PATCH.patch, band_t = band_t(GK.temperature, WILD_TILE)})
   def(V.next.high, V.next.grain .. " + " .. cfg.ridges.names.ground)
   def(X.body_grain, exclusion("band_t", MS.edge), {band_t = band_t(GK.temperature, WILD_TILE)})
+  -- The shared fields of the tile scores' noise (config.lua tiles.noise_share), read on the on branch alone. Each is
+  -- the installed tiles' own noise call with a seed of this mod's (prototypes/installed.lua); where that call is not
+  -- the one this version knows, the neutral body.
   local NS = cfg.tiles.noise_share
+  local installed = require("prototypes.installed")
+  local shared, why = installed.tile_noise(data.raw.tile, cfg.climate.grain.prefixes, NS.call)
+  if not shared then
+    log(cfg.identity.title .. ": the land tiles' own noise is not the one this version knows (" .. why ..
+      "), so each tile keeps its own noise and the shared fields are " .. NS.call.neutral)
+  end
   local function shared_field(i)
+    return shared and installed.call_text(shared, NS.call, NS.first_seed1 + i - 1) or NS.call.neutral
   end
   for i, name in ipairs(NS.fields) do
     def(name, shared_field(i))

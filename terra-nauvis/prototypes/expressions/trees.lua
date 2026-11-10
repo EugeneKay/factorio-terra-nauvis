@@ -147,9 +147,32 @@ def(B.lift_body, num(B.lift_per_sum) .. " * " .. cfg.regions.names.forest_sum ..
 -- The Earth temperature on the vanilla scale, as the fallback climate hands it to vanilla trees.
 def(TR.temperature, "clamp(" .. num(FB.scale) .. " * temperature, " .. num(FB.min) .. ", " .. num(FB.max) .. ")")
 
+-- The restored trees: each tree's text with the vanilla-scale temperature; one shared richness body. The text is
+-- the base game's named expression, read from the installed game (prototypes/installed.lua) and held to the
+-- table's digest: a text that changed since is logged and used as it stands, a missing one leaves the tree out.
 local TEMP = "%f[%w_]temperature%f[^%w_]"
+local function restored_trees()
+  local installed = require("prototypes.installed")
+  local changed = {}
+  for _, row in ipairs(V.trees) do
+    local n = R.trees[row.tree]
+    if not n then
+      error("config.lua trees.restore.trees has no names for " .. row.tree)
+    end
+    def(n.p, R.tree_off)
+    def(n.r, R.tree_off)
+    local text, known = installed.expression(data.raw["noise-expression"], row.expression, row.digest)
+    if not known then
+      changed[#changed + 1] = row.expression .. (text and "" or " (missing)")
+    end
+    def(n.body, (string.gsub(text or V.tree_missing, TEMP, TR.temperature)))
+  end
+  if #changed > 0 then
+    log(cfg.identity.title .. ": the base game's tree expressions " .. table.concat(changed, ", ") ..
+      " differ from the texts this version was tested with; the restored trees follow the installed game")
   end
 end
+restored_trees()
 def(R.richness, V.tree_richness)
 
 -- The rebuilt rocks and decals: each one's own autoplace text and local expressions.

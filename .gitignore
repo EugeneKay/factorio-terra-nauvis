@@ -6,3 +6,6 @@ dist/
 
 # The base game's prototypes, regenerated from the installed game by tools/make_vanilla_raw.py.
 tests/vanilla-raw.json
+
+# Alien Biomes' land tiles, made by tools/make_ab_raw.py; the file holds Alien Biomes' own text.
+tests/alien-biomes-raw.json

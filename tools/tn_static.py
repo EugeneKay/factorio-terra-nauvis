@@ -2599,9 +2599,26 @@ def release_input_findings(work, refs, collapse=None):
             for k in sorted(rt, key=str):
                 if not isinstance(wt, dict) or k not in wt:
                     out.append(f"{tp} table {k!r} is on {ref} and gone here (a released table version)")
+                elif _read_at_load(tp, k, wt[k]) != _read_at_load(tp, k, rt[k]):
                     out.append(f"{tp} table {k!r} changed in place against {ref}: a released table version is never "
                                f"edited (ship the change as the next version)")
     return sorted(set(out))
+
+
+def _read_at_load(tp, k, v):
+    """A released table as the append-only rule compares it. The tree rows of prototypes/tables/vanilla.lua held the
+    base game's text up to 0.4.0 and hold that text's digest from 1.0.0, when the mod began to read the text from the
+    installed game at load time (terra-nauvis/prototypes/installed.lua). Both forms compare by the digest, so a
+    released row still never changes: a digest of any other text differs."""
+    if not (str(tp).endswith("tables/vanilla.lua") and k == "trees" and isinstance(v, list)):
+        return v
+    import build_installed
+    out = []
+    for row in v:
+        if isinstance(row, dict) and isinstance(row.get("text"), str):
+            row = dict({f: x for f, x in row.items() if f != "text"}, digest=build_installed.digest(row["text"]))
+        out.append(row)
+    return out
 
 
 def _git_ls(sha, prefix, repo=REPO):
@@ -2787,7 +2804,12 @@ def bodies_findings(mod, fz, cfg):
 
 
 def vanilla_raw_missing():
+    """[the one line] when tests/vanilla-raw.json cannot seed the offline data stage, else []. The rows that
+    build bodies offline fail on it first: an empty data.raw would fail them later on a vanilla name. A missing
+    tests/alien-biomes-raw.json fails no row: the bodies that need it are skipped with a note (tnfrozen.offline_skipped)."""
     import tnlua
+    problem = tnlua.vanilla_raw_problem()
+    return [problem] if problem else []
 
 
 def row_bodies(repo=REPO):
@@ -3001,7 +3023,78 @@ def vanilla_raw_controls(td):
     return out
 
 
+def installed_controls(td):
+    """What the mod reads at load time (terra-nauvis/prototypes/installed.lua): the local Alien Biomes tile file fails
+    closed, its maker refuses a dump this mod's hooks rewrote, the tile noise is the one call the most land tiles
+    hold once, and a released tree row compares by digest."""
+    import build_installed
+    import make_ab_raw
+    import tnlua
+    out = []
+    absent = Path(td) / "absent" / "alien-biomes-raw.json"
+    try:
+        tnlua.ab_raw(absent)
+        out.append(("installed: an absent Alien Biomes tile file raises", False, "read as a base"))
     except tnlua.VanillaRawMissing as e:
+        out.append(("installed: an absent Alien Biomes tile file raises and names its maker",
+                    "is missing: run python tools/make_ab_raw.py" in str(e), str(e)))
+    stranger = _write(td, "format/alien-biomes-raw.json", json.dumps({"format": "x/1", "raw": {"tile": {"a": {}}}}))
+    out.append(("installed: a tile file of another format fails", bool(tnlua.ab_raw_problem(stranger)), ""))
+    cfg0 = tnconfig.load()
+    tile_bodies = tnfrozen.tile_noise_bodies(cfg0)
+    out.append(("installed: without the tile file the tile noise bodies are skipped, never passed",
+                bool(tile_bodies) and tile_bodies <= tnfrozen.offline_skipped(cfg0, absent), str(len(tile_bodies))))
+    usable = _write(td, "usable/alien-biomes-raw.json",
+                    json.dumps({"format": tnlua.AB_RAW_FORMAT, "raw": {"tile": {"a": {"name": "a", "type": "tile"}}}}))
+    out.append(("installed: with a tile file the tile noise bodies are compared",
+                not (tile_bodies & tnfrozen.offline_skipped(cfg0, usable)), ""))
+    cfg = tnconfig.load()
+    C = cfg["tiles"]["noise_share"]["call"]
+    prefix = cfg["climate"]["grain"]["prefixes"][0]
+
+    def tile(name, seed, extra=""):
+        text = "1 + " + C["fn"] + "{x = x, y = y, scale = 3" + extra + ", " + C["own"] + " = " + str(seed) + "}"
+        return {"type": "tile", "name": name, "layer": 5, "autoplace": {"probability_expression": text}}
+    a, b = prefix + "a", prefix + "b"
+    dump = {"tile": {a: tile(a, 1), b: tile(b, 2)}, "noise-expression": {}}
+    sig, n = build_installed.tile_noise(dump, cfg)
+    out.append(("installed: the call the land tiles hold once is found", (sig, n) == ("scale=3,x=x,y=y", 2), sig))
+    c = prefix + "c"
+    other = {"type": "tile", "name": c, "autoplace": {"probability_expression": "elevation - 3"}}
+    sig, n = build_installed.tile_noise({"tile": dict(dump["tile"], **{c: other})}, cfg)
+    out.append(("installed: a tile of the same prefix without the call does not hide it",
+                (sig, n) == ("scale=3,x=x,y=y", 2), sig))
+    for label, other in (("tiles that hold different calls give no tile noise", tile(b, 2, ", octaves = 2")),
+                         ("a tile that holds the call twice gives no tile noise",
+                          dict(tile(b, 2), autoplace={"probability_expression": tile(b, 2)["autoplace"][
+                              "probability_expression"] + " + " + tile(b, 3)["autoplace"]["probability_expression"]}))):
+        try:
+            got = build_installed.tile_noise({"tile": {a: tile(a, 1), b: other}}, cfg)
+            out.append(("installed: " + label, False, str(got)))
+        except build_installed.InstalledError as e:
+            out.append(("installed: " + label, True, str(e)))
+    try:
+        make_ab_raw.reduce_dump(dict(dump, **{"noise-expression": {cfg["keys"]["on"]: {}}}), cfg, vanilla={"tile": {}})
+        out.append(("installed: a dump this mod's hooks rewrote is refused", False, "reduced"))
+    except make_ab_raw.MakeError:
+        out.append(("installed: a dump this mod's hooks rewrote is refused", True, ""))
+    red = make_ab_raw.reduce_dump(dump, cfg, vanilla={"tile": {}})["raw"]["tile"]
+    out.append(("installed: the reduction keeps name, type and autoplace of the land tiles",
+                sorted(red) == [a, b] and set(red[a]) == set(tnlua.AB_RAW_FIELDS), str(sorted(red[a]))))
+    text = "min(1, x)"
+    tp = "terra-nauvis/prototypes/tables/vanilla.lua"
+    old = [{"tree": "t", "expression": "e", "text": text}]
+    new = [{"tree": "t", "expression": "e", "digest": build_installed.digest(text, cfg)}]
+    moved = [{"tree": "t", "expression": "e", "digest": build_installed.digest(text + " ", cfg)}]
+    out.append(("installed: a released tree row's text and its digest are one row",
+                _read_at_load(tp, "trees", old) == _read_at_load(tp, "trees", new), ""))
+    out.append(("installed: a tree row whose digest is of another text changed in place",
+                _read_at_load(tp, "trees", old) != _read_at_load(tp, "trees", moved), ""))
+    out.append(("installed: another table of the file compares as it stands",
+                _read_at_load(tp, "rocks", old) != _read_at_load(tp, "rocks", new), ""))
+    return out
+
+
 def fixture_controls():
     """Positive controls: every scan rule must fail a fixture that breaks it. Fixtures live in a fresh
     temporary directory outside the scanned trees and are never committed."""
@@ -3010,6 +3103,7 @@ def fixture_controls():
     with tempfile.TemporaryDirectory(prefix="tn-fixtures-") as td:
         td = Path(td)
         results += vanilla_raw_controls(td / "vanilla")
+        results += installed_controls(td / "installed")
         # workflow mutations
         manifest = lint_manifest()
         wf_dir = REPO / ".github" / "workflows"

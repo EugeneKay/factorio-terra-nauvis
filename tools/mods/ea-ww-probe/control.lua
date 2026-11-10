@@ -67,7 +67,11 @@ end
 local function run_placements(surface, job)
   local area_chunks = {}
   for _, p in ipairs(job.placements) do
+    -- the placement's chunk and its eight neighbours, keyed so a chunk shared by two placements stands once
     local cx, cy = math.floor(p.x / 32), math.floor(p.y / 32)
+    for k = 0, 8 do
+      local chunk = {cx + math.floor(k / 3) - 1, cy + k % 3 - 1}
+      area_chunks[chunk[1] .. "," .. chunk[2]] = chunk
     end
   end
   for _, c in pairs(area_chunks) do

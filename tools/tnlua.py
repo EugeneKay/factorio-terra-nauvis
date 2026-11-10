@@ -22,7 +22,10 @@ sort is not stable) and every Lua runtime error raise LuaError, never a partial 
 The subset: every statement of Lua 5.2 but goto and labels; every expression but the 5.3 integer
 and bitwise operators; numbers are doubles (tostring and `..` use "%.14g", as Lua 5.2 does);
 globals assert, error, ipairs, next, pairs, select, tonumber, tostring, type, unpack, log and
+require; string.format (d i u c x X o e E f F g G s %, no %q), byte (one position), find, gmatch, gsub,
+len, lower, match, rep, sub and upper (Lua patterns without %b and position captures);
 table.concat, insert, remove, sort and unpack; math.abs, acos, asin, ceil, cos, deg, exp, floor, fmod,
+huge, log, max, min, pi, pow, rad, sin, sqrt and tan; bit32.bxor and lshift (whole numbers from 0 up).
 """
 import math
 import re
@@ -43,16 +46,30 @@ class LuaError(RuntimeError):
 
 
 class Table:
+    """A Lua table over one dict `h`. Keys pass through _key, so 1 and 1.0 are one key and a boolean never
+    meets a number; a nil value is never stored, as in Lua, where assigning nil removes the field."""
     __slots__ = ("h",)
 
     def __init__(self, h=None):
+        self.h = h if h is not None else {}
 
     def get(self, k):
         return self.h.get(_key(k))
 
     def set(self, k, v):
+        slot = _key(k)
+        if v is not None:
+            self.h[slot] = v
+        elif slot in self.h:
+            del self.h[slot]
 
     def length(self):
+        """The # operator: the count of the whole-number keys from 1 up without a gap."""
+        border = 0
+        for border in range(len(self.h) + 1):
+            if border + 1 not in self.h:
+                break
+        return border
 
 
 class _Bool:
@@ -104,13 +121,25 @@ class Builtin:
         self.fn, self.name = fn, name
 
 
+class _Unwind(Exception):
+    """Control leaving a block early. The interpreter raises one and the enclosing function call or loop catches
+    it, so a return or a break crosses any depth of nested statements without each of them passing it up."""
+
+
+class _Return(_Unwind):
+    """A return statement, with the values it hands back."""
+
     def __init__(self, values):
+        super().__init__()
         self.values = values
 
 
+class _Break(_Unwind):
+    """A break out of the innermost loop."""
 
 
 class Scope:
+    """One block's local variables, with the block that encloses it."""
     __slots__ = ("vars", "parent")
 
     def __init__(self, parent=None):
@@ -118,6 +147,11 @@ class Scope:
         self.parent = parent
 
     def find(self, name):
+        """The nearest scope, from this one outward, that declares `name`, or None for a global."""
+        scope = self
+        while scope is not None and name not in scope.vars:
+            scope = scope.parent
+        return scope
 
 
 def lua_type(v):
@@ -447,6 +481,12 @@ _PAT_CACHE = {}
 def lua_pattern(pat):
     """A Lua 5.2 pattern as a compiled Python regex (single-byte characters; %b and position captures
     fail closed)."""
+    known = _PAT_CACHE.get(pat)
+    if known is not None:
+        return known
+    # a leading ^ anchors the match at the subject's start; anywhere else it is an ordinary character
+    anchored = pat[:1] == "^"
+    out, i, n = ([r"\A"] if anchored else []), (1 if anchored else 0), len(pat)
     while i < n:
         ch = pat[i]
         if ch == "(":
@@ -818,10 +858,42 @@ def _type(args):
     return [lua_type(args[0])]
 
 
+def _string_byte(args):
+    """string.byte(s [, i]): the byte at one position of the UTF-8 text (no range form)."""
+    data = _check_string(_arg(args, 0), "byte").encode("utf-8")
+    if _arg(args, 2) is not None:
+        raise LuaError("string.byte with a range is outside the subset (fail closed)")
+    i = int(_check_number(1.0 if _arg(args, 1) is None else _arg(args, 1), "byte", 2))
+    if i < 0:
+        i += len(data) + 1
+    return [float(data[i - 1])] if 1 <= i <= len(data) else []
+
+
+def _u32(v, fn, i):
+    """A bit32 operand: a whole number from 0 up, reduced modulo 2^32 as Lua 5.2 reduces it."""
+    n = _check_number(v, fn, i)
+    if n != n or n in (math.inf, -math.inf) or n < 0 or n != math.floor(n):
+        raise LuaError(f"bit32.{fn} of {n!r} is outside the subset (whole numbers from 0 up; fail closed)")
+    return int(n) % 4294967296
+
+
+def _bit32_bxor(args):
+    out = 0
+    for i, v in enumerate(args):
+        out ^= _u32(v, "bxor", i + 1)
+    return [float(out)]
+
+
+def _bit32_lshift(args):
+    x, shift = _u32(_arg(args, 0), "lshift", 1), _u32(_arg(args, 1), "lshift", 2)
+    return [float((x << shift) % 4294967296) if shift < 32 else 0.0]
+
+
 def _lib(interp):
     def B(fn, name):
         return Builtin(fn, name)
     string = Table()
+    string.set("byte", B(_string_byte, "string.byte"))
     for name, fn in {
             "format": string_format, "sub": _string_sub, "find": _string_find, "match": _string_match,
             "gmatch": _string_gmatch, "gsub": lambda a: _string_gsub(a, interp),
@@ -858,6 +930,10 @@ def _lib(interp):
         "type": B(_type, "type"), "unpack": B(_unpack, "unpack"), "log": B(lambda a: [], "log"),
         "string": string, "table": table, "math": m,
     }
+    bit32 = Table()
+    bit32.set("bxor", B(_bit32_bxor, "bit32.bxor"))
+    bit32.set("lshift", B(_bit32_lshift, "bit32.lshift"))
+    g["bit32"] = bit32
     return g, string
 
 
@@ -1452,8 +1528,20 @@ def vanilla_raw(path=VANILLA_RAW):
     return json.loads(Path(path).read_text(encoding="utf-8"))["raw"]
 
 
+AB_RAW = tnconfig.REPO / "tests" / "alien-biomes-raw.json"
+AB_RAW_FORMAT = "tn-alien-biomes-raw/1"
+# What tools/make_ab_raw.py keeps of each Alien Biomes land tile: the fields installed.lua reads.
+AB_RAW_FIELDS = ("name", "type", "autoplace")
+
+
+def ab_raw_problem(path=AB_RAW):
+    """None when `path` can seed the offline Alien Biomes data stage with the installed land tiles, else the one line
+    that says why not and how to make it. The file is made on the machine from the installed mod and is never
+    committed: it holds Alien Biomes' own text."""
     import json
     label = _vanilla_label(path)
+    fix = ("run python tools/make_ab_raw.py --dump <data-raw-dump.json of the base game plus Alien Biomes> (the "
+           "file is local: it holds Alien Biomes' text and is not committed)")
     p = Path(path)
     if not p.is_file():
         return f"{label} is missing: {fix}"
@@ -1462,9 +1550,34 @@ def vanilla_raw(path=VANILLA_RAW):
     except (OSError, UnicodeDecodeError, ValueError) as e:
         return f"{label} is unreadable ({type(e).__name__}): {fix}"
     raw = data.get("raw") if isinstance(data, dict) else None
+    if not isinstance(data, dict) or data.get("format") != AB_RAW_FORMAT or not isinstance(raw, dict):
+        return f"{label} is not a {AB_RAW_FORMAT} file: {fix}"
+    if not isinstance(raw.get("tile"), dict) or not raw.get("tile"):
+        return f"{label} holds no tile prototypes: {fix}"
+    return None
+
+
+def ab_raw(path=AB_RAW):
+    """Alien Biomes' land tiles as installed (tests/alien-biomes-raw.json, a reduced --dump-data of the base game plus
+    Alien Biomes), {type: {name: prototype}}. Raises VanillaRawMissing when the file is absent or unusable."""
+    import json
+    problem = ab_raw_problem(path)
     if problem:
         raise VanillaRawMissing(problem)
     return json.loads(Path(path).read_text(encoding="utf-8"))["raw"]
+
+
+def ab_base(vanilla=None, ab=None):
+    """The base the offline Alien Biomes data stage starts from: the base game's prototypes with Alien Biomes' land
+    tiles beside them, as the mod's data stage finds them when Alien Biomes is installed."""
+    base = {t: dict(protos) for t, protos in (vanilla_raw() if vanilla is None else vanilla).items()}
+    for t, protos in (ab_raw() if ab is None else ab).items():
+        base.setdefault(t, {})
+        clash = sorted(set(base[t]) & set(protos))
+        if clash:
+            raise LuaError(f"tests/alien-biomes-raw.json redefines the base game's {t} {clash[:3]} (fail closed)")
+        base[t].update(protos)
+    return base
 
 
 def data_stage(reader, values=None, mods=None, base=None):

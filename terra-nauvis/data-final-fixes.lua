@@ -74,6 +74,7 @@ end
 water_hook(H.fords.tile, {H.fords.key, TL.marsh.water_shallow.key}, H.fords.off, "ford and marsh hook")
 water_hook(TL.marsh.water_mud.tile, {TL.marsh.water_mud.key}, TL.marsh.water_mud.off, "marsh hook")
 
+-- A tile's own noise as two of the shared fields (config.lua tiles.noise_share).
 local function mixed_noise(seed1)
   local NS = TL.noise_share
   local n, steps = #NS.fields, #NS.steps
@@ -104,11 +105,22 @@ local function vanilla_hooks()
   end
 end
 
+-- A tile's own noise is found by its arguments, read from the installed tiles and never from text this mod ships:
+-- the one call every Alien Biomes land tile holds once (prototypes/installed.lua; config.lua tiles.noise_share.call),
+-- read here before any hook rewrites a score. A call with any other argument set, or with a call nested in it, keeps
+-- the tile's own noise, and so does every call where the installed tiles gave no such reading.
+local installed = require("prototypes.installed")
+local SHARED = installed.tile_noise(data.raw.tile, cfg.climate.grain.prefixes, TL.noise_share.call)
+local SHARED_CALL = TL.noise_share.call.fn .. "{"
 local shared_calls = 0
 
 local function shared_seed(body)
+  local own = TL.noise_share.call.own
+  local args = SHARED and not string.find(body, "{", 1, true) and installed.arguments(body)
+  if not args or not args[own] or installed.signature(args, own) ~= SHARED.signature then
     return nil
   end
+  return string.match(args[own], "^%d+$")
 end
 
 local function shared_noise(text)

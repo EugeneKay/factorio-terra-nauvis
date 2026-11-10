@@ -202,10 +202,22 @@ local function dump_grid(surface)
           encoding = "row j is y0 + j * step; each row is value*count pairs from x0 by step; 1 = value op threshold, 0 = not, 2 = not finite"}
 end
 
+-- Empties a test area of everything but the player's character, which the scenario still needs.
+local function clear_area(surface, area)
+  local found = surface.find_entities_filtered{area = area}
+  for i = #found, 1, -1 do
+    local entity = found[i]
+    if entity.valid and entity.type ~= "character" then
+      entity.destroy()
+    end
+  end
+end
+
 local function scene_setup(surface)
   local n = #SCENE_ORIENTATIONS
   local x0, y0, w, h = SCENE.x0 - 8, SCENE.y0 - 8, n * SCENE.spacing + 16, 32
   local area = {{x0, y0}, {x0 + w, y0 + h}}
+  clear_area(surface, area)
   local tiles = {}
   for y = y0, y0 + h - 1 do
     for x = x0, x0 + w - 1 do tiles[#tiles + 1] = {name = "landfill", position = {x, y}} end
@@ -226,6 +238,7 @@ local WALL = {x0 = -48, y0 = 1000, w = 96, h = 48, y = 1024}
 
 local function wall_setup(surface)
   local area = {{WALL.x0, WALL.y0}, {WALL.x0 + WALL.w, WALL.y0 + WALL.h}}
+  clear_area(surface, area)
   local tiles = {}
   for y = WALL.y0, WALL.y0 + WALL.h - 1 do
     for x = WALL.x0, WALL.x0 + WALL.w - 1 do tiles[#tiles + 1] = {name = "landfill", position = {x, y}} end
@@ -279,7 +292,9 @@ local function blocking_water_names()
   return out
 end
 
+-- Straight-line distance between two positions, in tiles.
 local function dist(a, b)
+  return math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y))
 end
 
 local function measure(surface, c)

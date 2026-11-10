@@ -200,6 +200,18 @@ def(MS.water_mud.body2, "if(elevation > 0, if(distance > " .. num(MS.start_clear
   {pool = F.name})
 def(MS.water_shallow.body, "if(" .. MARSH_W .. " > " .. num(V.marsh_cut) .. ", if(elevation < 0, if(elevation > " ..
   num(-MS.shallow_depth) .. ", " .. num(MS.shallow_score) .. ", -inf), -inf), -inf)")
+-- 1.0.0: the river deltas (config.lua regions_v3). The pools' third body is the second with the weight less the
+-- delta weight's share, so pools thin out inside a delta and its channels stay its water; the shallows' second body
+-- is the first and the channels, on land outside the start clearing, at the marsh shallows' score. Only new worlds
+-- name them.
+local D3 = cfg.regions_v3
+def(D3.names.water_mud, "if(elevation > 0, if(distance > " .. num(MS.start_clear_tiles) .. ", if(" .. MARSH_W ..
+  " > " .. num(V.marsh_cut) .. ", if(pool + " .. num(P.cut_per_weight) .. " * (" .. MARSH_W .. " - " ..
+  num(D3.channel.pool_damp) .. " * " .. D3.names.delta_w .. ") - " .. num(P.cut + P.cut_per_weight) .. " > 0, " ..
+  num(MS.score) .. ", -inf), -inf), -inf), -inf)", {pool = F.name})
+def(D3.names.water_shallow, "max(" .. MS.water_shallow.body .. ", if(elevation > 0, if(distance > " ..
+  num(MS.start_clear_tiles) .. ", if(" .. D3.names.channel .. " > 0, " .. num(MS.shallow_score) ..
+  ", -inf), -inf), -inf))")
 -- Without Alien Biomes: grass-1 between the pools, +bonus on land inside marshes, 0
 -- elsewhere, so grass-1 keeps its own score outside marshes and the pools (score) still beat it.
 def(MS.grass.body, "if(" .. MARSH_W .. " > " .. num(V.marsh_cut) .. ", if(elevation > 0, " .. num(MS.grass.bonus) ..

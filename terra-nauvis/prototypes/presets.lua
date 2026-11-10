@@ -469,9 +469,17 @@ end
 
 -- The second tables' re-points, which every new world bakes: the second hotspot table's bodies and the second region
 -- table's forest and marsh aggregates, each under the first table's name.
+local function second_tables(map_key)
   local out = {}
   for _, points in ipairs({cfg.hotspots_v2.points, cfg.regions_v2.points, cfg.hotspots_v3.points}) do
     for k, value in pairs(points) do
+      out[k] = value
+    end
+  end
+  -- 1.0.0: the river deltas (config.lua regions_v3), on the maps that hold them: the third marsh aggregate over the
+  -- second, and the pools' and shallows' next bodies, each under the name every consumer reads.
+  if cfg.regions_v3.maps[map_key] then
+    for k, value in pairs(cfg.regions_v3.points) do
       out[k] = value
     end
   end
@@ -579,6 +587,7 @@ local function baked(map_key, v)
   koppen_names(names)
   -- The second hotspot table and the second region table: every new world reads them through the first tables'
   -- names.
+  for k, value in pairs(second_tables(map_key)) do
     names[k] = value
   end
   return names

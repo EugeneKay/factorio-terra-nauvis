@@ -100,6 +100,13 @@ local RG_WX = NOISE .. "region_wx" .. RG_V
 local RG_WY = NOISE .. "region_wy" .. RG_V
 local RG_ROUGH = NOISE .. "region_rough" .. RG_V
 local RG_MARSH_ROUGH = NOISE .. "region_marsh_rough" .. RG_V
+-- 1.0.0: the river deltas (regions_v3): the marsh aggregate over three tables, the delta weight and the channel field
+local RG_MARSH_W3 = NOISE .. "marsh_w_v3"
+local RG_DELTA_W = NOISE .. "delta_w_v1"
+local RG_DELTA_U = NOISE .. "delta_u_v1"
+local RG_DELTA_V = NOISE .. "delta_v_v1"
+local RG_DELTA_BANK = NOISE .. "delta_bank_v1"
+local RG_DELTA_CH = NOISE .. "delta_channel_v1"
 -- 0.3.0: the forest and marsh aggregates over both region tables (regions_v2)
 local RG_FOREST_W2 = NOISE .. "forest_w_v2"
 local RG_FOREST_SUM2 = NOISE .. "forest_sum_v2"
@@ -264,6 +271,8 @@ local CT = {
   MARSH_FRAY = NOISE .. "marsh_pool_fray_v1",
   MARSH_SHALLOW = NOISE .. "marsh_water_shallow",
   MARSH_SHALLOW_BODY = NOISE .. "marsh_water_shallow_v1",
+  MARSH_MUD_BODY3 = NOISE .. "marsh_water_mud_v3",
+  MARSH_SHALLOW_BODY2 = NOISE .. "marsh_water_shallow_v2",
   MARSH_GRASS = NOISE .. "marsh_grass",
   MARSH_GRASS_BODY = NOISE .. "marsh_grass_v1",
   FROZEN_KEY = NOISE .. "frozen_ground",
@@ -1934,6 +1943,16 @@ return {
     {
       release = "0.3.0",
       names = {CT.MARSH_FRAY, CT.MARSH_MUD_BODY2},
+    },
+    -- The river deltas (1.0.0; regions_v3): under files the third region table, which releases the row names
+    -- regions.lua composes from its marsh rows; the marsh aggregate over three tables, the delta weight, the channel
+    -- field with its warped point and bank, and the water-mud and water-shallow bodies that read them. No geography:
+    -- a preset of the maps regions_v3.maps lists names them over the second table's (regions_v3.points).
+    {
+      release = "1.0.0",
+      names = {RG_MARSH_W3, RG_DELTA_W, RG_DELTA_U, RG_DELTA_V, RG_DELTA_BANK, RG_DELTA_CH, CT.MARSH_MUD_BODY3,
+               CT.MARSH_SHALLOW_BODY2},
+      files = {"prototypes/tables/regions_v3.lua"},
     },
     -- The Chaos zone's next outline, zone and class (0.3.0; destroyed.outline.next, destroyed.barrier.next). They exist
     -- with Alien Biomes only, as the barrier's bodies do; a preset with the zone on names them over the released ones.
@@ -4382,6 +4401,36 @@ return {
       u = RG_U, v = RG_V_, ox = RG_OX, oy = RG_OY, ax = RG_AX, ay = RG_AY, wk = RG_WK, wx = RG_WX, wy = RG_WY,
       rough = RG_ROUGH, marsh_rough = RG_MARSH_ROUGH,
     },
+  },
+
+  -- The river deltas (1.0.0): prototypes/tables/regions_v3.lua holds a marsh row on each great delta the first two
+  -- tables lack and the delta's distributaries as channel rows, polylines traced along the water of the reference
+  -- raster. No elevation moves and no geography release: a marsh row lifts the moisture as every marsh does, so a
+  -- delta is green in a desert, and a channel is drawn in the ford tile, walkable shallow water on land from the
+  -- river to the sea, which Exact coastlines never rewrites. The main stem stays the one ship channel.
+  --   maps      the maps whose new worlds name the bodies (points); Europe holds no row and keeps its names
+  --   names     marsh_w: the marsh aggregate over the three tables; delta_w: the largest weight of this table's
+  --             marsh rows; u, v: the region query point moved by the channel warp; bank: a channel's half-width
+  --             factor; channel: tiles inside the nearest channel (above 0 inside); water_mud: the pools, thinned
+  --             by pool_damp times delta_w so the channels stay the delta's water; water_shallow: the first body
+  --             and the channels on land outside the start clearing
+  --   channel   half_tiles {a, b}: a channel's half-width a + b s tiles at scale s times the row's width, at least
+  --             least_half_tiles; warp: octaves of wavelength {a, b} and amplitude {a, b} tiles, as waterways.natural
+  --             spells them, a basis noise per axis anchored to the region frame, on top of the rivers' own warp,
+  --             which the channels read by name: a polyline's straight runs bend where a river's mouth fade holds
+  --             that warp at 0, and their amplitude stays under a river's half-width, since a row that leaves a
+  --             river starts on that river's course at the save's map and scale (the table's starts);
+  --             bank: the half-width factor 1 + amplitude * noise
+  regions_v3 = {
+    maps = {atlantic = true, olde_world = true},
+    names = {marsh_w = RG_MARSH_W3, delta_w = RG_DELTA_W, u = RG_DELTA_U, v = RG_DELTA_V, bank = RG_DELTA_BANK,
+             channel = RG_DELTA_CH, water_mud = CT.MARSH_MUD_BODY3, water_shallow = CT.MARSH_SHALLOW_BODY2},
+    points = {[RG_MARSH_W] = RG_MARSH_W3, [CT.MARSH_MUD] = CT.MARSH_MUD_BODY3,
+              [CT.MARSH_SHALLOW] = CT.MARSH_SHALLOW_BODY2},
+    channel = {half_tiles = {1.5, 0.9}, least_half_tiles = 2.5, pool_damp = 0.5,
+               warp = {{seed1x = 7811, seed1y = 7812, wavelength = {40, 14}, amplitude = {0.5, 1.4}},
+                       {seed1x = 7813, seed1y = 7814, wavelength = {14, 2}, amplitude = {0.4, 0.5}}},
+               bank = {seed1 = 7815, wavelength = {9, 1}, amplitude = 0.3}},
   },
 
   -- The second region table (0.3.0): prototypes/tables/regions_v2.lua

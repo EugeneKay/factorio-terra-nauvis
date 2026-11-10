@@ -717,6 +717,7 @@ REGION_MAX_SHARE = 3                               # the destroyed zone's warp r
 REGION_TABLE = "prototypes/tables/regions.lua"     # relative to the mod folder, as `files` spells it
 HOTSPOT_TABLE2 = "prototypes/tables/hotspots_v2.lua"     # its rows take region names too, less the weight
 REGION_TABLE2 = "prototypes/tables/regions_v2.lua"       # its rows take region names too (0.3.0)
+REGION_TABLE3 = "prototypes/tables/regions_v3.lua"       # its marsh rows take region names too (1.0.0)
 HOTSPOT_TABLE3 = "prototypes/tables/hotspots_v3.lua"     # its rows take region names too, less the weight (0.3.1)
 REGION_ROW_KINDS = ("sd", "w", "depth")            # every row's signed distance, weight and depth
 REGION_CENTRE_KINDS = ("hu", "hv", "pd")           # a hotspot disc's jittered centre and plain distance
@@ -840,7 +841,15 @@ def region2_row_names(cfg):
     return sorted(region_row_name(cfg, k, r["id"]) for r in table["rows"] for k in REGION_ROW_KINDS)
 
 
+def region3_row_names(cfg):
+    """Every row name regions.lua composes for the third region table's rows: a marsh row's sd, weight and depth. A
+    channel row takes none: the channel field holds its segments."""
+    path = region_table_path(cfg).parent / "regions_v3.lua"
     table = _eval_text(path.read_text(encoding="utf-8"), path)
+    return sorted(region_row_name(cfg, k, r["id"]) for r in table["rows"] if r["layer"] != "channel"
+                  for k in REGION_ROW_KINDS)
+
+
 def region_noise_names(cfg, rows=None):
     """region_names as one sorted list."""
     names = region_names(cfg, rows)
@@ -1106,6 +1115,11 @@ def baked_names(cfg, map_key, version, scale, city=None, ab=False):
     pen.update((cfg.get("hotspots_v2") or {}).get("points") or {})
     # the second region table: presets.lua baked names its forest and marsh aggregates over the first table's
     pen.update((cfg.get("regions_v2") or {}).get("points") or {})
+    # the river deltas (1.0.0): presets.lua baked names the third marsh aggregate and the pools' and shallows' next
+    # bodies on the maps regions_v3.maps lists
+    r3 = cfg.get("regions_v3") or {}
+    if (r3.get("maps") or {}).get(map_key):
+        pen.update(r3.get("points") or {})
     if rs and cfg.get("hotspots_v2"):
         pen[K["enemy"]] = cfg["hotspots_v2"]["nests"]["wrapper"]
     # the scattered bases (data-final-fixes.lua enemy_wrapper): 0.3.0's presets name them over the nests
@@ -1191,6 +1205,8 @@ def release_of(cfg):
             names += hotspot2_row_names(cfg, "hotspots_v3.lua")
         if REGION_TABLE2 in (r.get("files") or []):
             names += region2_row_names(cfg)
+        if REGION_TABLE3 in (r.get("files") or []):
+            names += region3_row_names(cfg)
         for n in names:
             out[n] = r["release"]
     return out

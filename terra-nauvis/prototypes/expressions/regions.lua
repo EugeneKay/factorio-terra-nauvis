@@ -815,5 +815,146 @@ def(N.enemy_mult, by_map(function(M)
   return "1" .. (#terms > 0 and (" + " .. table.concat(terms, " + ")) or "")
 end))
 
+-- 1.0.0: the river deltas (config.lua regions_v3; prototypes/tables/regions_v3.lua). A marsh row takes the first
+-- table's bodies; the third marsh aggregate is the largest marsh weight over the three tables and the delta weight
+-- the largest over this table's.
+local TR3 = require("prototypes.tables.regions_v3")
+local NR3, CH = cfg.regions_v3.names, cfg.regions_v3.channel
+local ROWS3, DELTAS, CHANNELS = {}, {}, {}
+for _, x in ipairs(ROWS2) do
+  ROWS3[#ROWS3 + 1] = x
+end
+for _, r in ipairs(TR3.rows) do
+  if r.layer == "channel" then
+    CHANNELS[#CHANNELS + 1] = r
+  else
+    local x = {row = r, names = row_bodies(r)}
+    ROWS3[#ROWS3 + 1] = x
+    DELTAS[#DELTAS + 1] = x
+  end
+end
+def(NR3.marsh_w, by_map(function(M)
+  return joined("max", each(on_map(M, "marsh", nil, ROWS3), function(x) return x.names.w end), "0")
+end))
+def(NR3.delta_w, by_map(function(M)
+  return joined("max", each(on_map(M, "marsh", nil, DELTAS), function(x) return x.names.w end), "0")
+end))
+
+-- The channels. A noise fixed in tiles on the region anchor, so the same ground reads the same value from every
+-- spawn; the query point, in reference pixels; and the bank, a channel's half-width factor. All three are bodies of
+-- their own: every segment reads the point, and the game copies a local at every read.
+local function tile_noise(seed1, wavelength)
   return "basis_noise{x = x, y = y, seed0 = map_seed, seed1 = " .. num(seed1) .. ", input_scale = 1 / (" ..
+    num(wavelength[1]) .. " + " .. num(wavelength[2]) .. " * " .. K.scale .. "), output_scale = 1, offset_x = " ..
+    N.ox .. ", offset_y = " .. N.oy .. "}"
+end
+local function channel_warp(axis)
+  local parts = {}
+  for _, o in ipairs(CH.warp) do
+    parts[#parts + 1] = "(" .. num(o.amplitude[1]) .. " + " .. num(o.amplitude[2]) .. " * " .. K.scale .. ") * " ..
+      tile_noise(o["seed1" .. axis], o.wavelength)
+  end
+  return "(" .. table.concat(parts, " + ") .. ") / " .. K.scale
+end
+-- The point a map's rivers read (waterways.lua's warp bodies X and Y of the map's geography version with a river warp
+-- of its own, by name, picked by the folded scale as that version's entry picks its sets), moved into the region
+-- frame: a channel bends with the river it leaves, so the two stay joined at every seed, scale and spawn. A map with
+-- no such version reads the plain point. A version's warp names run X, Y, XP, YP per scale, as waterways.lua
+-- lists them.
+local RIVER_PARTS = {"X", "Y", "XP", "YP"}
+local function river_point(M, k, plain, radius, d)
+  local g
+  for _, v in ipairs(cfg.geography[M.key].versions) do
+    if v.warp and not v.map_type_of then
+      g = v
+    end
+  end
+  if not g then
+    return plain
+  end
+  local values = g.scales or cfg.scales.released
+  local text = g.warp[(#values - 1) * #RIVER_PARTS + k]
+  for i = #values - 1, 1, -1 do
+    text = "if(" .. K.scale .. " == " .. num(values[i]) .. ", " .. g.warp[(i - 1) * #RIVER_PARTS + k] .. ", " ..
+      text .. ")"
+  end
+  return "(" .. text .. " - " .. corner .. ") / " .. K.scale .. " + " .. num(radius + d)
+end
+def(NR3.u, by_map(function(M) return river_point(M, 1, QU, M.m.wr, M.du) end) .. " + " .. channel_warp("x"))
+def(NR3.v, by_map(function(M) return river_point(M, 2, QV, M.m.hr, M.dv) end) .. " + " .. channel_warp("y"))
+def(NR3.bank, "1 + " .. num(CH.bank.amplitude) .. " * clamp(" .. tile_noise(CH.bank.seed1, CH.bank.wavelength) ..
+  ", -1, 1)")
+
+-- The channel field: per channel row its half-width less the distance to its polyline, in tiles, so it is above 0
+-- inside a channel; the largest over the map's rows, -1 on a map with none. Each row's segments are locals under the
+-- row's index, the nearest squared distance cd<row>.
+local CL = {}
+-- A number of a rooted row's start, folded on the per-save map and scale: fn(u, v) of the start the table holds for
+-- each map and offered scale. A map the row is not on reads another map's, which no world of it compiles.
+local function by_start(r, fn)
+  local scales = cfg.scales.values
+  return by_map(function(M)
+    local starts = r.starts[M.key] or r.starts[r.maps[#r.maps]]
+    local text
+    for j = #scales, 1, -1 do
+      local value = num(fn(to_px(starts[j][1], starts[j][2])))
+      text = text and ("if(" .. K.scale .. " == " .. num(scales[j]) .. ", " .. value .. ", " .. text .. ")") or value
+    end
+    return text
+  end)
+end
+-- A rooted row's first segment, from its start on the river's own course at the save's map and scale to the row's
+-- first vertex: the segment formula of the rest with its ends' constants folded per save. Returns its squared
+-- distance.
+local function root_segment(s, r)
+  local bu, bv = to_px(r.latlon[1][1], r.latlon[1][2])
+  local k = s .. "_0"
+  CL["cu" .. k] = NR3.u .. " - (" .. by_start(r, function(au) return au end) .. ")"
+  CL["cv" .. k] = NR3.v .. " - (" .. by_start(r, function(_, av) return av end) .. ")"
+  CL["ce" .. k] = by_start(r, function(au) return bu - au end)
+  CL["cf" .. k] = by_start(r, function(_, av) return bv - av end)
+  CL["cg" .. k] = by_start(r, function(au, av) return 1 / ((bu - au) * (bu - au) + (bv - av) * (bv - av)) end)
+  CL["ct" .. k] = "clamp((cu" .. k .. " * ce" .. k .. " + cv" .. k .. " * cf" .. k .. ") * cg" .. k .. ", 0, 1)"
+  CL["cp" .. k] = "cu" .. k .. " - ct" .. k .. " * ce" .. k
+  CL["cq" .. k] = "cv" .. k .. " - ct" .. k .. " * cf" .. k
+  return "cp" .. k .. " * cp" .. k .. " + cq" .. k .. " * cq" .. k
+end
+local function channel_term(i, r)
+  local s, d2s = tostring(i), {}
+  if r.starts then
+    d2s[#d2s + 1] = root_segment(s, r)
+  end
+  for j = 1, #r.latlon - 1 do
+    local au, av = to_px(r.latlon[j][1], r.latlon[j][2])
+    local bu, bv = to_px(r.latlon[j + 1][1], r.latlon[j + 1][2])
+    local ex, ey = bu - au, bv - av
+    local k = s .. "_" .. tostring(j)
+    CL["cu" .. k] = minus(NR3.u, au)
+    CL["cv" .. k] = minus(NR3.v, av)
+    CL["ct" .. k] = "clamp((cu" .. k .. " * " .. num(ex) .. " + cv" .. k .. " * " .. num(ey) .. ") * " ..
+      num(1 / (ex * ex + ey * ey)) .. ", 0, 1)"
+    CL["cp" .. k] = "cu" .. k .. " - ct" .. k .. " * " .. num(ex)
+    CL["cq" .. k] = "cv" .. k .. " - ct" .. k .. " * " .. num(ey)
+    d2s[#d2s + 1] = "cp" .. k .. " * cp" .. k .. " + cq" .. k .. " * cq" .. k
+  end
+  CL["cd" .. s] = joined("min", d2s, nil)
+  return "max(" .. num(CH.least_half_tiles) .. ", " .. num(r.width) .. " * (" .. num(CH.half_tiles[1]) .. " + " ..
+    num(CH.half_tiles[2]) .. " * " .. K.scale .. ")) * " .. NR3.bank .. " - " .. K.scale .. " * sqrt(cd" .. s .. ")"
+end
+local CHANNEL_TERMS = {}
+for i, r in ipairs(CHANNELS) do
+  CHANNEL_TERMS[i] = channel_term(i, r)
+end
+def(NR3.channel, by_map(function(M)
+  local terms = {}
+  for i, r in ipairs(CHANNELS) do
+    for _, mk in ipairs(r.maps) do
+      if mk == M.key then
+        terms[#terms + 1] = CHANNEL_TERMS[i]
+      end
+    end
+  end
+  return joined("max", terms, "-1")
+end), CL)
+
 data:extend(E)

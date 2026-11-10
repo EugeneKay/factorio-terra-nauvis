@@ -987,6 +987,8 @@ local DE = {
   -- 0.4.0: class6's successor, the class the 0.4.0 presets name; grey rock also covers the dev>0 zone fringe
   -- (reach<=0), so the frayed zone edge reads grey rock instead of the Koppen base where Alien Biomes placed snow.
   class7 = NOISE .. "destroyed_class_v7",
+  -- 1.0.0: the position that also yields to every range's snow and grey rim (destroyed.dev.ranges)
+  dev3 = NOISE .. "destroyed_dev_v3",
   -- 0.3.1's Moscow zone (config.lua moscow): its outline, the Moscow position, the picklist's key and the Europe key
   mz_land = NOISE .. "moscow_outline_land_v1",
   mz_sea = NOISE .. "moscow_outline_sea_v1",
@@ -1990,6 +1992,13 @@ return {
     {
       release = "0.4.0",
       names = {DE.class6, DE.class7},
+    },
+    -- The Chaos zone's range yield (1.0.0; destroyed.dev.ranges): Alien Biomes only, as the next position is. A
+    -- preset with Destroyed Europe on names it over dev, so the ranges inside the zone keep their snow and grey rim.
+    -- A new body, which no older save names.
+    {
+      release = "1.0.0",
+      names = {DE.dev3},
     },
     -- The second hotspot table's bodies: under files its table, which releases the row names regions.lua composes
     -- from it, as the region table does. No geography: a preset names them over the first table's (rule 15).
@@ -3876,6 +3885,27 @@ return {
         jog_shift = 40000,
         snow_ramp_tiles = 48,
       },
+      -- 1.0.0 (destroyed.lua, the range yield): a new world with Destroyed Europe's own outline on names this
+      -- position over dev. It is the next position, less wherever a range's cold field (ridges.cold, the field the
+      -- snow and the grey rim are cut from) says a snowy range stands. ds is that field's fall from the snow's edge
+      -- (0 on the edge, negative in the snow). The range's position is px reference pixels a unit of ds, 0 on the
+      -- grey rim at rim of its width out from the snow's edge (the rim is ridges.cold.band times the ragged factor
+      -- wide, so where it breaks the zone's edge stands on the snow's), plus steep_px a unit past steep_from. Every
+      -- cut, the reach, the heat and the class read the position by name, so the zone treats a range as it treats
+      -- its own outer edge: heat ground, black ash, then grey rock up to the range's own grey rim, and past it the
+      -- rim and the snow are the climate's, with no lift, no palette and no snow ban. The gentle first slope gives
+      -- the grey rock room beside the rim; the steep one ends the band about steep_from out, before the flat top of
+      -- a range too low for snow (ds 0.22 there), which stays the zone's heat ground. On the steep slope a tile is
+      -- many tiles of the position, so the cuts' own frays move the black ash and heat edges by a tile or two, and
+      -- along a straight crest they would run on the cold field's straight contour: the steep term reads ds moved by
+      -- fray.next units a tile of the next position's fray and fray.tile units a tile of the cuts' tile fray, a few
+      -- tiles of ground each on a range's flank. With ridges off no range stands and the term is off_tiles, which
+      -- never binds.
+      -- in_px: toward the crest from the zero line the position falls in_px a unit instead of px. On the gentle px
+      -- the cuts' frays, some tens of tiles of the position, put the reach 10 to 20 tiles inside the rim and the
+      -- snow, where the snow ban and the palette followed it; at in_px they reach a tile or two.
+      ranges = {name = DE.dev3, px = 100, in_px = 1000, rim = 0.67, steep_px = 300, steep_from = 0.12,
+                fray = {next = 0.002, tile = 0.006}, off_tiles = 100000},
     },
   },
 

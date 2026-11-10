@@ -371,6 +371,22 @@ if AB then
       C.names.class .. " == " .. num(t.class) .. ", " .. num(C.score) .. ", -inf), -inf), -inf)")
   end
 
+  -- 1.0.0 (destroyed.dev.ranges): the position that yields to every snowy range. r is the range's own position in
+  -- tiles, 0 on its grey rim and negative toward its crest, from ds, the fall of the cold field the snow's cap reads
+  -- (ridges.lua) from the snow's edge, and the ragged factor that sets the rim's width. Its zero line takes no fray
+  -- of its own: moved out past the rim it left a strip of ordinary ground between the rim and the zone, and the reach
+  -- and every cut fray the edges they draw. A preset names it over dev and it reads the next position by name, never
+  -- the name it replaces.
+  local RY, CO = DV.ranges, cfg.ridges.cold
+  local snow_edge = CO.snow_at * CO.top_t / (CO.top_t - CO.snow_t)
+  def(RY.name, "min(" .. NN.dev .. ", if(" .. K.ridges .. " > " .. num(cfg.ridges.switch_threshold) .. ", r, " ..
+    num(RY.off_tiles) .. "))",
+    {ds = num(snow_edge) .. " - " .. cold,
+     d = "ds - " .. num(RY.rim * CO.band) .. " * " .. cfg.climate.ragged.name,
+     r = K.scale .. " * (" .. num(RY.px) .. " * max(0, d) + " .. num(RY.in_px) .. " * min(0, d) + " ..
+       num(RY.steep_px) .. " * max(0, ds + " .. num(RY.fray.next) .. " * " ..
+       NN.fray .. " + " .. num(RY.fray.tile) .. " * " .. DN.fray .. " - " .. num(RY.steep_from) .. "))"})
+
   -- The exclusion (config.lua destroyed.exclusion): the key's prototype holds 0, so a world made before keeps every
   -- hook's off branch and the dead trees' copies place nothing.
   local X = D.exclusion

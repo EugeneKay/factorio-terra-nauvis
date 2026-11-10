@@ -312,6 +312,11 @@ local function destroyed_values(map_key, v, names)
     -- widened grey band, frayed black-ash and greyed snow-prone heat ground where reach > 0, and extends the grey
     -- rock across the dev > 0 zone fringe (reach <= 0) so the cold-Koppen edge leaves no frozen snow or marsh there.
     out[D.chaos.names.class] = D.dev.next.class2.name2
+    -- 1.0.0: with Destroyed Europe's own outline on, the position that yields to every range (destroyed.dev.ranges),
+    -- so a range inside the zone keeps its snow and grey rim; the Moscow zone alone keeps the next position
+    if europe then
+      out[D.dev.names.dev] = D.dev.ranges.name
+    end
     out[cfg.climate.north3.names.drop] = cfg.climate.north3.zone_drop
     out[D.barrier.names.zone] = D.barrier.names.zone3
     out[D.outline.names.present] = D.outline.next.present

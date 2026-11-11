@@ -1042,6 +1042,12 @@ local DE = {
   range_open = NOISE .. "destroyed_range_open",
   range_open1 = NOISE .. "destroyed_range_open_v1",
   dead3 = NOISE .. "destroyed_dead_v3",
+  -- 1.1.0: the position that also yields to the north snow inside the Moscow zone at Chaos, the class that lays
+  -- grey rock on the ground it gives back where the world lays no snow, and the open mask that holds the zone's plants
+  -- there (moscow.keep.chaos)
+  dev4 = NOISE .. "destroyed_dev_v4",
+  class8 = NOISE .. "destroyed_class_v8",
+  open3 = NOISE .. "destroyed_open_v3",
   -- 0.3.1's Moscow zone (config.lua moscow): its outline, the Moscow position, the picklist's key and the Europe key
   mz_land = NOISE .. "moscow_outline_land_v1",
   mz_sea = NOISE .. "moscow_outline_sea_v1",
@@ -1113,6 +1119,9 @@ local BC = {
   rim_keep = NOISE .. "corrupt_rim_keep_v1",
   mz_snow_0 = NOISE .. "moscow_snow_0_v1",
   mz_snow_2 = NOISE .. "moscow_snow_2_v1",
+  -- 1.1.0: the class that leaves the world's own snow and the enclosed ranges' grey rim inside the Corrupted Moscow
+  -- zone (moscow.keep.corrupted)
+  class3 = NOISE .. "blue_class_v3",
 }
 
 -- Exact coastlines: the per-save name switch a map's preset carries, set to the
@@ -1130,7 +1139,7 @@ return {
     -- 1.0.0: the name the mod list and the mod portal show (info.json title, locale mod-name). `title` above
     -- stays the short name that starts every log and chat line.
     mod_title = "Terra Nauvis: Earth Maps",
-    version = "1.0.0",
+    version = "1.1.0",
     author = "Jake Mismas",
     homepage = "https://github.com/jakemismas/factorio-terra-nauvis",
     factorio_version = "2.1",
@@ -2110,6 +2119,14 @@ return {
     {
       release = "1.0.0",
       names = {DE.tree_reach, DE.range_open, DE.range_open1, DE.dead3},
+    },
+    -- The snow the Moscow zone encloses (1.1.0, moscow.keep): Alien Biomes only, as the next position and Blue
+    -- corrupted's class are. A preset with the zone at Chaos names the position over dev, the class over the zone's
+    -- class and the mask over its open mask, one at Corrupted its class over Blue corrupted's. New bodies, which no
+    -- older save names.
+    {
+      release = "1.1.0",
+      names = {DE.dev4, DE.class8, DE.open3, BC.class3},
     },
     -- The second hotspot table's bodies: under files its table, which releases the row names regions.lua composes
     -- from it, as the region table does. No geography: a preset names them over the first table's (rule 15).
@@ -4089,6 +4106,45 @@ return {
             fray = {tiles = 40, amp = 24, octaves = 2, persistence = 0.5, seed1 = 7925},
             tiles = {{tile = "frozen-snow-0", class = 10, body = BC.mz_snow_0},
                      {tile = "frozen-snow-2", class = 11, body = BC.mz_snow_2}}},
+    -- 1.1.0 (new worlds): the zone keeps the snow it encloses, the north snow of the North snow setting and the snowy
+    -- ranges (the western Caucasus by the Kerch Strait) with their grey rim.
+    --   chaos      a preset with the zone at Chaos names this position over the devastation field's (destroyed.dev):
+    --              the next position less the range yield (destroyed.dev.ranges), and inside the Moscow zone also
+    --              less the north snow's own position, rn tiles: px reference pixels a unit of ne south of the snow's
+    --              edge and in_px a unit into it, never under floor_px units. ne is in reference pixels: the cold
+    --              north's temperature near its line, the line's fall of climate.north2.south_per_degree a degree of
+    --              latitude plus noise times the climate's own temperature noise, less t_at, over that fall, times
+    --              coordinates.px_per_degree, plus fray.next tiles of the next position's fray and fray.tile tiles of
+    --              the cuts' tile fray (destroyed.dev.next, destroyed.dev). It reads no zone body and no grain, and
+    --              its zero line runs where that temperature is t_at, a little short of the snow's frayed edge. Every
+    --              reader of the position follows by name: the heat stops short of the snow, the class runs heat
+    --              ground, black ash and grey rock up to it, the snow ban lifts, and the trees there follow the zone's
+    --              own position as on an enclosed range (destroyed.dev.range_trees), which the preset names for this
+    --              zone too. Where the Moscow outline is absent (its position at outside_tiles) the position is dev3's,
+    --              or the next position where no range binds, bit for bit. The preset also
+    --              names class over the zone's class: inside the Moscow outline, where the zone's own position (the
+    --              next one) is in and ne is under 0, the ground the north snow takes back is the world's snow where
+    --              its tile temperature (climate.grain.keys) is under t_below and the reach is out, and grey rock
+    --              (destroyed.dev.next.class2's grey) everywhere else, so no green or brown ground stands in the zone
+    --              between the snow fields, and where the zone's own position is in and ne is not under 0 the zone's
+    --              class less its snow rule (class2's snow_cut), whose grey stood for snow that now lies outside the
+    --              zone. Elsewhere it is the zone's class, value for value. And it names open over the open mask
+    --              (destroyed.exclusion): 0 on that same ground, where the reach alone left it open, so the zone's
+    --              plant rule holds there too (no green grass or flowers on the grey rock), and the zone's mask
+    --              elsewhere
+    --   corrupted  a preset with the zone at Corrupted names this class over Blue corrupted's: inside the Moscow
+    --              outline, wherever the tile temperature is under t_below, where the world lays snow, or the range
+    --              cold field (ridges.cold) passes the grey rim's outer edge, rim times its width (band times the
+    --              ragged factor) from the snow's edge, and the tile temperature is under t_rim (the rim's outer part
+    --              is the world's grass, which would stand in the zone), it is class 0, so the world's own snow and
+    --              grey rim show, and everywhere else it is the zone's class. The zone's climate, trees and plants
+    --              stay the zone's, so its trees stand on the rim where their tiles allow, and no tree of the zone
+    --              stands on snow
+    keep = {
+      chaos = {name = DE.dev4, class = DE.class8, open = DE.open3, t_at = 1, noise = 1, px = 3, in_px = 20,
+               floor_px = 100, fray = {next = 1, tile = 1}, t_below = 0},
+      corrupted = {class = BC.class3, t_below = 0, rim = 1, t_rim = 22},
+    },
   },
 
   -- Blue corrupted UK and Australia (prototypes/expressions/blue.lua, prototypes/tables/zone_blue.lua). Mostly mauve

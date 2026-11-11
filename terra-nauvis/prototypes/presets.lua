@@ -329,6 +329,17 @@ local function destroyed_values(map_key, v, names)
       out[D.exclusion.range_open] = D.dev.range_trees.open
       out[D.barrier.names.dead] = D.dev.range_trees.dead
     end
+    -- 1.1.0: with the Moscow zone at Chaos, the position that also yields to the north snow inside it and to the ranges
+    -- it encloses, the class that lays grey rock between the snow fields it gives back and the open mask that holds the
+    -- zone's plants there (moscow.keep.chaos), and the trees of the ground they give back follow the zone's own
+    -- position
+    if names[cfg.moscow.key] == cfg.moscow.chaos then
+      out[D.dev.names.dev] = cfg.moscow.keep.chaos.name
+      out[D.chaos.names.class] = cfg.moscow.keep.chaos.class
+      out[D.barrier.names.open] = cfg.moscow.keep.chaos.open
+      out[D.exclusion.range_open] = D.dev.range_trees.open
+      out[D.barrier.names.dead] = D.dev.range_trees.dead
+    end
     -- The exclusion (config.lua destroyed.exclusion): a palm's key names the masked body, the rest read the key.
     out[D.exclusion.key] = cfg.neutral.one
     for _, p in ipairs(D.exclusion.palms) do
@@ -523,6 +534,11 @@ local function blue_values(names)
     out[B.outline.names.depth] = cfg.moscow.corrupt.union
     out[B.names.class] = cfg.moscow.snow.class
     out[cfg.moscow.snow.north_keep] = cfg.moscow.snow.rim_keep
+    -- 1.1.0: with the Moscow zone at Corrupted, the class that leaves the world's snow and the enclosed ranges' grey
+    -- rim inside its outline (moscow.keep.corrupted)
+    if names[cfg.moscow.key] == cfg.moscow.corrupted then
+      out[B.names.class] = cfg.moscow.keep.corrupted.class
+    end
   end
   return out
 end

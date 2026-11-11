@@ -1,4 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 2026-11-10
+  Features:
+    - The Moscow zone keeps the snow it covers, on new worlds beside Alien Biomes. At Chaos the
+      north snow of the North snow setting and the snowy western end of the Caucasus by the Kerch
+      Strait stay snow, the range with its grey rim, and the zone meets them through heat ground,
+      black ash and grey rock, with grey rock between the snow fields and dead trees on the snow.
+      At Corrupted the blue and purple ground stops wherever the world lays snow, and the range
+      keeps its grey rim.
+  Changes:
+    - Worlds made with earlier versions keep loading unchanged, their Moscow zone included. The new
+      terrain applies to new worlds.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2026-11-10
   Features:

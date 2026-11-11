@@ -15915,6 +15915,34 @@
    "dump": "m2",
    "slice": "extras",
    "registered": "2026-11-10"
+  },
+  "tn_blue_class_v3": {
+   "type": "noise-expression",
+   "sha256": "d2fdd930a39551b8705e6e9e5a942980da661831426f8156050e004bdc89681c",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-11-10"
+  },
+  "tn_destroyed_class_v8": {
+   "type": "noise-expression",
+   "sha256": "66448764a672f9948698e4a64f368e47a1c9321b7a699b07195cfa4ecc6997a9",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-11-10"
+  },
+  "tn_destroyed_dev_v4": {
+   "type": "noise-expression",
+   "sha256": "aa87ce83992237612e5790abd93fcbe59d27744c09d7d9c861776fa12051cf19",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-11-10"
+  },
+  "tn_destroyed_open_v3": {
+   "type": "noise-expression",
+   "sha256": "a241b6a29bae65ce9c8139db48577fa85d3dc719eed1570a80fb2750190f945c",
+   "dump": "m2",
+   "slice": "extras",
+   "registered": "2026-11-10"
   }
  }
 }

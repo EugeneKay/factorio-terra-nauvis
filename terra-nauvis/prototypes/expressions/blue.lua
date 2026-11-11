@@ -135,6 +135,17 @@ if AB then
   -- rising to 1 over ramp_tiles. A preset with the zone on names it over the north rim's keep.
   def(MS.rim_keep, "clamp((-" .. O.depth .. " * " .. K.scale .. " - " .. num(MS.keep_tiles) .. " + " .. fray_t ..
     ") / " .. num(MS.ramp_tiles) .. ", 0, 1)")
+  -- 1.1.0 (moscow.keep.corrupted): the next class over the one above. Inside the Moscow outline it is class 0 wherever
+  -- the world lays snow (its tile temperature, which no zone body moves, under t_below) or a range's grey rim (the
+  -- range cold field past the rim's outer edge, where the tile temperature is under t_rim), so the world's own snow
+  -- and rim show there, and everywhere else, the UK included, it is the class above, value for value.
+  local KR = MZ.keep.corrupted
+  local CO = cfg.ridges.cold
+  local TT = cfg.climate.grain.keys.temperature
+  def(KR.class, "if(" .. MZ.outline.names.present .. " > 0, if(max(" .. num(KR.t_below) .. " - " .. TT .. ", min(" ..
+    cfg.ridges.names.cold2.gated .. " - " .. num(CO.snow_at * CO.top_t / (CO.top_t - CO.snow_t)) .. " + " ..
+    num(KR.rim * CO.band) .. " * " .. cfg.climate.ragged.name .. ", " .. num(KR.t_rim) .. " - " .. TT ..
+    ")) > 0, 0, " .. MS.class .. "), " .. MS.class .. ")")
   for _, t in ipairs(B.tiles) do
     def(t.body, "if(" .. K.blue .. " > " .. num(cfg.destroyed.switch_threshold) .. ", if(elevation > 0, if(" ..
       N.class .. " == " .. num(t.class) .. ", " .. num(B.score) .. ", -inf), -inf), -inf)")

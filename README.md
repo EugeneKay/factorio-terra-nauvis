@@ -8,7 +8,7 @@ Europe and Blue corrupted UK off).*
 Terra Nauvis is a mod for Factorio 2.1 that turns Nauvis into Earth. It has three maps (Europe, the Old World,
 the Atlantic) with real coastlines, rivers, mountain ranges and ore fields, in eight sizes, and you start at a
 real city.
-Version 1.0.0 needs Factorio 2.1.24 or newer and runs on the base game; Alien Biomes is optional.
+Version 1.1.0 needs Factorio 2.1.24 or newer and runs on the base game. Alien Biomes is optional.
 
 ## Under the hood
 
@@ -27,7 +27,7 @@ need no world, and [ARCHITECTURE.md](ARCHITECTURE.md) has the rest.
 
 ## Install
 
-1. Download `terra-nauvis_1.0.0.zip` from the
+1. Download `terra-nauvis_1.1.0.zip` from the
    [Releases page](https://github.com/jakemismas/factorio-terra-nauvis/releases).
 2. Put the zip in your mods folder. Do not unzip it.
    - Windows: `%APPDATA%\Factorio\mods`
@@ -83,7 +83,7 @@ Twelve startup settings and one runtime setting. Every default gives a normal Ea
 | Inland lakes | Off | Scatters small random lakes across the land, about eight in every 1,024 by 1,024 tiles |
 | Destroyed Europe | Off | Turns the heart of Europe, from France to Poland and down Italy to about Rome, into a volcanic wasteland whose outline differs on every seed. The snowy ranges it encloses keep their snow and grow dead trees instead of living ones: the Alps, the eastern Alps and, on the Old World, the northern Apennines. The Pyrenees and the ranges outside the zone keep their living trees. Needs Alien Biomes |
 | Blue corrupted UK | Off | Turns the United Kingdom into Alien Biomes' blue and purple lands. Needs Alien Biomes |
-| Moscow zone | Normal | Normal, Chaos or Corrupted: the same two looks for a zone from the Baltic states to the Volga bend. Chaos and Corrupted need Alien Biomes |
+| Moscow zone | Normal | Normal, Chaos or Corrupted: the same two looks for a zone from the Baltic states to the Volga bend. Since 1.1.0 the north snow and the western end of the Caucasus stay snow inside the zone, with dead trees on them at Chaos. Chaos and Corrupted need Alien Biomes |
 | North snow | Medium | Low, Medium or High: how far south the snow of northern Eurasia reaches. Medium is about 61 to 64 N, High about 57 to 60 N |
 | City markers | Off | Shows city names on the map view. This is the one setting you can change in a running game |
 
@@ -193,7 +193,7 @@ refute a change, not to confirm it. Every visual change was judged on in-game sc
 ## About this repository
 
 The history here is a rebuild. The mod was rebuilt several times during development, and the original
-repository held working notes and material that was not safe to publish publically, and lots of cursed issues, so the history was reconstructed with
+repository held working notes and material that was not safe to publish publicly, and lots of cursed issues, so the history was reconstructed with
 each change dated when it was first made. The intermediate commits show how the code grew and are not each a
 working build; the tagged release is the tested build.
 

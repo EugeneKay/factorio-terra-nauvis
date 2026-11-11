@@ -8,6 +8,19 @@ All notable changes to Terra Nauvis are documented in this file. The format foll
 Versions before 1.0.0 were released from an earlier repository and have no tags here. Names such as `tn_geo 21`
 or `tn_enemy_v2` are identifiers in the code: a geography version and a named noise expression.
 
+## [1.1.0] - 2026-11-10
+
+Version 1.1.0 follows 1.0.0. Worlds made with earlier versions keep loading unchanged, their Moscow zone
+included, and the new terrain applies to new worlds only.
+
+### Added
+
+- The Moscow zone keeps the snow it covers, on new worlds beside Alien Biomes. At Chaos the north snow of the
+  North snow setting and the snowy western end of the Caucasus by the Kerch Strait stay snow, the range with its
+  grey rim, and the zone meets them through heat ground, black ash and grey rock, with grey rock between the snow
+  fields and dead trees on the snow. At Corrupted the blue and purple ground stops wherever the world lays snow,
+  and the range keeps its grey rim.
+
 ## [1.0.0] - 2026-11-10
 
 Version 1.0.0 follows 0.4.0. Worlds made with 0.3.x and 0.4.0 keep loading unchanged; the new terrain applies

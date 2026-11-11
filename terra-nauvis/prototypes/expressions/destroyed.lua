@@ -246,13 +246,14 @@ if AB then
   def(MZ.dev, "if(" .. MO.present .. " > 0, " .. K.scale .. " * (" .. MO.depth .. " - " .. num(MZ.start_px) .. " + " ..
     num(MZ.ragged_share) .. " * " .. DN.ragged .. "), " .. num(DV.outside_tiles) .. ")")
   -- add: a term both zones' positions take, sadd one the snow's yield takes (so the zone keeps to the snow's own edge),
-  -- padd one Europe's presence takes; mz: the Moscow position the field reads
-  local function dev_text(add, sadd, mz, padd)
+  -- padd one Europe's presence takes; mz: the Moscow position the field reads, and mtail the term it takes in place of
+  -- add (1.1.0, moscow.keep.chaos: every earlier body passes none, so its text is as it was)
+  local function dev_text(add, sadd, mz, padd, mtail)
     return "max(if(" .. MZ.europe.key .. " > " .. num(MZ.match) .. ", if(" .. DN.present .. padd .. " > 0, min(" ..
       K.scale .. " * (" .. DN.depth .. " - " .. num(DV.start_px) .. " + " .. DN.ragged .. ")" .. add .. ", " ..
       K.scale .. " * snow" .. sadd .. "), " .. num(DV.outside_tiles) .. "), " .. num(DV.outside_tiles) ..
-      "), if(abs(" .. MZ.key .. " - " .. num(MZ.chaos) .. ") < " .. num(MZ.match) .. ", " .. mz .. add .. ", " ..
-      num(DV.outside_tiles) .. "))"
+      "), if(abs(" .. MZ.key .. " - " .. num(MZ.chaos) .. ") < " .. num(MZ.match) .. ", " .. mz .. (mtail or add) ..
+      ", " .. num(DV.outside_tiles) .. "))"
   end
   local snow_text = num(PY.snow_px) .. " * (" .. num(PY.snow_at) .. " - " .. cold .. ") - " .. num(PY.south) .. " * " ..
     cut .. " + " .. num(PY.gate_per_px) .. " * max(0, -" .. cut .. " - " .. num(PY.gate_px) .. ")"
@@ -445,6 +446,52 @@ if AB then
        BN.dead_noise .. ", 0, 1), 0)), 0)",
      fade = "clamp((" .. num(snow_edge) .. " - " .. cold .. " - " .. num(RT.snow.at) .. ") / " ..
        num(RT.snow.span) .. ", 0, 1)"})
+
+  -- 1.1.0 (moscow.keep.chaos): the position that also yields to the north snow inside the Moscow zone. Destroyed
+  -- Europe's part and the range yield are dev3's text, so where the Moscow outline is absent (its position at
+  -- outside_tiles, which rn never undercuts) this is dev3, or the next position where no range binds, bit for bit.
+  -- Inside it the Moscow position is held under rn, the north snow's own position in tiles: ne reference pixels south
+  -- of the snow's edge, steeper into the snow and floored there. ne reads the cold north's line and the climate's
+  -- temperature noise by name and no zone body, so nothing here reads itself, and takes the next position's fray and
+  -- the cuts' tile fray in tiles, so its zero line and every cut on it fray as the zone's outer edge does where the
+  -- steep slope would leave them on the temperature's smooth contour.
+  local KC = MZ.keep.chaos
+  local spd = cfg.climate.north2.south_per_degree
+  local north = {
+    snow = snow_next,
+    ds = num(snow_edge) .. " - " .. cold,
+    d = "ds - " .. num(RY.rim * CO.band) .. " * " .. cfg.climate.ragged.name,
+    r = K.scale .. " * (" .. num(RY.px) .. " * max(0, d) + " .. num(RY.in_px) .. " * min(0, d) + " ..
+      num(RY.steep_px) .. " * max(0, ds + " .. num(RY.fray.next) .. " * " .. NN.fray .. " + " .. num(RY.fray.tile) ..
+      " * " .. DN.fray .. " - " .. num(RY.steep_from) .. "))",
+    ne = num(cfg.coordinates.px_per_degree / spd) .. " * (" .. num(KC.noise) .. " * (" ..
+      cfg.climate.names.ab.temperature .. " - " .. cfg.climate.names.core .. ") - " .. num(spd) .. " * " ..
+      cfg.climate.north3.names.d .. " - " .. num(KC.t_at) .. ") + (" .. num(KC.fray.next) .. " * " .. NN.fray ..
+      " + " .. num(KC.fray.tile) .. " * " .. DN.fray .. ") / " .. K.scale,
+    rn = K.scale .. " * (" .. num(KC.px) .. " * max(0, ne) + " .. num(KC.in_px) .. " * max(-" .. num(KC.floor_px) ..
+      ", min(0, ne)))",
+  }
+  def(KC.name, "min(" .. dev_text(" + " .. NN.fray, sadd, "min(" .. MZ.next.dev .. " + " .. NN.fray .. ", rn)", padd,
+    "") .. ", if(" .. K.ridges .. " > " .. num(cfg.ridges.switch_threshold) .. ", r, " .. num(RY.off_tiles) .. "))",
+    north)
+  -- The class over class7 (moscow.keep.chaos): inside the Moscow outline, where the zone's own position is in and the
+  -- north snow took the ground back (ne under 0), the world's snow where its tile temperature is under t_below and the
+  -- reach is out, and grey rock everywhere else. Where the zone's own position is in and ne is not under 0, class7
+  -- less its snow rule: the heat ground under the north snow's weight no longer turns grey, since the snow it stood
+  -- for now lies outside the zone, and a warm lobe of the zone keeps its heat ground. Elsewhere class7, value for
+  -- value. The tile temperature reads the zone's lift, which never stands where ne is under 0, and nothing the position
+  -- reads reads the class.
+  local plain = "if(" .. DN.reach .. " <= 0, if(" .. DN.dev .. " > 0, " .. num(NC2.grey) .. ", 0), if(" ..
+    cut_at(CU.heat) .. " > 0, 0, if(max(" .. ash2 .. ", " .. num(NC2.thin) .. " - " .. DN.reach .. " + " .. ash2 ..
+    ") > 0, " .. L[T.black_dirt] .. ", " .. num(NC2.grey) .. ")))"
+  def(KC.class, "if(" .. MO.present .. " > 0, if(" .. NN.dev .. " > 0, if(ne < 0, if(max(" ..
+    cfg.climate.grain.keys.temperature .. " - " .. num(KC.t_below) .. ", " .. DN.reach .. ") < 0, 0, " ..
+    num(NC2.grey) .. "), " .. plain .. "), " .. NC2.name2 .. "), " .. NC2.name2 .. ")", {ne = north.ne, grain = grain})
+  -- The open mask over the devastation field's (moscow.keep.chaos): 0 on the ground the north snow took back inside the
+  -- zone's own position, as on the zone's own ground, so the zone's plant rule holds on its grey rock; elsewhere the
+  -- devastation field's mask, value for value.
+  def(KC.open, "if(" .. MO.present .. " > 0, if(" .. NN.dev .. " > 0, if(ne < 0, 0, " .. DN.open .. "), " .. DN.open ..
+    "), " .. DN.open .. ")", {ne = north.ne})
 end
 
 data:extend(E)
